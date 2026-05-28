@@ -1,15 +1,16 @@
-import * as Linking from 'expo-linking';
-import { useEffect, useRef, useState } from 'react';
-import { ActivityIndicator, Alert, StyleSheet, TouchableOpacity } from 'react-native';
-
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { IconSymbol } from '@/components/ui/icon-symbol';
+import * as Linking from 'expo-linking';
+import * as Network from 'expo-network';
+import { useRouter } from 'expo-router';
 import * as SecureStore from 'expo-secure-store'; // Import SecureStore
 import { signOut } from 'firebase/auth';
 import { onValue, ref, update } from 'firebase/database';
+import { useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { auth, database } from '../../firebaseConfig';
 
 const USERNAME_KEY = 'loggedInUsername'; // Key for SecureStore
@@ -21,6 +22,8 @@ export default function HomeScreen() {
   const [isFirebaseLive, setIsFirebaseLive] = useState(false);
   const [loggedInUsername, setLoggedInUsername] = useState<string | null>(null); // New state for username
 
+  const router = useRouter();
+
   // Menggunakan Ref untuk menyimpan data terbaru agar bisa diakses oleh interval tanpa stale closure
   const dataRef = useRef(data);
   useEffect(() => {
@@ -30,34 +33,37 @@ export default function HomeScreen() {
   // Mengambil URL jika aplikasi dibuka via link
   const url = Linking.useURL();
 
+  const performLogout = async (isAuto = false) => {
+    try {
+      if (loggedInUsername) {
+        const username = loggedInUsername; 
+        setLoggedInUsername(null); 
+
+        const logoutRef = ref(database, `login_requests/${username}`);
+        
+        // Update status di Firebase sebelum menghapus data lokal
+        await update(logoutRef, { 
+          status: 'logout', 
+          timestamp: new Date().toISOString() 
+        });
+        
+        await SecureStore.deleteItemAsync(USERNAME_KEY);
+      }
+    } catch (err) {
+      console.error("Logout update error:", err);
+    } finally {
+      await signOut(auth);
+      if (isAuto) router.replace('/login');
+    }
+  };
+
   const handleLogout = () => {
     Alert.alert('Logout', 'Apakah Anda yakin ingin keluar?', [
       { text: 'Batal', style: 'cancel' },
       { 
         text: 'Keluar', 
         style: 'destructive', 
-        onPress: async () => {
-          try {
-            if (loggedInUsername) {
-              const username = loggedInUsername; // Simpan ke variabel lokal
-              setLoggedInUsername(null); // Segera hapus state agar interval berhenti
-
-              const logoutRef = ref(database, `login_requests/${username}`);
-              
-              // Pastikan update terkirim ke server sebelum lanjut
-              await update(logoutRef, { 
-                status: 'logout', 
-                timestamp: new Date().toISOString() 
-              });
-              
-              await SecureStore.deleteItemAsync(USERNAME_KEY);
-            }
-          } catch (err) {
-            console.error("Logout update error:", err);
-          } finally {
-            signOut(auth); // Logout permanen hanya setelah Firebase update selesai
-          }
-        }
+        onPress: () => performLogout()
       },
     ]);
   };
@@ -99,6 +105,31 @@ export default function HomeScreen() {
       if (unsubData) unsubData();
     };
   }, []);
+
+  // Monitor Jaringan Otomatis
+  useEffect(() => {
+    if (!loggedInUsername) return;
+
+    const checkNetwork = async () => {
+      const networkState = await Network.getNetworkStateAsync();
+      const ipAddress = await Network.getIpAddressAsync();
+
+      const isWifi = networkState.type === Network.NetworkStateType.WIFI;
+      
+      // Validasi IP address (Contoh: MikroTik biasanya di 192.168.x.x)
+      // Ini lebih akurat daripada SSID karena SSID sering disembunyikan atau dilarang dibaca OS.
+      const isOnCorrectNetwork = ipAddress?.startsWith('192.168.'); 
+
+      if (!networkState.isConnected || !isWifi || !isOnCorrectNetwork) {
+        Alert.alert("Jaringan Berubah", "Anda keluar dari area M|S Connectivity. Logout otomatis.");
+        performLogout(true);
+      }
+    };
+
+    // Jalankan pengecekan setiap 15 detik
+    const networkInterval = setInterval(checkNetwork, 15000);
+    return () => clearInterval(networkInterval);
+  }, [loggedInUsername]);
 
   // Menambahkan update data secara berkala ke Firebase
   useEffect(() => {
