@@ -4,12 +4,15 @@ version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 
 environment:
-  sdk: '>=2.17.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
+  flutter:
+    sdk: flutter
   routeros_api: ^0.1.4
-  firebase_core: ^2.24.2 # Ditambahkan
-  cloud_firestore: ^4.14.0 # Ditambahkan
+  # Samakan versinya ke 3.0.0
+  firebase_core: ^3.0.0 
+  cloud_firestore: ^5.0.0
 
 dev_dependencies:
   lints: ^2.0.0

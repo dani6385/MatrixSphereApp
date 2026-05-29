@@ -12,7 +12,9 @@ dependencies:
     sdk: flutter
   shared_services:
     path: ../../packages/shared_services
-
+  firebase_core: ^3.0.0 # Tambahkan ini
+  cloud_firestore: ^5.0.0 # Tambahkan ini
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
