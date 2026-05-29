@@ -1,0 +1,6 @@
+
+name: my_iot_project
+
+packages:
+  - apps/**
+  - packages/**
