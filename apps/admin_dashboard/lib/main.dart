@@ -20,13 +20,13 @@ class AdminDashboardApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        cardTheme: CardTheme(
+        cardTheme: CardThemeData(
           elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
       ),
-      );
+      home: const MikrotikControlScreen(),
+    );
   }
 }
 
@@ -201,7 +201,7 @@ class _MikrotikControlScreenState extends State<MikrotikControlScreen> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             subtitle: Text(
-              'IP: ${user['address'] ?? '-'}\nUptime: ${user['uptime'] ?? '-'}'
+              '''IP: ${user['address'] ?? '-'}\nUptime: ${user['uptime'] ?? '-'}''',
             ),
             trailing: IconButton(
               icon: const Icon(Icons.exit_to_app, color: Colors.redAccent),
