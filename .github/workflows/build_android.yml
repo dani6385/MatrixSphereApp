@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build and Distribute Android
 
 on:
   push:
@@ -8,23 +8,25 @@ on:
       - 'apps/admin_dashboard/**'
 
 jobs:
-  build:
+  build_and_distribute:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
-          channel: 'stable'
-      
+          
       - name: Build APK
         run: |
           cd apps/admin_dashboard
           flutter pub get
           flutter build apk --release
           
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          name: admin-dashboard-apk
-          path: apps/admin_dashboard/build/app/outputs/flutter-apk/app-release.apk
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.1:887909343137:android:d31316d77af51e6a7275e0 }}
+          groups: testers
+          file: apps/admin_dashboard/build/app/outputs/flutter-apk/app-release.apk
