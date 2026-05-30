@@ -30,3 +30,4 @@ jobs:
           token: ${{ secrets.1:887909343137:android:d31316d77af51e6a7275e0 }}
           groups: testers
           file: apps/admin_dashboard/build/app/outputs/flutter-apk/app-release.apk
+          # Force update trigger
