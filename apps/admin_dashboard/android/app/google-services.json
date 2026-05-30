@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "887909343137",
+    "firebase_url": "https://matrixsphere-build-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "matrixsphere-build",
+    "storage_bucket": "matrixsphere-build.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887909343137:android:d31316d77af51e6a7275e0",
+        "android_client_info": {
+          "package_name": "com.example.admin_dashboard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBa0BoPmGgEwZjycWLVMlkIQsOT-nwFD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887909343137:android:0a09b516702121c77275e0",
+        "android_client_info": {
+          "package_name": "com.matrixsphere.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBa0BoPmGgEwZjycWLVMlkIQsOT-nwFD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

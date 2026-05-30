@@ -23,20 +23,11 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -62,11 +53,42 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBBa0BoPmGgEwZjycWLVMlkIQsOT-nwFD0',
-    appId: '1:887909343137:android:0a09b516702121c77275e0',
+    appId: '1:887909343137:android:d31316d77af51e6a7275e0',
     messagingSenderId: '887909343137',
     projectId: 'matrixsphere-build',
     databaseURL: 'https://matrixsphere-build-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-build.firebasestorage.app',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyDG2JQHFuW6i-E_ZfhFyajJhWnbDt1AiVY',
+    appId: '1:887909343137:ios:917448d6158fd3ff7275e0',
+    messagingSenderId: '887909343137',
+    projectId: 'matrixsphere-build',
+    databaseURL: 'https://matrixsphere-build-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'matrixsphere-build.firebasestorage.app',
+    iosBundleId: 'com.example.adminDashboard',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDG2JQHFuW6i-E_ZfhFyajJhWnbDt1AiVY',
+    appId: '1:887909343137:ios:917448d6158fd3ff7275e0',
+    messagingSenderId: '887909343137',
+    projectId: 'matrixsphere-build',
+    databaseURL: 'https://matrixsphere-build-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'matrixsphere-build.firebasestorage.app',
+    iosBundleId: 'com.example.adminDashboard',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyD16fxrq8bRBiXYsRc9r6WTKaobYGakWTA',
+    appId: '1:887909343137:web:187485f92032839b7275e0',
+    messagingSenderId: '887909343137',
+    projectId: 'matrixsphere-build',
+    authDomain: 'matrixsphere-build.firebaseapp.com',
+    databaseURL: 'https://matrixsphere-build-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'matrixsphere-build.firebasestorage.app',
+    measurementId: 'G-BMRKN7L404',
   );
 
 }
