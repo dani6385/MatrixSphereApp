@@ -67,6 +67,7 @@ class DefaultFirebaseOptions {
     projectId: 'matrixsphere-build',
     databaseURL: 'https://matrixsphere-build-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-build.firebasestorage.app',
+    iosClientId: '887909343137-us27iks63peh80d1j5al7kk1pbmtamla.apps.googleusercontent.com',
     iosBundleId: 'com.example.adminDashboard',
   );
 
@@ -77,6 +78,7 @@ class DefaultFirebaseOptions {
     projectId: 'matrixsphere-build',
     databaseURL: 'https://matrixsphere-build-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-build.firebasestorage.app',
+    iosClientId: '887909343137-us27iks63peh80d1j5al7kk1pbmtamla.apps.googleusercontent.com',
     iosBundleId: 'com.example.adminDashboard',
   );
 

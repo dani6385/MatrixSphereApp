@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:admin_dashboard/home_screen.dart'; // Import the HomeScreen
+import 'package:admin_dashboard/main_screen.dart'; // Import the HomeScreen
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,11 +16,12 @@ class _LoginPageState extends State<LoginPage> {
   void _login() {
     if (_formKey.currentState!.validate()) {
       // Dummy validation: replace with actual authentication logic
-      if (_usernameController.text == 'admin' && _passwordController.text == 'password') {
+      if (_usernameController.text == 'admin' &&
+          _passwordController.text == 'password') {
         // Navigate to HomeScreen upon successful login
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const MainScreen()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -40,10 +41,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Login'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Admin Login'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -83,7 +81,10 @@ class _LoginPageState extends State<LoginPage> {
               ElevatedButton(
                 onPressed: _login,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 15,
+                  ),
                   textStyle: const TextStyle(fontSize: 16),
                 ),
                 child: const Text('Login'),

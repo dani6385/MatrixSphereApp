@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Impor Firebase Auth
 import 'dashboard_screen.dart';
@@ -36,16 +35,19 @@ class _MainScreenState extends State<MainScreen> {
     });
 
     try {
-      // Gunakan signInWithEmailAndPassword dari Firebase Auth
+      // 1. Proses Login
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
       );
 
-      // Jika login berhasil, navigasi ke DashboardScreen
+      // 2. PENTING: Cek apakah widget masih ada setelah proses await
+      if (!mounted) return;
+
+      // 3. Jika berhasil, lakukan navigasi atau update state
       if (userCredential.user != null) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => DashboardScreen()),
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
         );
       }
     } on FirebaseAuthException catch (e) {
@@ -61,9 +63,13 @@ class _MainScreenState extends State<MainScreen> {
         message = 'Terjadi kesalahan saat login.';
       }
       _showError(message);
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Gagal login: ${e.message}")));
     } catch (e) {
       // Tangani error umum lainnya
-      _showError('Terjadi kesalahan yang tidak terduga.');
+      debugPrint('Terjadi kesalahan yang tidak terduga.');
     }
 
     setState(() {
@@ -73,19 +79,14 @@ class _MainScreenState extends State<MainScreen> {
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Admin Login'),
-      ),
+      appBar: AppBar(title: const Text('Admin Login')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -96,10 +97,7 @@ class _MainScreenState extends State<MainScreen> {
               const Text(
                 'Welcome Back!',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 48),
               TextField(
@@ -127,7 +125,9 @@ class _MainScreenState extends State<MainScreen> {
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: _isLoading ? null : _login, // Panggil _login saat ditekan
+                onPressed: _isLoading
+                    ? null
+                    : _login, // Panggil _login saat ditekan
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -135,13 +135,8 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
                 child: _isLoading
-                    ? const CircularProgressIndicator(
-                        color: Colors.white,
-                      )
-                    : const Text(
-                        'Login',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Login', style: TextStyle(fontSize: 16)),
               ),
               // Tambahkan widget lain jika perlu, misalnya tombol lupa password
             ],

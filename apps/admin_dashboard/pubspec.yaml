@@ -17,6 +17,7 @@ dependencies:
     path: ../../packages/shared_services
   network_info_plus: ^7.0.0
   device_info_plus: ^12.4.0
+  syncfusion_flutter_charts: ^33.2.8
   
 dev_dependencies:
   flutter_test:

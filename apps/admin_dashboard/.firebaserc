@@ -1,7 +1,5 @@
 {
   "projects": {
     "default": "matrixsphere-build"
-  },
-  "targets": {},
-  "etags": {}
+  }
 }

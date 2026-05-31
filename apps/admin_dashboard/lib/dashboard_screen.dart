@@ -1,83 +1,37 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_services/shared_services.dart'; // Assuming MikrotikService is in this package
-import 'package:admin_dashboard/network_chart.dart'; // Assuming NetworkChart is in this file
-import 'package:admin_dashboard/throughput_chart.dart'; // Assuming ThroughputChart is in this file
-import 'dart:async'; // For Timer
+import 'mikrotik_service.dart'; // Sesuaikan path jika folder berbeda
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
-
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  late MikrotikService _mikrotikService;
-  Timer? _timer; // Timer for periodic data fetching
+  Timer? _timer;
+  // 1. Deklarasi Variabel (Gunakan final jika memungkinkan)
+  final // Gunakan alias 'local.' agar Flutter tahu Anda memakai yang punya Anda sendiri
+  local.MikrotikService
+  _mikrotikService = local.MikrotikService();
   int _activeUserCount = 0;
-  bool _isLoading = true;
-  String _connectionStatus = 'Connecting...';
+  bool _isLoading = false;
+  String _connectionStatus = "Disconnected";
 
   @override
   void initState() {
     super.initState();
-    _mikrotikService = MikrotikService(); // Initialize the Mikrotik service
-    _fetchDashboardData(); // Fetch data once immediately
-    _startDataFetchTimer(); // Start the periodic data fetch
+    _fetchDashboardData();
   }
 
-  void _startDataFetchTimer() {
-    // Fetch data every 5 seconds to keep statistics updated
-    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      if (mounted) {
-        _fetchDashboardData();
-      } else {
-        timer.cancel(); // Stop the timer if the widget is no longer active
-      }
-    });
-  }
-
+  // 2. Metode untuk mengambil data (Diperbaiki dengan pengecekan mounted)
   Future<void> _fetchDashboardData() async {
-    try {
-      // Ensure the MikrotikService is available
-      if (_mikrotikService == null) {
-        setState(() {
-          _connectionStatus = 'Service unavailable';
-          _isLoading = false;
-        });
-        return;
-      }
-
-      // Fetch the number of active hotspot users
-      final users = await _mikrotikService.getActiveHotspotUsers();
-      final activeUserCount = users.length;
-
-      // Set connection status (assuming success means connected)
-      String currentStatus = 'Connected';
-
-      if (mounted) {
-        setState(() {
-          _activeUserCount = activeUserCount;
-          _connectionStatus = currentStatus;
-          _isLoading = false;
-        });
-      }
-    } catch (e) {
-      print('Error fetching dashboard data: $e');
-      if (mounted) {
-        setState(() {
-          _connectionStatus =
-              'Disconnected'; // Update status to disconnected on error
-          _isLoading = false;
-        });
-      }
-    }
+final connected = await _mikrotikService.connect(...);
   }
 
   // Handler for "Add New User" button
   void _addNewUser() {
-    print('Add New User button pressed');
+    debugPrint('Add New User button pressed');
     // TODO: Implement navigation to a user creation form or show a dialog.
     // For example, you might navigate to a new screen:
     // Navigator.of(context).pushNamed('/addUser');
@@ -86,7 +40,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // Handler for "Disconnect User" button
   void _disconnectUser() {
-    print('Disconnect User button pressed');
+    debugPrint('Disconnect User button pressed');
     // TODO: Implement logic to select a user and then call kickHotspotUser.
     // This would typically involve fetching the list of active users and letting the admin select one.
     // As a placeholder, it could kick the first user if any are active.
@@ -107,7 +61,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   // Handler for "Reset Router" button
   void _resetRouter() {
-    print('Reset Router button pressed');
+    debugPrint('Reset Router button pressed');
     // TODO: Implement router reset logic. This is usually a complex operation.
     // Display a confirmation dialog.
     showDialog(
@@ -127,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             onPressed: () {
               // Call router reset API here if available.
               // For now, just show a confirmation message.
-              print('Router reset command initiated.');
+              debugPrint('Router reset command initiated.');
               Navigator.of(dialogContext).pop(); // Close the dialog
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Perintah reset router dikirim.')),
@@ -153,7 +107,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       try {
         _mikrotikService.dispose();
       } catch (e) {
-        print("Error disposing MikrotikService: $e");
+        debugPrint("Error disposing MikrotikService: $e");
       }
     }
     super.dispose();
@@ -169,14 +123,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              // Sign out from Firebase Auth
-              await FirebaseAuth.instance.signOut();
-              // Navigate back to the login screen, replacing the current route
-              if (mounted) {
-                Navigator.of(context).pushReplacementNamed(
-                  '/login',
-                ); // Ensure '/login' route is defined
-              }
+              // 1. Panggil fungsi sign out yang asli dari Firebase
+              await _mikrotikService.kickHotspotUser(...);
+if (!mounted) return; // Tambahkan baris ini
+ScaffoldMessenger.of(context).showSnackBar(...); // Sekarang aman
             },
           ),
         ],
