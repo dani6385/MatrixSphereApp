@@ -12,9 +12,15 @@ class DashboardScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () {
-              // Kembali ke halaman login
-              Navigator.of(context).pop();
+            onPressed: () async {
+              // 1. Sign out dari Firebase
+              await FirebaseAuth.instance.signOut();
+
+              // 2. Arahkan kembali ke halaman login dan hapus riwayat halaman dashboard
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                '/login', // Sesuaikan dengan nama route halaman login Anda
+                (Route<dynamic> route) => false,
+              );
             },
           ),
         ],
