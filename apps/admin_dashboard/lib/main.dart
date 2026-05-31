@@ -1,35 +1,44 @@
-import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart'; // Tambahkan ini!
-import 'main_screen.dart';
-import 'login_page.dart'; // Tambahkan ini agar LoginPage terdeteksi
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'main_screen.dart';
+import 'login_page.dart';
 
 Future<void> main() async {
+  // Memastikan binding widget diinisialisasi sebelum Firebase
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  // Inisialisasi Firebase dengan opsi platform saat ini
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
   runApp(const AdminDashboardApp());
 }
 
 class AdminDashboardApp extends StatelessWidget {
   const AdminDashboardApp({super.key});
 
-  // ... di dalam kelas AdminDashboardApp ...
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Admin Dashboard',
-      theme: ThemeData(primarySwatch: Colors.indigo),
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        useMaterial3: true,
+      ),
 
-      // GANTI BAGIAN INI:
+      // StreamBuilder memantau status login secara real-time
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          // Jika data login tersedia, arahkan ke MainScreen
+          // Jika snapshot memiliki data, berarti user sudah login
           if (snapshot.hasData) {
             return const MainScreen();
           }
-          // Jika belum login, arahkan ke halaman Login
+          // Jika tidak ada data, user belum login, tampilkan LoginPage
           return const LoginPage();
         },
       ),
