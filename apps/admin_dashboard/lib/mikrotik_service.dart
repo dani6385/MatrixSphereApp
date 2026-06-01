@@ -1,30 +1,49 @@
-import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:routeros_api/routeros_api.dart'; // Pastikan import ini benar
+import 'package:flutter/foundation.dart';
 
 class MikrotikService {
-  final String mikrotikIp = '192.168.88.1';
-  final String mikrotikUser = 'admin';
-  final String mikrotikPass = 'your_password';
+  RouterOSApi? _api;
 
-  // Sesuaikan connect agar menerima parameter jika perlu
-  Future<bool> connect([String? ip, String? user, String? pass]) async {
+  // Fungsi untuk koneksi ke router
+  Future<bool> connect(String ip, String user, String password) async {
     try {
-      debugPrint("Connecting to Mikrotik at ${ip ?? mikrotikIp}...");
-      await Future.delayed(const Duration(seconds: 1));
+      debugPrint("Mencoba terhubung ke $ip...");
+      
+      // Menggunakan instance dari RouterOSApi
+      // Pastikan parameter host, user, dan password sesuai dengan constructor library
+      _api = await RouterOSApi.connect(ip, user, password); 
+      
+      debugPrint("Berhasil terhubung ke MikroTik!");
       return true;
     } catch (e) {
-      debugPrint("Failed to connect to Mikrotik: $e");
+      debugPrint("Gagal koneksi ke MikroTik: $e");
       return false;
     }
   }
 
-  // Tambahkan metode ini agar tidak error di Dashboard
-  Future<void> disconnectAll() async {
-    debugPrint("Memutus semua koneksi...");
-    await Future.delayed(const Duration(milliseconds: 200));
+  // Fungsi untuk mengambil data interface
+  Future<List<Map<String, dynamic>>> getInterfaces() async {
+    // Mengecek apakah _api sudah terinisialisasi dan aktif
+    if (_api == null) return [];
+    
+    try {
+      // Mengirim perintah ke MikroTik menggunakan syntax yang umum
+      final response = await _api!.sendSync('/interface/print');
+      
+      // Memastikan data yang dikembalikan berupa List
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      debugPrint("Gagal mengambil data interface: $e");
+      return [];
+    }
   }
 
-  void dispose() {
-    debugPrint("Disposing Mikrotik service...");
+  // Fungsi untuk memutus koneksi
+  Future<void> disconnectAll() async {
+    if (_api != null) {
+      _api!.close();
+      _api = null;
+      debugPrint("Koneksi MikroTik diputus.");
+    }
   }
 }
