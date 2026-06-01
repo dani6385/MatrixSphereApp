@@ -7,10 +7,10 @@ class ThroughputChart extends StatefulWidget {
   const ThroughputChart({super.key});
 
   @override
-  _ThroughputChartState createState() => _ThroughputChartState();
+  ThroughputChartState createState() => ThroughputChartState();
 }
 
-class _ThroughputChartState extends State<ThroughputChart> {
+class ThroughputChartState extends State<ThroughputChart> {
   List<FlSpot> spots = []; // List titik data grafik
   Timer? timer;
 

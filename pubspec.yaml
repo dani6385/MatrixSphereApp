@@ -1,14 +1,24 @@
-
 name: my_iot_project
+description: A new Flutter project.
+publish_to: 'none'
+version: 1.0.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
 
-dev_dependencies:
-  melos: ^3.1.0
 dependencies:
-  fl_chart: ^1.2.0
-  firebase_core: ^1.19.0
-  firebase_auth: ^3.11.2
-  provider: ^6.1.5+1
-  http: ^1.6.0
+  flutter:
+    sdk: flutter
+  routeros_api: ^0.1.4  # Pastikan baris ini ada di sini!
+  firebase_core: ^3.15.2
+  firebase_auth: ^5.7.0
+  cloud_firestore: ^5.6.12
+  provider: ^6.1.2
+  http: ^1.2.0
+  fl_chart: ^0.68.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  melos: ^3.1.0

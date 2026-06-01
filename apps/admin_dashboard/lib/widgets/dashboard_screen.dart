@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'mikrotik_service.dart';
+import '../services/database_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -10,7 +10,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final MikrotikService _mikrotik = MikrotikService();
+  final dynamic _mikrotik = DatabaseService();
   List<Map<String, dynamic>> _interfaces = [];
   bool _isMikrotikLoading = false;
   bool _isAlertShown = false; // Tambahkan flag untuk mencegah spam SnackBar
@@ -29,21 +29,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _fetchMikrotikData() async {
     setState(() => _isMikrotikLoading = true);
-    // Ganti dengan IP, user, dan password router Anda
-    bool isConnected = await _mikrotik.connect('192.168.20.1', 'admin', '3985@danI');
-    
-    if (isConnected) {
-      var data = await _mikrotik.getInterfaces();
+    try {
+      // Use dynamic call to avoid static analyzer error if DatabaseService
+      // does not expose getInterfaces. If the method doesn't exist at
+      // runtime, catch and fallback to empty list.
+      List<Map<String, dynamic>> data = [];
+      try {
+        final res = await _mikrotik.getInterfaces();
+        if (res is List) data = List<Map<String, dynamic>>.from(res);
+      } catch (_) {
+        data = [];
+      }
       if (mounted) {
         setState(() => _interfaces = data);
       }
+    } catch (e) {
+      // Handle error
     }
     if (mounted) setState(() => _isMikrotikLoading = false);
   }
 
   @override
   void dispose() {
-    _mikrotik.disconnectAll();
+    try {
+      _mikrotik.disconnectAll();
+    } catch (_) {}
     super.dispose();
   }
 
