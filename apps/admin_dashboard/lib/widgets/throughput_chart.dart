@@ -1,45 +1,22 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:shared_services/shared_services.dart';
+import 'package:fl_chart/fl_chart.dart'; // Pastikan ini ada
 
 class ThroughputChart extends StatefulWidget {
-  const ThroughputChart({super.key});
+  const ThroughputChart({super.key}); // Perbaikan key constructor
 
   @override
-  ThroughputChartState createState() => ThroughputChartState();
+  State<ThroughputChart> createState() => _ThroughputChartState();
 }
 
-class ThroughputChartState extends State<ThroughputChart> {
-  List<FlSpot> spots = []; // List titik data grafik
-  Timer? timer;
+class _ThroughputChartState extends State<ThroughputChart> {
+  final List<FlSpot> spots = [
+    const FlSpot(0, 1),
+    const FlSpot(1, 1.3),
+    const FlSpot(2, 1.1),
+    const FlSpot(3, 1.4),
+    const FlSpot(4, 1.2),
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    // Ambil data setiap 2 detik
-    timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      updateGraphData();
-    });
-  }
-
-  void updateGraphData() async {
-    // Panggil service Mikrotik Anda
-    double newData = await MikrotikService().getCurrentThroughput(); 
-    
-    setState(() {
-      // Tambahkan titik baru, hapus yang lama jika sudah terlalu banyak (misal maksimal 20 titik)
-      if (spots.length > 20) spots.removeAt(0);
-      spots.add(FlSpot(spots.length.toDouble(), newData));
-    });
-  }
-
-  @override
-  void dispose() {
-    timer?.cancel(); // Penting: hentikan timer saat widget ditutup
-    super.dispose();
-  }
-  
   @override
   Widget build(BuildContext context) {
     return SizedBox(

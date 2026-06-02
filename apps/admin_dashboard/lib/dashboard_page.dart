@@ -1,6 +1,6 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import '../services/database_service.dart';
+import 'user_page.dart';
 
 class DashboardPage extends StatelessWidget {
   // 1. Menambahkan parameter key
@@ -12,7 +12,7 @@ class DashboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Admin Dashboard')),
-      body: StreamBuilder<DatabaseEvent>(
+      body: StreamBuilder<dynamic>(
         stream: _dbService.getMikrotikData(),
         builder: (context, snapshot) {
           // 2. Menambahkan block {} pada if
@@ -46,7 +46,9 @@ class DashboardPage extends StatelessWidget {
                 ...((data['interfaces'] as Map).entries.map(
                   (e) => ListTile(
                     title: Text('Interface: ${e.key}'),
-                    subtitle: Text('TX: ${e.value['tx']} | RX: ${e.value['rx']}'),
+                    subtitle: Text(
+                      'TX: ${e.value['tx']} | RX: ${e.value['rx']}',
+                    ),
                   ),
                 )),
             ],
@@ -61,9 +63,17 @@ class DashboardPage extends StatelessWidget {
           BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
-        type: BottomNavigationBarType.fixed, // Penting jika item lebih dari 3
+        type: BottomNavigationBarType.fixed,
+        currentIndex:
+            0, // Anda bisa menambahkan state untuk menandai menu aktif
         onTap: (index) {
-          // Logika untuk pindah halaman berdasarkan index
+          if (index == 1) {
+            // Index 1 adalah 'User'
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const UserPage()),
+            );
+          }
         },
       ),
     );
