@@ -32,3 +32,13 @@ class ChartData {
   final int x;
   final double y;
 }
+
+class _TrafficMonitorState extends State<TrafficMonitor> {
+  List<FlSpot> _mySpots = []; // Data yang diupdate setiap detik
+
+  @override
+  Widget build(BuildContext context) {
+    return ThroughputChart(spots: _mySpots); // Mengirim data ke chart
+  }
+}
+abstract class TrafficMonitor extends StatefulWidget { ... }

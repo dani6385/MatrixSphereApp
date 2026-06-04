@@ -12,3 +12,7 @@ flutter build web --csp
 
 firebase deploy --only hosting
 
+git init
+git remote add origin https://github.com/dani6385/MatrixSphereApp.git
+git fetch origin
+git reset --hard origin/main
