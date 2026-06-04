@@ -1,17 +1,17 @@
-<<<<<<< HEAD
+
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart'; // Pastikan ini ada
 
 class ThroughputChart extends StatefulWidget {
   const ThroughputChart({super.key}); // Perbaikan key constructor
-=======
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 >>>>>>> d7b204e (Initial commit: Setup monorepo flutter)
 
 class TrafficChart extends StatelessWidget {
   @override
-<<<<<<< HEAD
+
   State<ThroughputChart> createState() => _ThroughputChartState();
 }
 
@@ -23,7 +23,7 @@ class _ThroughputChartState extends State<ThroughputChart> {
     const FlSpot(3, 1.4),
     const FlSpot(4, 1.2),
   ];
-=======
+
   Widget build(BuildContext context) {
     return LineChart(
       LineChartData(

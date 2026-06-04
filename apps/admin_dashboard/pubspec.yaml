@@ -1,4 +1,4 @@
-name: shared_provider
+name: admin_app
 description: A shared provider for real-time Firebase data.
 version: 0.0.1
 

@@ -1,6 +1,19 @@
-
-name: my_iot_project
+name: matrix_sphere_monorepo
 
 packages:
-  - apps/**
-  - packages/**
+  - apps/*
+  - packages/*
+
+scripts:
+  # Memudahkan perintah untuk menjalankan semua aplikasi/paket
+  analyze:
+    run: melos exec -- flutter analyze
+    description: Run flutter analyze in all packages.
+    
+  test:all:
+    run: melos exec -- flutter test
+    description: Run all tests in all packages.
+
+  clean:all:
+    run: melos exec -- flutter clean
+    description: Run flutter clean in all packages.
