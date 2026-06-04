@@ -1,38 +1,18 @@
-import 'dart:math';
+library service_shared;
 
-class MikrotikService {
-  Future<bool> connect(String ip, String user, String pass) async {
-    // Pastikan kode di sini sesuai dengan implementasi Anda
-    return true;
-  }
+// 1. Export Firebase Initializer
+export 'src/firebase/firebase_initializer.dart';
 
-  Future<void> createVoucher(String user, String pass) async {
-    // Pastikan ini tidak kosong jika dipanggil di main.dart
-  }
+// 2. Export Service Layer (Abstraksi/Interface & Implementasi)
+export 'src/firebase/auth_service.dart';
+export 'src/firebase/firestore_service.dart';
 
-  Future<List<Map<String, String>>> getActiveHotspotUsers() async {
-    return [];
-  }
+// 3. Export Models
+export 'src/models/user_model.dart';
+export 'src/models/admin_model.dart';
 
-  Future<void> kickHotspotUser(String id, String user) async {
-    // Pastikan parameter id dan user ada
-  }
+// 4. Export Exceptions (Agar UI bisa menangkap error kustom)
+export 'src/exceptions/app_exceptions.dart';
 
-  Future<double> getCurrentThroughput() async {
-    // Simulate fetching traffic data
-    final random = Random();
-    return random.nextDouble() * 100; // Mbps
-  }
-
-  Future<Map<String, double>> getInterfaceTraffic() async {
-    // Simulate fetching traffic data
-    final random = Random();
-    final download = random.nextDouble() * 100; // Mbps
-    final upload = random.nextDouble() * 50; // Mbps
-    return {'download': download, 'upload': upload};
-  }
-
-  void dispose() {
-    // Kosongkan atau masukkan logic dispose
-  }
-}
+// 5. Export Utility/Constants jika ada
+export 'src/utils/firebase_constants.dart';

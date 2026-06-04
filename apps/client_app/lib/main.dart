@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'login_options_screen.dart'; // Mengimpor layar yang sudah kita pindahkan
+import 'screens/login_options_screen.dart'; // Mengimpor layar yang sudah kita pindahkan
 
 void main() {
   runApp(const MyApp());

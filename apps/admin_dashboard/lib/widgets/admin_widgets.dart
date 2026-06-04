@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/database_service.dart';
 
-class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({super.key});
+class AdminWidgets extends StatefulWidget {
+  const AdminWidgets({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  State<AdminWidgets> createState() => _AdminScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class _AdminScreenState extends State<AdminWidgets> {
   final dynamic _mikrotik = DatabaseService();
   List<Map<String, dynamic>> _interfaces = [];
   bool _isMikrotikLoading = false;

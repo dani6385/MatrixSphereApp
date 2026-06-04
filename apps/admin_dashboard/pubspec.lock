@@ -50,7 +50,7 @@ packages:
     source: hosted
     version: "1.1.2"
   cloud_firestore:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cloud_firestore
       sha256: "2d33da4465bdb81b6685c41b535895065adcb16261beb398f5f3bbc623979e9c"
@@ -90,7 +90,7 @@ packages:
     source: hosted
     version: "0.7.13"
   device_info_plus:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: device_info_plus
       sha256: b4fed1b2835da9d670d7bed7db79ae2a94b0f5ad6312268158a9b5479abbacdd
@@ -138,7 +138,7 @@ packages:
     source: hosted
     version: "7.0.1"
   firebase_auth:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_auth
       sha256: "0fed2133bee1369ee1118c1fef27b2ce0d84c54b7819a2b17dada5cfec3b03ff"
@@ -162,7 +162,7 @@ packages:
     source: hosted
     version: "5.15.3"
   firebase_core:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_core
       sha256: "7be63a3f841fc9663342f7f3a011a42aef6a61066943c90b1c434d79d5c995c5"
@@ -186,7 +186,7 @@ packages:
     source: hosted
     version: "2.24.1"
   firebase_database:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_database
       sha256: "35b37c04307b99c5f746387ce03292531c3aa1de91facffbd9cff5e069a8b5fd"
@@ -210,7 +210,7 @@ packages:
     source: hosted
     version: "0.2.6+16"
   fl_chart:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: fl_chart
       sha256: d0f0d49112f2f4b192481c16d05b6418bd7820e021e265a3c22db98acf7ed7fb
@@ -222,16 +222,8 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_lints:
-    dependency: "direct dev"
-    description:
-      name: flutter_lints
-      sha256: "5398f14efa795ffb7a33e9b6a08798b26a180edac4ad7db3f231e40f82ce11e1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.0"
   flutter_test:
-    dependency: "direct dev"
+    dependency: transitive
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -280,14 +272,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
-  lints:
-    dependency: transitive
-    description:
-      name: lints
-      sha256: c35bb79562d980e9a453fc715854e1ed39e24e7d0297a880ef54e17f9874a9d7
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.1"
   matcher:
     dependency: transitive
     description:
@@ -312,8 +296,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   network_info_plus:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: network_info_plus
       sha256: "2866dadcbee2709e20d67737a1556f5675b8b0cdcf2c1659ba74bc21bffede4f"
@@ -360,8 +352,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  provider:
+    dependency: transitive
+    description:
+      name: provider
+      sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.5+1"
   routeros_api:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: routeros_api
       sha256: "3e2e54270dcb6179b4706df25ce496133993893ff8d13322d1fa29992ca9d897"
@@ -369,12 +369,12 @@ packages:
     source: hosted
     version: "0.1.4"
   shared_services:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../../packages/shared_services"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "0.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -413,7 +413,7 @@ packages:
     source: hosted
     version: "1.4.1"
   syncfusion_flutter_charts:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: syncfusion_flutter_charts
       sha256: de03a4afa64bd54bf6a0acd0f2436b149dc675687deda131a3ba1a8bbbe6c0b0

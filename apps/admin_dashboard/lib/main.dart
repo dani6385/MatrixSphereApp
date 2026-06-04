@@ -1,57 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'dashboard_page.dart';
-// main_screen.dart was missing; provide a simple MainScreen here
-// to avoid missing import error. Replace with real implementation
-// in a separate file if/when available.
-import 'login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_services/shared_services.dart';
+import 'screens/login_page.dart';      // Lokasi LoginPage
+import 'widgets/main_widgets.dart';
 
-class MainScreen extends StatelessWidget {
-  const MainScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Main Screen')),
-      body: const Center(child: Text('Welcome to the Admin Dashboard')),
-    );
-  }
-}
-
-Future<void> main() async {
-  // Memastikan binding widget diinisialisasi sebelum Firebase
+void main() async {
+  // 1. Inisialisasi awal Flutter
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // 2. Inisialisasi Firebase
+  await Firebase.initializeApp(options: FirebaseOptions.currentPlatform,);
 
-  // Inisialisasi Firebase dengan opsi platform saat ini
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  runApp(const AdminDashboardApp());
+  // 3. Menjalankan aplikasi dengan MultiProvider di tingkat paling atas
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RealTime()),
+      ],
+      child: const AdminHome(),
+    ),
+  );
 }
 
-class AdminDashboardApp extends StatelessWidget {
-  const AdminDashboardApp({super.key});
+class AdminHome extends StatelessWidget {
+  const AdminHome({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Admin Dashboard',
-      theme: ThemeData(primarySwatch: Colors.indigo, useMaterial3: true),
-
-      // StreamBuilder memantau status login secara real-time
+      theme: ThemeData(
+        primarySwatch: Colors.indigo,
+        useMaterial3: true,
+      ),
+      // Menggunakan StreamBuilder untuk mengecek status login secara real-time
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          // Jika snapshot memiliki data, berarti user sudah login
+          // Jika sudah login, masuk ke MainLayout (Dashboard)
           if (snapshot.hasData) {
-            return DashboardPage(); // Sekarang mengarah ke Dashboard Anda
+            return const MainLayout();
           }
-          // Jika tidak ada data, user belum login, tampilkan LoginPage
+          // Jika belum login, tampilkan halaman Login
           return const LoginPage();
         },
       ),
     );
   }
+}
+// Di dalam aplikasi utama (misal: apps/main_app/lib/main.dart)
+final getIt = GetIt.instance;
+
+void setupLocator() {
+  // Mendaftarkan FirestoreService ke dalam dependency injector
+  getIt.registerLazySingleton(() => FirestoreService());
 }
