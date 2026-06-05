@@ -3,3 +3,18 @@ version: 1.0.0
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:           # <--- INI WAJIB ADA
+    sdk: flutter     # <--- INI WAJIB ADA
+  firebase_core: ^3.0.0
+  cloud_firestore: ^5.0.0
+  firebase_auth: ^5.0.0 # <--- WAJIB TAMBAHKAN INI UNTUK AUTHENTICATION
+  get_it: ^6.0.0
+  routeros_api:
+    git:
+      url: https://github.com/ginkohub/routeros_api.git
+  # Tambahkan dependensi lain di bawahnya jika ada
+
+flutter:
+  uses-material-design: true

@@ -1,4 +1,6 @@
-class MonitoringDashboard extends StatelessWidget {
+import 'package:cloud_firestore/cloud_firestore.dart'; // Tambahkan ini!
+
+class MonitoringDashboard {
   final Stream<DocumentSnapshot> statsStream;
   final List<Map<String, dynamic>> interfaces;
   final bool isLoading;
@@ -8,10 +10,20 @@ class MonitoringDashboard extends StatelessWidget {
     required this.interfaces,
     required this.isLoading,
   });
+}
 
-  @override
-  Widget build(BuildContext context) {
-    // Pindahkan semua logic UI dari AdminWidgets ke sini
-    // Gunakan StreamBuilder di sini untuk memantau statsStream
+// packages/shared_services/lib/src/mikrotik/monitoring_repository.dart
+class MonitoringRepository {
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  // Stream data dari Firebase
+  Stream<DocumentSnapshot> getMikrotikStatsStream() {
+    return _db.collection('mikrotik_stats').doc('current').snapshots();
+  }
+
+  // Logika fetch interface
+  Future<List<Map<String, dynamic>>> getInterfaces() async {
+    // Logika API MikroTik Anda di sini
+    return [];
   }
 }
