@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart'; // Import package shared Anda
-import 'package:shared_services/di/service_locator.dart'; // Import file locator
+// Import file locator
 
 class CreateVoucher extends StatefulWidget {
   const CreateVoucher({super.key});
@@ -11,7 +11,7 @@ class CreateVoucher extends StatefulWidget {
 
 class _CreateVoucherPageState extends State<CreateVoucher> {
   // 1. Memanggil service melalui locator
-  final mikrotikService = getIt<MikrotikService>();
+  final dynamic mikrotikService = getIt<MikrotikService>();
 
   // 2. Fungsi untuk handle aksi tombol
   void handleCreateVoucher() async {

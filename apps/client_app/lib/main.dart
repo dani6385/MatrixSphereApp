@@ -1,24 +1,31 @@
-
 import 'package:flutter/material.dart';
-import 'screens/login_options_screen.dart'; // Mengimpor layar yang sudah kita pindahkan
+import 'package:shared_services/shared_services.dart'; 
+import 'screens/login_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inisialisasi Firebase melalui Service yang sudah Anda buat
+  await FirebaseService.initialize();
+
+  // Setup Dependency Injection (Service Locator)
+  setupLocator();
+
+  runApp(const MatrixSphereApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MatrixSphereApp extends StatelessWidget {
+  const MatrixSphereApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Aplikasi Klien',
+      title: 'Matrix Sphere',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.indigo,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        primarySwatch: Colors.blue,
       ),
-      // Menjadikan LoginOptionsScreen sebagai halaman utama
-      home: const LoginOptionsScreen(),
+      home: const LoginScreen(),
     );
   }
 }

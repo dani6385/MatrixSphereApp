@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart'; // Import service Anda
-import 'package:shared_services/di/service_locator.dart';
+import 'package:get_it/get_it.dart';
 
 class CreateMemberPage extends StatefulWidget {
   const CreateMemberPage({super.key});
@@ -15,7 +15,14 @@ class _CreateMemberPageState extends State<CreateMemberPage> {
   final _phoneController = TextEditingController();
 
   // Mengambil service dari locator
-  final _firestoreService = getIt<FirestoreService>();
+  final dynamic _firestoreService = GetIt.I<FirestoreService>();
+  
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
   bool _isLoading = false;
 
   void _submitMember() async {

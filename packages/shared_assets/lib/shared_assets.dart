@@ -1,4 +1,5 @@
 library shared_assets;
+export 'src/theme_config.dart';
 
 /// Kelas helper untuk menyimpan path aset agar tidak terjadi typo (salah ketik)
 class AppAssets {

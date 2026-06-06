@@ -1,7 +1,21 @@
 {
   "projects": {
-    "default": "matrixsphere-build"
+    "default": "matrixsphere-project"
   },
-  "targets": {},
+  "targets": {
+    "matrixsphere-project": {
+      "hosting": {
+        "admin": [
+          "admin-sphere"
+        ],
+        "client": [
+          "client-sph"
+        ],
+        "shop": [
+          "shop-sphere"
+        ]
+      }
+    }
+  },
   "etags": {}
 }

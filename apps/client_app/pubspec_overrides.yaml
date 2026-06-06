@@ -1,4 +1,9 @@
+# melos_managed_dependency_overrides: shared_assets,shared_ui
 # melos_managed_dependency_overrides: shared_services
 dependency_overrides:
+  shared_assets:
+    path: ..\\..\\packages\\shared_assets
   shared_services:
     path: ../../packages/shared_services
+  shared_ui:
+    path: ..\\..\\packages\\shared_ui
