@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart'; 
+import 'package:shared_core/shared_core.dart';
 import 'screens/login_screen.dart';
 
 void main() async {

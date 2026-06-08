@@ -16,7 +16,7 @@ class ScanPage extends StatelessWidget {
         onDetect: (capture) {
           final List<Barcode> barcodes = capture.barcodes;
           if (barcodes.isNotEmpty) {
-            print("Hasil Scan: ${barcodes.first.rawValue}");
+            debugPrint("Hasil Scan: ${barcodes.first.rawValue}");
           }
         },
       ),

@@ -1,0 +1,37 @@
+name: shared_core
+description: A shared core library for business logic, services, and models.
+version: 0.0.1
+publish_to: 'none' # Menghindari agar tidak terpublish secara publik
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Firebase SDKs
+  firebase_core: ^3.0.0
+  cloud_firestore: ^5.0.0
+  firebase_auth: ^5.0.0
+  firebase_database: ^11.0.0
+  
+  
+  # Logic & Dependency Injection
+  get_it: ^7.6.0
+  
+  # Utilities (Opsional, sesuaikan dengan kebutuhan Anda)
+  equatable: ^2.0.5 # Bagus untuk membandingkan object model
+  http: ^1.2.0
+  shared_services:
+    path: ../shared_services
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+# Jika Anda menggunakan aset spesifik di core, bisa tambahkan di bawah ini
+flutter:
+  uses-material-design: true

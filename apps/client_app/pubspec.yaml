@@ -9,16 +9,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^3.15.2
+  shared_core:
+    path: ../../packages/shared_core
   shared_services:
     path: ../../packages/shared_services
-  shared_assets:
-    path: ../../packages/shared_assets
   shared_ui:
     path: ../../packages/shared_ui
-  cupertino_icons: ^1.0.8
-  mobile_scanner: any
-  image_picker: any
+  device_info_plus: ^10.0.0
+  get_it: ^7.7.0
 
 dev_dependencies:
   flutter_test:

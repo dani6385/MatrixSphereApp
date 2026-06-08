@@ -9,5 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_services:
+    path: ../shared_services
   mobile_scanner: any
   image_picker: any
+  

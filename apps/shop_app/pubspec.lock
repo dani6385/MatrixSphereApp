@@ -81,6 +81,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.9"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.8"
   fake_async:
     dependency: transitive
     description:
@@ -188,10 +196,18 @@ packages:
     dependency: transitive
     description:
       name: get_it
-      sha256: "2d5100a95d1edf6ba31561b79b166a565e0fa92dfccc9a62d5d8dc25458aec00"
+      sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.1"
+    version: "7.7.0"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.0"
   http_parser:
     dependency: transitive
     description:
@@ -272,15 +288,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  routeros_api:
-    dependency: transitive
+  shared_core:
+    dependency: "direct overridden"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: dd04a645d32d23e695bca1180fafd109de03def3
-      url: "https://github.com/ginkohub/routeros_api.git"
-    source: git
-    version: "0.1.4"
+      path: "../../packages/shared_core"
+      relative: true
+    source: path
+    version: "0.0.1"
   shared_services:
     dependency: "direct main"
     description:
