@@ -17,3 +17,13 @@ scripts:
   clean:all:
     run: melos exec -- flutter clean
     description: Run flutter clean in all packages.
+
+  bootstrap:
+    run: melos bootstrap
+    description: "Hubungkan semua paket dan aplikasi di workspace"
+
+  build:client_hotspot:
+    run: |
+      cd apps/client_hotspot
+      flutter build web
+    description: "Build web untuk client_hotspot"
