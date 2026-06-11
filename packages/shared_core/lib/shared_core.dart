@@ -10,6 +10,8 @@ export 'services/firebase_service.dart';
 export 'services/firestore_service.dart';
 
 // Export Mikrotik Logic
+export 'mikrotik/akses_member.dart';
+export 'mikrotik/qr_scanner.dart';
 export 'mikrotik/mikrotik_service.dart';
 export 'mikrotik/monitoring_repository.dart';
 export 'mikrotik/create_member.dart';

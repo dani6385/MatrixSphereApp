@@ -22,6 +22,9 @@
         /shared_core
             /lib
                 /mikrotik
+                    akses_member.dart
+                    akses_qris.dart
+                    akses_voucher.dart
                     create_member.dart
                     create_qris.dart
                     create_voucher.dart
@@ -64,3 +67,7 @@
                     ui_service.dart
                 shared_ui.dart
             pubspeck.yaml
+
+/iot mqtt brokers
+add name=hivemq-cloud address=a7731dfdb3184f8da8f569b86b8558d5.s1.eu.hivemq.cloud port=8883 \
+    username=dani6385 password=3985@danI tls=yes

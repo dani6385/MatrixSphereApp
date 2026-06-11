@@ -1,5 +1,6 @@
 name: shared_assets
 version: 1.0.0
+publish_to: none
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -7,6 +8,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  shared_services:
+    path: ../shared_assets
 
 flutter:
   fonts:

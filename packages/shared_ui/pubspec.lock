@@ -401,7 +401,7 @@ packages:
     source: hosted
     version: "2.1.8"
   shared_core:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       path: "../shared_core"
       relative: true
