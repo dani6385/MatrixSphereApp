@@ -1,4 +1,5 @@
-name: Build APK
+name: Build and Deploy
+
 on:
   push:
     branches: [ main ]
@@ -21,26 +22,14 @@ jobs:
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
-
-      - name: Install Melos
-        run: dart pub global activate melos
-
-      - name: Bootstrap Workspace
-        run: melos bootstrap
-
-      - name: Build web
-        run: melos run build:client_hotspot
-
-      - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
 
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
+      - name: Install Melos & Bootstrap
+        run: |
+          dart pub global activate melos
+          melos bootstrap
 
-      # Langkah Perbaikan: Masuk ke folder aplikasi sebelum menjalankan perintah apapun
       - name: Build Web and APK
         run: |
           cd apps/client_hotspot
@@ -48,17 +37,16 @@ jobs:
           flutter build web --release
           flutter build apk --release
 
-      # Deploy ke Firebase (Harus diarahkan ke folder hasil build)
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MATRIXSPHERE_APP }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
-          entryPoint: 'apps/client_hotspot' # Penting untuk monorepo
-          buildContext: 'apps/client_hotspot'
+          entryPoint: 'apps/client_hotspot'
 
-      # Upload APK sebagai artifact
-      - uses: actions/upload-artifact@v4
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
