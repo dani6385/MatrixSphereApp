@@ -1,3 +1,8 @@
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -23,3 +28,20 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MATRIXSPHERE_APP }}'
           projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Build APK
+        run: |
+          cd apps/client_hotspot
+          flutter pub get
+          flutter build apk --release
+
+      # Langkah opsional: Upload APK sebagai artifact agar bisa di-download
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
