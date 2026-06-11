@@ -43,3 +43,38 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Folder Firebase & Backend
+# Mengabaikan file kunci rahasia agar aman!
+**/serviceAccountKey.json
+.env
+.firebaserc
+.firebase/
+
+# Folder hasil build Flutter
+**/build/
+**/.dart_tool/
+**/.packages
+**/.pub-cache/
+**/.pub/
+
+# File konfigurasi lokal & IDE
+.vscode/
+.idea/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugin-shared
+.metadata
+
+# Folder khusus platform (hanya jika Anda ingin build lokal tidak tersimpan)
+# Catatan: Biasanya folder 'android/app/build' diabaikan secara otomatis
+**/.gradle/
+**/android/app/build/
+**/android/build/
+**/ios/Pods/
+**/ios/.symlinks/
+
+# File OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
