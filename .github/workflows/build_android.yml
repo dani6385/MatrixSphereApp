@@ -1,3 +1,4 @@
+name: Build APK
 on:
   push:
     branches: [ main ]
@@ -8,39 +9,37 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # Perlu izin ini untuk autentikasi OIDC
+      id-token: write
     steps:
       - uses: actions/checkout@v4
+
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
-      - run: flutter pub get
-      - run: flutter build web --release
-      
-      # Menggunakan OIDC untuk login tanpa Service Account Key
-      - uses: google-github-actions/auth@v2
-        with:
-          workload_identity_provider: 'projects/1234567890/locations/global/workloadIdentityPools/my-pool/providers/my-provider' # Ini akan Anda dapatkan dari Firebase
-          service_account: 'my-service-account@matrixsphere-build.iam.gserviceaccount.com'
-
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MATRIXSPHERE_APP }}'
-          projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
 
       - uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Build APK
+      # Langkah Perbaikan: Masuk ke folder aplikasi sebelum menjalankan perintah apapun
+      - name: Build Web and APK
         run: |
           cd apps/client_hotspot
           flutter pub get
+          flutter build web --release
           flutter build apk --release
 
-      # Langkah opsional: Upload APK sebagai artifact agar bisa di-download
+      # Deploy ke Firebase (Harus diarahkan ke folder hasil build)
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MATRIXSPHERE_APP }}'
+          projectId: '${{ secrets.FIREBASE_PROJECT_ID }}'
+          entryPoint: 'apps/client_hotspot' # Penting untuk monorepo
+          buildContext: 'apps/client_hotspot'
+
+      # Upload APK sebagai artifact
       - uses: actions/upload-artifact@v4
         with:
           name: release-apk
