@@ -1,45 +1,75 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
+// lib/services/hotspot_service.dart
 
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart'; // Pastikan sudah di-import
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 
 class HotspotService {
-  final String routerUrl = "http://192.168.20.1"; // Ganti dengan IP/Domain MikroTik Anda
+  final _logger = Logger(); // Inisialisasi Logger
 
-  // 1. Fungsi enkripsi Anda
-  String generateChapPassword(String chapId, String password, String chapChallenge) {
-    String combined = chapId + password + chapChallenge;
-    var bytes = utf8.encode(combined);
-    var digest = md5.convert(bytes);
-    return digest.toString();
+  Future<void> login(String username, String password, String chapId, String chapChallenge) async {
+    _logger.i("Mencoba login untuk user: $username");
+
+    try {
+      // 1. Kirim request ke MikroTik
+      var response = await http.post(
+        Uri.parse('http://192.168.20.1/login'), 
+        body: {
+          'username': username,
+          'password': '00' + generateChapPassword(chapId, password, chapChallenge),
+          'dst': 'http://www.google.com',
+          'popup': 'true',
+        },
+      );
+
+      // --- PASANG KODE LOG DI SINI ---
+      _logger.d("Status Code: ${response.statusCode}");
+      _logger.d("Respon Body: ${response.body}"); 
+      // -------------------------------
+
+      if (response.statusCode == 200) {
+        _logger.i("Login Berhasil!");
+      } else {
+        _logger.e("Login Gagal dengan status: ${response.statusCode}");
+      }
+      
+    } catch (e) {
+      _logger.e("Terjadi kesalahan jaringan: $e");
+    }
   }
 
-  // 2. Fungsi Utama Login
-  // Di lib/services/hotspot_service.dart
-Future<void> login(String username, String password, String chapId, String chapChallenge) async {
-  // ... kode Anda
-    // A. Ambil chap-id dan chap-challenge dari halaman login (biasanya melalui GET)
-    // Anda bisa parsing halaman login MikroTik untuk mendapatkan nilai ini
-    String chapId = "..."; // Didapat dari parse HTML
-    String chapChallenge = "..."; // Didapat dari parse HTML
-
-    // B. Generate password terenkripsi
-    String encryptedPassword = generateChapPassword(chapId, password, chapChallenge);
-
-    // C. Kirim POST request
-    var response = await http.post(
-      Uri.parse('$routerUrl/login'),
-      body: {
-        'username': username,
-        'password': '00' + encryptedPassword, // MikroTik butuh prefix '00' untuk CHAP
-        'dst': 'http://www.google.com',
-        'popup': 'true',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      print("Login Berhasil!");
+  // Generate CHAP response: MD5( id_byte + password + challenge_bytes ) as hex
+  String generateChapPassword(String chapId, String password, String chapChallenge) {
+    // parse chapId to single byte
+    int idByte;
+    try {
+      idByte = int.parse(chapId);
+    } catch (_) {
+      // try hex
+      idByte = int.parse(chapId, radix: 16);
     }
+
+    // decode challenge hex string to bytes
+    List<int> challengeBytes = _hexToBytes(chapChallenge);
+
+    // build input: id byte + password bytes + challenge bytes
+    final input = <int>[];
+    input.add(idByte & 0xFF);
+    input.addAll(utf8.encode(password));
+    input.addAll(challengeBytes);
+
+    final digest = md5.convert(input);
+    return digest.bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+  }
+
+  List<int> _hexToBytes(String hex) {
+    final clean = hex.replaceAll(RegExp(r'[^0-9a-fA-F]'), '');
+    final bytes = <int>[];
+    for (var i = 0; i < clean.length; i += 2) {
+      final part = clean.substring(i, i + 2);
+      bytes.add(int.parse(part, radix: 16));
+    }
+    return bytes;
   }
 }
