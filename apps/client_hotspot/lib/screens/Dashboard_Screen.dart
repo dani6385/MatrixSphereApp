@@ -1,10 +1,35 @@
 import 'package:flutter/material.dart';
 import 'dashboard_client.dart';
+import '../services/hotspot_service.dart';
 import 'package:shared_core/mikrotik/akses_voucher.dart';
 import 'package:shared_core/shared_core.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  late final TextEditingController usernameController;
+  late final TextEditingController passwordController;
+  String chapId = '';
+  String chapChallenge = '';
+
+  @override
+  void initState() {
+    super.initState();
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   // Fungsi bantuan untuk memanggil Popup
   void _showPopup(BuildContext context, Widget page) {
@@ -33,10 +58,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Metode Hotspot"),
-        elevation: 0,
-      ),
+      appBar: AppBar(title: const Text("Metode Hotspot"), elevation: 0),
       // Firebase Firestore dihapus dari sini
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -46,33 +68,64 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildMenuButton(
-                    context, 
-                    "Voucher", 
-                    Icons.confirmation_number, 
-                    onPressed: () => _showPopup(context, const AksesVoucherPage()),
+                    context,
+                    "Voucher",
+                    Icons.confirmation_number,
+                    onPressed: () =>
+                        _showPopup(context, const AksesVoucherPage()),
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: _buildMenuButton(
-                    context, 
-                    "Member", 
-                    Icons.person, 
+                    context,
+                    "Member",
+                    Icons.person,
+                    // Di dalam Dashboard_Screen.dart
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => Dialog(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          child: AksesMemberPage(
-                            onLoginSuccess: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => const DashboardClient()),
-                                (route) => false,
-                              );
-                            },
-                          ),
-                        ),
+                        barrierDismissible:
+                            false, // User tidak bisa menutup popup tanpa login/batal
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: AksesMemberPage(
+                              onLoginSuccess: () async {
+                                // 1. Tampilkan indikator loading (opsional, bisa pakai showDialog lagi)
+
+                                // 2. Panggil Service Login
+                                HotspotService service = HotspotService();
+
+                                // Catatan: Pastikan Anda sudah mengambil chapId & challenge
+                                // dari router sebelum baris ini
+                                await service.login(
+                                  usernameController.text, // 1
+                                  passwordController.text, // 2
+                                  chapId, // 3
+                                  chapChallenge, // 4
+                                );
+
+                                // 3. Tutup Popup
+                                if (context.mounted) {
+                                  Navigator.of(context).pop(); // Menutup dialog
+
+                                  // 4. Navigasi ke DashboardClient
+                                  Navigator.pushAndRemoveUntil(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const DashboardClient(),
+                                    ),
+                                    (route) => false,
+                                  );
+                                }
+                              },
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
@@ -84,14 +137,16 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: _buildMenuButton(
-                    context, 
-                    "QR scander", 
-                    Icons.qr_code_scanner, 
+                    context,
+                    "QR scander",
+                    Icons.qr_code_scanner,
                     onPressed: () {
                       showDialog(
                         context: context,
                         builder: (context) => Dialog(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(20.0),
                             child: Column(
@@ -111,7 +166,9 @@ class DashboardScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                Expanded(child: _buildMenuButton(context, "Beli Kuota", Icons.wifi)),
+                Expanded(
+                  child: _buildMenuButton(context, "Beli Kuota", Icons.wifi),
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -122,7 +179,13 @@ class DashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuButton(BuildContext context, String title, IconData icon, {VoidCallback? onPressed, bool isFullWidth = false}) {
+  Widget _buildMenuButton(
+    BuildContext context,
+    String title,
+    IconData icon, {
+    VoidCallback? onPressed,
+    bool isFullWidth = false,
+  }) {
     return SizedBox(
       width: isFullWidth ? double.infinity : null,
       child: ElevatedButton.icon(
@@ -130,13 +193,17 @@ class DashboardScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).primaryColor,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 20),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
         icon: Icon(icon),
         label: Text(title),
-        onPressed: onPressed ?? () {
-          debugPrint("$title ditekan");
-        },
+        onPressed:
+            onPressed ??
+            () {
+              debugPrint("$title ditekan");
+            },
       ),
     );
   }

@@ -15,7 +15,7 @@ class _AksesMemberPageState extends State<AksesMemberPage> {
 
   Future<void> _loginMember() async {
     // URL login hotspot MikroTik
-    final Uri loginUrl = Uri.parse('http://192.168.88.1/login');
+    final Uri loginUrl = Uri.parse('http://192.168.20.1/login');
 
     try {
       final response = await http.post(loginUrl, body: {
