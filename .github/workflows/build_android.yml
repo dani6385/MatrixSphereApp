@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build APK Only
 
 on:
   push:
@@ -6,11 +6,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_deploy:
+  build_apk:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -30,22 +27,11 @@ jobs:
           dart pub global activate melos
           melos bootstrap
 
-      - name: Build Web and APK
+      - name: Build APK
         run: |
           cd apps/client_hotspot
           flutter pub get
-          flutter build web --release
           flutter build apk --release
-
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          projectId: 'matrixsphere-project'
-          entryPoint: 'apps/client_hotspot'
-          firebaseServiceAccount: ''
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
