@@ -1,47 +1,32 @@
-import 'package:flutter/foundation.dart' show kIsWeb; // Impor ini penting
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/Dashboard_Screen.dart';
+import 'screens/login_screen.dart';
 
+void main() async {
+  // Wajib dipanggil untuk memastikan binding ke engine Flutter
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Ambil status login dari penyimpanan lokal
+  final prefs = await SharedPreferences.getInstance();
+  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
 
-class HotspotLoginScreen extends StatefulWidget {
-  const HotspotLoginScreen({super.key});
-
-  @override
-  State<HotspotLoginScreen> createState() => _HotspotLoginScreenState();
+  // Jalankan aplikasi dengan status login yang sudah dicek
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
-class _HotspotLoginScreenState extends State<HotspotLoginScreen> {
-  // Controller dibuat nullable (?) agar bisa bernilai null saat di Web
-  WebViewController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // HANYA inisialisasi controller jika BUKAN di Web
-    if (!kIsWeb) {
-      _controller = WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..loadRequest(Uri.parse('http://192.168.20.1/login'));
-    }
-  }
+class MyApp extends StatelessWidget {
+  final bool isLoggedIn;
+  
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("MatrixSphere Login")),
-      // Gunakan pengecekan platform sebelum menampilkan WebView
-      body: kIsWeb 
-          ? const Center(child: Text("Mode Web: WebView tidak didukung di sini."))
-          : (_controller != null ? WebViewWidget(controller: _controller!) : const SizedBox()),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'MatrixSphere',
+      // Jika isLoggedIn true, ke Dashboard, jika tidak ke LoginScreen
+      home: isLoggedIn ? const DashboardScreen() : const LoginScreen(),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: DashboardScreen(), // Ganti home ke DashboardScreen
-  ));
 }

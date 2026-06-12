@@ -3,7 +3,7 @@ import 'package:crypto/crypto.dart';
 import 'dart:convert';
 
 class HotspotAuthService {
-  final String routerUrl = "http://192.168.88.1"; // Sesuaikan dengan IP Router Anda
+  final String routerUrl = "http://192.168.20.1"; // Sesuaikan dengan IP Router Anda
 
   String generateChapPassword(String chapId, String password, String chapChallenge) {
     var bytes = utf8.encode(chapId + password + chapChallenge);
