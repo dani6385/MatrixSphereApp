@@ -3,6 +3,9 @@ name: Build APK Only
 on:
   push:
     branches: [ main ]
+    paths:
+      - 'apps/client_hotspot/**' # Hanya build jika folder ini berubah
+      - 'pubspec.yaml'
   workflow_dispatch:
 
 jobs:
@@ -10,6 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # 1. PASANG CACHE DULU (Paling atas)
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Cache Pub
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
 
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -30,8 +50,7 @@ jobs:
       - name: Build APK
         run: |
           cd apps/client_hotspot
-          flutter pub get
-          flutter build apk --release
+          flutter build apk --release --build-number=${{ github.run_number }}
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4

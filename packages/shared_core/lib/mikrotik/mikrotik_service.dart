@@ -1,64 +1,57 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:firebase_database/firebase_database.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
+import 'package:logger/logger.dart';
 
 class MikrotikService {
-  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+  static const String baseUrl = "http://192.168.20.1";
 
-  // Fungsi untuk mengambil kredensial dari Firebase
-  Future<Map<String, String>> _getRouterConfig() async {
-    final snapshot = await _dbRef.child('config/router').get();
-    if (!snapshot.exists) throw Exception("Konfigurasi router tidak ditemukan");
+  static String _generateChapResponse(String chapId, String password, String chapChallenge) {
+    final List<int> input = [];
+    // chapId harus berupa byte tunggal (konversi string ke int)
+    input.add(int.parse(chapId)); 
+    input.addAll(utf8.encode(password));
+    // Pastikan chapChallenge dalam format hex yang benar
+    input.addAll(_hexToBytes(chapChallenge));
     
-    final data = Map<String, dynamic>.from(snapshot.value as Map);
-    return {
-      'ip': data['ip'],
-      'user': data['user'],
-      'pass': data['pass'],
-    };
+    return md5.convert(input).toString();
   }
 
-  Future<void> addMember(String username, String password) async {
-    // 1. Ambil kredensial secara dinamis
-    final config = await _getRouterConfig();
-    
-    final url = Uri.parse("http://${config['ip']}/rest/ppp/secret");
-    final auth = base64Encode(utf8.encode('${config['user']}:${config['pass']}'));
+  static List<int> _hexToBytes(String hex) {
+    // Menambahkan validasi untuk memastikan panjang string genap
+    String cleanHex = hex.length % 2 != 0 ? '0$hex' : hex;
+    final bytes = <int>[];
+    for (var i = 0; i < cleanHex.length; i += 2) {
+      bytes.add(int.parse(cleanHex.substring(i, i + 2), radix: 16));
+    }
+    return bytes;
+  }
 
-    // 2. Eksekusi request
-    final response = await http.post(
-      url,
-      headers: {
-        "Authorization": "Basic $auth",
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "name": username,
-        "password": password,
-        "service": "pppoe",
-        "profile": "default-profile",
-      }),
-    );
+  static Future<bool> login(String username, String password, String chapId, String chapChallenge) async {
+    try {
+      final String responseHash = _generateChapResponse(chapId, password, chapChallenge);
+      
+      final response = await http.post(
+        Uri.parse('$baseUrl/login'),
+        body: {
+          'username': username,
+          'password': '00$responseHash',
+          'dst': 'http://www.google.com',
+          'popup': 'true',
+        },
+      ).timeout(const Duration(seconds: 10)); // Waktu timeout diperpanjang
 
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw Exception("Gagal terhubung ke Mikrotik: ${response.body}");
+      // Cek apakah response mengandung indikator sukses (biasanya teks/redirect)
+      // Mikrotik tidak selalu mengembalikan status 200 untuk sukses login
+      if (response.statusCode == 200 || response.statusCode == 302) {
+        return true;
+      } else {
+        Logger().w('Mikrotik status: ${response.statusCode}, Body: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      Logger().e('Mikrotik CHAP login error: $e');
+      return false;
     }
   }
-  Future<void> addVoucher(String code, String limit) async {
-  // Contoh implementasi jika menggunakan REST API
-  final config = await _getRouterConfig(); // Mengambil dari Firebase
-  
-  final response = await http.post(
-    Uri.parse("http://${config['ip']}/rest/ip/hotspot/user"),
-    headers: {"Authorization": "Basic ...", "Content-Type": "application/json"},
-    body: jsonEncode({
-      "name": code,
-      "password": code,
-      "profile": "voucher-profile", // Pastikan ada di Mikrotik
-      "comment": "Limit: $limit",
-    }),
-  );
-  
-  if (response.statusCode != 201) throw Exception("Gagal buat voucher");
-}
 }

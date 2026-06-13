@@ -12,9 +12,14 @@ class AksesMemberPage extends StatefulWidget {
 class _AksesMemberPageState extends State<AksesMemberPage> {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
+  
+  // 1. Tambahkan variabel status loading
+  bool _isLoading = false;
 
   Future<void> _loginMember() async {
-    // URL login hotspot MikroTik
+    // 2. Aktifkan loading saat tombol ditekan
+    setState(() => _isLoading = true);
+
     final Uri loginUrl = Uri.parse('http://192.168.20.1/login');
 
     try {
@@ -25,17 +30,26 @@ class _AksesMemberPageState extends State<AksesMemberPage> {
         'popup': 'true',
       });
 
-      if (response.statusCode == 200) {
-        widget.onLoginSuccess(); // Panggil fungsi navigasi
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Login Gagal, cek username/password")),
-        );
+      if (mounted) {
+        if (response.statusCode == 200) {
+          widget.onLoginSuccess();
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Login Gagal, cek username/password")),
+          );
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error: Tidak bisa terhubung ke MikroTik")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Error: Tidak bisa terhubung ke MikroTik")),
+        );
+      }
+    } finally {
+      // 3. Matikan loading setelah proses selesai (sukses atau gagal)
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -50,7 +64,18 @@ class _AksesMemberPageState extends State<AksesMemberPage> {
           TextField(controller: _userController, decoration: const InputDecoration(labelText: "Username")),
           TextField(controller: _passController, decoration: const InputDecoration(labelText: "Password"), obscureText: true),
           const SizedBox(height: 20),
-          ElevatedButton(onPressed: _loginMember, child: const Text("Login")),
+          
+          // 4. Modifikasi Tombol agar menampilkan loading
+          ElevatedButton(
+            onPressed: _isLoading ? null : _loginMember, 
+            child: _isLoading 
+                ? const SizedBox(
+                    height: 20, 
+                    width: 20, 
+                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.blue),
+                  )
+                : const Text("Login"),
+          ),
         ],
       ),
     );

@@ -4,3 +4,4 @@ library shared_services;
 import 'package:shared_core/shared_core.dart';
 export 'di/service_locator.dart';
 //export 'src/services/qr_scanner_service.dart';
+export 'src/auth/auth_service.dart';
