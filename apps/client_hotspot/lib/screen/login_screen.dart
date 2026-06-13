@@ -1,3 +1,4 @@
+import 'package:client_hotspot/screen/dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -34,11 +35,17 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
         _error = null;
       });
+      // Simulate a network request.
       await Future.delayed(const Duration(seconds: 2));
-      setState(() {
-        _isLoading = false;
-        _error = "Login failed. Please try again.";
-      });
+
+      if (!mounted) return;
+
+      // For now, we'll assume the login is always successful
+      // In a real app, you would have logic to check credentials.
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const DashboardScreen()),
+      );
     }
   }
 
