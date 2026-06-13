@@ -12,13 +12,30 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String _selectedMethod = '';
+  final String _selectedMethod = '';
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
 
   void _showInput(String method) {
-    setState(() => _selectedMethod = method);
+    if (method == 'member') {
+      showMemberForm(context);
+      return;
+    } else if (method == 'voucher') {
+      showVoucherDialog(context);
+      return;
+    } else if (method == 'trial') {
+      showTrialDialog(context);
+      return;
+      } else if (method == 'scan' || method == 'bayar') {
+      showQRScanner(context);
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => const SizedBox.shrink(),
+    );
   }
 
   @override
