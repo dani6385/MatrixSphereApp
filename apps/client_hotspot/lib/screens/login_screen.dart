@@ -3,6 +3,7 @@ import 'package:shared_services/shared_services.dart' as shared_services;
 import 'Dashboard_Screen.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:shared_core/shared_core.dart';
+import '../services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,11 +13,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final String _selectedMethod = '';
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
+  bool _isLoading = false; // <--- Pastikan ini di sini
+  final String _selectedMethod = '';
 
+  final HotspotAuthService _authService = HotspotAuthService();
+
+  // 2. KEMUDIAN BARU FUNGSI/METODE
   void _showInput(String method) {
     if (method == 'member') {
       showMemberDialog(context);
@@ -208,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // --- AREA POPUP/DYNAMIC INPUT (Muncul di bawah tombol) ---
                 if (_selectedMethod.isNotEmpty)
-                  Container(
+                    Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white.withValues(alpha: 0.1),
@@ -275,6 +279,14 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
 
     try {
+      final String chapId = "1";
+      final String chapChallenge = "challenge_dari_mikrotik";
+await _authService.login(
+        _usernameController.text, 
+        _passwordController.text, 
+        chapId, 
+        chapChallenge
+      );
       // Panggil service Mikrotik
       bool success = await MikrotikService.login(
         _usernameController.text,
@@ -306,3 +318,5 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 }
+
+// End of file
