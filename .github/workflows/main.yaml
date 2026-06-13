@@ -19,8 +19,9 @@ jobs:
         run: flutter pub get
         
       - name: Build APK
-        run: flutter build apk --release --split-per-abi 
-        # --split-per-abi membuat file APK lebih kecil dan lebih stabil
+        run: |
+          cd apps/client_hotspot
+          flutter build apk --release --build-number=${{ github.run_number }}
         
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
