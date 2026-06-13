@@ -1,7 +1,6 @@
 library shared_services;
 
-// ignore: unused_import
-import 'package:shared_core/shared_core.dart';
-export 'di/service_locator.dart';
-//export 'src/services/qr_scanner_service.dart';
-export 'src/auth/auth_service.dart';
+// Ekspor semua service dan kelas dari paket ini
+// agar bisa digunakan oleh paket lain dengan satu import.
+
+export 'firebase/firebase_service.dart';

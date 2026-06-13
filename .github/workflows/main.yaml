@@ -1,4 +1,4 @@
-name: Build Flutter APK & Release
+name: Build & Release
 
 on:
   push:
@@ -10,39 +10,29 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      # 1. Setup Java (Diperlukan untuk Android build)
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-
-      # 2. Setup Flutter dengan cache yang dioptimalkan
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.22.x'
-          cache: true # Mengaktifkan caching untuk Flutter SDK
-
-      # 3. Cache Pub dependencies
-      - name: Cache Pub Dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
         
       - name: Build APK
-        run: flutter build apk --release
+        run: flutter build apk --release --split-per-abi 
+        # --split-per-abi membuat file APK lebih kecil dan lebih stabil
         
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: build/app/outputs/flutter-apk/app-release.apk
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: build/app/outputs/flutter-apk/app-release.apk
           tag_name: v1.0.${{ github.run_number }}
           name: Release v1.0.${{ github.run_number }}
-          body: "APK otomatis dengan optimasi cache."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
