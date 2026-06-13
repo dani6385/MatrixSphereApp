@@ -1,34 +1,50 @@
+
 import 'package:flutter/material.dart';
 
-class VoucherDialog extends StatefulWidget {
-  const VoucherDialog({super.key});
+// Dialog untuk memasukkan kode voucher
+Future<String?> showVoucherDialog(BuildContext context) {
+  final TextEditingController voucherController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
-  @override
-  State<VoucherDialog> createState() => _VoucherDialogState();
-}
-
-class _VoucherDialogState extends State<VoucherDialog> {
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox.shrink();
-  }
-}
-
-void showVoucherDialog(BuildContext context) {
-  final TextEditingController controller = TextEditingController();
-
-  showDialog(
+  return showDialog<String>(
     context: context,
-    builder: (context) {
+    builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text("Masukkan Kode Voucher"),
-        content: TextField(controller: controller, decoration: const InputDecoration(border: OutlineInputBorder())),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Batal")),
-          ElevatedButton(onPressed: () {
-            debugPrint("Voucher: ${controller.text}");
-            Navigator.pop(context);
-          }, child: const Text("Gunakan")),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Gunakan Voucher'),
+        content: Form(
+          key: formKey,
+          child: TextFormField(
+            controller: voucherController,
+            decoration: const InputDecoration(
+              labelText: 'Kode Voucher',
+              hintText: 'Masukkan kode...',
+              border: OutlineInputBorder(),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Kode tidak boleh kosong';
+              }
+              return null;
+            },
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Batal'),
+            onPressed: () {
+              Navigator.pop(context, null); // Tutup dialog, kembalikan null
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Login'),
+            onPressed: () {
+              if (formKey.currentState?.validate() ?? false) {
+                // Tutup dialog dan kembalikan kode voucher
+                Navigator.pop(context, voucherController.text);
+              }
+            },
+          ),
         ],
       );
     },

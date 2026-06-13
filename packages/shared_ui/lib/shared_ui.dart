@@ -1,32 +1,11 @@
 library shared_ui;
-import 'package:flutter/material.dart';
 
-export 'src/dialogs/kuota_dialog.dart';
-export 'src/dialogs/scanner_dialog.dart';
-export 'src/dialogs/trial_dialog.dart';
+// Ekspor semua dialog yang dapat digunakan secara publik dari paket ini.
+// Ini memungkinkan paket lain untuk mengimpor semua dialog hanya dengan satu baris import.
+
+export 'src/dialogs/confirmation_dialog.dart';
+export 'src/dialogs/member_dialog.dart';
+export 'src/dialogs/package_selection_dialog.dart'; // Ini akan mengekspor class InternetPackage juga
+export 'src/dialogs/qris_display_dialog.dart';
 export 'src/dialogs/voucher_dialog.dart';
-export 'src/dialogs/member_form.dart';
-export 'src/widgets/bottom_navbar.dart';
-export 'src/widgets/qr_scanner.dart';
-
-
-
-// Di packages/shared_ui/lib/src/widgets/menu_button.dart
-class MenuButton extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final VoidCallback onPressed;
-
-  const MenuButton({super.key, required this.title, required this.icon, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [Icon(icon), const SizedBox(height: 4), Text(title)],
-      ),
-    );
-  }
-}
+export 'src/dialogs/voucher_result_dialog.dart';

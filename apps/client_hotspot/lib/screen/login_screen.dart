@@ -1,102 +1,152 @@
-import 'package:client_hotspot/screen/voucher_login_screen.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
+import 'package:shared_core/shared_core.dart';
+import 'package:client_hotspot/screen/dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
+
+  // --- Data Simulasi untuk Paket Internet ---
+  static const List<InternetPackage> _packages = [
+    InternetPackage(name: 'Paket Harian', price: 5000, validity: '1 Hari'),
+    InternetPackage(name: 'Paket 3 Hari', price: 12000, validity: '3 Hari'),
+    InternetPackage(name: 'Paket Mingguan', price: 25000, validity: '7 Hari'),
+  ];
+
+  // --- Logika Login Terpusat (Voucher) ---
+  Future<void> _performVoucherLogin(BuildContext context, String voucherCode) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    scaffoldMessenger.showSnackBar(
+      const SnackBar(content: Text('Mencoba login...'), duration: Duration(seconds: 30)),
+    );
+
+    final bool success = await MikrotikService.loginWithVoucher(voucherCode);
+    scaffoldMessenger.hideCurrentSnackBar();
+
+    if (success) {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Login berhasil!'), backgroundColor: Colors.green),
+      );
+      navigator.pushReplacement(
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+      );
+    } else {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Login gagal! Kode salah atau sudah digunakan.'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  // --- Logika Login Terpusat (Member/Trial) ---
+  Future<void> _performMemberLogin(BuildContext context, String username, String password) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+
+    scaffoldMessenger.showSnackBar(
+      SnackBar(content: Text('Mencoba login sebagai $username...'), duration: const Duration(seconds: 30)),
+    );
+
+    final bool success = await MikrotikService.login(username, password);
+    scaffoldMessenger.hideCurrentSnackBar();
+
+    if (success) {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Login berhasil!'), backgroundColor: Colors.green),
+      );
+      navigator.pushReplacement(
+        MaterialPageRoute(builder: (_) => const DashboardScreen()),
+      );
+    } else {
+      scaffoldMessenger.showSnackBar(
+        const SnackBar(content: Text('Login gagal! Periksa kembali kredensial Anda.'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  // --- Handler untuk Tombol 'Gunakan Voucher' ---
+  void _handleVoucherLogin(BuildContext context) async {
+    final String? voucherCode = await showVoucherDialog(context);
+    if (voucherCode != null && voucherCode.isNotEmpty) {
+      await _performVoucherLogin(context, voucherCode);
+    }
+  }
+
+  // --- Handler untuk Tombol 'Login Member' ---
+  void _handleMemberLogin(BuildContext context) async {
+    final MemberLoginDetails? details = await showMemberDialog(context);
+    if (details != null) {
+      await _performMemberLogin(context, details.username, details.password);
+    }
+  }
+
+  // --- Handler untuk Tombol 'Bayar dengan QRIS' ---
+  void _handleQrisPayment(BuildContext context) async {
+    final InternetPackage? selectedPackage = await showPackageSelectionDialog(context, _packages);
+    if (selectedPackage == null) return;
+
+    final bool? confirmedPayment = await showQrisDisplayDialog(context, selectedPackage);
+    if (confirmedPayment != true) return;
+
+    final String fakeVoucher = 'QRIS-${Random().nextInt(999999).toString().padLeft(6, '0')}';
+    final bool? useAndLogin = await showVoucherResultDialog(context, fakeVoucher);
+
+    if (useAndLogin == true) {
+      await _performVoucherLogin(context, fakeVoucher);
+    }
+  }
+
+  // --- Handler untuk Tombol 'Coba Gratis (Trial)' ---
+  void _handleTrialLogin(BuildContext context) async {
+    final bool confirmed = await showConfirmationDialog(
+      context: context, 
+      title: 'Gunakan Trial?', 
+      content: 'Anda akan login menggunakan akses trial. Kecepatan dan durasi mungkin terbatas. Lanjutkan?',
+      confirmText: 'Lanjutkan',
+    );
+
+    if (confirmed) {
+      // Kredensial untuk trial, ini harus cocok dengan yang diatur di MikroTik
+      await _performMemberLogin(context, 'trial', 'trial');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pilih Metode Login'),
-        backgroundColor: Colors.deepPurple,
+        title: const Text('Hotspot Login'),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepPurple, Colors.purple.shade300],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildOptionButton(
-                  context,
-                  icon: Icons.confirmation_number,
-                  label: 'Gunakan Voucher',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const VoucherLoginScreen()),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-                _buildOptionButton(
-                  context,
-                  icon: Icons.person_pin,
-                  label: 'Login Member',
-                  onPressed: () {
-                    // TODO: Implementasi logika untuk login member
-                  },
-                ),
-                const SizedBox(height: 16),
-                _buildOptionButton(
-                  context,
-                  icon: Icons.qr_code_scanner,
-                  label: 'Scan QRIS',
-                  onPressed: () {
-                    // TODO: Implementasi logika untuk scan QRIS
-                  },
-                ),
-                const SizedBox(height: 16),
-                _buildOptionButton(
-                  context,
-                  icon: Icons.credit_card,
-                  label: 'Bayar dengan QRIS',
-                  onPressed: () {
-                    // TODO: Implementasi logika untuk bayar dengan QRIS
-                  },
-                ),
-                const SizedBox(height: 16),
-                _buildOptionButton(
-                  context,
-                  icon: Icons.hourglass_empty,
-                  label: 'Trial',
-                  onPressed: () {
-                    // TODO: Implementasi logika untuk trial
-                  },
-                ),
-              ],
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton(
+              onPressed: () => _handleVoucherLogin(context),
+              child: const Text('Gunakan Voucher'),
             ),
-          ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () => _handleMemberLogin(context),
+              child: const Text('Login Member'),
+            ),
+            const SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () => _handleQrisPayment(context),
+              child: const Text('Bayar dengan QRIS'),
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: () => _handleTrialLogin(context),
+              child: const Text('Coba Gratis (Trial)'),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildOptionButton(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required VoidCallback onPressed,
-  }) {
-    return ElevatedButton.icon(
-      icon: Icon(icon, size: 28),
-      label: Text(label, style: const TextStyle(fontSize: 18)),
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.deepPurple, 
-        backgroundColor: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        padding: const EdgeInsets.symmetric(vertical: 20),
-        elevation: 5,
       ),
     );
   }

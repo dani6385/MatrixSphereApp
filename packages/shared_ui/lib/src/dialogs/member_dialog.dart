@@ -1,87 +1,84 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
-final Logger logger = Logger();
+// Model untuk mengembalikan hasil dari dialog
+class MemberLoginDetails {
+  final String username;
+  final String password;
 
-class MemberDialog extends StatefulWidget {
-  const MemberDialog({super.key});
-
-  @override
-  State<MemberDialog> createState() => _MemberDialogState();
+  MemberLoginDetails(this.username, this.password);
 }
 
-class _MemberDialogState extends State<MemberDialog> {
-  final _formKey = GlobalKey<FormState>();
-  final _usernameController = TextEditingController();
-  final _passwordController = TextEditingController();
+// Dialog untuk memasukkan username dan password member
+Future<MemberLoginDetails?> showMemberDialog(BuildContext context) {
+  final TextEditingController usernameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  void _submitLogin() {
-    if (_formKey.currentState!.validate()) {
-      final credentials = {
-        "username": _usernameController.text,
-        "password": _passwordController.text,
-      };
-
-      logger.i("Mencoba autentikasi member: ${_usernameController.text}");
-
-      // Mengembalikan data ke LoginScreen untuk diproses oleh MikrotikService.login
-      Navigator.pop(context, credentials);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Login Member'),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: _usernameController,
-              decoration: const InputDecoration(
-                labelText: 'Username',
-                prefixIcon: Icon(Icons.person),
-              ),
-              validator: (v) => v == null || v.isEmpty ? 'Masukkan username' : null,
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-                prefixIcon: Icon(Icons.lock),
-              ),
-              obscureText: true,
-              validator: (v) => v == null || v.isEmpty ? 'Masukkan password' : null,
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Batal'),
-        ),
-        ElevatedButton(
-          onPressed: _submitLogin,
-          child: const Text('Login'),
-        ),
-      ],
-    );
-  }
-}
-Future<Map<String, String>?> showMemberDialog(BuildContext context) {
-  return showDialog<Map<String, String>>(
+  return showDialog<MemberLoginDetails>(
     context: context,
-    builder: (context) => const MemberDialog(),
+    builder: (BuildContext context) {
+      return AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Login Member'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                controller: usernameController,
+                decoration: const InputDecoration(
+                  labelText: 'Username',
+                  hintText: 'Masukkan username...',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Username tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Password',
+                  hintText: 'Masukkan password...',
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Password tidak boleh kosong';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Batal'),
+            onPressed: () {
+              Navigator.pop(context, null);
+            },
+          ),
+          ElevatedButton(
+            child: const Text('Login'),
+            onPressed: () {
+              if (formKey.currentState?.validate() ?? false) {
+                final details = MemberLoginDetails(
+                  usernameController.text,
+                  passwordController.text,
+                );
+                Navigator.pop(context, details);
+              }
+            },
+          ),
+        ],
+      );
+    },
   );
 }
