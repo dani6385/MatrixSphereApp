@@ -1,36 +1,47 @@
 import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 import 'package:logger/logger.dart';
 
 class MikrotikService {
-  // Ganti dengan IP Gateway Mikrotik Anda
-  static const String baseUrl = "http://192.168.20.1/login";
+  static const String baseUrl = "http://192.168.20.1"; // Base URL saja
 
-  static Future<bool> login(String username, String password) async {
+  // Fungsi untuk menghasilkan response CHAP (MD5)
+  static String _generateChapResponse(String chapId, String password, String chapChallenge) {
+    // Input: chapId (byte) + password + challenge (byte)
+    final List<int> input = [];
+    input.add(int.parse(chapId));
+    input.addAll(utf8.encode(password));
+    input.addAll(_hexToBytes(chapChallenge));
+    
+    return md5.convert(input).toString();
+  }
+
+  static List<int> _hexToBytes(String hex) {
+    final bytes = <int>[];
+    for (var i = 0; i < hex.length; i += 2) {
+      bytes.add(int.parse(hex.substring(i, i + 2), radix: 16));
+    }
+    return bytes;
+  }
+
+  static Future<bool> login(String username, String password, String chapId, String chapChallenge) async {
     try {
+      final String responseHash = _generateChapResponse(chapId, password, chapChallenge);
+      
       final response = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse('$baseUrl/login'),
         body: {
           'username': username,
-          'password': password,
-          'dst': 'http://www.google.com', // Redirect tujuan setelah login
+          'password': '00$responseHash', // Format standar MikroTik CHAP adalah 00 + hash MD5
+          'dst': 'http://www.google.com',
           'popup': 'true',
         },
       ).timeout(const Duration(seconds: 5));
 
-      // Mikrotik biasanya mengembalikan status 200 jika berhasil
-      // Anda mungkin perlu mengecek isi body response untuk memastikan login berhasil
       return response.statusCode == 200;
     } catch (e) {
-      final logger = Logger(
-        printer: PrettyPrinter(
-          methodCount: 0, // Mengurangi info detail method agar tampilan bersih
-          errorMethodCount: 5, // Detail error tetap muncul
-          lineLength: 80,
-          colors: true,
-          printEmojis: true,
-        ),
-      );
-      logger.e('Mikrotik login error', error: e);
+      Logger().e('Mikrotik CHAP login error: $e');
       return false;
     }
   }
