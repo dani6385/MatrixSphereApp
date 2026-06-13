@@ -1,6 +1,6 @@
 {
-    "name": "myapp",
-    "short_name": "myapp",
+    "name": "clien_hotspot",
+    "short_name": "clien_hotspot",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
