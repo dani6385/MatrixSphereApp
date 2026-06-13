@@ -6,7 +6,7 @@ class KoneksiTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Center(
-      child: Text('Ini adalah Tab Koneksi'),
+      child: Text('Koneksi Tab'),
     );
   }
 }
