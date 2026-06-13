@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:113584843327:android:de61dec8b8310fd3cfe68a",
+        "mobilesdk_app_id": "1:113584843327:android:6897bc592fb95218cfe68a",
         "android_client_info": {
-          "package_name": "com.example.myapp"
+          "package_name": "com.matrixsphere.connectivity"
         }
       },
       "oauth_client": [],
