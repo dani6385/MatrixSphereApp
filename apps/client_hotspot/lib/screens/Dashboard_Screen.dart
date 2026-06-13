@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart'; // Pastikan import ini tetap ada jika diperlukan
- // Pastikan Anda mengimpor file bottom_navbar.dart
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -26,14 +24,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(title: const Text("MatrixSphere")),
       body: _pages[_currentIndex],
 
-      // Memanggil widget kustom BottomNavbar di sini
-      bottomNavigationBar: BottomNavbar(
+      // Menggunakan BottomNavigationBar standar dari Flutter untuk debugging
+      bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Utama',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.analytics),
+            label: 'Analisis',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.online_prediction),
+            label: 'Status',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profil',
+          ),
+           BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        // Menambahkan properti ini agar navbar tidak rusak saat lebih dari 3 item
+        type: BottomNavigationBarType.fixed, 
       ),
     );
   }
