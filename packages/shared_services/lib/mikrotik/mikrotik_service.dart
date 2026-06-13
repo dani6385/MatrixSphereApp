@@ -1,14 +1,15 @@
 // packages/shared_services/lib/mikrotik/mikrotik_service.dart
-
+import 'package:logger/logger.dart';
 import 'package:routeros_api/routeros_api.dart';
 
 class MikrotikService {
   late RouterOSClient _client;
+  final log = Logger();
 
   // Pastikan koneksi terbuka
   Future<void> _ensureConnected() async {
     _client = RouterOSClient(
-        host: '192.168.88.1', user: 'admin', password: 'password');
+        host: '192.168.20.1', user: 'admin', password: 'password');
     await _client.connect();
   }
 
@@ -18,6 +19,7 @@ class MikrotikService {
     required String profile,
     required String limitUptime,
   }) async {
+    bool isSuccess = false;
     try {
       await _ensureConnected();
 
@@ -29,12 +31,15 @@ class MikrotikService {
         'limit-uptime': limitUptime,
         'comment': 'Dibuat via App',
       });
-
-      await _client.close();
-      return true;
+      log.i('User hotspot $username berhasil dibuat');
+      isSuccess = true;
     } catch (e) {
-      print("Error: $e");
-      return false;
+      log.e("Error creating hotspot user: $e");
+      isSuccess = false;
+    } finally {
+      // Selalu tutup koneksi setelah selesai
+      _client.close();
     }
+    return isSuccess;
   }
 }

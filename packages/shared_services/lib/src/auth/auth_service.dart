@@ -1,10 +1,10 @@
-// packages/shared_services/lib/auth/auth_service.dart
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   static const String _keyLoggedIn = 'isLoggedIn';
   static const String _keyUsername = 'username';
+
+  static get SharedPreferences => null;
 
   // Menyimpan status login
   static Future<void> setLoggedIn(bool value, String username) async {

@@ -18,7 +18,7 @@
     },
     {
       "target": "client",
-      "public": "apps/client_app/build/web",
+      "public": "apps/client_hotspot/build/web",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [{"source": "**", "destination": "/index.html"}]
     },

@@ -22,6 +22,11 @@ class AuthService {
       // Memeriksa apakah ada entry yang cocok
       bool isMatch = data.values.any((m) => m['user'] == user && m['password'] == pass);
       
+      if (isMatch) {
+        // Jika cocok, login sebagai pengguna anonim
+        await _auth.signInAnonymously();
+      }
+
       return isMatch;
     } catch (e) {
       if (kDebugMode) {
