@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart' as shared_services;
 import 'Dashboard_Screen.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'package:shared_core/shared_core.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,35 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _selectedMethod = method);
   }
 
-  // Fungsi login utama
-  Future<void> _handleLogin() async {
-    setState(() => _isLoading = true);
-
-    try {
-      // Di sini Anda harus memanggil logika login sebenarnya (API/Mikrotik)
-      // Contoh: bool success = await MikrotikService.login(_usernameController.text, _passwordController.text);
-
-      // Simulasi sukses
-      await Future.delayed(const Duration(seconds: 2));
-
-      // Simpan sesi menggunakan AuthService global
-      await shared_services.AuthService.setLoggedIn(true, _usernameController.text);
-
-      if (!mounted) return;
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const DashboardScreen()),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Login gagal: $e")));
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -56,100 +28,119 @@ class _LoginScreenState extends State<LoginScreen> {
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-              const Text(
-                "MATRIX SPHERE",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const SizedBox(height: 40),
+                const Text(
+                  "MATRIX SPHERE",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const Text(
-                "Sistem Akses Jaringan Terintegrasi",
-                style: TextStyle(color: Colors.white70),
-              ),
-              const SizedBox(height: 40),
+                const Text(
+                  "Sistem Akses Jaringan Terintegrasi",
+                  style: TextStyle(color: Colors.white70),
+                ),
+                const SizedBox(height: 40),
 
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildMethodButton(
-                    "Voucher",
-                    Icons.confirmation_number,
-                    () => _showInput('voucher'),
-                  ),
-                  const SizedBox(width: 10),
-                  _buildMethodButton(
-                    "Member",
-                    Icons.person,
-                    () => _showInput('member'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildMethodButton("Scan QR", Icons.qr_code_scanner, () {
-                    // Tambahkan logika untuk membuka kamera scanner QR di sini
-                    print("Membuka kamera scan...");
-                  }),
-                  const SizedBox(width: 10),
-                  _buildMethodButton("Bayar QR", Icons.payment, () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const QrisScan()),
-                    );
-                    print("Membuka menu pembayaran QR...");
-                  }),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildMethodButton("TRIAL", Icons.qr_code_scanner, () {
-                    print("Membuka kamera scan...");
-                  }),
-                  const SizedBox(width: 10),
-                ],
-              ),
-              const SizedBox(height: 20),
-              if (_selectedMethod.isNotEmpty) ...[
-                TextField(
-                  controller: _usernameController,
-                  style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    labelText: "Username",
-                    labelStyle: TextStyle(color: Colors.white70),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildMethodButton(
+                      "Voucher",
+                      Icons.confirmation_number,
+                      () => _showInput('voucher'),
+                    ),
+                    const SizedBox(width: 10),
+                    _buildMethodButton(
+                      "Member",
+                      Icons.person,
+                      () => _showInput('member'),
+                    ),
+                  ],
                 ),
-                if (_selectedMethod == 'member')
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(
-                      labelText: "Password",
-                      labelStyle: TextStyle(color: Colors.white70),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildMethodButton("Scan QRIS", Icons.qr_code_scanner, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ScanPage()),
+                      );
+                    }),
+                    const SizedBox(width: 10),
+                    _buildMethodButton("Bayar QRis", Icons.qr_code_scanner, () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ScanPage()),
+                      );
+                    }),
+                  ],
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildMethodButton(
+                      "TRIAL",
+                      Icons.confirmation_number,
+                      () => _showInput('trial'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
+
+                // --- AREA POPUP/DYNAMIC INPUT (Muncul di bawah tombol) ---
+                if (_selectedMethod.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Login $_selectedMethod",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        TextField(
+                          controller: _usernameController,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: const InputDecoration(
+                            labelText: "Username",
+                            labelStyle: TextStyle(color: Colors.white70),
+                          ),
+                        ),
+                        if (_selectedMethod == 'member')
+                          TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              labelText: "Password",
+                              labelStyle: TextStyle(color: Colors.white70),
+                            ),
+                          ),
+                        const SizedBox(height: 20),
+                        _isLoading
+                            ? const CircularProgressIndicator()
+                            : ElevatedButton(
+                                onPressed: _handleLogin,
+                                child: const Text("LOGIN"),
+                              ),
+                      ],
                     ),
                   ),
-                const SizedBox(height: 20),
-                _isLoading
-                    ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                        onPressed: _handleLogin,
-                        child: const Text("LOGIN"),
-                      ),
-              ] else
-                const Text(
-                  "Silakan pilih metode login di atas.",
-                  style: TextStyle(color: Colors.white54),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -166,5 +157,40 @@ class _LoginScreenState extends State<LoginScreen> {
         foregroundColor: Colors.white,
       ),
     );
+  }
+
+  Future<void> _handleLogin() async {
+    setState(() => _isLoading = true);
+
+    try {
+      // Panggil service Mikrotik
+      bool success = await MikrotikService.login(
+        _usernameController.text,
+        _passwordController.text,
+      );
+
+      if (success) {
+        // Simpan sesi lokal
+        await shared_services.AuthService.setLoggedIn(
+          true,
+          _usernameController.text,
+        );
+
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        );
+      } else {
+        throw Exception("Username atau Password salah/Timeout");
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Gagal terhubung ke Mikrotik: $e")),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 }

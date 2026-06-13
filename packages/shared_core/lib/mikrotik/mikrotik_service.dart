@@ -1,64 +1,37 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:firebase_database/firebase_database.dart';
+import 'package:logger/logger.dart';
 
 class MikrotikService {
-  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+  // Ganti dengan IP Gateway Mikrotik Anda
+  static const String baseUrl = "http://192.168.20.1/login";
 
-  // Fungsi untuk mengambil kredensial dari Firebase
-  Future<Map<String, String>> _getRouterConfig() async {
-    final snapshot = await _dbRef.child('config/router').get();
-    if (!snapshot.exists) throw Exception("Konfigurasi router tidak ditemukan");
-    
-    final data = Map<String, dynamic>.from(snapshot.value as Map);
-    return {
-      'ip': data['ip'],
-      'user': data['user'],
-      'pass': data['pass'],
-    };
-  }
+  static Future<bool> login(String username, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        body: {
+          'username': username,
+          'password': password,
+          'dst': 'http://www.google.com', // Redirect tujuan setelah login
+          'popup': 'true',
+        },
+      ).timeout(const Duration(seconds: 5));
 
-  Future<void> addMember(String username, String password) async {
-    // 1. Ambil kredensial secara dinamis
-    final config = await _getRouterConfig();
-    
-    final url = Uri.parse("http://${config['ip']}/rest/ppp/secret");
-    final auth = base64Encode(utf8.encode('${config['user']}:${config['pass']}'));
-
-    // 2. Eksekusi request
-    final response = await http.post(
-      url,
-      headers: {
-        "Authorization": "Basic $auth",
-        "Content-Type": "application/json",
-      },
-      body: jsonEncode({
-        "name": username,
-        "password": password,
-        "service": "pppoe",
-        "profile": "default-profile",
-      }),
-    );
-
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      throw Exception("Gagal terhubung ke Mikrotik: ${response.body}");
+      // Mikrotik biasanya mengembalikan status 200 jika berhasil
+      // Anda mungkin perlu mengecek isi body response untuk memastikan login berhasil
+      return response.statusCode == 200;
+    } catch (e) {
+      final logger = Logger(
+        printer: PrettyPrinter(
+          methodCount: 0, // Mengurangi info detail method agar tampilan bersih
+          errorMethodCount: 5, // Detail error tetap muncul
+          lineLength: 80,
+          colors: true,
+          printEmojis: true,
+        ),
+      );
+      logger.e('Mikrotik login error', error: e);
+      return false;
     }
   }
-  Future<void> addVoucher(String code, String limit) async {
-  // Contoh implementasi jika menggunakan REST API
-  final config = await _getRouterConfig(); // Mengambil dari Firebase
-  
-  final response = await http.post(
-    Uri.parse("http://${config['ip']}/rest/ip/hotspot/user"),
-    headers: {"Authorization": "Basic ...", "Content-Type": "application/json"},
-    body: jsonEncode({
-      "name": code,
-      "password": code,
-      "profile": "voucher-profile", // Pastikan ada di Mikrotik
-      "comment": "Limit: $limit",
-    }),
-  );
-  
-  if (response.statusCode != 201) throw Exception("Gagal buat voucher");
-}
 }
