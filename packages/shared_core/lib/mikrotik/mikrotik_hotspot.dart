@@ -1,64 +1,130 @@
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart' as html_parser;
-import 'package:crypto/crypto.dart'; // Aktifkan kembali ini, kita akan pakai!
-import 'dart:convert'; // Perlu untuk utf8
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 import 'package:logger/logger.dart';
 
-final logger = Logger();
+/// Kelas ini menangani semua interaksi yang berhubungan dengan 
+/// proses login PENGGUNA ke hotspot MikroTik.
+/// Ini berkomunikasi dengan halaman login berbasis web (HTTP),
+/// bukan dengan API service.
+class MikrotikHotspot {
+  static const String baseUrl = "http://192.168.20.1"; // Pastikan IP ini adalah IP router Anda
+  static final Logger _logger = Logger();
 
-Future<Map<String, String>> getMikrotikAuthData() async {
-  // Ganti dengan alamat IP atau domain hotspot Anda
-  final url = Uri.parse('http://192.168.20.1'); 
-  
-  try {
-    final response = await http.get(url);
-    
-    if (response.statusCode == 200) {
-        var document = html_parser.parse(response.body);
-      
-      // Mencari input hidden dengan ID tertentu dari HTML Anda
-      String chapId = document.querySelector('#chap-id')?.attributes['value'] ?? '';
-      String chapChallenge = document.querySelector('#chap-challenge')?.attributes['value'] ?? '';
-      
-      return {
-        'chap-id': chapId,
-        'chap-challenge': chapChallenge,
-      };
-    }
-  } catch (e) {
-    logger.e("Error mengambil data: $e");
+  // --- Fungsi Helper untuk Enkripsi CHAP-MD5 ---
+
+  static String _generateChapResponse(String chapId, String password, String chapChallenge) {
+    final List<int> input = [];
+    input.add(int.parse(chapId, radix: 16));
+    input.addAll(utf8.encode(password));
+    input.addAll(_hexToBytes(chapChallenge));
+    return md5.convert(input).toString();
   }
-  return {'chap-id': '', 'chap-challenge': ''};
-}
 
-Future<void> performLogin(String username, String password) async {
-  try {
-    // Ambil data challenge dari Mikrotik
-    final authData = await getMikrotikAuthData();
-    String chapId = authData['chap-id']!;
-    String chapChallenge = authData['chap-challenge']!;
-
-    // Proses Enkripsi MD5 sesuai standar Mikrotik
-    var bytes = utf8.encode(chapId + password + chapChallenge);
-    var digest = md5.convert(bytes);
-
-    // 3. Kirim data Login
-    var response = await http.post(
-      Uri.parse('http://192.168.20.1/login'),
-      body: {
-        'username': username,
-        'password': digest.toString(), // Password sudah terenkripsi
-        'dst': 'http://www.google.com',
-        'popup': 'true',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      logger.i("Login Berhasil!");
-    } else {
-      logger.e("Login Gagal, Status: ${response.statusCode}");
+  static List<int> _hexToBytes(String hex) {
+    final bytes = <int>[];
+    for (var i = 0; i < hex.length; i += 2) {
+      bytes.add(int.parse(hex.substring(i, i + 2), radix: 16));
     }
-  } catch (e) {
-    logger.e("Terjadi error saat login: $e");
+    return bytes;
+  }
+
+  static Future<Map<String, String>?> _fetchChapCredentials() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/login')).timeout(const Duration(seconds: 5));
+      if (response.statusCode == 200) {
+        final chapIdRegex = RegExp(r'name="chap-id" value="([a-f0-9]+)"\');
+        final chapChallengeRegex = RegExp(r'name="chap-challenge" value="([a-f0-9]+)"\');
+        
+        final chapIdMatch = chapIdRegex.firstMatch(response.body);
+        final chapChallengeMatch = chapChallengeRegex.firstMatch(response.body);
+
+        if (chapIdMatch != null && chapChallengeMatch != null) {
+          final chapId = chapIdMatch.group(1);
+          final chapChallenge = chapChallengeMatch.group(1);
+          if (chapId != null && chapChallenge != null) {
+            _logger.i("CHAP Credentials fetched: ID=$chapId, Challenge=$chapChallenge");
+            return {'chapId': chapId, 'chapChallenge': chapChallenge};
+          }
+        }
+      }
+      _logger.e("Failed to find CHAP credentials on login page.");
+      return null;
+    } catch (e) {
+      _logger.e("Error fetching CHAP credentials: $e");
+      return null;
+    }
+  }
+
+  // --- Fungsi Login Utama ---
+
+  /// Login menggunakan username dan password.
+  /// Metode ini menggunakan HTTP CHAP yang lebih aman jika diaktifkan di MikroTik.
+  static Future<bool> login(String username, String password) async {
+    final credentials = await _fetchChapCredentials();
+    if (credentials == null) {
+      _logger.w("Aborting login for '$username': Could not fetch CHAP credentials.");
+      return false;
+    }
+
+    final chapId = credentials['chapId']!;
+    final chapChallenge = credentials['chapChallenge']!;
+    
+    try {
+      final String responseHash = _generateChapResponse(chapId, password, chapChallenge);
+      _logger.i("Attempting CHAP login for user: $username");
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/login'),
+        body: {
+          'username': username,
+          'password': '00$responseHash', // Prefix \00 diperlukan untuk CHAP
+          'dst': 'http://www.google.com',
+          'popup': 'true',
+          'chap-id': chapId,
+          'chap-challenge': chapChallenge,
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      // Cek keberhasilan login. Redirect (302) atau halaman status adalah indikator sukses.
+      if (response.statusCode == 302 || response.body.contains("You are logged in") || response.body.contains('status.html')) {
+        _logger.i("CHAP login successful for user: $username");
+        return true;
+      } else {
+        _logger.w('CHAP login failed for user: $username. Status: ${response.statusCode}, Body: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      _logger.e('CHAP login error for user: $username. Error: $e');
+      return false;
+    }
+  }
+
+  /// Login menggunakan kode voucher.
+  /// Metode ini menggunakan HTTP PAP (Plaintext), di mana username dan password sama.
+  static Future<bool> loginWithVoucher(String voucherCode) async {
+    try {
+      _logger.i("Attempting PAP login with voucher: $voucherCode");
+      final response = await http.post(
+        Uri.parse('$baseUrl/login'),
+        body: {
+          'username': voucherCode,
+          'password': voucherCode, 
+          'dst': 'http://www.google.com',
+          'popup': 'true',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 302 || response.body.contains("You are logged in") || response.body.contains('status.html')) {
+        _logger.i("Voucher login successful for: $voucherCode");
+        return true;
+      } else {
+        _logger.w('Voucher login failed. Status: ${response.statusCode}, Body: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      _logger.e("Failed to connect to router for voucher login: $e");
+      return false;
+    }
   }
 }

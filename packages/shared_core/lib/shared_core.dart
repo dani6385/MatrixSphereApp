@@ -1,18 +1,7 @@
 library shared_core;
 
-// Export Models
-export 'models/voucher_model.dart';
+// Ekspor semua service dan kelas inti dari paket ini
+// agar bisa digunakan oleh paket lain dengan satu import.
 
-// Export Services (Disatukan agar mudah diakses)
-export 'services/database_service.dart';
-export 'services/firebase_auth_service.dart';
-export 'services/firebase_service.dart';
-export 'services/firestore_service.dart';
-
-// Export Mikrotik Logic
-export 'mikrotik/akses_member.dart';
-export 'mikrotik/qr_scanner.dart';
-export 'mikrotik/mikrotik_service.dart';
-export 'mikrotik/monitoring_repository.dart';
-export 'mikrotik/create_member.dart';
-export 'mikrotik/create_voucher.dart';
+export 'mikrotik/mikrotik_hotspot.dart'; // <-- Baris ini yang akan memperbaiki error
+export 'mikrotik/mikrotik_service.dart'; // Tetap kita ekspor untuk aplikasi admin nanti

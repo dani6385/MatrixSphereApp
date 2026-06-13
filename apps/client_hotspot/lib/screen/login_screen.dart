@@ -1,7 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:shared_core/shared_core.dart';
+// Import utama dari shared_core yang mengekspor semua service yang diperlukan
+import 'package:shared_core/shared_core.dart'; 
 import 'package:client_hotspot/screen/dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -23,7 +24,8 @@ class LoginScreen extends StatelessWidget {
       const SnackBar(content: Text('Mencoba login...'), duration: Duration(seconds: 30)),
     );
 
-    final bool success = await MikrotikService.loginWithVoucher(voucherCode);
+    // Menggunakan kelas yang benar: MikrotikHotspot
+    final bool success = await MikrotikHotspot.loginWithVoucher(voucherCode);
     scaffoldMessenger.hideCurrentSnackBar();
 
     if (success) {
@@ -49,7 +51,8 @@ class LoginScreen extends StatelessWidget {
       SnackBar(content: Text('Mencoba login sebagai $username...'), duration: const Duration(seconds: 30)),
     );
 
-    final bool success = await MikrotikService.login(username, password);
+    // Menggunakan kelas yang benar: MikrotikHotspot
+    final bool success = await MikrotikHotspot.login(username, password);
     scaffoldMessenger.hideCurrentSnackBar();
 
     if (success) {
@@ -66,7 +69,8 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
-  // --- Handler untuk Tombol 'Gunakan Voucher' ---
+  // --- Handlers untuk Tombol-tombol UI ---
+
   void _handleVoucherLogin(BuildContext context) async {
     final String? voucherCode = await showVoucherDialog(context);
     if (voucherCode != null && voucherCode.isNotEmpty) {
@@ -74,7 +78,6 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
-  // --- Handler untuk Tombol 'Login Member' ---
   void _handleMemberLogin(BuildContext context) async {
     final MemberLoginDetails? details = await showMemberDialog(context);
     if (details != null) {
@@ -82,7 +85,6 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
-  // --- Handler untuk Tombol 'Bayar dengan QRIS' ---
   void _handleQrisPayment(BuildContext context) async {
     final InternetPackage? selectedPackage = await showPackageSelectionDialog(context, _packages);
     if (selectedPackage == null) return;
@@ -98,7 +100,6 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
-  // --- Handler untuk Tombol 'Coba Gratis (Trial)' ---
   void _handleTrialLogin(BuildContext context) async {
     final bool confirmed = await showConfirmationDialog(
       context: context, 
@@ -108,7 +109,6 @@ class LoginScreen extends StatelessWidget {
     );
 
     if (confirmed) {
-      // Kredensial untuk trial, ini harus cocok dengan yang diatur di MikroTik
       await _performMemberLogin(context, 'trial', 'trial');
     }
   }
