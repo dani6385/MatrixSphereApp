@@ -25,3 +25,4 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^3.0.0
   melos: ^3.1.0
+  pubspec_version: ^1.2.0

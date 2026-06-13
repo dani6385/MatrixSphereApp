@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _showInput(String method) {
     if (method == 'member') {
-      showMemberForm(context);
+      showMemberDialog(context);
       return;
     } else if (method == 'voucher') {
       showVoucherDialog(context);
@@ -35,6 +35,101 @@ class _LoginScreenState extends State<LoginScreen> {
     showDialog(
       context: context,
       builder: (context) => const SizedBox.shrink(),
+    );
+  }
+
+  // Dialogs / helpers for various login methods
+  void showMemberDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Member Login'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(labelText: 'Username'),
+            ),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Password'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('CANCEL'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _handleLogin();
+            },
+            child: const Text('LOGIN'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showVoucherDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Voucher Login'),
+        content: TextField(
+          controller: _usernameController,
+          decoration: const InputDecoration(labelText: 'Voucher Code'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('CANCEL'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _handleLogin();
+            },
+            child: const Text('USE'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showTrialDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Trial Login'),
+        content: const Text('Start a trial session?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('NO'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // trigger trial flow; reuse _handleLogin for now
+              _handleLogin();
+            },
+            child: const Text('YES'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showQRScanner(BuildContext context) {
+    // navigate to ScanPage if available
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ScanPage()),
     );
   }
 
