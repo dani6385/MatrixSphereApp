@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MatrixSphere',
       // Jika isLoggedIn true, ke Dashboard, jika tidak ke LoginScreen
-      home: isLoggedIn ? const DashboardScreen() : const LoginScreen(),
+      home: isLoggedIn ? DashboardScreen() : LoginScreen(),
     );
   }
 }
