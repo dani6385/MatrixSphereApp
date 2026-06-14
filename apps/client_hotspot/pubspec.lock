@@ -592,7 +592,7 @@ packages:
     source: hosted
     version: "2.4.1"
   shared_services:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: "../../packages/shared_services"
       relative: true

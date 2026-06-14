@@ -1,5 +1,2 @@
-library shared_services;
-
-// Ekspor semua utilitas dan layanan yang dapat dibagikan dari sini
-
+export 'service_locator.dart';
 export 'src/utils/app_logger.dart';
