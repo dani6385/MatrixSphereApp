@@ -1,6 +1,5 @@
 library shared_services;
 
-// Ekspor semua service dan kelas dari paket ini
-// agar bisa digunakan oleh paket lain dengan satu import.
+// Ekspor semua utilitas dan layanan yang dapat dibagikan dari sini
 
-export 'firebase/firebase_service.dart';
+export 'src/utils/app_logger.dart';

@@ -15,6 +15,7 @@ dependencies:
   get_it: ^7.6.0
   shared_preferences: ^2.3.0
   routeros_api: ^0.1.4
+  firebase_core: ^3.15.2
 
 flutter:
   uses-material-design: true

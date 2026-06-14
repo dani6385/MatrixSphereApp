@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 // Impor barrel file yang mengekspor semua service di paket ini
-import 'package:shared_services/shared_services.dart';
+import 'package:shared_services/firebase/firebase_service.dart';
 
 // Instance global dari GetIt service locator
 final getIt = GetIt.instance;

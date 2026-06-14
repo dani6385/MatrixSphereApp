@@ -82,7 +82,7 @@ packages:
     source: hosted
     version: "0.3.5+2"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       sha256: c8ea0233063ba03258fbcf2ca4d6dadfefe14f02fab57702265467a19f27fadf
@@ -313,7 +313,7 @@ packages:
     source: hosted
     version: "0.15.6"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
@@ -425,7 +425,7 @@ packages:
     source: hosted
     version: "5.1.1"
   logger:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logger
       sha256: "25aee487596a6257655a1e091ec2ae66bc30e7af663592cc3a27e6591e05035c"
@@ -595,13 +595,6 @@ packages:
     dependency: transitive
     description:
       path: "../../packages/shared_services"
-      relative: true
-    source: path
-    version: "1.0.0"
-  shared_ui:
-    dependency: "direct main"
-    description:
-      path: "../../packages/shared_ui"
       relative: true
     source: path
     version: "1.0.0"
