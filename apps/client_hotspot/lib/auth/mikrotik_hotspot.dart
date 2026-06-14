@@ -1,22 +1,13 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:http/http.dart' as http;
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
 import 'package:logger/logger.dart';
 
 class MikrotikHotspot {
-  static const String baseUrl = "http://192.168.30.1"; // Pastikan IP sesuai
+  static const String baseUrl = "http://192.168.30.1";
   static final Logger _logger = Logger();
 
-  // 1. Fungsi enkripsi CHAP-MD5 (Wajib sesuai standar MikroTik)
-  static String _generateChapResponse(
-      String chapId, String password, String chapChallenge) {
-    final List<int> input = [];
-    input.add(int.parse(chapId, radix: 16));
-    input.addAll(utf8.encode(password));
-    input.addAll(_hexToBytes(chapChallenge));
-    return md5.convert(input).toString();
-  }
-
+  // Helper untuk mengubah Hex ke List int
   static List<int> _hexToBytes(String hex) {
     final bytes = <int>[];
     for (var i = 0; i < hex.length; i += 2) {
@@ -25,71 +16,69 @@ class MikrotikHotspot {
     return bytes;
   }
 
-  // 2. Mengambil challenge terbaru dari router
-  static Future<Map<String, String>?> _fetchChapCredentials() async {
-    try {
-      final response = await http
-          .get(Uri.parse('$baseUrl/login'))
-          .timeout(const Duration(seconds: 5));
-
-      if (response.statusCode == 200) {
-        final chapId = RegExp(r'name="chap-id" value="([a-f0-9]+)"')
-            .firstMatch(response.body)
-            ?.group(1);
-        final chapChallenge =
-            RegExp(r'name="chap-challenge" value="([a-f0-9]+)"')
-                .firstMatch(response.body)
-                ?.group(1);
-
-        if (chapId != null && chapChallenge != null) {
-          return {'chapId': chapId, 'chapChallenge': chapChallenge};
-        }
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // 3. Fungsi Login Utama
+  // Fungsi Login Utama dengan penanganan Cookie dan Byte 0x00
   static Future<bool> login(String username, String password) async {
-    final credentials = await _fetchChapCredentials();
-    if (credentials == null) return false;
-
-    final chapId = credentials['chapId']!;
-    final chapChallenge = credentials['chapChallenge']!;
-
+    final client = http.Client();
     try {
-      final responseHash =
-          _generateChapResponse(chapId, password, chapChallenge);
+      // 1. Ambil halaman login untuk mendapatkan chap-id dan chap-challenge
+      final response = await client.get(Uri.parse('$baseUrl/login'));
 
-      final response = await http.post(
+      final chapIdMatch =
+          RegExp(r'chap-id" value="([^"]+)"').firstMatch(response.body);
+      final chapChallengeMatch =
+          RegExp(r'chap-challenge" value="([^"]+)"').firstMatch(response.body);
+
+      if (chapIdMatch == null || chapChallengeMatch == null) {
+        _logger.e("Gagal mendapatkan challenge dari router.");
+        return false;
+      }
+
+      final chapId = chapIdMatch.group(1)!;
+      final chapChallenge = chapChallengeMatch.group(1)!;
+
+      // 2. Buat Hash CHAP
+      final List<int> passwordBytes = utf8.encode(password);
+      final List<int> challengeBytes = _hexToBytes(chapChallenge);
+
+      final List<int> hashInput = [];
+      hashInput.add(int.parse(chapId, radix: 16));
+      hashInput.addAll(passwordBytes);
+      hashInput.addAll(challengeBytes);
+
+      final String responseHash = md5.convert(hashInput).toString();
+
+      // 3. Kirim POST dengan prefix byte 0x00 (hex: 00)
+      // Kita kirim sebagai string dengan karakter null
+      final String passwordEncoded = String.fromCharCode(0) + responseHash;
+
+      final loginResponse = await client.post(
         Uri.parse('$baseUrl/login'),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: {
           'username': username,
-          // PENTING: Menggunakan String.fromCharCode(0) untuk byte null
-          'password': String.fromCharCode(0) + responseHash,
+          'password': passwordEncoded,
           'dst': 'http://www.google.com',
           'popup': 'true',
           'chap-id': chapId,
           'chap-challenge': chapChallenge,
         },
-      ).timeout(const Duration(seconds: 10));
+      );
 
-      // Cek status keberhasilan
-      if (response.statusCode == 302 ||
-          response.body.contains("logged in") ||
-          response.body.contains('status.html')) {
-        _logger.i("Login sukses untuk user: $username");
-        return true;
+      // 4. Verifikasi hasil
+      if (loginResponse.statusCode == 200 || loginResponse.statusCode == 302) {
+        if (loginResponse.body.contains("status.html") ||
+            loginResponse.body.contains("You are logged in")) {
+          _logger.i("Login berhasil!");
+          return true;
+        }
       }
 
-      _logger.w("Login gagal. Respon: ${response.body}");
+      _logger.w("Login gagal. Respon: ${loginResponse.body}");
       return false;
     } catch (e) {
-      _logger.e("Error koneksi: $e");
+      _logger.e("Terjadi kesalahan: $e");
       return false;
+    } finally {
+      client.close();
     }
   }
 }
