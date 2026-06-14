@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 class MikrotikHotspot {
-  static const String baseUrl = "http://192.168.20.1"; // Pastikan IP sesuai
+  static const String baseUrl = "http://192.168.30.1"; // Pastikan IP sesuai
   static final Logger _logger = Logger();
 
   // 1. Fungsi enkripsi CHAP-MD5 (Wajib sesuai standar MikroTik)

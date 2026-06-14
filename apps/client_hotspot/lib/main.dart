@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart'; // Menggunakan barrel file utama
 
-import 'screen/login_screen.dart'; // Impor LoginScreen
+import 'screens/login_screen.dart'; // Impor LoginScreen
 
 void main() {
   // Pastikan service locator diinisialisasi sebelum aplikasi berjalan
