@@ -96,15 +96,27 @@ class MikrotikHotspot {
           'chap-challenge': chapChallenge,
         },
       ).timeout(const Duration(seconds: 10));
-
+// Cek apakah login berhasil berdasarkan status code atau konten halaman
       if (response.statusCode == 302 ||
           response.body.contains("You are logged in") ||
-          response.body.contains('status.html')) {
+          response.body.contains('status.html') ||
+          response.body.contains('successfully logged in')) {
         _logger.i("CHAP login successful for user: $username");
         return true;
       } else {
         _logger.w(
-            'CHAP login failed for user: $username. Status: ${response.statusCode}, Body: ${response.body}');
+            'CHAP login failed for user: $username. Status: ${response.statusCode}');
+
+        // Cek secara spesifik pesan error dari MikroTik
+        if (response.body.contains('invalid username or password')) {
+          _logger.w('Login failed: Invalid username or password.');
+        } else if (response.body.contains('no more sessions are allowed')) {
+          _logger.w('Login failed: User session limit reached.');
+        } else {
+          _logger.w(
+              'Login failed: Server returned ${response.body.length} characters of HTML.');
+        }
+
         return false;
       }
     } catch (e) {
