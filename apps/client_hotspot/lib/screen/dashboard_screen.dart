@@ -1,4 +1,4 @@
-import 'package:client_hotspot/tabs/koneksi_tab.dart';
+import 'package:client_hotspot/screen/koneksi_tab.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatefulWidget {
