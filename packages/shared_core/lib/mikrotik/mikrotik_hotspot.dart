@@ -38,9 +38,9 @@ class MikrotikHotspot {
           .timeout(const Duration(seconds: 5));
 
       if (response.statusCode == 200) {
-        final chapIdRegex = RegExp(r'name="chap-id" value="([a-f0-9]+)"\');
+        final chapIdRegex = RegExp(r'name="chap-id" value="([a-f0-9]+)"');
         final chapChallengeRegex =
-            RegExp(r'name="chap-challenge" value="([a-f0-9]+)"\');
+            RegExp(r'name="chap-challenge" value="([a-f0-9]+)"');
 
         final chapIdMatch = chapIdRegex.firstMatch(response.body);
         final chapChallengeMatch = chapChallengeRegex.firstMatch(response.body);
@@ -89,7 +89,7 @@ class MikrotikHotspot {
         Uri.parse('$baseUrl/login'),
         body: {
           'username': username,
-          'password': '\00$responseHash', // Prefix \00 untuk CHAP
+          'password': String.fromCharCode(0) + responseHash,
           'dst': 'http://www.google.com',
           'popup': 'true',
           'chap-id': chapId,
