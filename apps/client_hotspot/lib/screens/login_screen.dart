@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../auth/mikrotik_auth.dart'; // Pastikan file mikrotik_auth.dart sudah diimport
 import 'dart:async';
+import 'dashboard_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   // MikrotikAuth requires a positional argument (e.g. base URL or host).
@@ -26,10 +27,10 @@ class LoginScreen extends StatelessWidget {
                 controller: userController,
                 decoration: InputDecoration(labelText: "Username")),
             if (type == "Member")
-            TextField(
-                controller: passController,
-                decoration: InputDecoration(labelText: "Password"),
-                obscureText: true),
+              TextField(
+                  controller: passController,
+                  decoration: InputDecoration(labelText: "Password"),
+                  obscureText: true),
           ],
         ),
         actions: [
@@ -42,10 +43,13 @@ class LoginScreen extends StatelessWidget {
                 await auth.login(user, pass);
                 // --- TAMBAHKAN CEK MOUNTED DI SINI ---
                 if (!context.mounted) return;
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => DashboardScreen()),
+                );
 
-                // Sekarang aman untuk menggunakan context
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Memverifikasi koneksi internet...")),
+                  SnackBar(content: Text("Login Sukses!")),
                 );
                 Navigator.pop(context);
               } catch (e) {
@@ -72,24 +76,23 @@ class LoginScreen extends StatelessWidget {
     }
   }
 
-Future<bool> checkInternetAccessWithRetry({
-  int maxRetries = 3, 
-  Duration delay = const Duration(seconds: 2)
-}) async {
-  for (int i = 0; i < maxRetries; i++) {
-    bool isConnected = await checkInternetAccess(); // Menggunakan fungsi checkInternetAccess kita sebelumnya
-    
-    if (isConnected) {
-      return true; // Berhasil terhubung
+  Future<bool> checkInternetAccessWithRetry(
+      {int maxRetries = 3, Duration delay = const Duration(seconds: 2)}) async {
+    for (int i = 0; i < maxRetries; i++) {
+      bool isConnected =
+          await checkInternetAccess(); // Menggunakan fungsi checkInternetAccess kita sebelumnya
+
+      if (isConnected) {
+        return true; // Berhasil terhubung
+      }
+
+      // Jika belum, tunggu beberapa saat sebelum mencoba lagi
+      if (i < maxRetries - 1) {
+        await Future.delayed(delay);
+      }
     }
-    
-    // Jika belum, tunggu beberapa saat sebelum mencoba lagi
-    if (i < maxRetries - 1) {
-      await Future.delayed(delay);
-    }
+    return false; // Gagal setelah beberapa kali percobaan
   }
-  return false; // Gagal setelah beberapa kali percobaan
-}
 
   @override
   Widget build(BuildContext context) {
