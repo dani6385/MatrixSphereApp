@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../auth/mikrotik_auth.dart'; // Pastikan file mikrotik_auth.dart sudah diimport
 import 'dart:async';
-import 'dashboard_screen.dart';
+import 'navigation_layout.dart';
 
 class LoginScreen extends StatelessWidget {
   // MikrotikAuth requires a positional argument (e.g. base URL or host).
@@ -51,7 +51,7 @@ class LoginScreen extends StatelessWidget {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const DashboardScreen()),
+                      builder: (context) => const NavigationLayout()),
                 );
               } catch (e) {
                 if (!context.mounted) return;
