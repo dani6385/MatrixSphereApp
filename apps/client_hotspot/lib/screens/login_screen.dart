@@ -65,16 +65,18 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       // Aplikasi akan menunggu sampai IP didapatkan dari Firebase
       String url = await _auth.getLoginUrl();
-      
+
       await http.get(Uri.parse(url));
       // ... proses selanjutnya ...
-      
+      final response =
+          await http.get(Uri.parse(url)).timeout(const Duration(seconds: 5));
     } catch (e) {
-      _logger.e("Gagal login: $e");
-      // Tampilkan pesan error ke user bahwa aplikasi butuh koneksi ke Firebase
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Konfigurasi server tidak ditemukan. Periksa internet.')),
-      );
+      _logger.e("Error terjadi: $e");
+      if (mounted) {
+        setState(() => _isLoading = false);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Koneksi gagal: $e')));
+      }
     } finally {
       setState(() => _isLoading = false);
     }
