@@ -32,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
     bool berhasil = await auth.login(
       username: myUsernameController.text,
       password: myPasswordController.text,
-      challenge: '',
     );
     if (!mounted) return;
     if (berhasil) {
