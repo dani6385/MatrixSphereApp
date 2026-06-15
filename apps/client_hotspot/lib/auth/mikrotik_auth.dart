@@ -1,46 +1,61 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
+import 'package:crypto/crypto.dart';
+import 'dart:convert';
+import 'package:logger/logger.dart'; // Pastikan package logger di-import
 
 class MikrotikAuth {
-  final Logger _logger = Logger();
-   DatabaseReference get _dbRef =>
-      FirebaseDatabase.instance.ref('mikrotik_member/matrixsphere/config/mikrotik_ip');
+  // Ganti dengan alamat IP/URL login Mikrotik Anda
+  final String loginUrl = "http://192.168.30.1/login";
 
-  Future<String> getLoginUrl() async {
-    final snapshot = await _dbRef.get();
-    
-    if (snapshot.exists) {
-      String ip = snapshot.value.toString();
-      return "http://$ip/login";
-    }
-    
-    throw Exception("IP Mikrotik tidak ditemukan di rtdb.");
+  // Perbaikan: Penamaan variabel menggunakan camelCase dan deklarasi yang benar
+  final Logger _logger = Logger();
+
+  // Fungsi untuk enkripsi password sesuai standar Mikrotik (CHAP)
+  String generateChapPassword(String challenge, String password) {
+    // Challenge dari Mikrotik biasanya dalam format hex string,
+    // pastikan diubah menjadi bytes jika perlu.
+    var challengeBytes = hexToBytes(challenge);
+    var passwordBytes = utf8.encode(password);
+
+    var content = [0] + passwordBytes + challengeBytes;
+    var digest = md5.convert(content);
+
+    return digest.toString();
   }
 
-Stream<String> getLoginUrlStream() {
-    return _dbRef.onValue.map((event) {
-      String ip = event.snapshot.value.toString();
-      return "http://$ip/login";
-    });
+  // Helper untuk mengubah hex string menjadi list of bytes
+  List<int> hexToBytes(String hex) {
+    List<int> bytes = [];
+    for (int i = 0; i < hex.length; i += 2) {
+      bytes.add(int.parse(hex.substring(i, i + 2), radix: 16));
+    }
+    return bytes;
   }
 
   Future<void> doLogin(
-    String username,
-    String password,
-    String challenge,
-    String chapId,
-  ) async {
-    final url = await getLoginUrl();
+      String username, String password, String challenge, String chapId) async {
+    String chapPassword = generateChapPassword(challenge, password);
 
-    final response = await http.post(Uri.parse(url), body: {
-      'username': username,
-      'password': password,
-      'challenge': challenge,
-      'chap-id': chapId,
-    });
+    try {
+      var response = await http.post(
+        Uri.parse(loginUrl),
+        body: {
+          'username': username,
+          'password': chapPassword,
+          'dst': 'http://www.google.com',
+          'popup': 'true',
+          'chap-id': chapId, // Penting untuk menyertakan chap-id
+          'chap-challenge': challenge,
+        },
+      );
 
-    _logger.i('Login response status: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        _logger.i("Login berhasil!");
+      } else {
+        _logger.e("Login gagal dengan status: ${response.statusCode}");
+      }
+    } catch (e) {
+      _logger.e("Terjadi kesalahan koneksi: $e");
+    }
   }
 }
-

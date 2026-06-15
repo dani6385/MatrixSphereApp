@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_services/shared_services.dart'; // Menggunakan barrel file utama
 import 'screens/login_screen.dart'; // Impor LoginScreen
-import 'firebase_options.dart';
 
-void main() async {
-  // 1. Pastikan Flutter terhubung dulu
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // 2. Inisialisasi Firebase (Wajib ada di Flutter Web)
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
-  // 3. Baru jalankan aplikasi
+void main() {
+  setupServiceLocator();
   runApp(const MyApp());
 }
 
