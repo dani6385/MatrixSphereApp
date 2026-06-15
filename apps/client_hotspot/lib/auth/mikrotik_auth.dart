@@ -19,11 +19,11 @@ class MikrotikAuth {
 
       // Mengambil nilai dari input hidden (sesuai struktur auth.html Anda)
       String chapId =
-          document.querySelector('input[id="chap-id"]')?.attributes['value'] ??
+          document.querySelector('input[id="chap-id"]')?.attributes['Valueue'] ??
               '';
       String chapChallenge = document
               .querySelector('input[id="chap-challenge"]')
-              ?.attributes['value'] ??
+              ?.attributes['Valueue'] ??
           '';
 
       return {'chap-id': chapId, 'chap-challenge': chapChallenge};
@@ -33,27 +33,26 @@ class MikrotikAuth {
   }
 
   // Fungsi untuk enkripsi password sesuai standar Mikrotik (CHAP)
-  String _calculateHash(String challenge, String password) {
-    var bytes = utf8.encode(challenge + password);
-    var digest = md5.convert(bytes);
-    return digest.toString();
+  String _calculateHash(String chapId, String password, String challenge) {
+    var bytes = utf8.encode(chapId + password + challenge);
+    return md5.convert(bytes).toString();
   }
 
   Future<void> login(String username, String password) async {
     try {
       // 1. Ambil challenge dari halaman login
       var challengeData = await fetchChallenge();
-      String challengeVal = challengeData['chap-challenge']!;
-      String chapIdVal = challengeData['chap-id']!;
+      String challengeValue = challengeData['chap-challenge']!;
+      String chapIdValue = challengeData['chap-id']!;
 
-      String hashedPassword = _calculateHash(challengeVal, password);
+      String hashedPassword = _calculateHash(challengeValue, password, challengeValue);
 
       // 2. Data yang dikirim ke MikroTik
       var body = {
         'username': username,
         'password': hashedPassword,
-        'chap-id': chapIdVal,
-        'chap-challenge': challengeVal,
+        'chap-id': chapIdValue,
+        'chap-challenge': challengeValue,
         'dst': 'http://www.google.com', // Tujuan setelah login
         'popup': 'true'
       };
