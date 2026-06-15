@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-//import 'package:html/parser.dart' as html;
+import 'package:html/parser.dart' as html;
 import 'package:logger/logger.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
 
@@ -13,6 +13,23 @@ class MikrotikAuth {
   final String loginUrl;
 
   MikrotikAuth({required this.loginUrl});
+
+  Future<Map<String, String>> fetchChallenge() async {
+    final response = await http.get(Uri.parse(loginUrl));
+
+    if (response.statusCode == 200) {
+      var document = html.parse(response.body);
+
+      // Mencari nilai value dari input hidden berdasarkan ID
+      String chapId =
+          document.querySelector('#chap-id')?.attributes['value'] ?? '';
+      String chapChallenge =
+          document.querySelector('#chap-challenge')?.attributes['value'] ?? '';
+
+      return {'id': chapId, 'challenge': chapChallenge};
+    }
+    throw Exception("Gagal terhubung ke MikroTik");
+  }
 
   /// Mengubah password menjadi hash CHAP yang diminta MikroTik
   String _generateChapPassword(String challenge, String password) {
@@ -49,7 +66,7 @@ class MikrotikAuth {
       // Cek respon: MikroTik biasanya mengembalikan status lewat body atau redirect
       if (response.statusCode == 200) {
         // Logika untuk verifikasi apakah login berhasil (cek isi body)
-        return !response.body.contains("error"); 
+        return !response.body.contains("error");
       }
       return false;
     } catch (e) {

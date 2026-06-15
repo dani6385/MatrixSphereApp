@@ -4,11 +4,18 @@ import '../auth/mikrotik_auth.dart'; // Pastikan file mikrotik_auth.dart sudah d
 import 'dart:async';
 import 'navigation_layout.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   // Instantiate MikrotikAuth with required loginUrl parameter
   final dynamic auth = MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
-
-  LoginScreen({super.key});
+  final TextEditingController myUsernameController = TextEditingController();
+  final TextEditingController myPasswordController = TextEditingController();
 
   // Fungsi pembantu untuk memicu proses login
   void _showLoginDialog(BuildContext context, String type) {
@@ -69,7 +76,7 @@ class LoginScreen extends StatelessWidget {
   // Periksa akses internet dengan mencoba lookup DNS sederhana
   Future<bool> checkInternetAccess() async {
     try {
-      final result = await InternetAddress.lookup('example.com');
+      final result = await InternetAddress.lookup('http://192.168.30.1');
       return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } catch (_) {
       return false;
@@ -117,4 +124,14 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+  @override
+  void dispose() {
+    // Jangan lupa membersihkan controller saat layar ditutup
+    myUsernameController.dispose();
+    myPasswordController.dispose();
+    super.dispose();
+  }
+  
+  // ... sisa kode Anda
 }
+
