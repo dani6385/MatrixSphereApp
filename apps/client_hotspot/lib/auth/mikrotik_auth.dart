@@ -1,61 +1,91 @@
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:logger/logger.dart'; // Pastikan package logger di-import
+import 'package:html/parser.dart' as html;
+import 'package:logger/logger.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MikrotikAuth {
   // Ganti dengan alamat IP/URL login Mikrotik Anda
-  final String loginUrl = "http://192.168.30.1/login";
-
-  // Perbaikan: Penamaan variabel menggunakan camelCase dan deklarasi yang benar
+  final String baseUrl;
+  MikrotikAuth(this.baseUrl);
   final Logger _logger = Logger();
 
+  Future<Map<String, String>> fetchChallenge() async {
+    final response = await http.get(Uri.parse(baseUrl));
+
+    if (response.statusCode == 200) {
+      var document = html.parse(response.body);
+
+      // Mengambil nilai dari input hidden (sesuai struktur auth.html Anda)
+      String chapId =
+          document.querySelector('input[id="chap-id"]')?.attributes['value'] ??
+              '';
+      String chapChallenge = document
+              .querySelector('input[id="chap-challenge"]')
+              ?.attributes['value'] ??
+          '';
+
+      return {'chap-id': chapId, 'chap-challenge': chapChallenge};
+    } else {
+      throw Exception("Gagal terhubung ke MikroTik");
+    }
+  }
+
   // Fungsi untuk enkripsi password sesuai standar Mikrotik (CHAP)
-  String generateChapPassword(String challenge, String password) {
-    // Challenge dari Mikrotik biasanya dalam format hex string,
-    // pastikan diubah menjadi bytes jika perlu.
-    var challengeBytes = hexToBytes(challenge);
-    var passwordBytes = utf8.encode(password);
-
-    var content = [0] + passwordBytes + challengeBytes;
-    var digest = md5.convert(content);
-
+  String _calculateHash(String challenge, String password) {
+    var bytes = utf8.encode(challenge + password);
+    var digest = md5.convert(bytes);
     return digest.toString();
   }
 
-  // Helper untuk mengubah hex string menjadi list of bytes
-  List<int> hexToBytes(String hex) {
-    List<int> bytes = [];
-    for (int i = 0; i < hex.length; i += 2) {
-      bytes.add(int.parse(hex.substring(i, i + 2), radix: 16));
-    }
-    return bytes;
-  }
-
-  Future<void> doLogin(
-      String username, String password, String challenge, String chapId) async {
-    String chapPassword = generateChapPassword(challenge, password);
-
+  Future<void> doLogin(String username, String password) async {
     try {
-      var response = await http.post(
-        Uri.parse(loginUrl),
-        body: {
-          'username': username,
-          'password': chapPassword,
-          'dst': 'http://www.google.com',
-          'popup': 'true',
-          'chap-id': chapId, // Penting untuk menyertakan chap-id
-          'chap-challenge': challenge,
-        },
-      );
+      // 1. Ambil challenge dari halaman login
+      var challengeData = await fetchChallenge();
+      String challengeVal = challengeData['chap-challenge']!;
+      String chapIdVal = challengeData['chap-id']!;
 
-      if (response.statusCode == 200) {
-        _logger.i("Login berhasil!");
+      String hashedPassword = _calculateHash(challengeVal, password);
+
+      // 2. Data yang dikirim ke MikroTik
+      var body = {
+        'username': username,
+        'password': hashedPassword,
+        'chap-id': chapIdVal,
+        'chap-challenge': challengeVal,
+        'dst': 'http://www.google.com', // Tujuan setelah login
+        'popup': 'true'
+      };
+      final response = await http.post(Uri.parse('$baseUrl/login'), body: body);
+      if (response.statusCode == 200 || response.statusCode == 302) {
+        if (response.body.contains("logged in") || response.statusCode == 302) {
+          await _saveLoginSession(username);
+          _logger.i("Login Sukses untuk user: $username");
+        } else {
+          _logger.w("Login Gagal: Username atau password salah.");
+        }
       } else {
-        _logger.e("Login gagal dengan status: ${response.statusCode}");
+        _logger.e("Gagal terhubung ke router: ${response.statusCode}");
       }
     } catch (e) {
-      _logger.e("Terjadi kesalahan koneksi: $e");
+      _logger.e("Terjadi error: $e");
     }
+  }
+
+  Future<void> _saveLoginSession(String username) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isLoggedIn', true);
+    await prefs.setString('username', username);
+  }
+
+  Future<bool> isLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('isLoggedIn') ?? false;
+  }
+
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
   }
 }
