@@ -43,15 +43,16 @@ class LoginScreen extends StatelessWidget {
                 await auth.login(user, pass);
                 // --- TAMBAHKAN CEK MOUNTED DI SINI ---
                 if (!context.mounted) return;
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => DashboardScreen()),
-                );
+                Navigator.pop(context);
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Login Sukses!")),
                 );
-                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DashboardScreen()),
+                );
               } catch (e) {
                 if (!context.mounted) return;
                 ScaffoldMessenger.of(context).showSnackBar(

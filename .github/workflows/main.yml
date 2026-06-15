@@ -1,4 +1,4 @@
-name: Build & Release to Repo Home
+name: Build, Deploy & Release
 
 on:
   push:
@@ -9,26 +9,21 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_release:
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache Gradle
+      # Cache setup
+      - name: Cache Gradle & Pub
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
-
-      - name: Cache Pub
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: ${{ runner.os }}-pub-
+            ~/.pub-cache
+          key: ${{ runner.os }}-build-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-build-
 
       - name: Setup Java & Flutter
         uses: actions/setup-java@v3
@@ -49,13 +44,22 @@ jobs:
           cd apps/client_hotspot
           flutter build apk --release --build-number=${{ github.run_number }}
 
-      # Upload ke Releases agar muncul di Halaman Depan
+      # 1. Kirim ke Firebase App Distribution
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
+
+      # 2. Upload ke GitHub Releases
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
           tag_name: v1.0.${{ github.run_number }}
           name: Versi Baru - Build ${{ github.run_number }}
-          body: "APK terbaru tersedia untuk diunduh."
+          body: "APK terbaru telah di-deploy ke Firebase dan siap diunduh."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
