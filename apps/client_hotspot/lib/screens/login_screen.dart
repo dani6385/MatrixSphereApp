@@ -25,6 +25,7 @@ class LoginScreen extends StatelessWidget {
             TextField(
                 controller: userController,
                 decoration: InputDecoration(labelText: "Username")),
+            if (type == "Member")
             TextField(
                 controller: passController,
                 decoration: InputDecoration(labelText: "Password"),
@@ -34,9 +35,11 @@ class LoginScreen extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () async {
-              try {
-                await auth.login(userController.text, passController.text);
+              String user = userController.text;
+              String pass = type == "Member" ? passController.text : '';
 
+              try {
+                await auth.login(user, pass);
                 // --- TAMBAHKAN CEK MOUNTED DI SINI ---
                 if (!context.mounted) return;
 
