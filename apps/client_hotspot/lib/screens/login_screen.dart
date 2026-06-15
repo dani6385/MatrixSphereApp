@@ -46,7 +46,10 @@ class _LoginScreenState extends State<LoginScreen> {
               String pass = type == "Member" ? passController.text : '';
 
               try {
-                await auth.login(user, pass);
+                await auth.login(
+                    username: myUsernameController.text,
+                    password: myPasswordController.text
+                    );
                 // --- TAMBAHKAN CEK MOUNTED DI SINI ---
                 if (!context.mounted) return;
                 Navigator.pop(context);
@@ -124,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   @override
   void dispose() {
     // Jangan lupa membersihkan controller saat layar ditutup
@@ -131,7 +135,6 @@ class _LoginScreenState extends State<LoginScreen> {
     myPasswordController.dispose();
     super.dispose();
   }
-  
+
   // ... sisa kode Anda
 }
-
