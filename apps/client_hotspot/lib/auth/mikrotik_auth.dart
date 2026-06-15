@@ -39,7 +39,7 @@ class MikrotikAuth {
     return digest.toString();
   }
 
-  Future<void> doLogin(String username, String password) async {
+  Future<void> login(String username, String password) async {
     try {
       // 1. Ambil challenge dari halaman login
       var challengeData = await fetchChallenge();

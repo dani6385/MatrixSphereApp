@@ -1,10 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../auth/mikrotik_auth.dart'; // Pastikan file mikrotik_auth.dart sudah diimport
+import 'dart:async';
 
 class LoginScreen extends StatelessWidget {
   // MikrotikAuth requires a positional argument (e.g. base URL or host).
   // Provide a suitable value here. Using empty string as placeholder.
-  final dynamic auth = MikrotikAuth('');
+  final dynamic auth = MikrotikAuth('http://192.168.30.1');
 
   LoginScreen({super.key});
 
@@ -40,7 +42,7 @@ class LoginScreen extends StatelessWidget {
 
                 // Sekarang aman untuk menggunakan context
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Berhasil Login!")),
+                  SnackBar(content: Text("Memverifikasi koneksi internet...")),
                 );
                 Navigator.pop(context);
               } catch (e) {
@@ -56,6 +58,35 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
+  // Periksa akses internet dengan mencoba lookup DNS sederhana
+  Future<bool> checkInternetAccess() async {
+    try {
+      final result = await InternetAddress.lookup('example.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (_) {
+      return false;
+    }
+  }
+
+Future<bool> checkInternetAccessWithRetry({
+  int maxRetries = 3, 
+  Duration delay = const Duration(seconds: 2)
+}) async {
+  for (int i = 0; i < maxRetries; i++) {
+    bool isConnected = await checkInternetAccess(); // Menggunakan fungsi checkInternetAccess kita sebelumnya
+    
+    if (isConnected) {
+      return true; // Berhasil terhubung
+    }
+    
+    // Jika belum, tunggu beberapa saat sebelum mencoba lagi
+    if (i < maxRetries - 1) {
+      await Future.delayed(delay);
+    }
+  }
+  return false; // Gagal setelah beberapa kali percobaan
+}
 
   @override
   Widget build(BuildContext context) {
