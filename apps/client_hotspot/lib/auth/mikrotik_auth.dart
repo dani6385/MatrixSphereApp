@@ -17,11 +17,11 @@ class MikrotikAuth {
 
       // Mengambil input hidden chap-id dan chap-challenge
       String chapId = document
-              .querySelector('input[name="chap-id"]')
+              .querySelector('input[id="chap-id"]')
               ?.attributes['value'] ??
           '';
       String chapChallenge = document
-              .querySelector('input[name="chap-challenge"]')
+              .querySelector('input[id="chap-challenge"]')
               ?.attributes['value'] ??
           '';
 
@@ -40,20 +40,20 @@ class MikrotikAuth {
   Future<void> login(String username, String password) async {
     try {
       // 1. Ambil Value challenge terbaru
-      var challengeValue = await fetchChallenge();
-      String chapId = challengeValue['chap-id']!;
-      String challenge = challengeValue['chap-challenge']!;
+      var challengeData = await fetchChallenge();
+      String chapIdValue = challengeData['chap-id']!;
+      String challengeValue = challengeData['chap-challenge']!;
 
       // 2. Hitung MD5 Hash
-      String hashedPassword = _calculateHash(chapId, password, challenge);
+      String hashedPassword = _calculateHash(chapIdValue, password, challengeValue);
       _logger.i(
           "DEBUG: Username: $username, PassHash: $hashedPassword, Challenge: $challengeValue");
       // 3. Kirim Value ke MikroTik
       var body = {
         'username': username,
         'password': hashedPassword,
-        'chap-id': chapId,
-        'chap-challenge': challenge,
+        'chap-id': chapIdValue,
+        'chap-challenge': challengeValue,
         'dst': 'http://www.google.com',
         'popup': 'true'
       };
