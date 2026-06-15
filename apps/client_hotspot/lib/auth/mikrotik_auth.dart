@@ -1,89 +1,60 @@
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:html/parser.dart' as html;
+//import 'package:html/parser.dart' as html;
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+
+// Logger instance for logging within this file
+final Logger _logger = Logger();
 
 class MikrotikAuth {
-  final String baseUrl;
-  MikrotikAuth(this.baseUrl);
-  final Logger _logger = Logger();
+  // URL endpoint login MikroTik (biasanya http://192.168.88.1/login)
+  final String loginUrl;
 
-  Future<Map<String, String>> fetchChallenge() async {
-    final response = await http.get(Uri.parse(baseUrl));
-    if (response.statusCode == 200) {
-      var document = html.parse(response.body);
+  MikrotikAuth({required this.loginUrl});
 
-      // Mengambil input hidden chap-id dan chap-challenge
-      String chapId = document
-              .querySelector('input[id="chap-id"]')
-              ?.attributes['value'] ??
-          '';
-      String chapChallenge = document
-              .querySelector('input[id="chap-challenge"]')
-              ?.attributes['value'] ??
-          '';
-
-      return {'chap-id': chapId, 'chap-challenge': chapChallenge};
-    } else {
-      throw Exception("Gagal memuat halaman login MikroTik");
-    }
+  /// Mengubah password menjadi hash CHAP yang diminta MikroTik
+  String _generateChapPassword(String challenge, String password) {
+    // MikroTik menggunakan format: 0x + md5(byte(challenge) + password)
+    final input = challenge + password;
+    final bytes = utf8.encode(input);
+    final hash = md5.convert(bytes);
+    return '00${hexEncode(hash.bytes)}';
   }
 
-  String _calculateHash(String chapId, String password, String challenge) {
-    // Standard Mikrotik CHAP: md5(chapId + password + challenge)
-    var bytes = utf8.encode(chapId + password + challenge);
-    return md5.convert(bytes).toString();
-  }
+  // Helper untuk konversi ke hex string
+  String hexEncode(List<int> bytes) =>
+      bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
 
-  Future<void> login(String username, String password) async {
+  /// Fungsi utama untuk login
+  Future<bool> login({
+    required String username,
+    required String password,
+    required String challenge, // Didapat dari halaman landing MikroTik
+  }) async {
     try {
-      // 1. Ambil Value challenge terbaru
-      var challengeData = await fetchChallenge();
-      String chapIdValue = challengeData['chap-id']!;
-      String challengeValue = challengeData['chap-challenge']!;
+      final chapPassword = _generateChapPassword(challenge, password);
 
-      // 2. Hitung MD5 Hash
-      String hashedPassword = _calculateHash(chapIdValue, password, challengeValue);
-      _logger.i(
-          "DEBUG: Username: $username, PassHash: $hashedPassword, Challenge: $challengeValue");
-      // 3. Kirim Value ke MikroTik
-      var body = {
-        'username': username,
-        'password': hashedPassword,
-        'chap-id': chapIdValue,
-        'chap-challenge': challengeValue,
-        'dst': 'http://www.google.com',
-        'popup': 'true'
-      };
+      final response = await http.post(
+        Uri.parse(loginUrl),
+        body: {
+          'username': username,
+          'password': chapPassword,
+          'dst': 'http://www.google.com', // URL tujuan setelah login
+          'popup': 'true',
+        },
+      );
 
-      final response = await http.post(Uri.parse('$baseUrl/login'), body: body);
-
-      // 4. Analisis Respons
-      // Mikrotik mengirimkan error dalam bentuk teks di body, bukan status code error
-      if (response.body.contains("invalid") ||
-          response.body.contains("internal error")) {
-        throw Exception("Username atau Password salah!");
+      // Cek respon: MikroTik biasanya mengembalikan status lewat body atau redirect
+      if (response.statusCode == 200) {
+        // Logika untuk verifikasi apakah login berhasil (cek isi body)
+        return !response.body.contains("error"); 
       }
-
-      // Jika sukses, biasanya statusnya 200 atau 302
-      if (response.statusCode == 200 || response.statusCode == 302) {
-        await _saveLoginSession(username);
-        _logger.i("Login Sukses untuk user: $username");
-      } else {
-        throw Exception(
-            "Koneksi ke router gagal (Status: ${response.statusCode})");
-      }
+      return false;
     } catch (e) {
-      _logger.e("Terjadi error: $e");
-      rethrow; // Melempar error agar bisa ditangkap oleh UI/LoginScreen
+      _logger.e("Error koneksi: $e");
+      return false;
     }
-  }
-
-  Future<void> _saveLoginSession(String username) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
-    await prefs.setString('username', username);
   }
 }

@@ -18,7 +18,7 @@ extension MikrotikAuthLoginStatus on MikrotikAuth {
 }
 final Logger _logger = Logger();
 void checkAuthStatus() async {
-  MikrotikAuth auth = MikrotikAuth('http://192.168.30.1');
+  MikrotikAuth auth = MikrotikAuth(loginUrl: 'https://192.168.30.1/login');
   bool loggedIn = await auth.isLoggedIn();
 
   if (loggedIn) {

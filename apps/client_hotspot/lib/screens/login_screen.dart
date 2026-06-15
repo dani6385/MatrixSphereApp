@@ -5,9 +5,8 @@ import 'dart:async';
 import 'navigation_layout.dart';
 
 class LoginScreen extends StatelessWidget {
-  // MikrotikAuth requires a positional argument (e.g. base URL or host).
-  // Provide a suitable value here. Using empty string as placeholder.
-  final dynamic auth = MikrotikAuth('http://192.168.30.1');
+  // Instantiate MikrotikAuth with required loginUrl parameter
+  final dynamic auth = MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
 
   LoginScreen({super.key});
 
