@@ -42,14 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
         actions: [
           TextButton(
             onPressed: () async {
-              String user = userController.text;
-              String pass = type == "Member" ? passController.text : '';
+              String user = myUsernameController.text;
+              String pass = type == "Member" ? myPasswordController.text : '';
 
               try {
-                await auth.login(
-                    username: myUsernameController.text,
-                    password: myPasswordController.text
-                    );
+                await auth.login(user, pass);
                 // --- TAMBAHKAN CEK MOUNTED DI SINI ---
                 if (!context.mounted) return;
                 Navigator.pop(context);
@@ -127,7 +124,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
   @override
   void dispose() {
     // Jangan lupa membersihkan controller saat layar ditutup
@@ -135,6 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
     myPasswordController.dispose();
     super.dispose();
   }
-
+  
   // ... sisa kode Anda
 }
+
