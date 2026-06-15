@@ -4,6 +4,25 @@ import 'dart:convert';
 import 'package:html/parser.dart' as html;
 import 'package:logger/logger.dart';
 //import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:network_info_plus/network_info_plus.dart';
+
+final NetworkInfo _networkInfo = NetworkInfo();
+
+Future<void> checkConnection() async {
+  final connectivityResult = await Connectivity().checkConnectivity();
+
+  if (connectivityResult.contains(ConnectivityResult.wifi)) {
+    // Perangkat terhubung ke WiFi
+    String? wifiName = await _networkInfo.getWifiName();
+    _logger.i("Terhubung ke WiFi: $wifiName");
+
+    // Anda bisa menambahkan logika:
+    // jika wifiName == "NamaSSIDMikrotikAnda", maka tampilkan tombol login
+  } else {
+    _logger.i("Tidak terhubung ke WiFi");
+  }
+}
 
 // Logger instance for logging within this file
 final Logger _logger = Logger();
