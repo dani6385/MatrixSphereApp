@@ -1,6 +1,20 @@
 // packages/shared_services/lib/mikrotik/mikrotik_service.dart
 import 'package:logger/logger.dart';
-import 'package:routeros_api/routeros_api.dart';
+
+/// Placeholder client when `routeros_api` package is unavailable.
+/// Replace with the real `RouterOSClient` implementation from `routeros_api`.
+class RouterOSClient {
+  RouterOSClient({required String host, required String user, required String password});
+
+  Future<void> connect() => throw UnimplementedError(
+      'routeros_api package is missing. Add routeros_api to pubspec.yaml.');
+
+  Future<void> execute(String path, {required Map<String, String> params}) =>
+      throw UnimplementedError(
+          'routeros_api package is missing. Add routeros_api to pubspec.yaml.');
+
+  void close() {}
+}
 
 class MikrotikService {
   late RouterOSClient _client;

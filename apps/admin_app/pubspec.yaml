@@ -1,0 +1,28 @@
+
+name: client_hotspot
+description: "A new Flutter project."
+publish_to: 'none' 
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  shared_core:
+    path: ../../packages/shared_core
+  shared_services: # Ini dia perbaikannya
+    path: ../../packages/shared_services # Ini dia perbaikannya
+  crypto: ^3.0.7
+  logger: ^2.7.0
+  http: ^1.6.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true

@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:shared_services/shared_services.dart'; // Menggunakan barrel file utama
-
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/login_screen.dart'; // Impor LoginScreen
+import 'firebase_options.dart';
 
-void main() {
-  // Pastikan service locator diinisialisasi sebelum aplikasi berjalan
-  // Meskipun kosong untuk saat ini, ini adalah pola arsitektur yang benar
-  setupServiceLocator();
+void main() async {
+  // 1. Pastikan Flutter terhubung dulu
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // 2. Inisialisasi Firebase (Wajib ada di Flutter Web)
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
+  // 3. Baru jalankan aplikasi
   runApp(const MyApp());
 }
 
