@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
 import 'package:convert/convert.dart' as convert;
@@ -80,30 +81,38 @@ class MikrotikAuth {
 
     String chapPassword = _generateChapPassword(chapId, password, challenge);
 
+    final client = IOClient();
+    final request = http.Request('POST', Uri.parse(loginUrl))
+      ..followRedirects = false // Menonaktifkan redirect otomatis
+      ..bodyFields = {
+        'username': username,
+        'password': chapPassword,
+        'chap-id': chapId,
+        'chap-challenge': challenge,
+        'dst': 'http://www.google.com',
+        'popup': 'true',
+      };
+
     try {
       _logger.i("Mencoba login dengan username: $username");
-      var response = await http.post(
-        Uri.parse(loginUrl),
-        body: {
-          'username': username,
-          'password': chapPassword, 
-          'chap-id': chapId, 
-          'chap-challenge': challenge,
-          'dst': 'http://www.google.com',
-          'popup': 'true',
-        },
-      );
+      final response = await client.send(request);
 
-      if (response.statusCode == 200 && !response.body.contains("login failed")) {
-        _logger.i("Login berhasil!");
+      // Login BERHASIL jika MikroTik merespons dengan redirect (302)
+      if (response.statusCode == 302) {
+        _logger.i("Login berhasil! Redirect diterima dari MikroTik.");
         return true;
       } else {
-        _logger.w("Login gagal. Status: ${response.statusCode}, Body: ${response.body}");
+        // Jika tidak redirect, berarti login GAGAL
+        final responseBody = await response.stream.bytesToString();
+        _logger.w(
+            "Login gagal. Status: ${response.statusCode}, Body: $responseBody");
         return false;
       }
     } catch (e) {
       _logger.e("Error saat post login: $e");
       return false;
+    } finally {
+      client.close();
     }
   }
 }

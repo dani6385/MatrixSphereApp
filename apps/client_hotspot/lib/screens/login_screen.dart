@@ -1,9 +1,9 @@
-//import 'dart:io';
 import 'package:flutter/material.dart';
-import '../auth/mikrotik_auth.dart'; // Pastikan file mikrotik_auth.dart sudah diimport
-import 'dart:async';
-//import 'navigation_layout.dart';
 import 'package:logger/logger.dart';
+import '../auth/mikrotik_auth.dart';
+import '../dialog/member_dialog.dart';
+import '../dialog/voucher_dialog.dart';
+import 'dashboard_screen.dart'; // Navigate on success
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,78 +11,134 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
-final Logger _logger = Logger();
-class _LoginScreenState extends State<LoginScreen> {
-  // Instantiate MikrotikAuth with required loginUrl parameter
-  final TextEditingController myUsernameController = TextEditingController();
-  final TextEditingController myPasswordController = TextEditingController();
-  String loginMethod = 'member';
-  @override
-  void dispose() {
-    myUsernameController.dispose();
-    myPasswordController.dispose();
-    super.dispose();
-  }
-  Future<void> _handleLogin() async {
-    final auth = MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
-    
-    // Debugging: cek apakah teks terbaca
-    _logger.d("Mencoba login dengan: ${myUsernameController.text}");
 
-    bool berhasil = await auth.login(
-      username: myUsernameController.text,
-      password: myPasswordController.text,
+class _LoginScreenState extends State<LoginScreen> {
+  final Logger _logger = Logger();
+  final MikrotikAuth _auth =
+      MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
+
+  Future<void> _handleLogin(
+      {required String username, String password = ''}) async {
+    // Show a loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
     );
-    if (!mounted) return;
-    if (berhasil) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Login Berhasil!")));
+
+    bool success = false;
+    Object? error;
+
+    try {
+      success = await _auth.login(username: username, password: password);
+    } catch (e) {
+      error = e;
+    }
+
+    if (!mounted) return; // Guard against async gap
+
+    // Close loading indicator
+    Navigator.pop(context);
+
+    if (error != null) {
+      _logger.e("Error saat login: $error");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Terjadi error: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } else if (success) {
+      _logger.i("Login berhasil, navigasi ke Dashboard.");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login Berhasil!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (_) => const DashboardScreen()));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Login Gagal, periksa koneksi/kredensial")));
+      _logger.w("Login gagal.");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Login Gagal. Periksa kembali data Anda.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
+
+  void _showVoucherDialog() async {
+    final voucherCode = await showVoucherDialog(context);
+    if (voucherCode != null && voucherCode.isNotEmpty) {
+      _logger.i("Mencoba login dengan voucher: $voucherCode");
+      // For vouchers, username and password are the same
+      await _handleLogin(username: voucherCode, password: voucherCode);
+    }
+  }
+
+  void _showMemberDialog() async {
+    final credentials = await showMemberLoginDialog(context);
+    if (credentials != null &&
+        credentials['username'] != null &&
+        credentials['password'] != null) {
+      _logger.i("Mencoba login member: ${credentials['username']}");
+      await _handleLogin(
+        username: credentials['username']!,
+        password: credentials['password']!,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Login Member/Voucher")),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            // Tombol Pilihan Metode
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: () => setState(() => loginMethod = 'voucher'),
-                  child: const Text("Voucher"),
+      appBar: AppBar(
+        title: const Text('Hotspot Login'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Icon(Icons.wifi, size: 80, color: Colors.blueAccent),
+              const SizedBox(height: 20),
+              const Text(
+                'Selamat Datang',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                'Silakan pilih metode login Anda',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              const SizedBox(height: 40),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.confirmation_number),
+                label: const Text('Login Voucher'),
+                onPressed: _showVoucherDialog,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
-                const SizedBox(width: 10),
-                ElevatedButton(
-                  onPressed: () => setState(() => loginMethod = 'member'),
-                  child: const Text("Member"),
+              ),
+              const SizedBox(height: 15),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.person),
+                label: const Text('Login Member'),
+                onPressed: _showMemberDialog,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 15),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            
-            // Input Field
-            TextField(
-              controller: myUsernameController,
-              decoration: InputDecoration(labelText: loginMethod == 'voucher' ? 'Kode Voucher' : 'Username'),
-            ),
-            TextField(
-              controller: myPasswordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
-            ),
-            const SizedBox(height: 20),
-            
-            // Tombol Login
-            ElevatedButton(
-              onPressed: _handleLogin,
-              child: const Text("Login"),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
