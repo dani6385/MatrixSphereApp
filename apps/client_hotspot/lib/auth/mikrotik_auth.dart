@@ -1,83 +1,109 @@
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:convert/convert.dart';
+import 'package:convert/convert.dart' as convert;
 import 'package:html/parser.dart' show parse;
 import 'package:logger/logger.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectivity_plus/connectivity_plus.dart' as connectivity;
 import 'package:network_info_plus/network_info_plus.dart';
 
 final NetworkInfo _networkInfo = NetworkInfo();
+final Logger _logger = Logger();
 
 Future<void> checkConnection() async {
-  final connectivityResult = await Connectivity().checkConnectivity();
+  final connectivityResult = await connectivity.Connectivity().checkConnectivity();
 
-  if (connectivityResult.contains(ConnectivityResult.wifi)) {
-    // Perangkat terhubung ke WiFi
+  if (connectivityResult.contains(connectivity.ConnectivityResult.wifi)) {
     String? wifiName = await _networkInfo.getWifiName();
     _logger.i("Terhubung ke WiFi: $wifiName");
-
-    // Anda bisa menambahkan logika:
-    // jika wifiName == "NamaSSIDMikrotikAnda", maka tampilkan tombol login
   } else {
     _logger.i("Tidak terhubung ke WiFi");
   }
 }
 
-// Logger instance for logging within this file
-final Logger _logger = Logger();
-
 class MikrotikAuth {
-  // URL endpoint login MikroTik (biasanya http://192.168.88.1/login)
   final String loginUrl;
 
   MikrotikAuth({required this.loginUrl});
 
-  Future<Map<String, String>> fetchChallenge() async {
-    final response = await http.get(Uri.parse('http://192.168.30.1/login'));
+  Future<Map<String, String>> fetchChallengeAndId() async {
+    try {
+      final response = await http.get(Uri.parse(loginUrl));
 
-    if (response.statusCode == 200) {
-      var document = parse(response.body);
-      var challengeInput =
-          document.querySelector('input[name="chap-challenge"]');
-      String challenge = challengeInput?.attributes['value'] ?? "";
+      if (response.statusCode == 200) {
+        var document = parse(response.body);
+        var challengeInput =
+            document.querySelector('input[name="chap-challenge"]');
+        var chapIdInput = document.querySelector('input[name="chap-id"]');
 
-      return {'challenge': challenge};
+        String challenge = challengeInput?.attributes['value'] ?? "";
+        String chapId = chapIdInput?.attributes['value'] ?? "";
+
+        if (challenge.isNotEmpty && chapId.isNotEmpty) {
+          _logger.i("Challenge: $challenge, ChapID: $chapId");
+          return {'challenge': challenge, 'chapId': chapId};
+        }
+      }
+    } catch (e) {
+      _logger.e("Gagal mengambil challenge: $e");
     }
-    return {'challenge': ""};
+    return {'challenge': "", 'chapId': ""};
   }
 
-  /// Mengubah password menjadi hash CHAP yang diminta MikroTik
-  String _generateChapPassword(String challenge, String password) {
-    // MikroTik menggunakan format: 0x + md5(byte(challenge) + password)
-    var bytes = utf8.encode('\x00$password$challenge');
-    var digest = md5.convert(bytes);
-    return '00${hex.encode(digest.bytes)}';
+  String _generateChapPassword(String chapId, String password, String challenge) {
+    var chapIdBytes = convert.hex.decode(chapId);
+    var passwordBytes = utf8.encode(password);
+    var challengeBytes = convert.hex.decode(challenge);
+
+    var bytesToHash = <int>[];
+    bytesToHash.addAll(chapIdBytes);
+    bytesToHash.addAll(passwordBytes);
+    bytesToHash.addAll(challengeBytes);
+
+    var digest = md5.convert(bytesToHash);
+
+    return convert.hex.encode(digest.bytes);
   }
 
-  /// Fungsi utama untuk login
   Future<bool> login({
     required String username,
     required String password,
   }) async {
-    Map<String, String> config = await fetchChallenge();
-    String challenge = config['challenge']!;
-    if (challenge.isEmpty) return false;
+    Map<String, String> config = await fetchChallengeAndId();
+    String challenge = config['challenge'] ?? "";
+    String chapId = config['chapId'] ?? "";
 
-    String chapPassword = _generateChapPassword(challenge, password);
+    if (challenge.isEmpty || chapId.isEmpty) {
+      _logger.e("Gagal mendapatkan challenge atau chap-id. Login dibatalkan.");
+      return false;
+    }
 
-    var response = await http.post(
-      Uri.parse(loginUrl),
-      body: {
-        'username': username,
-        'password': chapPassword, // Mengirim password yang sudah di-hash
-        'chap-id': '0', // Pastikan parameter ini juga dikirim
-        'chap-challenge': challenge,
-        'dst': 'http://www.google.com',
-        'popup': 'true',
-      },
-    );
-    return response.statusCode == 200;
+    String chapPassword = _generateChapPassword(chapId, password, challenge);
+
+    try {
+      _logger.i("Mencoba login dengan username: $username");
+      var response = await http.post(
+        Uri.parse(loginUrl),
+        body: {
+          'username': username,
+          'password': chapPassword, 
+          'chap-id': chapId, 
+          'chap-challenge': challenge,
+          'dst': 'http://www.google.com',
+          'popup': 'true',
+        },
+      );
+
+      if (response.statusCode == 200 && !response.body.contains("login failed")) {
+        _logger.i("Login berhasil!");
+        return true;
+      } else {
+        _logger.w("Login gagal. Status: ${response.statusCode}, Body: ${response.body}");
+        return false;
+      }
+    } catch (e) {
+      _logger.e("Error saat post login: $e");
+      return false;
+    }
   }
 }
