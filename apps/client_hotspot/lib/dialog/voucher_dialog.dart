@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 ///
 /// Mengembalikan kode voucher sebagai `String` jika login ditekan,
 /// atau `null` jika dialog dibatalkan.
-Future<String?> showVoucherDialog(BuildContext context) {
+Future<String?> showVoucherDialog(BuildContext context, Future<void> Function({String password, required String username}) handleLogin) {
   final formKey = GlobalKey<FormState>();
   final voucherController = TextEditingController();
 

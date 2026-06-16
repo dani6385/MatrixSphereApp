@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 ///
 /// Mengembalikan `Map<String, String>` yang berisi 'username' dan 'password' jika login ditekan,
 /// atau `null` jika dialog dibatalkan.
-Future<Map<String, String>?> showMemberLoginDialog(BuildContext context) {
+Future<Map<String, String>?> showMemberLoginDialog(BuildContext context, [Future<void> Function({String password, required String username})? handleLogin]) {
   final formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();

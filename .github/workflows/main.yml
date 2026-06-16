@@ -5,30 +5,29 @@ on:
     branches: [ main ]
     paths:
       - 'apps/client_hotspot/**'
+      - 'apps/admin_mikrotik/**'
       - 'pubspec.yaml'
   workflow_dispatch:
 
 jobs:
-  build_and_release:
+  # Job 1: Build Admin MikroTik
+  build_admin_mikrotik:
     runs-on: ubuntu-latest
+    # Hanya jalan jika ada perubahan di folder admin
+    if: contains(github.event.head_commit.modified, 'apps/admin_mikrotik/')
     steps:
       - uses: actions/checkout@v4
 
-      - name: Cache Gradle
+      # Cache Gradle & Pub untuk Admin
+      - name: Cache Gradle & Pub Admin
         uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
-
-      - name: Cache Pub
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: ${{ runner.os }}-pub-
+            ~/.pub-cache
+          key: ${{ runner.os }}-admin-${{ hashFiles('apps/admin_mikrotik/**/pubspec.lock', 'apps/admin_mikrotik/**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-admin-
 
       - name: Setup Java & Flutter
         uses: actions/setup-java@v3
@@ -44,11 +43,79 @@ jobs:
           dart pub global activate melos
           melos bootstrap
 
+      - name: Build APK Admin
+        run: |
+          cd apps/admin_mikrotik
+          flutter build apk --release --build-number=${{ github.run_number }}
+
+      # Upload ke Firebase App Distribution (Gunakan App ID Admin)
+      - name: Upload Admin ke Firebase
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_ADMIN_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+
+      # Upload ke GitHub Releases
+      - name: Create GitHub Release Admin
+        uses: softprops/action-gh-release@v1
+        with:
+          files: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          tag_name: admin-v1.0.${{ github.run_number }}
+          name: Admin MikroTik - Build ${{ github.run_number }}
+          body: "APK Admin MikroTik terbaru tersedia."
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Job 2: Build Client Hotspot MikroTik
+  build_clien_hotspot:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'apps/client_hotspot/')
+    steps:
+      - uses: actions/checkout@v4
+      # Cache Setup (Lebih efisien)
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Cache Pub
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+      # Setup Environment
+      - name: Setup Java & Flutter
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+
+      - name: Install Melos & Bootstrap
+        run: |
+          dart pub global activate melos
+          melos bootstrap
+      # Build APK
       - name: Build APK
         run: |
           cd apps/client_hotspot
           flutter build apk --release --build-number=${{ github.run_number }}
-
+      # Upload ke Firebase App Distribution (Testers)
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
       # Upload ke Releases agar muncul di Halaman Depan
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1

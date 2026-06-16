@@ -21,18 +21,25 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLoginStatus();
+    // Gunakan addPostFrameCallback untuk memastikan context sudah siap
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkLoginStatus();
+    });
   }
 
   void _checkLoginStatus() async {
     final isLoggedIn = await AuthService.isLoggedIn();
     if (isLoggedIn && mounted) {
       _logger.i("User sudah login, langsung ke NavigationLayout.");
-      // PERBAIKAN: Menggunakan navigasi yang lebih kuat
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const NavigationLayout()),
-        (Route<dynamic> route) => false,
-      );
+      // Gunakan setState untuk navigasi yang aman
+      setState(() {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const NavigationLayout()),
+          (Route<dynamic> route) => false,
+        );
+      });
+    } else {
+      _logger.i("User belum login.");
     }
   }
 
@@ -58,7 +65,8 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pop(context); // Tutup loading indicator
 
     if (success) {
-      _logger.i("Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
+      _logger.i(
+          "Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
       await AuthService.setLoggedIn(true, username);
       if (!mounted) return;
 
@@ -68,39 +76,21 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.green,
         ),
       );
-      // PERBAIKAN: Menggunakan navigasi yang lebih kuat untuk memastikan pindah halaman
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const NavigationLayout()),
-        (Route<dynamic> route) => false, // Hapus semua halaman sebelumnya
-      );
+      // Gunakan setState untuk navigasi yang aman
+      setState(() {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const NavigationLayout()),
+          (Route<dynamic> route) => false, // Hapus semua halaman sebelumnya
+        );
+      });
     } else {
       _logger.w("Login gagal. Pesan error: $errorMessage");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
+          content:
+              Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
           backgroundColor: Colors.red,
         ),
-      );
-    }
-  }
-
-  void _showVoucherDialog() async {
-    final voucherCode = await showVoucherDialog(context);
-    if (voucherCode != null && voucherCode.isNotEmpty) {
-      _logger.i("Mencoba login dengan voucher: $voucherCode");
-      await _handleLogin(username: voucherCode, password: voucherCode);
-    }
-  }
-
-  void _showMemberDialog() async {
-    final credentials = await showMemberLoginDialog(context);
-    if (credentials != null &&
-        credentials['username'] != null &&
-        credentials['password'] != null) {
-      _logger.i("Mencoba login member: ${credentials['username']}");
-      await _handleLogin(
-        username: credentials['username']!,
-        password: credentials['password']!,
       );
     }
   }
@@ -108,52 +98,66 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hotspot Login'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Icon(Icons.wifi, size: 80, color: Colors.blueAccent),
-              const SizedBox(height: 20),
-              const Text(
-                'Selamat Datang',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-              ),
-              const Text(
-                'Silakan pilih metode login Anda',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
-              ),
-              const SizedBox(height: 40),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.confirmation_number),
-                label: const Text('Login Voucher'),
-                onPressed: _showVoucherDialog,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  textStyle: const TextStyle(fontSize: 18),
-                ),
-              ),
-              const SizedBox(height: 15),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.person),
-                label: const Text('Login Member'),
-                onPressed: _showMemberDialog,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  textStyle: const TextStyle(fontSize: 18),
-                ),
-              ),
-            ],
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFE3D2F8), Color(0xFFF0E5F8)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
         ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.wifi, size: 64, color: Colors.blueAccent),
+            const SizedBox(height: 20),
+            const Text(
+              'Selamat Datang',
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const Text(
+              'Silakan pilih metode login Anda',
+              style: TextStyle(fontSize: 16, color: Colors.black54),
+            ),
+            const SizedBox(height: 40),
+            _buildLoginButton(
+              text: 'Login Voucher',
+              icon: Icons.confirmation_number,
+              onPressed: () => showVoucherDialog(context, _handleLogin),
+            ),
+            const SizedBox(height: 20),
+            _buildLoginButton(
+              text: 'Login Member',
+              icon: Icons.person,
+              onPressed: () => showMemberLoginDialog(context, _handleLogin),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLoginButton({
+    required String text,
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return ElevatedButton.icon(
+      icon: Icon(icon, color: Colors.deepPurple),
+      label: Text(text, style: const TextStyle(color: Colors.deepPurple)),
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        minimumSize: const Size(250, 50),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30),
+        ),
+        elevation: 5,
       ),
     );
   }
