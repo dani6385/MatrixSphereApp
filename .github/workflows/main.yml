@@ -58,7 +58,6 @@ jobs:
         run: flutter build apk --release
         working-directory: ./apps/admin_mikrotik
 
-      # PERBAIKAN: Mengganti nama action dengan kapitalisasi yang benar
       - name: 6. Deploy to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Action@v1
         with:
@@ -101,7 +100,6 @@ jobs:
         run: flutter build apk --release
         working-directory: ./apps/client_hotspot
 
-      # PERBAIKAN: Mengganti nama action dengan kapitalisasi yang benar
       - name: 6. Deploy to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Action@v1
         with:
