@@ -1,9 +1,5 @@
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
-import 'package:crypto/crypto.dart';
-import 'dart:convert';
-import 'package:convert/convert.dart' as convert;
-import 'package:html/parser.dart' show parse;
 import 'package:logger/logger.dart';
 import 'package:connectivity_plus/connectivity_plus.dart' as connectivity;
 import 'package:network_info_plus/network_info_plus.dart';
@@ -12,7 +8,8 @@ final NetworkInfo _networkInfo = NetworkInfo();
 final Logger _logger = Logger();
 
 Future<void> checkConnection() async {
-  final connectivityResult = await connectivity.Connectivity().checkConnectivity();
+  final connectivityResult =
+      await connectivity.Connectivity().checkConnectivity();
 
   if (connectivityResult.contains(connectivity.ConnectivityResult.wifi)) {
     String? wifiName = await _networkInfo.getWifiName();
@@ -27,117 +24,56 @@ class MikrotikAuth {
 
   MikrotikAuth({required this.loginUrl});
 
-  Future<Map<String, String>> fetchChallengeAndId() async {
-    try {
-      final response = await http.get(Uri.parse(loginUrl));
-
-      if (response.statusCode == 200) {
-        var document = parse(response.body);
-        var challengeInput =
-            document.querySelector('input[name="chap-challenge"]');
-        var chapIdInput = document.querySelector('input[name="chap-id"]');
-
-        String challenge = challengeInput?.attributes['value'] ?? "";
-        String chapId = chapIdInput?.attributes['value'] ?? "";
-
-        if (challenge.isNotEmpty && chapId.isNotEmpty) {
-          _logger.i("Original Challenge: $challenge, ChapID: $chapId");
-          return {'challenge': challenge, 'chapId': chapId};
-        }
-      }
-    } catch (e) {
-      _logger.e("Gagal mengambil challenge: $e");
-    }
-    return {'challenge': "", 'chapId': ""};
-  }
-
-  String _generateChapPassword(String chapId, String password, String challenge) {
-    String sanitizeAndPadHex(String input) {
-      String sanitized = input.replaceAll(RegExp(r'[^0-9a-fA-F]'), '');
-
-      if (sanitized.length % 2 != 0) {
-        _logger.w("String hex ganjil terdeteksi: $sanitized. Menambahkan padding '0'.");
-        sanitized = '0$sanitized';
-      }
-      return sanitized;
-    }
-
-    final sanitizedChapId = sanitizeAndPadHex(chapId);
-    final sanitizedChallenge = sanitizeAndPadHex(challenge);
-
-    try {
-      var chapIdBytes = convert.hex.decode(sanitizedChapId);
-      var passwordBytes = utf8.encode(password);
-      var challengeBytes = convert.hex.decode(sanitizedChallenge);
-
-      var bytesToHash = <int>[];
-      bytesToHash.addAll(chapIdBytes);
-      bytesToHash.addAll(passwordBytes);
-      bytesToHash.addAll(challengeBytes);
-
-      var digest = md5.convert(bytesToHash);
-
-      return convert.hex.encode(digest.bytes);
-    } catch (e) {
-      _logger.e("Error kritis saat proses CHAP: $e");
-      _logger.e("Chap-ID (setelah sanitasi): $sanitizedChapId");
-      _logger.e("Challenge (setelah sanitasi): $sanitizedChallenge");
-      rethrow;
-    }
-  }
+  // FUNGSI UNTUK CHAP SUDAH TIDAK DIPERLUKAN LAGI, DIHAPUS.
 
   Future<bool> login({
     required String username,
     required String password,
   }) async {
-    Map<String, String> config = await fetchChallengeAndId();
-    String challenge = config['challenge'] ?? "";
-    String chapId = config['chapId'] ?? "";
-
-    if (challenge.isEmpty || chapId.isEmpty) {
-      _logger.e("Gagal mendapatkan challenge atau chap-id. Login dibatalkan.");
-      return false;
-    }
-
-    String chapPassword = _generateChapPassword(chapId, password, challenge);
-
+    // ---- PERUBAHAN TOTAL: Mengikuti metode cURL (HTTP POST biasa) ----
     final client = IOClient();
     final request = http.Request('POST', Uri.parse(loginUrl))
-      ..followRedirects = false
+      ..followRedirects =
+          false // Penting: Jangan ikuti redirect secara otomatis
+      ..headers['Content-Type'] = 'application/x-www-form-urlencoded'
       ..bodyFields = {
+        // Kirim username dan password sebagai plain text, tanpa enkripsi CHAP.
         'username': username,
-        'password': chapPassword,
-        'chap-id': chapId,
-        'chap-challenge': challenge,
-        'dst': 'http://www.google.com',
-        'popup': 'true',
+        'password': password,
+        'dst': 'http://www.google.com', // Beberapa hotspot butuh ini
+        'popup': 'true', // Beberapa hotspot butuh ini
       };
 
     try {
-      _logger.i("Mencoba login dengan username: $username");
+      _logger
+          .i("Mencoba login dengan HTTP POST biasa untuk username: $username");
       final streamedResponse = await client.send(request);
-
-      // Selalu baca body, terlepas dari status code
       final responseBody = await streamedResponse.stream.bytesToString();
 
-      // ---- PERBAIKAN LOGIKA SUKSES ----
-      // Kondisi Sukses 1: Server merespons dengan redirect (302)
+      // Logika sukses tetap sama: cari redirect (302) atau halaman status (200 dengan /logout)
       if (streamedResponse.statusCode == 302) {
-        _logger.i("Login berhasil! Redirect (302) diterima dari MikroTik.");
+        _logger.i("Login berhasil! Redirect (302) diterima.");
         return true;
       }
 
-      // Kondisi Sukses 2: Server merespons halaman status (200) yang berisi link logout
-      if (streamedResponse.statusCode == 200 && responseBody.contains("/logout")) {
-        _logger.i("Login berhasil! Halaman status (200 OK dengan link logout) terdeteksi.");
+      if (streamedResponse.statusCode == 200 &&
+          responseBody.contains('logout')) {
+        _logger.i(
+            "Login berhasil! Halaman status (200 OK dengan link logout) terdeteksi.");
         return true;
       }
 
-      // Jika tidak ada kondisi sukses yang terpenuhi, maka login dianggap gagal.
+      // Jika login berhasil, beberapa halaman status tidak punya link /logout tapi punya /status
+      if (streamedResponse.statusCode == 200 &&
+          responseBody.contains('status')) {
+        _logger.i(
+            "Login berhasil! Halaman status (200 OK dengan link status) terdeteksi.");
+        return true;
+      }
+
       _logger.w(
           "Login gagal. Status: ${streamedResponse.statusCode}, Body: $responseBody");
       return false;
-      
     } catch (e) {
       _logger.e("Error saat post login: $e");
       rethrow;
