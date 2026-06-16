@@ -1,4 +1,4 @@
-name: Build Selective Flutter Apps
+name: Build & Distribute Flutter Apps
 
 on:
   push:
@@ -25,62 +25,88 @@ jobs:
             client_hotspot:
               - 'apps/client_hotspot/**'
 
-  build_admin_mikrotik:
+  build_and_deploy_admin:
     needs: changes
     if: ${{ needs.changes.outputs.admin_mikrotik == 'true' }}
-    name: Build Admin Mikrotik App
+    name: Build & Deploy Admin Mikrotik
     runs-on: ubuntu-latest
     steps:
       - name: 1. Checkout repository
         uses: actions/checkout@v4
 
-      # OPTIMASI: Menambahkan cache untuk Flutter SDK
       - name: 2. Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: true # Menambahkan cache untuk Flutter SDK
+          cache: true
 
-      - name: 3. Get dependencies for Admin app
+      - name: 3. Get dependencies
         run: flutter pub get
         working-directory: ./apps/admin_mikrotik
 
-      - name: 4. Build APK for Admin app
+      # --- PERBAIKAN: MENAMBAHKAN CACHE UNTUK GRADLE ---
+      - name: 4. Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: 5. Build APK
         run: flutter build apk --release
         working-directory: ./apps/admin_mikrotik
 
-      - name: 5. Upload Admin APK Artifact
-        uses: actions/upload-artifact@v4
+      - name: 6. Deploy to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Action@v1
         with:
-          name: admin-mikrotik-release.apk
-          path: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          appId: ${{ secrets.FIREBASE_APP_ID_ADMIN }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          releaseNotes: "Build from commit ${{ github.sha }}"
 
-  build_client_hotspot:
+  build_and_deploy_client:
     needs: changes
     if: ${{ needs.changes.outputs.client_hotspot == 'true' }}
-    name: Build Client Hotspot App
+    name: Build & Deploy Client Hotspot
     runs-on: ubuntu-latest
     steps:
       - name: 1. Checkout repository
         uses: actions/checkout@v4
 
-      # OPTIMASI: Menambahkan cache untuk Flutter SDK
       - name: 2. Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          cache: true # Menambahkan cache untuk Flutter SDK
+          cache: true
 
-      - name: 3. Get dependencies for Client app
+      - name: 3. Get dependencies
         run: flutter pub get
         working-directory: ./apps/client_hotspot
 
-      - name: 4. Build APK for Client app
+      # --- PERBAIKAN: MENAMBAHKAN CACHE UNTUK GRADLE ---
+      - name: 4. Cache Gradle Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: 5. Build APK
         run: flutter build apk --release
         working-directory: ./apps/client_hotspot
 
-      - name: 5. Upload Client APK Artifact
-        uses: actions/upload-artifact@v4
+      - name: 6. Deploy to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Action@v1
         with:
-          name: client-hotspot-release.apk
-          path: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
+          appId: ${{ secrets.FIREBASE_APP_ID_CLIENT }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
+          releaseNotes: "Build from commit ${{ github.sha }}"
