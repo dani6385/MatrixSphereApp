@@ -14,7 +14,6 @@ jobs:
   build_admin_mikrotik:
     runs-on: ubuntu-latest
     # Hanya jalan jika ada perubahan di folder admin
-    if: contains(github.event.head_commit.modified, 'apps/admin_mikrotik/')
     steps:
       - uses: actions/checkout@v4
 
