@@ -4,7 +4,7 @@ import 'package:shared_services/shared_services.dart';
 import '../auth/mikrotik_auth.dart';
 import '../dialog/member_dialog.dart';
 import '../dialog/voucher_dialog.dart';
-import './navigation_layout.dart'; // Mengarah ke NavigationLayout
+import './navigation_layout.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,25 +21,42 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    // Gunakan addPostFrameCallback untuk memastikan context sudah siap
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkLoginStatus();
+      _checkLoginStatusAndNavigate();
     });
   }
 
-  void _checkLoginStatus() async {
-    final isLoggedIn = await AuthService.isLoggedIn();
-    if (isLoggedIn && mounted) {
-      _logger.i("User sudah login, langsung ke NavigationLayout.");
-      // Gunakan setState untuk navigasi yang aman
-      setState(() {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const NavigationLayout()),
-          (Route<dynamic> route) => false,
-        );
-      });
+  // --- FUNGSI BARU YANG DIPERBAIKI ---
+  void _checkLoginStatusAndNavigate() async {
+    // 1. Cek status login lokal
+    final isLocallyLoggedIn = await AuthService.isLoggedIn();
+    if (!isLocallyLoggedIn) {
+      _logger.i("User belum login (tidak ada data sesi lokal).");
+      return; // Tetap di halaman login
+    }
+
+    // 2. Ambil username dari sesi lokal
+    final username = await AuthService.getUsername();
+    if (username == null || username.isEmpty) {
+      _logger.w("Status login lokal true, tapi tidak ada username. Sesi dibersihkan.");
+      await AuthService.setLoggedIn(false, ''); // Bersihkan sesi yang tidak konsisten
+      return;
+    }
+
+    _logger.i("Sesi lokal ditemukan untuk user '$username'. Memverifikasi dengan Firebase RTDB...");
+
+    // 3. Verifikasi dengan Firebase RTDB sebagai sumber kebenaran
+    final isRtdbLoggedIn = await _auth.checkLoginStatus(username);
+
+    if (isRtdbLoggedIn && mounted) {
+      _logger.i("User '$username' terverifikasi di RTDB. Navigasi ke dashboard.");
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const NavigationLayout()),
+        (Route<dynamic> route) => false,
+      );
     } else {
-      _logger.i("User belum login.");
+      _logger.w("User '$username' tidak ditemukan di RTDB. Sesi lokal dibersihkan.");
+      await AuthService.setLoggedIn(false, ''); // Jika tidak ada di RTDB, sesi lokal tidak valid
     }
   }
 
@@ -75,13 +92,11 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.green,
         ),
       );
-      // Gunakan setState untuk navigasi yang aman
-      setState(() {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const NavigationLayout()),
-          (Route<dynamic> route) => false, // Hapus semua halaman sebelumnya
-        );
-      });
+      
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const NavigationLayout()),
+        (Route<dynamic> route) => false, // Hapus semua halaman sebelumnya
+      );
     } else {
       _logger.w("Login gagal. Pesan error: $errorMessage");
       ScaffoldMessenger.of(context).showSnackBar(

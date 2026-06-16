@@ -4,9 +4,7 @@ class AuthService {
   static const String _keyLoggedIn = 'isLoggedIn';
   static const String _keyUsername = 'username';
 
-  static get SharedPreferences => null;
-
-  // Menyimpan status login
+  // Menyimpan status login dan username
   static Future<void> setLoggedIn(bool value, String username) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyLoggedIn, value);
@@ -19,9 +17,17 @@ class AuthService {
     return prefs.getBool(_keyLoggedIn) ?? false;
   }
 
-  // Logout (Membersihkan data)
+  // --- METODE BARU YANG DITAMBAHKAN ---
+  // Mengambil username yang tersimpan
+  static Future<String?> getUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyUsername);
+  }
+
+  // Logout (Membersihkan semua data sesi)
   static Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    await prefs.remove(_keyLoggedIn);
+    await prefs.remove(_keyUsername);
   }
 }
