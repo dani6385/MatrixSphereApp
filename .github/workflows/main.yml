@@ -1,3 +1,5 @@
+name: Build, Deploy & Release
+
 on:
   push:
     branches: [ main ]
@@ -5,44 +7,17 @@ on:
       - 'apps/client_hotspot/**'
       - 'apps/admin_mikrotik/**'
       - 'pubspec.yaml'
+  workflow_dispatch:
 
 jobs:
-  build-hotspot:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'apps/client_hotspot/')
-    steps:
-      - uses: actions/checkout@v4
-      
-      # Tambahkan Cache di sini
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            apps/client_hotspot/.gradle
-          key: ${{ runner.os }}-hotspot-${{ hashFiles('apps/client_hotspot/pubspec.lock') }}
-          restore-keys: ${{ runner.os }}-hotspot-
-
-      - uses: subosito/flutter-action@v2
-      - run: |
-          cd apps/client_hotspot
-          flutter pub get
-          flutter build apk --release
-
-      - uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
-          token: ${{ secrets.FIREBASE_TOKEN }} 
-          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
-
+  # Job 1: Build Admin MikroTik
   build-admin:
     runs-on: ubuntu-latest
     if: contains(github.event.head_commit.modified, 'apps/admin_mikrotik/')
     steps:
       - uses: actions/checkout@v4
       
-      # Tambahkan Cache di sini
-      - name: Cache dependencies
+      - name: Cache dependencies Admin
         uses: actions/cache@v4
         with:
           path: |
@@ -52,14 +27,49 @@ jobs:
           restore-keys: ${{ runner.os }}-admin-
 
       - uses: subosito/flutter-action@v2
+        with: { flutter-version: '3.x' }
+
       - run: |
           cd apps/admin_mikrotik
           flutter pub get
           flutter build apk --release
 
-      - uses: softprops/action-gh-release@v1
+      - name: Upload Admin ke Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          files: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
-          tag_name: admin-v1.0.${{ github.run_number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          appId: ${{ secrets.FIREBASE_ADMIN_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+
+# Job 2: Build Hotspot Client
+  build-hotspot:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'apps/client_hotspot/')
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Cache dependencies Client
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            apps/client_hotspot/.gradle
+          key: ${{ runner.os }}-hotspot-${{ hashFiles('apps/client_hotspot/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-hotspot-
+
+      - uses: subosito/flutter-action@v2
+        with: { flutter-version: '3.x' }
+
+      - run: |
+          cd apps/client_hotspot
+          flutter pub get
+          flutter build apk --release --build-number=${{ github.run_number }}
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk

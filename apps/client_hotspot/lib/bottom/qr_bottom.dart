@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../dialog/qr_dialog.dart';
+import 'qr_dialog.dart';
 
 class QrBottom extends StatefulWidget {
   const QrBottom({super.key});
