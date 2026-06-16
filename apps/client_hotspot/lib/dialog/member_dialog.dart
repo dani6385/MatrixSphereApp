@@ -1,67 +1,46 @@
 import 'package:flutter/material.dart';
 
-/// Menampilkan dialog untuk login member.
-///
-/// Mengembalikan `Map<String, String>` yang berisi 'username' dan 'password' jika login ditekan,
-/// atau `null` jika dialog dibatalkan.
-Future<Map<String, String>?> showMemberLoginDialog(BuildContext context, [Future<void> Function({String password, required String username})? handleLogin]) {
-  final formKey = GlobalKey<FormState>();
+// Mengembalikan parameter `onLogin` yang hilang untuk menangani logika login
+void showMemberDialog(BuildContext context,
+    Function({required String username, required String password}) onLogin) {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
 
-  return showDialog<Map<String, String>?>(
+  showDialog(
     context: context,
-    builder: (BuildContext context) {
+    builder: (context) {
       return AlertDialog(
         title: const Text('Login Member'),
-        content: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: usernameController,
-                decoration: const InputDecoration(labelText: 'Username'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Username tidak boleh kosong';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Password tidak boleh kosong';
-                  }
-                  return null;
-                },
-              ),
-            ],
-          ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: usernameController,
+              decoration: const InputDecoration(labelText: 'Username'),
+              autofocus: true,
+            ),
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+          ],
         ),
         actions: [
           TextButton(
+            onPressed: () => Navigator.pop(context),
             child: const Text('Batal'),
-            onPressed: () {
-              // Tutup dialog dan tidak mengembalikan apa-apa
-              Navigator.pop(context);
-            },
           ),
           ElevatedButton(
-            child: const Text('Login'),
             onPressed: () {
-              if (formKey.currentState?.validate() ?? false) {
-                // Tutup dialog dan kembalikan data login
-                Navigator.pop(context, {
-                  'username': usernameController.text,
-                  'password': passwordController.text,
-                });
-              }
+              // Memanggil callback onLogin yang sudah dikembalikan
+              onLogin(
+                username: usernameController.text,
+                password: passwordController.text,
+              );
+              // Proses selanjutnya (termasuk menutup dialog) akan ditangani oleh fungsi _handleLogin
             },
+            child: const Text('Login'),
           ),
         ],
       );

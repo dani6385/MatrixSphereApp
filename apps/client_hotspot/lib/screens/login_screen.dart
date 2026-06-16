@@ -65,8 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pop(context); // Tutup loading indicator
 
     if (success) {
-      _logger.i(
-          "Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
+      _logger.i("Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
       await AuthService.setLoggedIn(true, username);
       if (!mounted) return;
 
@@ -87,8 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _logger.w("Login gagal. Pesan error: $errorMessage");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content:
-              Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
+          content: Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
           backgroundColor: Colors.red,
         ),
       );
@@ -134,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
             _buildLoginButton(
               text: 'Login Member',
               icon: Icons.person,
-              onPressed: () => showMemberLoginDialog(context, _handleLogin),
+              onPressed: () => showMemberDialog(context, _handleLogin),
             ),
           ],
         ),
