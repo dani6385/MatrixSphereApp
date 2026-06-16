@@ -262,6 +262,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_lints:
+    dependency: "direct dev"
+    description:
+      name: flutter_lints
+      sha256: a25a15ebbdfc33ab1cd26c63a6ee519df92338a9c10f122adda92938253bef04
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -271,7 +279,7 @@ packages:
     source: hosted
     version: "2.0.34"
   flutter_test:
-    dependency: transitive
+    dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -313,7 +321,7 @@ packages:
     source: hosted
     version: "4.1.2"
   image_picker:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: image_picker
       sha256: "91c025426c2881c551100bce834e201c835a170151545f58d17da5180ca7d9ac"
@@ -400,8 +408,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      sha256: "0a217c6c989d21039f1498c3ed9f3ed71b354e69873f13a8dfc3c9fe76f1b452"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       sha256: "25aee487596a6257655a1e091ec2ae66bc30e7af663592cc3a27e6591e05035c"
@@ -441,7 +457,7 @@ packages:
     source: hosted
     version: "2.0.0"
   mobile_scanner:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: mobile_scanner
       sha256: "0b466a0a8a211b366c2e87f3345715faef9b6011c7147556ad22f37de6ba3173"
@@ -504,6 +520,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.4"
+  shared_assets:
+    dependency: "direct main"
+    description:
+      path: "../shared_assets"
+      relative: true
+    source: path
+    version: "1.0.0"
   shared_core:
     dependency: "direct overridden"
     description:
@@ -568,7 +591,7 @@ packages:
     source: hosted
     version: "2.4.1"
   shared_services:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../shared_services"
       relative: true

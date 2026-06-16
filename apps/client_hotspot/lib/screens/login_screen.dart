@@ -4,7 +4,7 @@ import 'package:shared_services/shared_services.dart';
 import '../auth/mikrotik_auth.dart';
 import '../dialog/member_dialog.dart';
 import '../dialog/voucher_dialog.dart';
-import './navigation_layout.dart';
+import 'navigation_layout.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,25 +38,31 @@ class _LoginScreenState extends State<LoginScreen> {
     // 2. Ambil username dari sesi lokal
     final username = await AuthService.getUsername();
     if (username == null || username.isEmpty) {
-      _logger.w("Status login lokal true, tapi tidak ada username. Sesi dibersihkan.");
-      await AuthService.setLoggedIn(false, ''); // Bersihkan sesi yang tidak konsisten
+      _logger.w(
+          "Status login lokal true, tapi tidak ada username. Sesi dibersihkan.");
+      await AuthService.setLoggedIn(
+          false, ''); // Bersihkan sesi yang tidak konsisten
       return;
     }
 
-    _logger.i("Sesi lokal ditemukan untuk user '$username'. Memverifikasi dengan Firebase RTDB...");
+    _logger.i(
+        "Sesi lokal ditemukan untuk user '$username'. Memverifikasi dengan Firebase RTDB...");
 
     // 3. Verifikasi dengan Firebase RTDB sebagai sumber kebenaran
     final isRtdbLoggedIn = await _auth.checkLoginStatus(username);
 
     if (isRtdbLoggedIn && mounted) {
-      _logger.i("User '$username' terverifikasi di RTDB. Navigasi ke dashboard.");
+      _logger
+          .i("User '$username' terverifikasi di RTDB. Navigasi ke dashboard.");
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const NavigationLayout()),
         (Route<dynamic> route) => false,
       );
     } else {
-      _logger.w("User '$username' tidak ditemukan di RTDB. Sesi lokal dibersihkan.");
-      await AuthService.setLoggedIn(false, ''); // Jika tidak ada di RTDB, sesi lokal tidak valid
+      _logger.w(
+          "User '$username' tidak ditemukan di RTDB. Sesi lokal dibersihkan.");
+      await AuthService.setLoggedIn(
+          false, ''); // Jika tidak ada di RTDB, sesi lokal tidak valid
     }
   }
 
@@ -82,7 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pop(context); // Tutup loading indicator
 
     if (success) {
-      _logger.i("Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
+      _logger.i(
+          "Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
       await AuthService.setLoggedIn(true, username);
       if (!mounted) return;
 
@@ -92,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.green,
         ),
       );
-      
+
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const NavigationLayout()),
         (Route<dynamic> route) => false, // Hapus semua halaman sebelumnya
@@ -101,7 +108,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _logger.w("Login gagal. Pesan error: $errorMessage");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
+          content:
+              Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
           backgroundColor: Colors.red,
         ),
       );

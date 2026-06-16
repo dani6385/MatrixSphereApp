@@ -13,8 +13,8 @@ dependencies:
   cupertino_icons: ^1.0.8
   shared_core:
     path: ../../packages/shared_core
-  shared_services: # Ini dia perbaikannya
-    path: ../../packages/shared_services # Ini dia perbaikannya
+  shared_services:
+    path: ../../packages/shared_services
   crypto: ^3.0.7
   logger: ^2.7.0
   http: ^1.6.0
@@ -30,6 +30,8 @@ dependencies:
   connectivity_plus: ^7.1.1
   network_info_plus: ^7.0.0
   convert: ^3.1.2
+  shared_ui: ^0.0.1
+  
 
 dev_dependencies:
   flutter_test:
