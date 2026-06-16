@@ -1,66 +1,86 @@
-name: Build, Deploy & Release
+name: Build Selective Flutter Apps
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - 'apps/client_hotspot/**'
-      - 'pubspec.yaml'
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
-  build_and_deploy:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      admin_mikrotik: ${{ steps.filter.outputs.admin_mikrotik }}
+      client_hotspot: ${{ steps.filter.outputs.client_hotspot }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use path filter action
+        uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            admin_mikrotik:
+              - 'apps/admin_mikrotik/**'
+            client_hotspot:
+              - 'apps/client_hotspot/**'
+
+  build_admin_mikrotik:
+    needs: changes
+    if: ${{ needs.changes.outputs.admin_mikrotik == 'true' }}
+    name: Build Admin Mikrotik App
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: 1. Checkout repository
+        uses: actions/checkout@v4
 
-      # Cache setup
-      - name: Cache Gradle & Pub
-        uses: actions/cache@v4
+      # OPTIMASI: Menambahkan cache untuk Flutter SDK
+      - name: 2. Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            ~/.pub-cache
-          key: ${{ runner.os }}-build-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-build-
+          channel: 'stable'
+          cache: true # Menambahkan cache untuk Flutter SDK
 
-      - name: Setup Java & Flutter
-        uses: actions/setup-java@v3
+      - name: 3. Get dependencies for Admin app
+        run: flutter pub get
+        working-directory: ./apps/admin_mikrotik
+
+      - name: 4. Build APK for Admin app
+        run: flutter build apk --release
+        working-directory: ./apps/admin_mikrotik
+
+      - name: 5. Upload Admin APK Artifact
+        uses: actions/upload-artifact@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
-      - uses: subosito/flutter-action@v2
+          name: admin-mikrotik-release.apk
+          path: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+
+  build_client_hotspot:
+    needs: changes
+    if: ${{ needs.changes.outputs.client_hotspot == 'true' }}
+    name: Build Client Hotspot App
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Checkout repository
+        uses: actions/checkout@v4
+
+      # OPTIMASI: Menambahkan cache untuk Flutter SDK
+      - name: 2. Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          channel: 'stable'
+          cache: true # Menambahkan cache untuk Flutter SDK
 
-      - name: Install Melos & Bootstrap
-        run: |
-          dart pub global activate melos
-          melos bootstrap
+      - name: 3. Get dependencies for Client app
+        run: flutter pub get
+        working-directory: ./apps/client_hotspot
 
-      - name: Build APK
-        run: |
-          cd apps/client_hotspot
-          flutter build apk --release --build-number=${{ github.run_number }}
+      - name: 4. Build APK for Client app
+        run: flutter build apk --release
+        working-directory: ./apps/client_hotspot
 
-      # 1. Kirim ke Firebase App Distribution
-      - name: Upload to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+      - name: 5. Upload Client APK Artifact
+        uses: actions/upload-artifact@v4
         with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
-          token: ${{ secrets.FIREBASE_TOKEN }}
-          groups: testers
-          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
-
-      # 2. Upload ke GitHub Releases
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
-          tag_name: v1.0.${{ github.run_number }}
-          name: Versi Baru - Build ${{ github.run_number }}
-          body: "APK terbaru telah di-deploy ke Firebase dan siap diunduh."
-          allowUpdates: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: client-hotspot-release.apk
+          path: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
