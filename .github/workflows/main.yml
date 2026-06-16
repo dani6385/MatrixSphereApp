@@ -1,4 +1,4 @@
-name: Build & Release to Repo Home
+name: Build, Release to Repo Home & deploy
 
 on:
   push:

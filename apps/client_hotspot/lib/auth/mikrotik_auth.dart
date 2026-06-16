@@ -39,40 +39,34 @@ class MikrotikAuth {
       };
 
     try {
-      _logger.i("Mencoba login dengan HTTP POST biasa untuk username: $username");
+      _logger.i("Mencoba login dengan HTTP POST untuk username: $username");
       final streamedResponse = await client.send(request);
       final responseBody = await streamedResponse.stream.bytesToString();
       
-      // Log respons mentah untuk debugging di masa depan
       _logger.d("Status Code: ${streamedResponse.statusCode}");
-      _logger.d("Response Body: $responseBody");
+      _logger.d("Response Headers: ${streamedResponse.headers}");
+      _logger.d("Response Body (cuplikan): ${responseBody.substring(0, responseBody.length > 500 ? 500 : responseBody.length)}");
 
-      // Kondisi Sukses 1: Redirect langsung
+      // --- PERBAIKAN LOGIKA LOGIN ---
+      // Keberhasilan login ditandai dengan status code 302 (redirect) ke halaman status,
+      // atau status code 200 yang isinya mengarah ke halaman status/logout.
+      
+      // Kondisi Sukses 1: Redirect (302) ke halaman status.
       if (streamedResponse.statusCode == 302) {
-        _logger.i("Login berhasil! Redirect (302) diterima.");
+        final location = streamedResponse.headers['location'];
+        if (location != null && location.contains('status')) {
+            _logger.i("Login berhasil! Redirect (302) ke halaman status terdeteksi: $location");
+            return true;
+        }
+      }
+
+      // Kondisi Sukses 2: Halaman sukses (200) yang berisi link logout atau mengarah ke status.html.
+      if (streamedResponse.statusCode == 200 && (responseBody.contains('logout') || responseBody.contains('status.html'))) {
+        _logger.i("Login berhasil! Halaman sukses (200 OK) dengan link logout atau redirect ke status.html terdeteksi.");
         return true;
       }
 
-      // Kondisi Sukses 2: Halaman status dengan link /logout
-      if (streamedResponse.statusCode == 200 && responseBody.contains('logout')) {
-        _logger.i("Login berhasil! Halaman status (200 OK dengan link logout) terdeteksi.");
-        return true;
-      }
-
-      // Kondisi Sukses 3: Halaman status dengan link /status
-      if (streamedResponse.statusCode == 200 && responseBody.contains('status')) {
-        _logger.i("Login berhasil! Halaman status (200 OK dengan link status) terdeteksi.");
-        return true;
-      }
-
-      // --- PERBAIKAN FINAL --- 
-      // Kondisi Sukses 4: Halaman berisi redirect JavaScript ke status.html
-      if (streamedResponse.statusCode == 200 && responseBody.contains('status.html')) {
-        _logger.i("Login berhasil! Halaman redirect JS ke 'status.html' terdeteksi.");
-        return true;
-      }
-
-      _logger.w("Login gagal. Tidak ada kondisi sukses yang cocok. Respons tidak mengandung kata kunci yang diharapkan.");
+      _logger.w("Login gagal. Status: ${streamedResponse.statusCode}. Tidak ada kondisi sukses yang cocok.");
       return false;
 
     } catch (e) {
