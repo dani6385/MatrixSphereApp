@@ -52,9 +52,13 @@ class MikrotikAuth {
   }
 
   String _generateChapPassword(String chapId, String password, String challenge) {
-    var chapIdBytes = convert.hex.decode(chapId);
+    // PERBAIKAN: Membersihkan karakter backslash ('\\') yang tidak valid.
+    final sanitizedChapId = chapId.replaceAll('\\', '');
+    final sanitizedChallenge = challenge.replaceAll('\\', '');
+
+    var chapIdBytes = convert.hex.decode(sanitizedChapId);
     var passwordBytes = utf8.encode(password);
-    var challengeBytes = convert.hex.decode(challenge);
+    var challengeBytes = convert.hex.decode(sanitizedChallenge);
 
     var bytesToHash = <int>[];
     bytesToHash.addAll(chapIdBytes);
@@ -97,12 +101,10 @@ class MikrotikAuth {
       _logger.i("Mencoba login dengan username: $username");
       final response = await client.send(request);
 
-      // Login BERHASIL jika MikroTik merespons dengan redirect (302)
       if (response.statusCode == 302) {
         _logger.i("Login berhasil! Redirect diterima dari MikroTik.");
         return true;
       } else {
-        // Jika tidak redirect, berarti login GAGAL
         final responseBody = await response.stream.bytesToString();
         _logger.w(
             "Login gagal. Status: ${response.statusCode}, Body: $responseBody");
@@ -110,7 +112,8 @@ class MikrotikAuth {
       }
     } catch (e) {
       _logger.e("Error saat post login: $e");
-      return false;
+      // Melempar kembali error agar bisa ditangkap oleh _handleLogin dan ditampilkan di UI
+      rethrow;
     } finally {
       client.close();
     }

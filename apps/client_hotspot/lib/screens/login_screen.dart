@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 import '../auth/mikrotik_auth.dart';
 import '../dialog/member_dialog.dart';
 import '../dialog/voucher_dialog.dart';
-import 'dashboard_screen.dart'; // Navigate on success
+import './navigation_layout.dart'; // Mengarah ke NavigationLayout
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -49,15 +49,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } else if (success) {
-      _logger.i("Login berhasil, navigasi ke Dashboard.");
+      _logger.i("Login berhasil, navigasi ke NavigationLayout.");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Login Berhasil!'),
           backgroundColor: Colors.green,
         ),
       );
+      // Navigasi ke NavigationLayout, bukan DashboardScreen
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const DashboardScreen()));
+          MaterialPageRoute(builder: (_) => const NavigationLayout()));
     } else {
       _logger.w("Login gagal.");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -73,7 +74,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final voucherCode = await showVoucherDialog(context);
     if (voucherCode != null && voucherCode.isNotEmpty) {
       _logger.i("Mencoba login dengan voucher: $voucherCode");
-      // For vouchers, username and password are the same
       await _handleLogin(username: voucherCode, password: voucherCode);
     }
   }
