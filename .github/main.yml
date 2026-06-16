@@ -5,35 +5,54 @@ on:
     branches: [ main ]
     paths:
       - 'apps/client_hotspot/**'
-      - 'apps/admin_mikrotik/**'
       - 'pubspec.yaml'
   workflow_dispatch:
 
 jobs:
-  # Job 1: Build Hotspot Client
-  build-hotspot:
+  build_and_deploy:
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'apps/client_hotspot/')
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Cache dependencies Client
+
+      # 1. Cache Setup (Lebih efisien)
+      - name: Cache Gradle
         uses: actions/cache@v4
         with:
           path: |
-            ~/.pub-cache
-            apps/client_hotspot/.gradle
-          key: ${{ runner.os }}-hotspot-${{ hashFiles('apps/client_hotspot/pubspec.lock') }}
-          restore-keys: ${{ runner.os }}-hotspot-
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
 
+      - name: Cache Pub
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      # 2. Setup Environment
+      - name: Setup Java & Flutter
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
       - uses: subosito/flutter-action@v2
-        with: { flutter-version: '3.x' }
+        with:
+          flutter-version: '3.x'
 
-      - run: |
+      - name: Install Melos & Bootstrap
+        run: |
+          dart pub global activate melos
+          melos bootstrap
+
+      # 3. Build APK
+      - name: Build APK
+        run: |
           cd apps/client_hotspot
-          flutter pub get
           flutter build apk --release --build-number=${{ github.run_number }}
 
+      # 4. Upload ke Firebase App Distribution (Testers)
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
@@ -42,34 +61,14 @@ jobs:
           groups: testers
           file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
 
-  # Job 2: Build Admin MikroTik
-  build-admin:
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.modified, 'apps/admin_mikrotik/')
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Cache dependencies Admin
-        uses: actions/cache@v4
+      # 5. Create GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
         with:
-          path: |
-            ~/.pub-cache
-            apps/admin_mikrotik/.gradle
-          key: ${{ runner.os }}-admin-${{ hashFiles('apps/admin_mikrotik/pubspec.lock') }}
-          restore-keys: ${{ runner.os }}-admin-
-
-      - uses: subosito/flutter-action@v2
-        with: { flutter-version: '3.x' }
-
-      - run: |
-          cd apps/admin_mikrotik
-          flutter pub get
-          flutter build apk --release
-
-      - name: Upload Admin ke Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
-        with:
-          appId: ${{ secrets.FIREBASE_ADMIN_APP_ID }}
-          token: ${{ secrets.FIREBASE_TOKEN }}
-          groups: testers
-          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          files: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
+          tag_name: v1.0.${{ github.run_number }}
+          name: Versi Baru - Build ${{ github.run_number }}
+          body: "APK terbaru telah di-deploy ke Firebase dan siap diunduh dari Release ini."
+          allowUpdates: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
