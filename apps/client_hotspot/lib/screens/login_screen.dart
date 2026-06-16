@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-// Impor yang benar dari file publik
 import 'package:shared_services/shared_services.dart';
 import '../auth/mikrotik_auth.dart';
 import '../dialog/member_dialog.dart';
@@ -29,15 +28,16 @@ class _LoginScreenState extends State<LoginScreen> {
     final isLoggedIn = await AuthService.isLoggedIn();
     if (isLoggedIn && mounted) {
       _logger.i("User sudah login, langsung ke NavigationLayout.");
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const NavigationLayout()),
+      // PERBAIKAN: Menggunakan navigasi yang lebih kuat
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const NavigationLayout()),
+        (Route<dynamic> route) => false,
       );
     }
   }
 
   Future<void> _handleLogin(
       {required String username, String password = ''}) async {
-    // Show a loading indicator
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -45,28 +45,19 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     bool success = false;
-    Object? error;
+    String? errorMessage;
 
     try {
       success = await _auth.login(username: username, password: password);
     } catch (e) {
-      error = e;
+      errorMessage = e.toString();
     }
 
     if (!mounted) return; // Guard against async gap
 
-    // Close loading indicator
-    Navigator.pop(context);
+    Navigator.pop(context); // Tutup loading indicator
 
-    if (error != null) {
-      _logger.e("Error saat login: $error");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Terjadi error: $error'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } else if (success) {
+    if (success) {
       _logger.i("Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
       await AuthService.setLoggedIn(true, username);
       if (!mounted) return;
@@ -77,13 +68,16 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.green,
         ),
       );
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => const NavigationLayout()));
+      // PERBAIKAN: Menggunakan navigasi yang lebih kuat untuk memastikan pindah halaman
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const NavigationLayout()),
+        (Route<dynamic> route) => false, // Hapus semua halaman sebelumnya
+      );
     } else {
-      _logger.w("Login gagal.");
+      _logger.w("Login gagal. Pesan error: $errorMessage");
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login Gagal. Periksa kembali data Anda.'),
+        SnackBar(
+          content: Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
           backgroundColor: Colors.red,
         ),
       );
