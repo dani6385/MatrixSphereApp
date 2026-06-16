@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'scan_dialog.dart';
+import '../dialog/scan_dialog.dart';
 
 class ScanBottom extends StatefulWidget {
   const ScanBottom({super.key});
