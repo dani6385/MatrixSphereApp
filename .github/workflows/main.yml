@@ -3,7 +3,7 @@ name: Build and Distribute Flutter App
 
 # Pemicu (Trigger)
 on:
-  # Ini memungkinkan Anda menjalankan alur kerja ini secara manual dari tab Actions
+  # Baris ini SANGAT PENTING. Ini yang membuat alur kerja bisa dijalankan manual.
   workflow_dispatch:
     inputs:
       app:
