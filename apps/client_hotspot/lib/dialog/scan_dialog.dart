@@ -39,10 +39,8 @@ class _ScanDialogState extends State<_ScanDialog> {
   void _handleBarcode(BarcodeCapture capture) {
     if (mounted && capture.barcodes.isNotEmpty) {
       final String? code = capture.barcodes.first.rawValue;
-      if (code != null) {
-        // Pop dialog with the scanned code
-        Navigator.of(context).pop(code);
-      }
+      // Pop dialog with the scanned code
+      Navigator.of(context).pop(code);
     }
   }
 
@@ -51,17 +49,12 @@ class _ScanDialogState extends State<_ScanDialog> {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image == null) return; // User cancelled the picker
 
-      final BarcodeCapture? barcodes = await _scannerController.analyzeImage(image.path);
+      final BarcodeCapture? capture = await _scannerController.analyzeImage(image.path);
 
       if (!mounted) return;
-
-      if (barcodes != null && barcodes.barcodes.isNotEmpty) {
-        final String? code = barcodes.barcodes.first.rawValue;
-        if (code != null) {
-          Navigator.of(context).pop(code);
-        } else {
-          _showError('Tidak dapat membaca kode QR dari gambar yang dipilih.');
-        }
+      
+      if (capture != null && capture.barcodes.isNotEmpty) {
+        _handleBarcode(capture);
       } else {
         _showError('Tidak ada kode QR yang ditemukan di gambar.');
       }
@@ -108,7 +101,7 @@ class _ScanDialogState extends State<_ScanDialog> {
                   errorBuilder: (context, error, child) {
                     return Center(
                       child: Text(
-                        'Kamera tidak tersedia atau terjadi kesalahan: \n${error.error}',
+                        'Kamera tidak tersedia atau terjadi kesalahan: \n${error.toString()}',
                         textAlign: TextAlign.center,
                       ),
                     );
@@ -139,8 +132,4 @@ class _ScanDialogState extends State<_ScanDialog> {
       ],
     );
   }
-}
-
-extension on MobileScannerException {
-  get error => null;
 }

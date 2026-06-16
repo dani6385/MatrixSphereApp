@@ -28,29 +28,24 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
-  // --- FUNGSI BARU YANG DIPERBAIKI ---
   void _checkLoginStatusAndNavigate() async {
-    // 1. Cek status login lokal
     final isLocallyLoggedIn = await AuthService.isLoggedIn();
     if (!isLocallyLoggedIn) {
       _logger.i("User belum login (tidak ada data sesi lokal).");
-      return; // Tetap di halaman login
+      return;
     }
 
-    // 2. Ambil username dari sesi lokal
     final username = await AuthService.getUsername();
     if (username == null || username.isEmpty) {
       _logger.w(
           "Status login lokal true, tapi tidak ada username. Sesi dibersihkan.");
-      await AuthService.setLoggedIn(
-          false, ''); // Bersihkan sesi yang tidak konsisten
+      await AuthService.setLoggedIn(false, '');
       return;
     }
 
     _logger.i(
         "Sesi lokal ditemukan untuk user '$username'. Memverifikasi dengan Firebase RTDB...");
 
-    // 3. Verifikasi dengan Firebase RTDB sebagai sumber kebenaran
     final isRtdbLoggedIn = await _auth.checkLoginStatus(username);
 
     if (isRtdbLoggedIn && mounted) {
@@ -63,8 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       _logger.w(
           "User '$username' tidak ditemukan di RTDB. Sesi lokal dibersihkan.");
-      await AuthService.setLoggedIn(
-          false, ''); // Jika tidak ada di RTDB, sesi lokal tidak valid
+      await AuthService.setLoggedIn(false, '');
     }
   }
 
@@ -85,9 +79,9 @@ class _LoginScreenState extends State<LoginScreen> {
       errorMessage = e.toString();
     }
 
-    if (!mounted) return; // Guard against async gap
+    if (!mounted) return;
 
-    Navigator.pop(context); // Tutup loading indicator
+    Navigator.pop(context);
 
     if (success) {
       _logger.i(
@@ -104,7 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const NavigationLayout()),
-        (Route<dynamic> route) => false, // Hapus semua halaman sebelumnya
+        (Route<dynamic> route) => false,
       );
     } else {
       _logger.w("Login gagal. Pesan error: $errorMessage");
@@ -118,12 +112,41 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _scanQR() {
-    showScanDialog(context, _handleLogin);
+  void _scanQR() async {
+    final result = await showScanDialog(context);
+    if (result != null) {
+      await _handleLogin(username: result);
+    }
   }
 
   void _bayarQR() {
     showQrDialog(context);
+  }
+
+  void _showTrialDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Coba Gratis'),
+        content: const Text(
+            'Anda akan mendapatkan akses internet gratis selama 1 jam. Lanjutkan?'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Batal'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          TextButton(
+            child: const Text('Mulai'),
+            onPressed: () {
+              Navigator.of(context).pop();
+              final trialUsername =
+                  'TRIAL-${DateTime.now().millisecondsSinceEpoch}';
+              _handleLogin(username: trialUsername);
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -141,6 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const Spacer(),
             const Icon(Icons.wifi, size: 64, color: Colors.blueAccent),
             const SizedBox(height: 20),
             const Text(
@@ -156,52 +180,78 @@ class _LoginScreenState extends State<LoginScreen> {
               style: TextStyle(fontSize: 16, color: Colors.black54),
             ),
             const SizedBox(height: 40),
-            _buildLoginButton(
-              text: 'Login Voucher',
-              icon: Icons.confirmation_number,
-              onPressed: () => showVoucherDialog(context, _handleLogin),
+            Table(
+              children: [
+                TableRow(
+                  children: [
+                    _buildLoginButton(
+                      text: 'Login Voucher',
+                      icon: Icons.confirmation_number,
+                      onPressed: () => showVoucherDialog(context, _handleLogin),
+                    ),
+                    _buildLoginButton(
+                      text: 'Login Member',
+                      icon: Icons.person,
+                      onPressed: () => showMemberDialog(context, _handleLogin),
+                    ),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    _buildLoginButton(
+                      text: 'Scan QR',
+                      icon: Icons.qr_code_scanner,
+                      onPressed: _scanQR,
+                    ),
+                    _buildLoginButton(
+                      text: 'Bayar QR',
+                      icon: Icons.qr_code_2,
+                      onPressed: _bayarQR,
+                    ),
+                  ],
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 40),
             _buildLoginButton(
-              text: 'Login Member',
-              icon: Icons.person,
-              onPressed: () => showMemberDialog(context, _handleLogin),
+              text: 'Coba Gratis (1 Jam)',
+              icon: Icons.timer_outlined,
+              onPressed: _showTrialDialog,
+              isTrial: true,
             ),
-            const SizedBox(height: 20),
-            _buildLoginButton(
-              text: 'Scan QR',
-              icon: Icons.qr_code_scanner,
-              onPressed: _scanQR,
-            ),
-            const SizedBox(height: 20),
-            _buildLoginButton(
-              text: 'Bayar QR',
-              icon: Icons.qr_code_2,
-              onPressed: _bayarQR,
-            ),
+            const Spacer(),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildLoginButton({
-    required String text,
-    required IconData icon,
-    required VoidCallback onPressed,
-  }) {
-    return ElevatedButton.icon(
-      icon: Icon(icon, color: Colors.deepPurple),
-      label: Text(text, style: const TextStyle(color: Colors.deepPurple)),
+Widget _buildLoginButton({
+  required String text,
+  required IconData icon,
+  required VoidCallback onPressed,
+  bool isTrial = false,
+}) {
+  final buttonStyle = ElevatedButton.styleFrom(
+    backgroundColor: isTrial ? Colors.orangeAccent : Colors.white,
+    minimumSize: const Size(150, 50),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30),
+    ),
+    elevation: 5,
+  );
+
+  final iconColor = isTrial ? Colors.white : Colors.deepPurple;
+  final textColor = isTrial ? Colors.white : Colors.deepPurple;
+
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: ElevatedButton.icon(
+      icon: Icon(icon, color: iconColor),
+      label: Text(text, style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
       onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        minimumSize: const Size(250, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-        elevation: 5,
-      ),
-    );
-  }
+      style: buttonStyle,
+    ),
+  );
 }
