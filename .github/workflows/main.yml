@@ -1,110 +1,65 @@
-name: Build & Distribute Flutter Apps
-
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+    paths:
+      - 'apps/client_hotspot/**'
+      - 'apps/admin_mikrotik/**'
+      - 'pubspec.yaml'
 
 jobs:
-  changes:
+  build-hotspot:
     runs-on: ubuntu-latest
-    outputs:
-      admin_mikrotik: ${{ steps.filter.outputs.admin_mikrotik }}
-      client_hotspot: ${{ steps.filter.outputs.client_hotspot }}
+    if: contains(github.event.head_commit.modified, 'apps/client_hotspot/')
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Use path filter action
-        uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            admin_mikrotik:
-              - 'apps/admin_mikrotik/**'
-            client_hotspot:
-              - 'apps/client_hotspot/**'
-
-  build_and_deploy_admin:
-    needs: changes
-    if: ${{ needs.changes.outputs.admin_mikrotik == 'true' }}
-    name: Build & Deploy Admin Mikrotik
-    runs-on: ubuntu-latest
-    steps:
-      - name: 1. Checkout repository
-        uses: actions/checkout@v4
-
-      - name: 2. Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-
-      - name: 3. Get dependencies
-        run: flutter pub get
-        working-directory: ./apps/admin_mikrotik
-
-      - name: 4. Cache Gradle Dependencies
+      - uses: actions/checkout@v4
+      
+      # Tambahkan Cache di sini
+      - name: Cache dependencies
         uses: actions/cache@v4
         with:
           path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+            ~/.pub-cache
+            apps/client_hotspot/.gradle
+          key: ${{ runner.os }}-hotspot-${{ hashFiles('apps/client_hotspot/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-hotspot-
 
-      - name: 5. Build APK
-        run: flutter build apk --release
-        working-directory: ./apps/admin_mikrotik
+      - uses: subosito/flutter-action@v2
+      - run: |
+          cd apps/client_hotspot
+          flutter pub get
+          flutter build apk --release
 
-      - name: 6. Deploy to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Action@v1
+      - uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{ secrets.FIREBASE_APP_ID_ADMIN }}
-          token: ${{ secrets.FIREBASE_TOKEN }}
-          groups: testers
-          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
-          releaseNotes: "Build from commit ${{ github.sha }}"
-
-  build_and_deploy_client:
-    needs: changes
-    if: ${{ needs.changes.outputs.client_hotspot == 'true' }}
-    name: Build & Deploy Client Hotspot
-    runs-on: ubuntu-latest
-    steps:
-      - name: 1. Checkout repository
-        uses: actions/checkout@v4
-
-      - name: 2. Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-
-      - name: 3. Get dependencies
-        run: flutter pub get
-        working-directory: ./apps/client_hotspot
-
-      - name: 4. Cache Gradle Dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: 5. Build APK
-        run: flutter build apk --release
-        working-directory: ./apps/client_hotspot
-
-      - name: 6. Deploy to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Action@v1
-        with:
-          appId: ${{ secrets.FIREBASE_APP_ID_CLIENT }}
-          token: ${{ secrets.FIREBASE_TOKEN }}
-          groups: testers
+          appId: ${{ secrets.FIREBASE_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }} 
           file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
-          releaseNotes: "Build from commit ${{ github.sha }}"
+
+  build-admin:
+    runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.modified, 'apps/admin_mikrotik/')
+    steps:
+      - uses: actions/checkout@v4
+      
+      # Tambahkan Cache di sini
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            apps/admin_mikrotik/.gradle
+          key: ${{ runner.os }}-admin-${{ hashFiles('apps/admin_mikrotik/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-admin-
+
+      - uses: subosito/flutter-action@v2
+      - run: |
+          cd apps/admin_mikrotik
+          flutter pub get
+          flutter build apk --release
+
+      - uses: softprops/action-gh-release@v1
+        with:
+          files: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          tag_name: admin-v1.0.${{ github.run_number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
