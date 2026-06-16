@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_services/shared_services.dart';
 import '../auth/mikrotik_auth.dart';
-import '../dialog/member_dialog.dart';
+import '../bottom/member_dialog.dart';
 import '../dialog/voucher_dialog.dart';
 import './navigation_layout.dart'; // Mengarah ke NavigationLayout
 
