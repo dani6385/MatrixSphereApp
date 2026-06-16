@@ -57,7 +57,6 @@ class MikrotikAuth {
 
       if (sanitized.length % 2 != 0) {
         _logger.w("String hex ganjil terdeteksi: $sanitized. Menambahkan padding '0'.");
-        // PERBAIKAN: Menggunakan string interpolation
         sanitized = '0$sanitized';
       }
       return sanitized;
@@ -116,17 +115,29 @@ class MikrotikAuth {
 
     try {
       _logger.i("Mencoba login dengan username: $username");
-      final response = await client.send(request);
+      final streamedResponse = await client.send(request);
 
-      if (response.statusCode == 302) {
-        _logger.i("Login berhasil! Redirect diterima dari MikroTik.");
+      // Selalu baca body, terlepas dari status code
+      final responseBody = await streamedResponse.stream.bytesToString();
+
+      // ---- PERBAIKAN LOGIKA SUKSES ----
+      // Kondisi Sukses 1: Server merespons dengan redirect (302)
+      if (streamedResponse.statusCode == 302) {
+        _logger.i("Login berhasil! Redirect (302) diterima dari MikroTik.");
         return true;
-      } else {
-        final responseBody = await response.stream.bytesToString();
-        _logger.w(
-            "Login gagal. Status: ${response.statusCode}, Body: $responseBody");
-        return false;
       }
+
+      // Kondisi Sukses 2: Server merespons halaman status (200) yang berisi link logout
+      if (streamedResponse.statusCode == 200 && responseBody.contains("/logout")) {
+        _logger.i("Login berhasil! Halaman status (200 OK dengan link logout) terdeteksi.");
+        return true;
+      }
+
+      // Jika tidak ada kondisi sukses yang terpenuhi, maka login dianggap gagal.
+      _logger.w(
+          "Login gagal. Status: ${streamedResponse.statusCode}, Body: $responseBody");
+      return false;
+      
     } catch (e) {
       _logger.e("Error saat post login: $e");
       rethrow;
