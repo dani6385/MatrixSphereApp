@@ -41,7 +41,7 @@ class MikrotikAuth {
         String chapId = chapIdInput?.attributes['value'] ?? "";
 
         if (challenge.isNotEmpty && chapId.isNotEmpty) {
-          _logger.i("Challenge: $challenge, ChapID: $chapId");
+          _logger.i("Original Challenge: $challenge, ChapID: $chapId");
           return {'challenge': challenge, 'chapId': chapId};
         }
       }
@@ -52,22 +52,39 @@ class MikrotikAuth {
   }
 
   String _generateChapPassword(String chapId, String password, String challenge) {
-    // PERBAIKAN: Membersihkan karakter backslash ('\\') yang tidak valid.
-    final sanitizedChapId = chapId.replaceAll('\\', '');
-    final sanitizedChallenge = challenge.replaceAll('\\', '');
+    String sanitizeAndPadHex(String input) {
+      String sanitized = input.replaceAll(RegExp(r'[^0-9a-fA-F]'), '');
 
-    var chapIdBytes = convert.hex.decode(sanitizedChapId);
-    var passwordBytes = utf8.encode(password);
-    var challengeBytes = convert.hex.decode(sanitizedChallenge);
+      if (sanitized.length % 2 != 0) {
+        _logger.w("String hex ganjil terdeteksi: $sanitized. Menambahkan padding '0'.");
+        // PERBAIKAN: Menggunakan string interpolation
+        sanitized = '0$sanitized';
+      }
+      return sanitized;
+    }
 
-    var bytesToHash = <int>[];
-    bytesToHash.addAll(chapIdBytes);
-    bytesToHash.addAll(passwordBytes);
-    bytesToHash.addAll(challengeBytes);
+    final sanitizedChapId = sanitizeAndPadHex(chapId);
+    final sanitizedChallenge = sanitizeAndPadHex(challenge);
 
-    var digest = md5.convert(bytesToHash);
+    try {
+      var chapIdBytes = convert.hex.decode(sanitizedChapId);
+      var passwordBytes = utf8.encode(password);
+      var challengeBytes = convert.hex.decode(sanitizedChallenge);
 
-    return convert.hex.encode(digest.bytes);
+      var bytesToHash = <int>[];
+      bytesToHash.addAll(chapIdBytes);
+      bytesToHash.addAll(passwordBytes);
+      bytesToHash.addAll(challengeBytes);
+
+      var digest = md5.convert(bytesToHash);
+
+      return convert.hex.encode(digest.bytes);
+    } catch (e) {
+      _logger.e("Error kritis saat proses CHAP: $e");
+      _logger.e("Chap-ID (setelah sanitasi): $sanitizedChapId");
+      _logger.e("Challenge (setelah sanitasi): $sanitizedChallenge");
+      rethrow;
+    }
   }
 
   Future<bool> login({
@@ -87,7 +104,7 @@ class MikrotikAuth {
 
     final client = IOClient();
     final request = http.Request('POST', Uri.parse(loginUrl))
-      ..followRedirects = false // Menonaktifkan redirect otomatis
+      ..followRedirects = false
       ..bodyFields = {
         'username': username,
         'password': chapPassword,
@@ -112,7 +129,6 @@ class MikrotikAuth {
       }
     } catch (e) {
       _logger.e("Error saat post login: $e");
-      // Melempar kembali error agar bisa ditangkap oleh _handleLogin dan ditampilkan di UI
       rethrow;
     } finally {
       client.close();

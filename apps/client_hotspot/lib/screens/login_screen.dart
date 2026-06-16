@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+// Impor yang benar dari file publik
+import 'package:shared_services/shared_services.dart';
 import '../auth/mikrotik_auth.dart';
 import '../dialog/member_dialog.dart';
 import '../dialog/voucher_dialog.dart';
@@ -16,6 +18,22 @@ class _LoginScreenState extends State<LoginScreen> {
   final Logger _logger = Logger();
   final MikrotikAuth _auth =
       MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  void _checkLoginStatus() async {
+    final isLoggedIn = await AuthService.isLoggedIn();
+    if (isLoggedIn && mounted) {
+      _logger.i("User sudah login, langsung ke NavigationLayout.");
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (_) => const NavigationLayout()),
+      );
+    }
+  }
 
   Future<void> _handleLogin(
       {required String username, String password = ''}) async {
@@ -49,14 +67,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } else if (success) {
-      _logger.i("Login berhasil, navigasi ke NavigationLayout.");
+      _logger.i("Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
+      await AuthService.setLoggedIn(true, username);
+      if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Login Berhasil!'),
           backgroundColor: Colors.green,
         ),
       );
-      // Navigasi ke NavigationLayout, bukan DashboardScreen
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const NavigationLayout()));
     } else {
