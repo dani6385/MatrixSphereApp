@@ -3,6 +3,8 @@ import 'package:logger/logger.dart';
 import 'package:shared_services/shared_services.dart';
 import '../auth/mikrotik_auth.dart';
 import '../dialog/member_dialog.dart';
+import '../dialog/qr_dialog.dart';
+import '../dialog/scan_dialog.dart';
 import '../dialog/voucher_dialog.dart';
 import 'navigation_layout.dart';
 
@@ -116,6 +118,14 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _scanQR() {
+    showScanDialog(context, _handleLogin);
+  }
+
+  void _bayarQR() {
+    showQrDialog(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,6 +166,18 @@ class _LoginScreenState extends State<LoginScreen> {
               text: 'Login Member',
               icon: Icons.person,
               onPressed: () => showMemberDialog(context, _handleLogin),
+            ),
+            const SizedBox(height: 20),
+            _buildLoginButton(
+              text: 'Scan QR',
+              icon: Icons.qr_code_scanner,
+              onPressed: _scanQR,
+            ),
+            const SizedBox(height: 20),
+            _buildLoginButton(
+              text: 'Bayar QR',
+              icon: Icons.qr_code_2,
+              onPressed: _bayarQR,
             ),
           ],
         ),

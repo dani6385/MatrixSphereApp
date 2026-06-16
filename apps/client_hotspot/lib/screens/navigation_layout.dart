@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_ui/widgets/app_bottom_nav_bar.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'dashboard_screen.dart';
 
 class NavigationLayout extends StatefulWidget {
