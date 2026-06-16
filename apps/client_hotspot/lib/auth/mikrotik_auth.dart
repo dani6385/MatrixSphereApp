@@ -8,8 +8,7 @@ final NetworkInfo _networkInfo = NetworkInfo();
 final Logger _logger = Logger();
 
 Future<void> checkConnection() async {
-  final connectivityResult =
-      await connectivity.Connectivity().checkConnectivity();
+  final connectivityResult = await connectivity.Connectivity().checkConnectivity();
 
   if (connectivityResult.contains(connectivity.ConnectivityResult.wifi)) {
     String? wifiName = await _networkInfo.getWifiName();
@@ -24,56 +23,58 @@ class MikrotikAuth {
 
   MikrotikAuth({required this.loginUrl});
 
-  // FUNGSI UNTUK CHAP SUDAH TIDAK DIPERLUKAN LAGI, DIHAPUS.
-
   Future<bool> login({
     required String username,
     required String password,
   }) async {
-    // ---- PERUBAHAN TOTAL: Mengikuti metode cURL (HTTP POST biasa) ----
     final client = IOClient();
     final request = http.Request('POST', Uri.parse(loginUrl))
-      ..followRedirects =
-          false // Penting: Jangan ikuti redirect secara otomatis
+      ..followRedirects = false
       ..headers['Content-Type'] = 'application/x-www-form-urlencoded'
       ..bodyFields = {
-        // Kirim username dan password sebagai plain text, tanpa enkripsi CHAP.
         'username': username,
         'password': password,
-        'dst': 'http://www.google.com', // Beberapa hotspot butuh ini
-        'popup': 'true', // Beberapa hotspot butuh ini
+        'dst': 'http://www.google.com',
+        'popup': 'true',
       };
 
     try {
-      _logger
-          .i("Mencoba login dengan HTTP POST biasa untuk username: $username");
+      _logger.i("Mencoba login dengan HTTP POST biasa untuk username: $username");
       final streamedResponse = await client.send(request);
       final responseBody = await streamedResponse.stream.bytesToString();
+      
+      // Log respons mentah untuk debugging di masa depan
+      _logger.d("Status Code: ${streamedResponse.statusCode}");
+      _logger.d("Response Body: $responseBody");
 
-      // Logika sukses tetap sama: cari redirect (302) atau halaman status (200 dengan /logout)
+      // Kondisi Sukses 1: Redirect langsung
       if (streamedResponse.statusCode == 302) {
         _logger.i("Login berhasil! Redirect (302) diterima.");
         return true;
       }
 
-      if (streamedResponse.statusCode == 200 &&
-          responseBody.contains('logout')) {
-        _logger.i(
-            "Login berhasil! Halaman status (200 OK dengan link logout) terdeteksi.");
+      // Kondisi Sukses 2: Halaman status dengan link /logout
+      if (streamedResponse.statusCode == 200 && responseBody.contains('logout')) {
+        _logger.i("Login berhasil! Halaman status (200 OK dengan link logout) terdeteksi.");
         return true;
       }
 
-      // Jika login berhasil, beberapa halaman status tidak punya link /logout tapi punya /status
-      if (streamedResponse.statusCode == 200 &&
-          responseBody.contains('status')) {
-        _logger.i(
-            "Login berhasil! Halaman status (200 OK dengan link status) terdeteksi.");
+      // Kondisi Sukses 3: Halaman status dengan link /status
+      if (streamedResponse.statusCode == 200 && responseBody.contains('status')) {
+        _logger.i("Login berhasil! Halaman status (200 OK dengan link status) terdeteksi.");
         return true;
       }
 
-      _logger.w(
-          "Login gagal. Status: ${streamedResponse.statusCode}, Body: $responseBody");
+      // --- PERBAIKAN FINAL --- 
+      // Kondisi Sukses 4: Halaman berisi redirect JavaScript ke status.html
+      if (streamedResponse.statusCode == 200 && responseBody.contains('status.html')) {
+        _logger.i("Login berhasil! Halaman redirect JS ke 'status.html' terdeteksi.");
+        return true;
+      }
+
+      _logger.w("Login gagal. Tidak ada kondisi sukses yang cocok. Respons tidak mengandung kata kunci yang diharapkan.");
       return false;
+
     } catch (e) {
       _logger.e("Error saat post login: $e");
       rethrow;
