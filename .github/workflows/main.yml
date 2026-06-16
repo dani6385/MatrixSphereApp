@@ -36,7 +36,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable' # Anda bisa ganti ke 'beta' atau 'dev' jika perlu
+          channel: 'stable'
 
       # 4. Mengambil semua dependensi Flutter dari root project
       - name: Get root Flutter dependencies
@@ -58,31 +58,21 @@ jobs:
         run: flutter build apk --release
 
       # 8. Mengunggah APK client_hotspot ke Firebase App Distribution
-        # Langkah ini hanya berjalan jika 'client_hotspot' yang dipilih
       - name: Upload Client App to Firebase App Distribution
         if: github.event.inputs.app == 'client_hotspot'
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          # Gunakan secret untuk Firebase App ID aplikasi client Anda
           appId: ${{ secrets.FIREBASE_APP_ID_CLIENT }}
-          # Gunakan secret untuk file kredensial service account Firebase
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-          # Nama grup tester di Firebase App Distribution (opsional)
           groups: testers
-          # Path ke file APK yang telah di-build
           file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
 
       # 9. Mengunggah APK admin_mikrotik ke Firebase App Distribution
-        # Langkah ini hanya berjalan jika 'admin_mikrotik' yang dipilih
       - name: Upload Admin App to Firebase App Distribution
         if: github.event.inputs.app == 'admin_mikrotik'
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          # Gunakan secret untuk Firebase App ID aplikasi admin Anda
           appId: ${{ secrets.FIREBASE_APP_ID_ADMIN }}
-          # Gunakan secret untuk file kredensial service account Firebase
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
-          # Nama grup tester di Firebase App Distribution (opsional)
           groups: testers
-          # Path ke file APK yang telah di-build
           file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
