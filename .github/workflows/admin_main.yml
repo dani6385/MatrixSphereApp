@@ -1,10 +1,10 @@
-name: Build, Release to Repo Home & deploy
+name: Build, Release Admin to Repo Home & deploy
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'apps/client_hotspot/**'
+      - 'apps/admin_mikrotik/**'
       - 'pubspec.yaml'
   workflow_dispatch:
 
@@ -49,23 +49,23 @@ jobs:
       # Build APK
       - name: Build APK
         run: |
-          cd apps/client_hotspot
+          cd apps/admin_mikrotik
           flutter build apk --release --build-number=${{ github.run_number }}
 
       # 1. UPLOAD KE FIREBASE APP DISTRIBUTION
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }}
+          appId: ${{ secrets.FIREBASE_ADMIN_APP_ID }}
           token: ${{ secrets.FIREBASE_TOKEN }}
           groups: testers
-          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
+          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
 
       # 2. UPLOAD KE GITHUB RELEASES (Home Repo)
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
+          files: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
           tag_name: v1.0.${{ github.run_number }}
           name: Versi Baru - Build ${{ github.run_number }}
           body: "APK terbaru telah diunggah ke Firebase App Distribution dan tersedia di sini."
