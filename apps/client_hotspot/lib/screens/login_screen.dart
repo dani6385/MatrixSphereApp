@@ -7,6 +7,10 @@ import '../dialog/qr_dialog.dart';
 import '../dialog/scan_dialog.dart';
 import '../dialog/voucher_dialog.dart';
 import 'navigation_layout.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'dart:async';
+
+import '../services/hotspot_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,12 +23,36 @@ class _LoginScreenState extends State<LoginScreen> {
   final Logger _logger = Logger();
   final MikrotikAuth _auth =
       MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
+  final HotspotService _hotspotService = HotspotService();
+  StreamSubscription<DatabaseEvent>? _waitStreamSubscription;
+  String? _macAddress;
 
   @override
   void initState() {
     super.initState();
+    _listenToWaitingUsers();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkLoginStatusAndNavigate();
+    });
+  }
+
+  @override
+  void dispose() {
+    _waitStreamSubscription?.cancel();
+    super.dispose();
+  }
+
+  void _listenToWaitingUsers() {
+    _waitStreamSubscription =
+        _hotspotService.getWaitingUsersStream().listen((event) {
+      if (event.snapshot.value != null) {
+        final data = event.snapshot.value as Map<dynamic, dynamic>;
+        if (data.keys.isNotEmpty) {
+          setState(() {
+            _macAddress = data.keys.first;
+          });
+        }
+      }
     });
   }
 
@@ -139,9 +167,17 @@ class _LoginScreenState extends State<LoginScreen> {
             child: const Text('Mulai'),
             onPressed: () {
               Navigator.of(context).pop();
-              final trialUsername =
-                  'TRIAL-${DateTime.now().millisecondsSinceEpoch}';
-              _handleLogin(username: trialUsername);
+              if (_macAddress != null) {
+                final trialUsername = 'T-$_macAddress';
+                _handleLogin(username: trialUsername);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Tidak ada perangkat yang terdeteksi.'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
             },
           ),
         ],
