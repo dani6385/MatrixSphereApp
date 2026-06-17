@@ -7,6 +7,8 @@ import '../dialog/qr_dialog.dart';
 import '../dialog/scan_dialog.dart';
 import '../dialog/voucher_dialog.dart';
 import 'navigation_layout.dart';
+import 'package:shared_assets/shared_assets.dart';
+import '../services/hotspot_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,6 +19,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final Logger _logger = Logger();
+  final HotspotService _hotspotService = HotspotService();
   final MikrotikAuth _auth =
       MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
 
@@ -92,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Login Berhasil!'),
-          backgroundColor: Colors.green,
+          backgroundColor: AppColors.secondaryColor,
         ),
       );
 
@@ -106,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
         SnackBar(
           content:
               Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.errorColor,
         ),
       );
     }
@@ -149,10 +152,15 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  @override
+ @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: StreamBuilder(
+        stream: _hotspotService.getWaitingUsersStream(),
+        builder: (context, snapshot) {
+          // Logika: Jika ada data di folder 'wait', kita bisa beri notifikasi atau tombol khusus
+          bool hasWaitingUsers = snapshot.hasData && snapshot.data!.snapshot.value != null;
+          return Container(
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
@@ -165,19 +173,36 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            const Icon(Icons.wifi, size: 64, color: Colors.blueAccent),
+            const Icon(Icons.wifi, size: 64, color: AppColors.wifiColor),
             const SizedBox(height: 20),
+            if (hasWaitingUsers)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Card(
+                      color: Colors.amber[100],
+                      child: ListTile(
+                        leading: const Icon(Icons.notifications_active),
+                        title: const Text("Ada perangkat baru terdeteksi!"),
+                        onTap: () async {
+                          String macAddress = snapshot.data!.snapshot.value.toString();
+                          // Arahkan ke dialog atau fungsi aktivasi
+                          await _hotspotService.activateTrial("92:21:50:C3:A7:11");
+                          await _handleLogin(username: "T-$macAddress");
+                        },
+                      ),
+                    ),
+                  ),
             const Text(
               'Selamat Datang',
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color: AppColors.primaryColor,
               ),
             ),
             const Text(
               'Silakan pilih metode login Anda',
-              style: TextStyle(fontSize: 16, color: Colors.black54),
+              style: TextStyle(fontSize: 16, color: AppColors.textColor),
             ),
             const SizedBox(height: 40),
             Table(
@@ -187,11 +212,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildLoginButton(
                       text: 'Login Voucher',
                       icon: Icons.confirmation_number,
+                      color: AppColors.voucherColor,
                       onPressed: () => showVoucherDialog(context, _handleLogin),
                     ),
                     _buildLoginButton(
                       text: 'Login Member',
                       icon: Icons.person,
+                      color: AppColors.memberColor,
                       onPressed: () => showMemberDialog(context, _handleLogin),
                     ),
                   ],
@@ -201,11 +228,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     _buildLoginButton(
                       text: 'Scan QR',
                       icon: Icons.qr_code_scanner,
+                      color: AppColors.scanQrColor,
                       onPressed: _scanQR,
                     ),
                     _buildLoginButton(
                       text: 'Bayar QR',
                       icon: Icons.qr_code_2,
+                      color: AppColors.payQrColor,
                       onPressed: _bayarQR,
                     ),
                   ],
@@ -214,16 +243,19 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 40),
             _buildLoginButton(
-              text: 'Coba Gratis (1 Jam)',
+              text: 'Coba Gratis',
               icon: Icons.timer_outlined,
+              color: AppColors.trialColor,
               onPressed: _showTrialDialog,
               isTrial: true,
             ),
             const Spacer(),
           ],
         ),
-      ),
-    );
+      );
+    },
+  ),
+ );
   }
 }
 
@@ -232,26 +264,26 @@ Widget _buildLoginButton({
   required IconData icon,
   required VoidCallback onPressed,
   bool isTrial = false,
+  Color? color, // Tambahkan parameter warna di sini
 }) {
-  final buttonStyle = ElevatedButton.styleFrom(
-    backgroundColor: isTrial ? Colors.orangeAccent : Colors.white,
-    minimumSize: const Size(150, 50),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30),
-    ),
-    elevation: 5,
-  );
-
-  final iconColor = isTrial ? Colors.white : Colors.deepPurple;
-  final textColor = isTrial ? Colors.white : Colors.deepPurple;
-
   return Padding(
     padding: const EdgeInsets.all(8.0),
-    child: ElevatedButton.icon(
-      icon: Icon(icon, color: iconColor),
-      label: Text(text, style: TextStyle(color: textColor, fontWeight: FontWeight.bold)),
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        // Gunakan parameter color, jika null gunakan warna default (misal: primary)
+        backgroundColor: color ?? Colors.blue,
+        foregroundColor: AppColors.foregroundColor,
+        padding: const EdgeInsets.symmetric(vertical: 20,),
+        minimumSize: const Size(double.infinity, 50),
+      ),
       onPressed: onPressed,
-      style: buttonStyle,
+      child: Column(
+        children: [
+          Icon(icon),
+          const SizedBox(height: 8),
+          Text(text),
+        ],
+      ),
     ),
   );
 }

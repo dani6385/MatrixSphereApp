@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>MatrixSphere - Login</title>
+</head>
+<body>
+    <h2>Selamat Datang di Hotspot</h2>
+    <form action="/login" method="POST">
+        <input type="hidden" id="chap-id" name="chap-id" value="$(chap-id)">
+        <input type="hidden" id="chap-challenge" name="chap-challenge" value="$(chap-challenge)">
+        <div>
+            <label>Username:</label>
+            <input type="text" name="username" required>
+        </div>
+        <div>
+            <label>Password:</label>
+            <input type="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+    </form>
+    <script>
+        (function() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const isAndroid = /android/i.test(userAgent);
+            const playStoreUrl = "https://play.google.com/store/apps/details?id=com.yourpackage.name"; // Ganti dengan link aplikasi Anda
+            const pcAuthUrl = "auth.html";
+            if (isAndroid) {
+                // 1. Coba buka custom scheme
+                window.location.href = "matrixsphere://login";
+                // 2. Tunggu 2-5 detik, jika aplikasi tidak terbuka (halaman masih terlihat), pindah ke Play Store
+                setTimeout(function() {
+                    window.location.href = playStoreUrl;
+                }, 3000); // 3000ms = 3 detik
+            } else {
+                // Jika bukan Android (dianggap PC), arahkan ke auth.html
+                window.location.href = pcAuthUrl;
+            }
+        })();
+    </script>
+</body>
+</html>
+

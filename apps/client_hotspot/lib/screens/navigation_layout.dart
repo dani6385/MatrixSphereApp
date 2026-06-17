@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'dashboard_screen.dart';
+import '../constants/pages_config.dart';
 
 class NavigationLayout extends StatefulWidget {
   const NavigationLayout({super.key});
@@ -12,14 +12,6 @@ class NavigationLayout extends StatefulWidget {
 class _NavigationLayoutState extends State<NavigationLayout> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = [
-    const DashboardScreen(),
-    const Center(child: Text("Halaman Profil")),
-    const Center(child: Text("Halaman Hotspot Anda")),
-    const Center(child: Text("Halaman Status")),
-    const Center(child: Text("Halaman Pengaturan")),
-  ];
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -29,10 +21,17 @@ class _NavigationLayoutState extends State<NavigationLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: PagesConfig.pages[_selectedIndex],
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.wifi), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.group), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: ""),
+        ],
       ),
     );
   }

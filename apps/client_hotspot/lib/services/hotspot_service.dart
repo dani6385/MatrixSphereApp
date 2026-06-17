@@ -1,0 +1,31 @@
+import 'package:firebase_database/firebase_database.dart';
+import 'package:logger/logger.dart';
+
+class HotspotService {
+  final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+  final Logger _logger = Logger();
+
+  // Stream untuk mendengarkan data user yang sedang menunggu di Firebase
+  Stream<DatabaseEvent> getWaitingUsersStream() {
+    return _dbRef.child('mikrotik_member/wait').onValue;
+  }
+
+  // Fungsi untuk memicu Trial (misalnya mengubah status atau memindahkan data)
+  Future<void> activateTrial(String macAddress) async {
+    try {
+      // Logika: Pindahkan dari 'wait' ke 'active'
+      // Atau sekadar kirim flag ke Mikrotik melalui Firebase
+      await _dbRef.child('mikrotik_member/active/$macAddress').set({
+        'status': 'aktif',
+        'activated_at': DateTime.now().toString(),
+      });
+
+      // Hapus dari daftar tunggu
+      await _dbRef.child('mikrotik_member/wait/$macAddress').remove();
+      
+      _logger.i("Trial berhasil diaktifkan untuk $macAddress");
+    } catch (e) {
+      _logger.e("Error mengaktifkan trial: $e");
+    }
+  }
+}
