@@ -19,9 +19,34 @@ Future<void> checkConnection() async {
   }
 }
 
+Future<bool> authorizeDirectly(String macAddress, String loginUrl) async {
+  final url = Uri.parse(loginUrl);
+  final String username = 'T-$macAddress';
+
+    _logger.i("Mencoba login ke Mikrotik dengan username: $username");
+    
+  try {
+    final response = await http.post(
+      url,
+      body: {
+        'mac': macAddress,
+        'action': 'login', // sesuaikan dengan parameter login hotspot Anda
+        'trial': 'true',
+      },
+    );
+    if (response.statusCode == 200) {
+      _logger.i("Akses berhasil diberikan langsung ke $macAddress");
+      return true;
+    }
+  } catch (e) {
+    _logger.e("Gagal menembak akses ke Mikrotik: $e");
+  }
+  return false;
+}
+
 class MikrotikAuth {
   final String loginUrl;
-  final String rtdbUrl = "https://matrixsphere-project-default-rtdb.asia-southeast1.firebasedatabase.app/mikrotik_member";
+  final String rtdbUrl = "https://matrixsphere-project-default-rtdb.asia-southeast1.firebasedatabase.app/mikrotik_data";
 
   MikrotikAuth({required this.loginUrl});
 

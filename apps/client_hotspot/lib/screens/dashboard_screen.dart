@@ -1,82 +1,101 @@
 import 'package:flutter/material.dart';
-// Impor yang benar dari file publik
+import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_services/shared_services.dart';
-import './login_screen.dart';
+import 'login_screen.dart';
+import '../models/user_model.dart'; // Import model yang kita buat tadi
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
-  // Fungsi untuk logout
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  // Ambil ID user yang sedang login (sesuaikan dengan logic auth Anda)
+  final String userId = 'user1234'; 
+  late DatabaseReference _userRef;
+
+  @override
+  void initState() {
+    super.initState();
+    _userRef = FirebaseDatabase.instance.ref('users/$userId');
+  }
+
   void _logout(BuildContext context) async {
     await AuthService.logout();
     if (context.mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const LoginScreen()),
-        (Route<dynamic> route) => false, // Hapus semua riwayat navigasi
+        (route) => false,
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: GridView.count(
-        crossAxisCount: 2, // 2 kolom
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        children: [
-          _buildMenuCard(context, Icons.person_add, 'Beli Voucher', Colors.orange, () {}),
-          _buildMenuCard(context, Icons.wifi_tethering, 'Layanan Hotspot', Colors.blue, () {}),
-          _buildMenuCard(context, Icons.history, 'Riwayat Transaksi', Colors.green, () {}),
-          // Menambahkan aksi logout ke tombol 'Profil Saya'
-          _buildMenuCard(context, Icons.account_circle, 'Profil Saya', Colors.purple, () {
-            // Tampilkan dialog konfirmasi sebelum logout
-            showDialog(
-              context: context,
-              builder: (BuildContext ctx) {
-                return AlertDialog(
-                  title: const Text('Konfirmasi Logout'),
-                  content: const Text('Apakah Anda yakin ingin keluar?'),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(), // Tutup dialog
-                      child: const Text('Batal'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(ctx).pop(); // Tutup dialog dulu
-                        _logout(context); // Panggil fungsi logout
-                      },
-                      child: const Text('Logout', style: TextStyle(color: Colors.red)),
-                    ),
-                  ],
-                );
-              },
-            );
-          }),
-        ],
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            _buildProfileHeader(),
+            const SizedBox(height: 20),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                children: [
+                  _buildMenuCard(Icons.person_add, 'Beli Voucher', Colors.orange, () {}),
+                  _buildMenuCard(Icons.wifi_tethering, 'Layanan Hotspot', Colors.blue, () {}),
+                  _buildMenuCard(Icons.history, 'Riwayat Transaksi', Colors.green, () {}),
+                  _buildMenuCard(Icons.logout, 'Logout', Colors.red, () => _logout(context)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // Widget pembantu untuk membuat kotak menu, sekarang dengan aksi `onTap`
-  Widget _buildMenuCard(BuildContext context, IconData icon, String title, Color color, VoidCallback onTap) {
+  Widget _buildProfileHeader() {
+    return StreamBuilder(
+      stream: _userRef.onValue,
+      builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
+        if (snapshot.hasError) return const Text("Gagal memuat data");
+        if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
+          return const CircularProgressIndicator();
+        }
+
+        final data = UserModel.fromMap(snapshot.data!.snapshot.value as Map);
+
+        return Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          child: ListTile(
+            leading: const CircleAvatar(child: Icon(Icons.person)),
+            title: Text(data.nama, style: const TextStyle(fontWeight: FontWeight.bold)),
+            subtitle: Text("MAC: ${data.macAddress}"),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuCard(IconData icon, String title, Color color, VoidCallback onTap) {
     return Card(
-      elevation: 4,
+      elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
       child: InkWell(
-        onTap: onTap, // Menggunakan aksi yang diberikan
+        onTap: onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 50, color: color),
+            Icon(icon, size: 40, color: color),
             const SizedBox(height: 10),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           ],
         ),
       ),
