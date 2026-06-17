@@ -46,7 +46,7 @@ Future<bool> authorizeDirectly(String macAddress, String loginUrl) async {
 
 class MikrotikAuth {
   final String loginUrl;
-  final String rtdbUrl = "https://matrixsphere-project-default-rtdb.asia-southeast1.firebasedatabase.app/mikrotik_member";
+  final String rtdbUrl = "https://matrixsphere-project-default-rtdb.asia-southeast1.firebasedatabase.app/mikrotik_data";
 
   MikrotikAuth({required this.loginUrl});
 
