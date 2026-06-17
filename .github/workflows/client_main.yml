@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'apps/client_hotspot/**'
-      - 'pubspec.yaml'
+      - 'apps/client_hotspot/pubspec.yaml'
   workflow_dispatch:
 
 jobs:
