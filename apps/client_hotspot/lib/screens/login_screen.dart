@@ -158,8 +158,11 @@ class _LoginScreenState extends State<LoginScreen> {
       body: StreamBuilder(
         stream: _hotspotService.getWaitingUsersStream(),
         builder: (context, snapshot) {
-          // Logika: Jika ada data di folder 'wait', kita bisa beri notifikasi atau tombol khusus
-          bool hasWaitingUsers = snapshot.hasData && snapshot.data!.snapshot.value != null;
+            // Logika: Jika ada data di folder 'wait', kita bisa beri notifikasi atau tombol khusus
+            bool hasWaitingUsers = snapshot.hasData && snapshot.data!.snapshot.value != null;
+            final Map<dynamic, dynamic> waitingUsers = hasWaitingUsers
+              ? Map<dynamic, dynamic>.from(snapshot.data!.snapshot.value as Map)
+              : {};
           return Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -184,9 +187,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         leading: const Icon(Icons.notifications_active),
                         title: const Text("Ada perangkat baru terdeteksi!"),
                         onTap: () async {
-                          String macAddress = snapshot.data!.snapshot.value.toString();
+                          // Ambil MAC pertama dari daftar waiting users
+                          if (waitingUsers.isEmpty) return;
+                          String macAddress = waitingUsers.keys.first.toString();
                           // Arahkan ke dialog atau fungsi aktivasi
-                          await _hotspotService.activateTrial("92:21:50:C3:A7:11");
+                          await _hotspotService.activateTrial(macAddress);
                           await _handleLogin(username: "T-$macAddress");
                         },
                       ),

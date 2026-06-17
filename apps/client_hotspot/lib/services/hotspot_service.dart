@@ -7,7 +7,7 @@ class HotspotService {
 
   // Stream untuk mendengarkan data user yang sedang menunggu di Firebase
   Stream<DatabaseEvent> getWaitingUsersStream() {
-    return _dbRef.child('mikrotik_member/wait').onValue;
+    return _dbRef.child('mikrotik_data/MatrixSphere/wait').onValue;
   }
 
   // Fungsi untuk memicu Trial (misalnya mengubah status atau memindahkan data)
@@ -15,13 +15,13 @@ class HotspotService {
     try {
       // Logika: Pindahkan dari 'wait' ke 'active'
       // Atau sekadar kirim flag ke Mikrotik melalui Firebase
-      await _dbRef.child('mikrotik_member/active/$macAddress').set({
+      await _dbRef.child('mikrotik_data/active/$macAddress').set({
         'status': 'aktif',
         'activated_at': DateTime.now().toString(),
       });
 
       // Hapus dari daftar tunggu
-      await _dbRef.child('mikrotik_member/wait/$macAddress').remove();
+      await _dbRef.child('mikrotik_data/MatrixSphere/wait/$macAddress').remove();
       
       _logger.i("Trial berhasil diaktifkan untuk $macAddress");
     } catch (e) {
