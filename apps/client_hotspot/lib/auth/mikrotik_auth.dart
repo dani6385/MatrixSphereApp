@@ -117,57 +117,47 @@ class MikrotikAuth {
       final responseBody = await streamedResponse.stream.bytesToString();
       
       _logger.d("Status Code: ${streamedResponse.statusCode}");
-      _logger.d("Response Headers: ${streamedResponse.headers}");
-      _logger.d("Response Body (cuplikan): ${responseBody.substring(0, responseBody.length > 500 ? 500 : responseBody.length)}");
 
-      // Kondisi Sukses 1: Redirect (302) ke halaman status.
+      bool isLoginSuccess = false;
+
+      // Kondisi sukses: Redirect (302) ke halaman status atau respons 200 OK
       if (streamedResponse.statusCode == 302) {
         final location = streamedResponse.headers['location'];
         if (location != null && location.contains('status')) {
-            _logger.i("Login berhasil! Redirect (302) ke halaman status terdeteksi: $location");
-            
-            // --- OPSI DARI FIREBASE RTDB ---
-            // Coba ekstrak IP dan MAC dari URL redirect
-            final statusUri = Uri.parse(location);
-            final ip = statusUri.queryParameters['ip'];
-            final mac = statusUri.queryParameters['mac'];
-
-            if (ip != null && mac != null) {
-              await _updateLoginStatusInRtdb(username, ip, mac);
-            } else {
-               _logger.w("IP/MAC tidak ditemukan di query params redirect. Data tidak diupdate ke RTDB.");
-            }
-            return true;
+          _logger.i("Login berhasil! Redirect ke halaman status terdeteksi.");
+          isLoginSuccess = true;
+        }
+      } else if (streamedResponse.statusCode == 200) {
+        // Periksa apakah halaman 200 OK bukan halaman error login
+        if (!responseBody.contains('login failed')) { // Sesuaikan dengan pesan error di halaman login Anda
+          _logger.i("Login berhasil! Status 200 OK diterima.");
+          isLoginSuccess = true;
         }
       }
 
-      // Kondisi Sukses 2: Halaman sukses (200) yang berisi link logout atau mengarah ke status.html.
-      // Ini biasanya terjadi jika user sudah login sebelumnya.
-      if (streamedResponse.statusCode == 200 && (responseBody.contains('logout') || responseBody.contains('status.html'))) {
-        _logger.i("Login berhasil! Halaman sukses (200 OK) dengan link logout atau redirect ke status.html terdeteksi.");
-        
-        // --- OPSI DARI FIREBASE RTDB ---
-        String? ip;
-        String? mac;
+      if (isLoginSuccess) {
+        // Coba parse IP dan MAC, tapi jangan sampai menggagalkan login jika tidak ditemukan
+        String ip = "unknown";
+        String mac = "unknown";
+        try {
+          if (streamedResponse.statusCode == 302) {
+            final location = streamedResponse.headers['location']!;
+            final statusUri = Uri.parse(location);
+            ip = statusUri.queryParameters['ip'] ?? "unknown";
+            mac = statusUri.queryParameters['mac'] ?? "unknown";
+          } else { // status 200
+            final ipMatch = RegExp(r'ip-address(?:|es)?:(?:<[^>]+>)?\s*([\d\.]+)').firstMatch(responseBody);
+            if (ipMatch != null) ip = ipMatch.group(1)!;
 
-        // Coba ekstrak dari body HTML
-        final ipMatch = RegExp(r'ip-address(?:|es)?:(?:<[^>]+>)?\s*([\d\.]+)').firstMatch(responseBody);
-        if (ipMatch != null) {
-          ip = ipMatch.group(1);
+            final macMatch = RegExp(r'mac-address(?:|es)?:(?:<[^>]+>)?\s*([0-9A-Fa-f:]+)').firstMatch(responseBody);
+            if (macMatch != null) mac = macMatch.group(1)!;
+          }
+        } catch (e) {
+          _logger.w("Gagal mem-parsing IP/MAC dari respons, tapi login tetap dianggap berhasil. Error: $e");
         }
 
-        final macMatch = RegExp(r'mac-address(?:|es)?:(?:<[^>]+>)?\s*([0-9A-Fa-f:]+)').firstMatch(responseBody);
-        if (macMatch != null) {
-          mac = macMatch.group(1);
-        }
-
-        if (ip != null && mac != null) {
-          _logger.i("IP ($ip) dan MAC ($mac) berhasil di-parse dari response body.");
-          await _updateLoginStatusInRtdb(username, ip, mac);
-        } else {
-          _logger.w("Tidak dapat mem-parse IP/MAC dari response body. Data tidak diupdate ke RTDB.");
-        }
-        
+        // Panggil update ke RTDB tanpa memblokir.
+        _updateLoginStatusInRtdb(username, ip, mac);
         return true;
       }
 

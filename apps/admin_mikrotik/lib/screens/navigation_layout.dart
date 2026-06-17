@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import '../constants/pages_config.dart';
+import '../contants/pages_config.dart';
 
 class NavigationLayout extends StatefulWidget {
   const NavigationLayout({super.key});
