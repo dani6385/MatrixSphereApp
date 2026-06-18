@@ -8,22 +8,15 @@ import 'package:network_info_plus/network_info_plus.dart';
 final NetworkInfo _networkInfo = NetworkInfo();
 final Logger _logger = Logger();
 
-Future<String?> checkWifiConnection({String? expectedSsid}) async {
+// --- FUNGSI DIPERBARUI --- 
+// Sekarang hanya memeriksa apakah terhubung ke WiFi, dan mengembalikan nama WiFi jika ya.
+Future<String?> checkWifiConnection() async {
   final connectivityResult = await connectivity.Connectivity().checkConnectivity();
 
   if (connectivityResult.contains(connectivity.ConnectivityResult.wifi)) {
     String? wifiName = await _networkInfo.getWifiName();
     _logger.i("Terhubung ke WiFi: $wifiName");
-
-    if (expectedSsid != null && wifiName != null) {
-      if (wifiName.contains(expectedSsid)) {
-        return wifiName;
-      } else {
-        _logger.w("Nama WiFi '$wifiName' tidak cocok dengan yang diharapkan '$expectedSsid'");
-        return null; // Tidak cocok dengan SSID yang diharapkan
-      }
-    } 
-    return wifiName; // Kembali nama wifi jika tidak ada ssid yg di harapkan
+    return wifiName; 
   } else {
     _logger.i("Tidak terhubung ke WiFi");
     return null; // Tidak terhubung ke WiFi

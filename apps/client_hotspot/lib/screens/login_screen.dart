@@ -107,7 +107,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _handleLogin({required String username, String password = ''}) async {
-    final wifiName = await checkWifiConnection(expectedSsid: 'Mikrotik');
+    // --- PEMANGGILAN DIPERBARUI ---
+    final wifiName = await checkWifiConnection();
     if (wifiName == null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -118,7 +119,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // Guard against async gap
     if (!mounted) return;
 
     showDialog(
