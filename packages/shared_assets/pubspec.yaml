@@ -9,7 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_services:
-    path: ../shared_assets
+    path: ../shared_services
 
 flutter:
   fonts:
