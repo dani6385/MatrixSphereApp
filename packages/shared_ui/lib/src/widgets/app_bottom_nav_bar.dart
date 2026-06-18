@@ -9,7 +9,7 @@ class AppBottomNavBar extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.onTap,
-    required this.items,
+    required this.items, required Color selectedItemColor, required Color unselectedItemColor,
   });
 
   @override

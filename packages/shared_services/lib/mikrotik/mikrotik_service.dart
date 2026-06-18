@@ -9,7 +9,7 @@ class RouterOSClient {
   Future<void> connect() => throw UnimplementedError(
       'routeros_api package is missing. Add routeros_api to pubspec.yaml.');
 
-  Future<void> execute(String path, {required Map<String, String> params}) =>
+  Future<dynamic> execute(String path, {Map<String, String>? params}) =>
       throw UnimplementedError(
           'routeros_api package is missing. Add routeros_api to pubspec.yaml.');
 
@@ -55,5 +55,27 @@ class MikrotikService {
       _client.close();
     }
     return isSuccess;
+  }
+
+  Future<Map<String, dynamic>?> getActiveUser(String username) async {
+    Map<String, dynamic>? userData;
+    try {
+      await _ensureConnected();
+      final response = await _client.execute(
+        '/ip/hotspot/active/print',
+        params: {'?user': username},
+      );
+      if (response.isNotEmpty) {
+        userData = response[0];
+        log.i("Data user aktif ditemukan: $userData");
+      } else {
+        log.i("User $username tidak aktif.");
+      }
+    } catch (e) {
+      log.e("Error getting active user: $e");
+    } finally {
+      _client.close();
+    }
+    return userData;
   }
 }

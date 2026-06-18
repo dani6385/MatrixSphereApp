@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_assets/shared_assets.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../constants/pages_config.dart';
 
@@ -23,6 +24,8 @@ class _NavigationLayoutState extends State<NavigationLayout> {
     return Scaffold(
       body: PagesConfig.pages[_selectedIndex],
       bottomNavigationBar: AppBottomNavBar(
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.textOnLight,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         items: const [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_assets/shared_assets.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../contants/pages_config.dart';
 
@@ -25,12 +26,29 @@ class _NavigationLayoutState extends State<NavigationLayout> {
       bottomNavigationBar: AppBottomNavBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.textOnDark,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.wifi), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: ""),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: ""),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wifi),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.group),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "",
+          ),
         ],
       ),
     );

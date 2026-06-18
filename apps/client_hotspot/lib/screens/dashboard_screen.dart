@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_assets/shared_assets.dart';
 import 'package:shared_services/shared_services.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -54,7 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             if (snapshot.hasError) {
               return Text(
                 'Gagal memuat data: ${snapshot.error}',
-                style: TextStyle(color: AppTheme.),
+                style: TextStyle(color: AppColors.textOnDark),
               );
             }
 

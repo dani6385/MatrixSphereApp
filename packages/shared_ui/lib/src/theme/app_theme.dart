@@ -3,8 +3,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_assets/shared_assets.dart';
 
 abstract class AppTheme {
-  // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
-  static Color? ;
+  /// Dekorasi Glassmorphism yang dapat digunakan kembali
+  static BoxDecoration glassmorphism(BuildContext context,
+      {double borderRadius = 16.0}) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+    final color = isDarkMode
+        ? Colors.white.withValues(alpha: 0.1)
+        : Colors.white.withValues(alpha: 0.4);
+    final borderColor = isDarkMode
+        ? Colors.white.withValues(alpha: 0.2)
+        : Colors.white.withValues(alpha: 0.5);
+
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(borderRadius),
+      color: color,
+      border: Border.all(
+        color: borderColor,
+        width: 1.5,
+      ),
+    );
+  }
 
   // Tema untuk Mode Terang (Light Mode)
   static ThemeData get lightTheme {
@@ -17,30 +35,26 @@ abstract class AppTheme {
         secondary: AppColors.secondary,
         surface: AppColors.lightSurface,
         error: AppColors.error,
-        onPrimary: AppColors.textOnPrimary, // Teks di atas warna primer
-        onSecondary: Colors.white,         // Teks di atas warna sekunder
-        onSurface: AppColors.textOnLight, // Teks di atas background utama
+        onPrimary: AppColors.textOnPrimary,
+        onSecondary: Colors.white,
+        onSurface: AppColors.textOnLight,
         onError: Colors.white,
       ),
-
-      // Tema Teks menggunakan Google Fonts (Poppins)
-      textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme).copyWith(
+      textTheme:
+          GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme).copyWith(
         bodyMedium: const TextStyle(color: AppColors.textOnLight),
-        headlineMedium: const TextStyle(color: AppColors.textOnLight, fontWeight: FontWeight.bold),
+        headlineMedium: const TextStyle(
+            color: AppColors.textOnLight, fontWeight: FontWeight.bold),
       ),
-
-      // Tema AppBar
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.primary, 
-        foregroundColor: AppColors.textOnPrimary, // Warna untuk judul dan ikon
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.textOnPrimary,
         elevation: 2,
         iconTheme: IconThemeData(color: AppColors.textOnPrimary),
       ),
-
-      // Tema Tombol
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.secondary, // Warna oranye untuk aksi utama
+          backgroundColor: AppColors.secondary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
@@ -48,8 +62,6 @@ abstract class AppTheme {
           ),
         ),
       ),
-
-      // Tema Card
       cardTheme: CardThemeData(
         elevation: 1,
         color: AppColors.lightSurface,
@@ -57,13 +69,11 @@ abstract class AppTheme {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-      
-      // Tema Input
       inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.primary, width: 2.0)
-        )
+          borderSide: BorderSide(color: AppColors.primary, width: 2.0),
+        ),
       ),
     );
   }
@@ -76,7 +86,7 @@ abstract class AppTheme {
       scaffoldBackgroundColor: AppColors.darkBackground,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.primary,
-        secondary: AppColors.secondary, 
+        secondary: AppColors.secondary,
         surface: AppColors.darkSurface,
         error: AppColors.error,
         onPrimary: AppColors.textOnPrimary,
@@ -84,22 +94,18 @@ abstract class AppTheme {
         onSurface: AppColors.textOnDark,
         onError: Colors.white,
       ),
-
-      // Tema Teks menggunakan Google Fonts (Poppins)
-      textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
+      textTheme:
+          GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
         bodyMedium: const TextStyle(color: AppColors.textOnDark),
-        headlineMedium: const TextStyle(color: AppColors.textOnDark, fontWeight: FontWeight.bold),
+        headlineMedium: const TextStyle(
+            color: AppColors.textOnDark, fontWeight: FontWeight.bold),
       ),
-      
-      // Tema AppBar
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.darkSurface,
         foregroundColor: AppColors.textOnDark,
-        elevation: 0, // Lebih flat di mode gelap
+        elevation: 0,
         iconTheme: IconThemeData(color: AppColors.textOnDark),
       ),
-
-      // Tema Tombol
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.secondary,
@@ -110,22 +116,18 @@ abstract class AppTheme {
           ),
         ),
       ),
-
-      // Tema Card
       cardTheme: CardThemeData(
-        elevation: 2, // Dibuat sedikit lebih menonjol
+        elevation: 2,
         color: AppColors.darkSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
       ),
-
-      // Tema Input
       inputDecorationTheme: const InputDecorationTheme(
         border: OutlineInputBorder(),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: AppColors.secondary, width: 2.0)
-        )
+          borderSide: BorderSide(color: AppColors.secondary, width: 2.0),
+        ),
       ),
     );
   }
