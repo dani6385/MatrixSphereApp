@@ -1,20 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../screens/navigation_layout.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  // Di apps/admin_mikrotik/lib/main.dart
-await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
-  // Jadikan main sebagai fungsi async
   // Pastikan Flutter binding telah diinisialisasi
   WidgetsFlutterBinding.ensureInitialized();
   // Inisialisasi Firebase
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   // Jalankan aplikasi
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
