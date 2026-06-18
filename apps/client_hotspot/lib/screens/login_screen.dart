@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_services/shared_services.dart';
@@ -6,11 +7,8 @@ import '../dialog/member_dialog.dart';
 import '../dialog/qr_dialog.dart';
 import '../dialog/scan_dialog.dart';
 import '../dialog/voucher_dialog.dart';
-import 'navigation_layout.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'dart:async';
-
 import '../services/hotspot_service.dart';
+import 'navigation_layout.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,35 +19,58 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final Logger _logger = Logger();
-  final MikrotikAuth _auth =
-      MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
+  final MikrotikAuth _auth = MikrotikAuth(loginUrl: 'http://192.168.30.1/login');
   final HotspotService _hotspotService = HotspotService();
-  StreamSubscription<DatabaseEvent>? _waitStreamSubscription;
+
   String? _macAddress;
+  bool _isFetchingMac = false;
+  Timer? _macFetchingTimer;
 
   @override
   void initState() {
     super.initState();
-    _listenToWaitingUsers();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkLoginStatusAndNavigate();
+      _startFetchingMacAddress();
     });
   }
 
   @override
   void dispose() {
-    _waitStreamSubscription?.cancel();
+    _macFetchingTimer?.cancel();
     super.dispose();
   }
 
-  void _listenToWaitingUsers() {
-    _waitStreamSubscription =
-        _hotspotService.getWaitingUsersStream().listen((event) {
-      if (event.snapshot.value != null) {
-        final data = event.snapshot.value as Map<dynamic, dynamic>;
-        if (data.keys.isNotEmpty) {
+  void _startFetchingMacAddress() {
+    _macFetchingTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      if (_macAddress != null) {
+        timer.cancel();
+        return;
+      }
+      if (!_isFetchingMac) {
+        setState(() {
+          _isFetchingMac = true;
+        });
+
+        _logger.i("Mencoba mengambil MAC address dari RTDB...");
+        final mac = await _hotspotService.fetchAndClearMacAddress();
+        if (mac != null && mounted) {
           setState(() {
-            _macAddress = data.keys.first;
+            _macAddress = mac;
+            _logger.i("MAC Address berhasil didapatkan: $_macAddress");
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Perangkat siap untuk login trial.'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          });
+          timer.cancel();
+        }
+
+        if (mounted) {
+          setState(() {
+            _isFetchingMac = false;
           });
         }
       }
@@ -65,33 +86,41 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final username = await AuthService.getUsername();
     if (username == null || username.isEmpty) {
-      _logger.w(
-          "Status login lokal true, tapi tidak ada username. Sesi dibersihkan.");
-      await AuthService.setLoggedIn(false, '');
+      _logger.w("Status login lokal true, tapi tidak ada username. Sesi dibersihkan.");
+      await AuthService.logout();
       return;
     }
 
-    _logger.i(
-        "Sesi lokal ditemukan untuk user '$username'. Memverifikasi dengan Firebase RTDB...");
-
+    _logger.i("Sesi lokal ditemukan untuk user '$username'. Memverifikasi dengan Firebase RTDB...");
     final isRtdbLoggedIn = await _auth.checkLoginStatus(username);
 
     if (isRtdbLoggedIn && mounted) {
-      _logger
-          .i("User '$username' terverifikasi di RTDB. Navigasi ke dashboard.");
+      _logger.i("User '$username' terverifikasi di RTDB. Navigasi ke dashboard.");
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const NavigationLayout()),
         (Route<dynamic> route) => false,
       );
     } else {
-      _logger.w(
-          "User '$username' tidak ditemukan di RTDB. Sesi lokal dibersihkan.");
-      await AuthService.setLoggedIn(false, '');
+      _logger.w("User '$username' tidak ditemukan di RTDB. Sesi lokal dibersihkan.");
+      await AuthService.logout();
     }
   }
 
-  Future<void> _handleLogin(
-      {required String username, String password = ''}) async {
+  Future<void> _handleLogin({required String username, String password = ''}) async {
+    final wifiName = await checkWifiConnection(expectedSsid: 'Mikrotik');
+    if (wifiName == null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Harap sambungkan ke jaringan WiFi Hotspot untuk login.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Guard against async gap
+    if (!mounted) return;
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -108,35 +137,28 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     if (!mounted) return;
-
     Navigator.pop(context);
 
     if (success) {
-      _logger.i(
-          "Login berhasil, menyimpan status & navigasi ke NavigationLayout.");
       await AuthService.setLoggedIn(true, username);
       if (!mounted) return;
-
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Login Berhasil!'),
-          backgroundColor: Colors.green,
-        ),
+        const SnackBar(content: Text('Login Berhasil!'), backgroundColor: Colors.green),
       );
-
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const NavigationLayout()),
         (Route<dynamic> route) => false,
       );
     } else {
       _logger.w("Login gagal. Pesan error: $errorMessage");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      if(mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage ?? 'Login Gagal. Periksa kembali data Anda.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -152,12 +174,21 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showTrialDialog() {
+    if (_macAddress == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('MAC address belum terdeteksi. Harap tunggu sebentar dan pastikan terhubung ke WiFi Hotspot.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Coba Gratis'),
-        content: const Text(
-            'Anda akan mendapatkan akses internet gratis selama 1 jam. Lanjutkan?'),
+        content: const Text('Anda akan mendapatkan akses internet gratis selama 1 jam. Lanjutkan?'),
         actions: <Widget>[
           TextButton(
             child: const Text('Batal'),
@@ -167,17 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
             child: const Text('Mulai'),
             onPressed: () {
               Navigator.of(context).pop();
-              if (_macAddress != null) {
-                final trialUsername = 'T-$_macAddress';
-                _handleLogin(username: trialUsername);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Tidak ada perangkat yang terdeteksi.'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
+              final trialUsername = 'T-$_macAddress';
+              _handleLogin(username: trialUsername);
             },
           ),
         ],
@@ -205,11 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 20),
             const Text(
               'Selamat Datang',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             const Text(
               'Silakan pilih metode login Anda',
@@ -272,9 +290,7 @@ Widget _buildLoginButton({
   final buttonStyle = ElevatedButton.styleFrom(
     backgroundColor: isTrial ? Colors.orangeAccent : Colors.white,
     minimumSize: const Size(150, 50),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30),
-    ),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     elevation: 5,
   );
 
