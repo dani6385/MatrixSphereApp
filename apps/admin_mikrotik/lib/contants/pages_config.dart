@@ -4,7 +4,7 @@ import '../screens/hotspot_screen.dart';
 import '../screens/status_screen.dart';
 import '../screens/profil_screen.dart';
 import '../screens/settings_screen.dart';
-import '../screens/dashboard_screen.dart';
+import 'dashboard_screen.dart';
 
 class PagesConfig {
   static final List<Widget> pages = [
