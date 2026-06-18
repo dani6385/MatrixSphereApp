@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
 
-/// Berisi definisi warna yang digunakan secara konsisten di seluruh aplikasi.
-/// Memusatkan warna di sini memudahkan untuk mengubah tema visual aplikasi
-/// di satu tempat.
+/// Palet Warna Modern & Profesional untuk Aplikasi Hotspot
+/// Menggunakan skema warna Deep Slate Blue dengan aksen Carrot Orange.
 class AppColors {
-  // Warna utama yang digunakan untuk branding, tombol utama, app bar, dll.
-  static const Color primaryColor = Color(0xFF6200EE); // Ungu yang kuat
+  // Warna Primer & Sekunder
+  static const Color primary = Color(0xFF2C3E50); // Deep Slate Blue (Biru Tua Keabuan)
+  static const Color secondary = Color(0xFFE67E22); // Carrot Orange (Oranye Wortel)
 
-  // Warna sekunder untuk aksen, floating action button, dll.
-  static const Color secondaryColor = Color(0xFF03DAC6); // Teal
+  // Warna Latar & Permukaan (Mode Terang)
+  static const Color lightBackground = Color(0xFFF5F7FA); // Whisper (Abu-abu Sangat Terang)
+  static const Color lightSurface = Colors.white;
 
-  // Warna latar belakang utama untuk sebagian besar layar.
-  static const Color backgroundColor =
-      Color.fromARGB(155, 64, 71, 134); // Ungu muda dari login screen
-  static const Color foregroundColor = Color.fromARGB(255, 126, 92, 92);
-  static const Color wifiColor = Colors.blueAccent;
-  // Warna untuk permukaan seperti Card, Dialog, BottomSheet.
-  static const Color surfaceColor = Colors.white;
-  static const Color textColor = Colors.black87;
-  static const Color textSecondaryColor = Colors.white;
-  // Warna untuk menampilkan pesan error.
-  static const Color errorColor = Color(0xFFB00020);
-  static const Color voucherColor = Color(0xFF3498DB); // Biru voucher
-  static const Color memberColor = Color(0xFF2ECC71); // Hijau member
-  static const Color scanQrColor = Color(0xFFF1C40F);
-  static const Color payQrColor = Color(0x00e74c3c);
-  static const Color trialColor = Color(0xFF9B59B6); // Ungu trial
+  // Warna Latar & Permukaan (Mode Gelap)
+  static const Color darkBackground = Color(0xFF1C2833); // Dark Slate (Biru Sangat Gelap)
+  static const Color darkSurface = Color(0xFF273746); // Abbey (Abu-abu Gelap)
+
+  // Warna Teks
+  static const Color textOnLight = Color(0xFF34495E); // Wet Asphalt (Abu-abu Gelap)
+  static const Color textOnDark = Color(0xFFECF0F1); // Clouds (Abu-abu Terang)
+  static const Color textOnPrimary = Colors.white;
+
+  // Warna Utilitas
+  static const Color success = Color(0xFF2ECC71); // Emerald (Hijau)
+  static const Color error = Color(0xFFE74C3C);   // Alizarin (Merah)
+  static const Color warning = Color(0xFFF1C40F);   // Sun Flower (Kuning)
+  
+  // Warna Aksen Tambahan (jika diperlukan)
+  static const Color accentBlue = Color(0xFF3498DB); // Peter River Blue
 }
