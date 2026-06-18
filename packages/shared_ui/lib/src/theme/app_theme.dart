@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_assets/shared_assets.dart';
 
-class AppTheme {
+abstract class AppTheme {
+  // ignore: prefer_typing_uninitialized_variables, non_constant_identifier_names
+  static Color? ;
+
   // Tema untuk Mode Terang (Light Mode)
   static ThemeData get lightTheme {
     return ThemeData(
@@ -47,7 +50,7 @@ class AppTheme {
       ),
 
       // Tema Card
-      cardTheme: CardThemeData( // <-- PERBAIKAN DI SINI
+      cardTheme: CardThemeData(
         elevation: 1,
         color: AppColors.lightSurface,
         shape: RoundedRectangleBorder(
@@ -109,7 +112,7 @@ class AppTheme {
       ),
 
       // Tema Card
-      cardTheme: CardThemeData( // <-- DAN DI SINI
+      cardTheme: CardThemeData(
         elevation: 2, // Dibuat sedikit lebih menonjol
         color: AppColors.darkSurface,
         shape: RoundedRectangleBorder(

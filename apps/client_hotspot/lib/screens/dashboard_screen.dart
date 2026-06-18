@@ -54,7 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             if (snapshot.hasError) {
               return Text(
                 'Gagal memuat data: ${snapshot.error}',
-                style: const TextStyle(color: appColors.),
+                style: TextStyle(color: AppTheme.),
               );
             }
 
