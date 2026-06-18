@@ -6,12 +6,8 @@ class HotspotScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hotspot'),
-      ),
-      body: const Center(
-        child: Text('Hotspot Screen'),
-      ),
+      appBar: AppBar(title: const Text('Hotspot')),
+      body: const Center(child: Text('Hotspot Screen')),
     );
   }
 }

@@ -24,31 +24,16 @@ class _NavigationLayoutState extends State<NavigationLayout> {
     return Scaffold(
       body: PagesConfig.pages[_selectedIndex],
       bottomNavigationBar: AppBottomNavBar(
+        selectedItemColor: AppColors.primary,
+        unselectedItemColor: AppColors.textOnLight,
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        selectedItemColor: AppColors.primary,
-        unselectedItemColor: AppColors.textOnDark,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.wifi),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.group),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: "",
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: "Dashboard"),
+          BottomNavigationBarItem(icon: Icon(Icons.wifi), label: "Hotspot"),
+          BottomNavigationBarItem(icon: Icon(Icons.sync_alt), label: "Status"),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
         ],
       ),
     );
