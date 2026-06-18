@@ -1,6 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import '../screens/navigation_layout.dart';
 
-void main() {
+void main() async {
+  // Jadikan main sebagai fungsi async
+  // Pastikan Flutter binding telah diinisialisasi
+  WidgetsFlutterBinding.ensureInitialized();
+  // Inisialisasi Firebase
+  await Firebase.initializeApp();
+  // Jalankan aplikasi
   runApp(const MyApp());
 }
 
@@ -9,6 +17,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp();
+    return MaterialApp(
+      title: 'Client Hotspot',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
+      home: const NavigationLayout(), // Atur NavigationLayout sebagai home
+    );
   }
 }
