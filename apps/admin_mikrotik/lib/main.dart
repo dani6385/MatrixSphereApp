@@ -1,5 +1,5 @@
+import 'package:admin_mikrotik/contants/navigation_layout.dart';
 import 'package:flutter/material.dart';
-import 'package:admin_mikrotik/screens/navigation_layout.dart';
 
 void main() {
   runApp(const MyApp());
