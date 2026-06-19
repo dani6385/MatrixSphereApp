@@ -13,7 +13,6 @@ class _WifiScreenState extends State<WifiScreen> {
   final _mikrotikService = MikroTikService();
   bool _isLoading = true;
   String? _errorMessage;
-  List<WifiNetwork> _networks = [];
   HotspotActiveUser? _currentUserData;
 
   @override
@@ -22,7 +21,6 @@ class _WifiScreenState extends State<WifiScreen> {
     _connectAndFetchData();
   }
 
-  // --- FIX: Restructured the finally block ---
   Future<void> _connectAndFetchData() async {
     if (!mounted) return;
     setState(() => _isLoading = true);
@@ -31,21 +29,12 @@ class _WifiScreenState extends State<WifiScreen> {
       if (!_mikrotikService.isConnected) {
         await _mikrotikService.connect();
       }
-      final results = await Future.wait([
-        _mikrotikService.getActiveUserStats(username: 'user1234'),
-        _mikrotikService.scanWifiNetworks(),
-      ]);
+      final userData = await _mikrotikService.getActiveUserStats(username: 'user1234');
       
       if (!mounted) return; 
 
-      final userData = results[0] as HotspotActiveUser?;
-      final networks = results[1] as List<WifiNetwork>;
-      
-      networks.sort((a, b) => int.parse(b.signalStrength).compareTo(int.parse(a.signalStrength)));
-
       setState(() {
         _currentUserData = userData;
-        _networks = networks;
       });
 
     } catch (e) {
@@ -76,9 +65,9 @@ class _WifiScreenState extends State<WifiScreen> {
                         _buildConnectionVisual(_currentUserData!),
                       
                       const SizedBox(height: 24),
-                      Text('Available Networks', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
-                      _buildWifiList(),
+
+                      if (_currentUserData != null)
+                        _buildCurrentNetworkInfo(_currentUserData!),
 
                       const SizedBox(height: 24),
                       _buildSelfService(context), 
@@ -88,32 +77,35 @@ class _WifiScreenState extends State<WifiScreen> {
     );
   }
 
-  Widget _buildWifiList() {
+  Widget _buildCurrentNetworkInfo(HotspotActiveUser user) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: ListView.separated(
-        shrinkWrap: true, 
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: _networks.length,
-        separatorBuilder: (context, index) => Divider(height: 1, indent: 16, endIndent: 16),
-        itemBuilder: (context, index) {
-          final network = _networks[index];
-          return ListTile(
-            leading: _buildSignalIcon(network.signalStrength),
-            title: Text(network.ssid, style: TextStyle(fontWeight: FontWeight.w500)),
-            subtitle: Text(network.address),
-            trailing: Icon(Icons.chevron_right, color: Colors.grey.shade400),
-            onTap: () => _handleConnect(network),
-          );
-        },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Currently Connected To',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            ListTile(
+              leading: _buildSignalIcon(user.signalStrength),
+              title: Text(user.ssid, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 18)),
+              subtitle: Text(user.macAddress),
+              contentPadding: EdgeInsets.zero,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildSignalIcon(String signal, {double size = 24.0}) {
     try {
-      final strength = int.parse(signal.replaceAll('dBm', ''));
+      final strength = int.parse(signal.replaceAll('dBm', '').split('@')[0]);
       IconData iconData;
       Color color;
 
@@ -135,43 +127,6 @@ class _WifiScreenState extends State<WifiScreen> {
       return Icon(Icons.wifi_find, color: Colors.grey, size: size);
     }
   }
-
-  Future<void> _handleConnect(WifiNetwork network) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        content: Row(
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(width: 20),
-            Text("Connecting to ${network.ssid}..."),
-          ],
-        ),
-      ),
-    );
-
-    try {
-      await _mikrotikService.connectToWifi(network.ssid);
-
-      if (!mounted) return;
-
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Connected to ${network.ssid}"), backgroundColor: Colors.green),
-      );
-      _connectAndFetchData();
-    } catch (e) {
-      if (!mounted) return;
-
-      Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to connect: $e"), backgroundColor: Colors.red),
-      );
-    }
-  }
-  
-  // ... Other methods ...
 
     Widget _buildConnectionVisual(HotspotActiveUser user) {
     return Card(

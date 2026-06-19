@@ -1,3 +1,5 @@
+import 'screens/profile_screen.dart';
+import 'screens/setting_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/status_screen.dart';
 import 'screens/wifi_screen.dart';
@@ -16,8 +18,8 @@ class _NavigationLayoutState extends State<NavigationLayout> {
     HomeScreen(),
     StatusScreen(),
     WifiScreen(),
-    Text('Profile Screen'),
-    Text('Settings Screen'),
+    ProfileScreen(),
+    SettingsScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -29,30 +31,16 @@ class _NavigationLayoutState extends State<NavigationLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Client Hotspot'),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
+      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.info_outline),
             label: 'Status',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.wifi),
-            label: 'Wifi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.wifi), label: 'Wifi'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
             label: 'Settings',

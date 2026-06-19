@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:logger/logger.dart';
 
 // Placeholder class for RouterOS API interaction.
@@ -22,7 +23,7 @@ class RouterOSAPI {
       return [
         {
           'user': 'user1234',
-          'mac-address': 'AA:BB:CC:DD:EE:FF', 
+          'mac-address': 'AA:BB:CC:DD:EE:FF',
           'uptime': '3h 45m',
           'limit-bytes-total': '10737418240',
           'bytes-in': '1825361100',
@@ -35,11 +36,15 @@ class RouterOSAPI {
       return [
         {
           'mac-address': 'AA:BB:CC:DD:EE:FF',
-          'interface': 'wlan1',
+          'interface': 'wlan-hotspot-1',
           'signal-strength': '-58dBm@6Mbps',
           'tx-rate': '54Mbps',
         },
       ];
+    } else if (command == '/interface/wireless/print') {
+        return [
+            { 'ssid': 'MyAwesomeHotspot' }
+        ];
     } else if (command == '/interface/wireless/scan') {
       return [
         {'ssid': 'MyHome-5G', 'address': '00:11:22:AA:BB:CC', 'signal-strength': '-55'},
@@ -52,9 +57,8 @@ class RouterOSAPI {
   void close() { _logger.d('Connection closed.'); }
 }
 
-// --- FIX: Re-adding signalStrength to HotspotActiveUser ---
 class HotspotActiveUser {
-  final String user, uptime, bytesIn, bytesOut, limitBytesTotal, sessionTimeLeft, monthlyUsage, currentSpeed, macAddress, signalStrength;
+  final String user, uptime, bytesIn, bytesOut, limitBytesTotal, sessionTimeLeft, monthlyUsage, currentSpeed, macAddress, signalStrength, ssid;
 
   HotspotActiveUser.fromMap(Map<String, dynamic> map)
       : user = map['user'] ?? '',
@@ -66,7 +70,19 @@ class HotspotActiveUser {
         monthlyUsage = _parseComment(map['comment'], 'monthly-usage'),
         currentSpeed = _parseComment(map['comment'], 'current-speed'),
         macAddress = map['mac-address'] ?? '',
-        signalStrength = map['signal-strength'] ?? 'N/A'; // Field is back
+        signalStrength = map['signal-strength'] ?? 'N/A',
+        ssid = map['ssid'] ?? 'N/A';
+        
+  int get totalBytesUsed {
+    return (int.tryParse(bytesIn) ?? 0) + (int.tryParse(bytesOut) ?? 0);
+  }
+
+  int get remainingBytes {
+    final limit = int.tryParse(limitBytesTotal) ?? 0;
+    if (limit == 0) return 0;
+    final used = totalBytesUsed;
+    return limit > used ? limit - used : 0;
+  }
 
   static String _parseComment(String? comment, String key) {
     if (comment == null) return 'N/A';
@@ -82,7 +98,13 @@ class HotspotActiveUser {
     return 'N/A';
   }
   
-  static String formatBytes(String bytesStr, {int decimals = 1}) { /* ... */ return '0 B'; }
+  static String formatBytes(String bytesStr, {int decimals = 2}) {
+    final bytes = int.tryParse(bytesStr);
+    if (bytes == null || bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+    var i = (log(bytes) / log(1024)).floor();
+    return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+   }
 }
 
 class WifiNetwork {
@@ -117,7 +139,6 @@ class MikroTikService {
     }
   }
 
-  // --- FIX: Restoring the full logic for getActiveUserStats ---
   Future<HotspotActiveUser?> getActiveUserStats({required String username}) async {
     if (!_isConnected || _api == null) throw Exception('Not connected.');
     try {
@@ -133,10 +154,22 @@ class MikroTikService {
       if (macAddress != null) {
         final regResponse = await _api!.call(
           '/interface/wireless/registration-table/print',
-          queries: ['.proplist=signal-strength', '?mac-address=$macAddress'],
+          queries: ['.proplist=signal-strength,interface', '?mac-address=$macAddress'],
         );
         if (regResponse.isNotEmpty) {
-          userMap['signal-strength'] = regResponse.first['signal-strength'];
+          final regMap = regResponse.first;
+          userMap['signal-strength'] = regMap['signal-strength'];
+          final interface = regMap['interface'];
+
+          if (interface != null) {
+            final interfaceResponse = await _api!.call(
+              '/interface/wireless/print',
+              queries: ['.proplist=ssid', '?name=$interface'],
+            );
+            if (interfaceResponse.isNotEmpty) {
+              userMap['ssid'] = interfaceResponse.first['ssid'];
+            }
+          }
         }
       }
       return HotspotActiveUser.fromMap(userMap);

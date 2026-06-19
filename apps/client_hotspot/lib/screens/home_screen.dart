@@ -78,6 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 24),
                               _buildConnectionDashboard(context, _userData!),
                               const SizedBox(height: 16),
+                              _buildDataUsage(context, _userData!),
+                              const SizedBox(height: 16),
                               _buildInfoCards(context, _userData!),
                               const SizedBox(height: 24),
                               _buildFooterStatus(context),
@@ -90,10 +92,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildConnectionDashboard(BuildContext context, HotspotActiveUser user) {
-    final totalUsed = (double.tryParse(user.bytesIn) ?? 0) + (double.tryParse(user.bytesOut) ?? 0);
     final limit = double.tryParse(user.limitBytesTotal) ?? 0;
-    final remaining = limit > totalUsed ? limit - totalUsed : 0;
-    final percentage = limit > 0 ? remaining / limit : 0.0;
+    final used = user.totalBytesUsed.toDouble();
+    final percentage = limit > 0 ? used / limit : 0.0;
 
     return Card(
       elevation: 4, shadowColor: Colors.black12, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -101,14 +102,14 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            const Text('Connection Dashboard', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text('Data Usage', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
             CircularPercentIndicator(
-              radius: 80.0, lineWidth: 15.0, percent: 1.0 - percentage, // Show usage, not remainder
+              radius: 80.0, lineWidth: 15.0, percent: percentage,
               center: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(HotspotActiveUser.formatBytes(remaining.toString()), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+                  Text(HotspotActiveUser.formatBytes(used.toString()), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
                   Text('/ ${HotspotActiveUser.formatBytes(limit.toString())}', style: const TextStyle(fontSize: 14, color: Colors.grey)),
                 ],
               ),
@@ -121,6 +122,57 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+  
+  Widget _buildDataUsage(BuildContext context, HotspotActiveUser user) {
+    final limit = int.tryParse(user.limitBytesTotal) ?? 0;
+    final used = user.totalBytesUsed;
+    final remaining = user.remainingBytes;
+    final percentage = limit > 0 ? used / limit : 0.0;
+
+    return Card(
+      elevation: 2, 
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Data Usage Details', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            LinearPercentIndicator(
+              lineHeight: 20.0,
+              percent: percentage,
+              center: Text(
+                '${(percentage * 100).toStringAsFixed(1)}%',
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
+              barRadius: const Radius.circular(10),
+              progressColor: Colors.blue,
+              backgroundColor: Colors.grey.shade300,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Used', style: TextStyle(color: Colors.grey)),
+                    Text(HotspotActiveUser.formatBytes(used.toString()), style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    const Text('Remaining', style: TextStyle(color: Colors.grey)),
+                    Text(HotspotActiveUser.formatBytes(remaining.toString()), style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),),);
   }
 
   Widget _buildInfoCards(BuildContext context, HotspotActiveUser user) {
