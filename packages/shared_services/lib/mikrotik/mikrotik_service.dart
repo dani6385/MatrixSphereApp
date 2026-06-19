@@ -78,4 +78,45 @@ class MikrotikService {
     }
     return userData;
   }
+
+  /// Executes a raw command on the Mikrotik router.
+  Future<List<Map<String, dynamic>>> executeTerminalCommand(String command) async {
+    List<Map<String, dynamic>> result = [];
+    try {
+      await _ensureConnected();
+      log.i('Executing terminal command: "$command"');
+
+      // This is a very basic parser. It assumes the first word is the command path
+      // and subsequent parts are key=value pairs. It does not handle values with spaces.
+      final parts = command.trim().split(RegExp(r'\s+'));
+      final path = parts[0];
+      final params = <String, String>{};
+      if (parts.length > 1) {
+        for (final param in parts.sublist(1)) {
+          final kv = param.split('=');
+          if (kv.length == 2) {
+            params[kv[0]] = kv[1];
+          } else if (kv.length == 1 && kv[0].startsWith('?')) {
+            params[kv[0]] = ""; 
+          }
+        }
+      }
+      
+      final response = await _client.execute(path, params: params.isNotEmpty ? params : null);
+
+      if (response is List) {
+        result = List<Map<String, dynamic>>.from(response.cast<Map<String, dynamic>>());
+      } else if (response is Map) {
+        result = [Map<String, dynamic>.from(response.cast<String, dynamic>())];
+      }
+      log.i("Command executed successfully. Response: $result");
+
+    } catch (e) {
+      log.e("Error executing terminal command: $e");
+      rethrow; // Rethrow the error to be handled by the UI
+    } finally {
+      _client.close();
+    }
+    return result;
+  }
 }
