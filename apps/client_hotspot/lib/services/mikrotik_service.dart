@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:logger/logger.dart';
 
 // Placeholder class for RouterOS API interaction. 
 // This is created to resolve the build error, but in a real app, 
 // this should come from the 'routeros_api' package.
 class RouterOSAPI {
   RouterOSAPI._(); // Private constructor
+  static final Logger _logger = Logger();
 
   // Static method to simulate a connection
   static Future<RouterOSAPI> connect({
@@ -12,15 +14,15 @@ class RouterOSAPI {
     required String user, 
     required String pass
   }) async {
-    print('Connecting to $host with user $user...');
+    _logger.d('Connecting to $host with user $user...');
     await Future.delayed(const Duration(milliseconds: 100)); // Simulate network delay
-    print('Connection successful.');
+    _logger.d('Connection successful.');
     return RouterOSAPI._();
   }
 
   // Method to simulate an API command call
   Future<List<Map<String, dynamic>>> call(String command, {List<String>? queries}) async {
-    print('Executing command: $command');
+    _logger.d('Executing command: $command');
     // If the command is to get active users, return mock data
     if (command == '/ip/hotspot/active/print') {
       return [
@@ -41,7 +43,7 @@ class RouterOSAPI {
 
   // Method to close the connection
   void close() {
-    print('Connection closed.');
+    _logger.d('Connection closed.');
   }
 }
 
@@ -84,6 +86,7 @@ class HotspotActiveUser {
 class MikroTikService {
   RouterOSAPI? _api;
   bool _isConnected = false;
+  final Logger _logger = Logger();
 
   // --- CONNECTION DETAILS - Replace with your actual credentials ---
   final String _host = '192.168.30.1'; // Or your router's IP
@@ -96,9 +99,9 @@ class MikroTikService {
     try {
       _api = await RouterOSAPI.connect(host: _host, user: _user, pass: _pass);
       _isConnected = true;
-      print('Successfully connected to MikroTik router.');
+      _logger.d('Successfully connected to MikroTik router.');
     } catch (e) {
-      print('Error connecting to MikroTik: $e');
+      _logger.e('Error connecting to MikroTik: $e');
       _isConnected = false;
       // Rethrow the exception to be handled by the UI
       rethrow;
@@ -132,7 +135,7 @@ class MikroTikService {
       }
       return null; // User not found
     } catch (e) {
-      print('Error fetching active user stats: $e');
+      _logger.e('Error fetching active user stats: $e');
       rethrow;
     }
   }
@@ -140,6 +143,6 @@ class MikroTikService {
   void disconnect() {
     _api?.close();
     _isConnected = false;
-    print('Disconnected from MikroTik router.');
+    _logger.d('Disconnected from MikroTik router.');
   }
 }

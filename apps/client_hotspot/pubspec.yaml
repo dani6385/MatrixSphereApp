@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   fl_chart: ^1.2.0
   routeros_api: ^0.1.4
+  logger: ^2.7.0
 
 dev_dependencies:
   flutter_test:

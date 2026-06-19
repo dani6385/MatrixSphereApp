@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:client_hotspot/screens/home_screen.dart';
+import 'navigation_layout.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(),
+      home: const NavigationLayout(),
     );
   }
 }
