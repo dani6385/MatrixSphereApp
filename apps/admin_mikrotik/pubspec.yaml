@@ -12,12 +12,11 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  shared_ui: ^0.0.1
 
   # Firebase dependencies
   firebase_core: ^3.1.0
   firebase_database: ^11.0.0
-  shared_assets: ^1.0.0
+  # shared_assets dependency removed as the package does not exist
   shared_services: ^1.0.0
 
 dev_dependencies:

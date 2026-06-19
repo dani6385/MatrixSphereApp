@@ -587,11 +587,10 @@ packages:
   routeros_api:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: dd04a645d32d23e695bca1180fafd109de03def3
-      url: "https://github.com/ginkohub/routeros_api.git"
-    source: git
+      name: routeros_api
+      sha256: "3e2e54270dcb6179b4706df25ce496133993893ff8d13322d1fa29992ca9d897"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.1.4"
   sky_engine:
     dependency: transitive

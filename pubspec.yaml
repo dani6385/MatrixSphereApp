@@ -9,9 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  routeros_api:
-    git:
-      url: https://github.com/ginkohub/routeros_api.git
+  # CORRECTED: Using the version from pub.dev to match the sub-project
+  routeros_api: ^0.1.4
   firebase_core: ^3.15.2
   firebase_auth: ^5.7.0
   cloud_firestore: ^5.6.12
@@ -27,7 +26,6 @@ dependencies:
   network_info_plus: ^7.0.0
   connectivity_plus: ^7.1.1
   convert: ^3.1.2
-  # duplicate entries removed
 
 dev_dependencies:
   flutter_test:
