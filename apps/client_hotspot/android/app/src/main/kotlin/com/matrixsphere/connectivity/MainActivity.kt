@@ -1,4 +1,4 @@
-package com.example.client_hotspot
+package com.matrixsphere.connectivity
 
 import io.flutter.embedding.android.FlutterActivity
 
