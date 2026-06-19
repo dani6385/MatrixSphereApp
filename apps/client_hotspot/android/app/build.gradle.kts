@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.client_hotspot"
+    namespace "com.matrixsphere.connectivity"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
