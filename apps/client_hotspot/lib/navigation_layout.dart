@@ -1,4 +1,6 @@
 import 'screens/home_screen.dart';
+import 'screens/status_screen.dart';
+import 'screens/wifi_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationLayout extends StatefulWidget {
@@ -12,8 +14,8 @@ class _NavigationLayoutState extends State<NavigationLayout> {
   int _selectedIndex = 0;
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Text('Status Screen'),
-    Text('Wifi Screen'),
+    StatusScreen(),
+    WifiScreen(),
     Text('Profile Screen'),
     Text('Settings Screen'),
   ];
