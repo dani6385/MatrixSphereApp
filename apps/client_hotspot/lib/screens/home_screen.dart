@@ -1,7 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import '../services/mikrotik_service.dart';
+// Import library MikroTik API Anda di sini
+// Import library Iklan (contoh: google_mobile_ads) di sini
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,265 +10,367 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _mikrotikService = MikroTikService();
-  bool _isLoading = true;
-  String? _errorMessage;
-  HotspotActiveUser? _userData;
+  // Variabel untuk menyimpan data dari MikroTik
+  String _sisaKuota = "24.7 GB";
+  String _masaAktif = "21 Hari";
+  double _persenKuota = 0.75; // Contoh 75%
+
+  // Logika Iklan (Pseudo-code)
+  // BannerAd? _bannerAd;
+  // bool _isBannerAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _connectAndFetchData();
-  }
-
-  Future<void> _connectAndFetchData() async {
-    if (!mounted) return;
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      if (!_mikrotikService.isConnected) {
-        await _mikrotikService.connect();
-      }
-      final user = await _mikrotikService.getActiveUserStats(username: 'user1234');
-      if (mounted) {
-        setState(() {
-          _userData = user;
-        });
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _errorMessage = "Error: ${e.toString()}";
-        });
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    }
+    // 1. Panggil fungsi untuk mengambil data dari MikroTik API
+    // 2. Inisialisasi Iklan Banner
   }
 
   @override
   Widget build(BuildContext context) {
+    // Definisi Warna Tema (Elegance & Professional)
+    final Color primaryColor = const Color(0xFF0D1E40); // Deep Sapphire
+    final Color accentColor = const Color(0xFF2196F3); // Modern Blue
+    final Color cardColor = Colors.white;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0A2342), // Dark blue background
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: _connectAndFetchData,
-          backgroundColor: const Color(0xFF1a3b6e),
-          color: Colors.white,
-          child: _isLoading
-              ? const Center(child: CircularProgressIndicator(color: Colors.white))
-              : _errorMessage != null
-                  ? Center(child: Padding(padding: const EdgeInsets.all(16), child: Text(_errorMessage!, style: const TextStyle(color: Colors.red))))
-                  : _userData == null
-                      ? const Center(child: Text('No user data found.', style: TextStyle(color: Colors.white)))
-                      : SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildAppBar(context),
-                                const SizedBox(height: 20),
-                                _buildWelcomeCard(context),
-                                const SizedBox(height: 20),
-                                _buildQuotaCard(context, _userData!),
-                                const SizedBox(height: 30),
-                                _buildPromoSection(context),
-                                const SizedBox(height: 20),
-                                _buildAdBanner(context),
-                              ],
-                            ),
-                          ),
-                        ),
+      backgroundColor: const Color(0xFFF4F7FA), // Light Gray Background
+      appBar: AppBar(
+        title: const Text(
+          'NetLink Hotspot',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
+        backgroundColor: primaryColor,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_active, color: Colors.white),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.person, color: Colors.white),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        // Memungkinkan Scroll
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ==========================================
+            // 1. DASHBOARD STATUS (Elegant Card)
+            // ==========================================
+            _buildStatusCard(primaryColor, accentColor, cardColor),
+
+            const SizedBox(height: 24),
+
+            // ==========================================
+            // 2. TOMBOL AKSI UTAMA (Modern Icons)
+            // ==========================================
+            Text(
+              'Aksi Cepat',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: primaryColor,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildActionButtons(accentColor, cardColor),
+
+            const SizedBox(height: 24),
+
+            // ==========================================
+            // 3. MADING INFORMASI (List of Cards)
+            // ==========================================
+            Text(
+              'Mading Informasi & Promo',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: primaryColor,
+              ),
+            ),
+            const SizedBox(height: 12),
+            _buildMadingSection(cardColor, accentColor),
+
+            const SizedBox(height: 16),
+
+            // ==========================================
+            // 4. INTEGRASI IKLAN (Halus & Scrollable)
+            // ==========================================
+            // Contoh penempatan iklan banner yang menyatu dengan list
+            Container(
+              height: 60,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: const Center(
+                child: Text(
+                  "IKLAN SPONSOR - Promo Kopi Lokal (AdMob)",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      // Bottom Navigation Bar (Opsional, untuk navigasi antar screen)
+      bottomNavigationBar: BottomNavigationBar(
+        selectedItemColor: accentColor,
+        unselectedItemColor: Colors.grey,
+        currentIndex: 0, // Home selected
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Pengaturan',
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          children: [
-            const Icon(Icons.language, color: Colors.white, size: 40), // Placeholder for logo
-            const SizedBox(width: 8),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text('NetLink', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-                Text('June 20, 2026', style: TextStyle(color: Colors.white70, fontSize: 12)),
-              ],
-            ),
-          ],
-        ),
-        IconButton(
-          icon: const Icon(Icons.notifications_none, color: Colors.white, size: 28),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
+  // =========================================================================
+  // WIDGET BUILDER HELPER (Untuk Kode yang Bersih)
+  // =========================================================================
 
-  Widget _buildWelcomeCard(BuildContext context) {
-    return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1a3b6e).withAlpha(204), // 0.8 opacity
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: const Text(
-          'Selamat Datang, User! | NetLink Hotspot',
-          style: TextStyle(color: Colors.white),
-        ));
-  }
-
-  Widget _buildQuotaCard(BuildContext context, HotspotActiveUser user) {
-    final limit = double.tryParse(user.limitBytesTotal) ?? 0;
-    final remaining = user.remainingBytes.toDouble();
-    final percentage = limit > 0 ? remaining / limit : 0.0;
-    final remainingGB = (remaining / 1024 / 1024 / 1024).toStringAsFixed(1);
-
+  Widget _buildStatusCard(
+    Color primaryColor,
+    Color accentColor,
+    Color cardColor,
+  ) {
     return Card(
       elevation: 4,
-      color: const Color(0xFF1a3b6e),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      color: cardColor,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CircularPercentIndicator(
-                  radius: 50.0,
-                  lineWidth: 8.0,
-                  percent: percentage,
-                  circularStrokeCap: CircularStrokeCap.round,
-                  progressColor: const Color(0xFF00FFC2),
-                  backgroundColor: Colors.white.withAlpha(51), // 0.2 opacity
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'SISA KUOTA',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      _sisaKuota,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('SISA KUOTA', style: TextStyle(color: Colors.white70, fontSize: 14)),
-                      Text('$remainingGB GB', style: const TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold)),
-                    ],
+                // Circular Progress (Elegant)
+                SizedBox(
+                  height: 60,
+                  width: 60,
+                  child: CircularProgressIndicator(
+                    value: _persenKuota,
+                    backgroundColor: Colors.grey.shade200,
+                    valueColor: AlwaysStoppedAnimation<Color>(accentColor),
+                    strokeWidth: 8,
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 20),
-            const Divider(color: Colors.white30),
-            const SizedBox(height: 10),
-            const Text(
-              'Masa Aktif: 21 Hari | Berlaku s/d: 16 Juli 2028', // Placeholder text
-              style: TextStyle(color: Colors.white70, fontSize: 12),
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildStatusInfo(
+                  'Masa Aktif',
+                  _masaAktif,
+                  Icons.timer_outlined,
+                  accentColor,
+                ),
+                _buildStatusInfo(
+                  'Status',
+                  'Aktif',
+                  Icons.check_circle_outline,
+                  Colors.green,
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            _buildInfoCards(context, user),
           ],
         ),
       ),
     );
   }
 
-   Widget _buildInfoCards(BuildContext context, HotspotActiveUser user) {
+  Widget _buildStatusInfo(
+    String label,
+    String value,
+    IconData icon,
+    Color iconColor,
+  ) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: iconColor),
+        const SizedBox(width: 6),
+        Text(
+          '$label: ',
+          style: const TextStyle(color: Colors.grey, fontSize: 13),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+            color: Color(0xFF0D1E40),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons(Color accentColor, Color cardColor) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _infoCard(context, icon: Icons.timer_outlined, label: 'Uptime\n(Session)', value: user.uptime, color: Colors.orangeAccent),
-        _infoCard(context, icon: Icons.data_usage_outlined, label: 'Total Usage\n(Month)', value: user.monthlyUsage, color: Colors.lightBlueAccent),
-        _infoCard(context, icon: Icons.speed_outlined, label: 'Current Speed', value: user.currentSpeed, color: Colors.greenAccent),
+        _buildActionButton(
+          Icons.qr_code_scanner,
+          'Scan Voucher',
+          accentColor,
+          cardColor,
+          () {
+            // Navigasi ke Scan Screen
+          },
+        ),
+        _buildActionButton(
+          Icons.account_balance_wallet_outlined,
+          'Bayar QRIS',
+          accentColor,
+          cardColor,
+          () {
+            // Navigasi ke Payment Screen
+          },
+        ),
+        // TOMBOL TRIAL BERBASIS IKLAN (Highlighted)
+        _buildActionButton(
+          Icons.play_circle_fill,
+          'Trial (Iklan)',
+          Colors.orange,
+          cardColor,
+          () {
+            // Pemicu Rewarded Ad
+          },
+          isHighlighted: true,
+        ),
       ],
     );
   }
-  
-   Widget _infoCard(BuildContext context, {required IconData icon, required String label, required String value, required Color color}) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        padding: const EdgeInsets.symmetric(vertical: 12.0),
-         decoration: BoxDecoration(
-          color: Colors.white.withAlpha(13), // 0.05 opacity
-          borderRadius: BorderRadius.circular(12)),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 28, color: color),
-            const SizedBox(height: 8),
-            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, color: Colors.white70, height: 1.2)),
-            const SizedBox(height: 4),
-            Text(value, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
-          ],
-        ),
+
+  Widget _buildActionButton(
+    IconData icon,
+    String label,
+    Color color,
+    Color cardColor,
+    VoidCallback onPressed, {
+    bool isHighlighted = false,
+  }) {
+    return InkWell(
+      onTap: onPressed,
+      child: Column(
+        children: [
+          Container(
+            height: 60,
+            width: 60,
+            decoration: BoxDecoration(
+              color: isHighlighted ? color.withAlpha(5) : color,
+              borderRadius: BorderRadius.circular(16),
+              border: isHighlighted ? Border.all(color: color, width: 2) : null,
+            ),
+            child: Icon(
+              icon,
+              color: isHighlighted ? color : Colors.white,
+              size: 30,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF0D1E40),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildPromoSection(BuildContext context) {
+  Widget _buildMadingSection(Color cardColor, Color accentColor) {
+    // Contoh data Mading (Bisa diambil dari comment user MikroTik)
+    final List<Map<String, String>> madingMessages = [
+      {'title': 'Promo Paket Hebat!', 'desc': 'Hemat 30% Bulan Ini'},
+      {'title': 'Jaringan Stabil', 'desc': 'Semua Sistem OK'},
+      {'title': 'Event Spesial', 'desc': 'WiFi Gratis @ Alun-Alun Sabtu Ini'},
+    ];
+
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('MADING INFORMASI & PROMO', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
-        _promoItem(context, title: 'Promo Paket Hebat! - Hemat 30% Bulan Ini'),
-        _promoItem(context, title: 'Jaringan Stabil | Semua Sistem OK'),
-        _promoItem(context, title: 'Event Spesial: WiFi Gratis @ Alun-Alun'),
-      ],
+      children: madingMessages
+          .map(
+            (msg) => _buildMadingCard(
+              msg['title']!,
+              msg['desc']!,
+              cardColor,
+              accentColor,
+            ),
+          )
+          .toList(),
     );
   }
 
-  Widget _promoItem(BuildContext context, {required String title}) {
+  Widget _buildMadingCard(
+    String title,
+    String desc,
+    Color cardColor,
+    Color accentColor,
+  ) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      color: const Color(0xFF1a3b6e),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      elevation: 1,
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: cardColor,
       child: ListTile(
-        title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 14)),
-        trailing: const Icon(Icons.chevron_right, color: Colors.white),
-        onTap: () {},
+        leading: Icon(Icons.info_outline, color: accentColor),
+        title: Text(
+          title,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        ),
+        subtitle: Text(
+          desc,
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 14,
+          color: Colors.grey,
+        ),
+        onTap: () {
+          // Detail Mading
+        },
       ),
     );
-  }
-
-   Widget _buildAdBanner(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Container(
-              color: Colors.orange,
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              child: const Text('C', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text('IKLAN SPONSOR - Promo Kopi Lokal', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                  Text('Google AdMob', style: TextStyle(color: Colors.grey, fontSize: 10)),
-                ],
-              ),
-            ),
-            const Icon(Icons.play_arrow, color: Colors.green),
-          ],
-        ));
   }
 }

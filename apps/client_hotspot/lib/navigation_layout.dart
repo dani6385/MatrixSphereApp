@@ -2,6 +2,7 @@ import 'screens/profile_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/status_screen.dart';
 import 'screens/voucher_screen.dart';
+import 'screens/wifi_screen.dart';
 import 'package:flutter/material.dart';
 
 class NavigationLayout extends StatefulWidget {
@@ -17,6 +18,7 @@ class _NavigationLayoutState extends State<NavigationLayout> {
     HomeScreen(),
     StatusScreen(),
     VoucherScreen(),
+    WifiScreen(),
     ProfileScreen(),
   ];
 
@@ -38,6 +40,7 @@ class _NavigationLayoutState extends State<NavigationLayout> {
             label: 'Status',
           ),
           BottomNavigationBarItem(icon: Icon(Icons.confirmation_number), label: 'Voucher'),
+          BottomNavigationBarItem(icon: Icon(Icons.wifi), label: 'WiFi'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
