@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'home/detailed_quota.dart';
-import 'home/season.dart';
-import 'home/total_usage.dart';
-import 'home/current_speed.dart';
 
 class StatusCard extends StatelessWidget {
   final String sisaKuota;
   final double persenKuota;
   final String masaAktif;
-  final String uptime;
-  final String totalUsage;
-  final String currentSpeed;
   final Color primaryColor;
   final Color accentColor;
   final Color cardColor;
@@ -20,9 +14,6 @@ class StatusCard extends StatelessWidget {
     required this.sisaKuota,
     required this.persenKuota,
     required this.masaAktif,
-    required this.uptime,
-    required this.totalUsage,
-    required this.currentSpeed,
     required this.primaryColor,
     required this.accentColor,
     required this.cardColor,
@@ -85,60 +76,11 @@ class StatusCard extends StatelessWidget {
               const SizedBox(height: 16),
               const Divider(),
               const SizedBox(height: 12),
-              Wrap(
-                alignment: WrapAlignment.spaceAround,
-                spacing: 12.0,
-                runSpacing: 12.0,
-                children: [
-                  _buildStatusInfo(
-                    'Masa Aktif',
-                    masaAktif,
-                    Icons.timer_outlined,
-                    accentColor,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SeasonScreen()),
-                      );
-                    },
-                    child: _buildStatusInfo(
-                      'Uptime',
-                      uptime,
-                      Icons.timer,
-                      accentColor,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const TotalUsageScreen()),
-                      );
-                    },
-                    child: _buildStatusInfo(
-                      'Total Usage',
-                      totalUsage,
-                      Icons.data_usage,
-                      accentColor,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const CurrentSpeedScreen()),
-                      );
-                    },
-                    child: _buildStatusInfo(
-                      'Current Speed',
-                      currentSpeed,
-                      Icons.speed,
-                      accentColor,
-                    ),
-                  ),
-                ],
+              _buildStatusInfo(
+                'Masa Aktif',
+                masaAktif,
+                Icons.timer_outlined,
+                accentColor,
               ),
             ],
           ),

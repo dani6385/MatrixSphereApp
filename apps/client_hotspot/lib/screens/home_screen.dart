@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'widgets/mading_section.dart';
 import 'widgets/status_card.dart';
+import 'widgets/home/season.dart';
+import 'widgets/home/total_usage.dart';
+import 'widgets/home/current_speed.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -54,46 +57,73 @@ class _HomeState extends State<HomeScreen> {
               sisaKuota: _sisaKuota,
               persenKuota: _persenKuota,
               masaAktif: _masaAktif,
-              uptime: _uptime,
-              totalUsage: _totalUsage,
-              currentSpeed: _currentSpeed,
               primaryColor: primaryColor,
               accentColor: accentColor,
               cardColor: cardColor,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 48),
 
             // BAGIAN BARU: Tiga Kartu Info
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: _buildInfoCard(
-                    icon: Icons.timer_sharp,
-                    color: Colors.orange,
-                    title: 'Uptime',
-                    subtitle: '(Session)',
-                    value: _uptime,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SeasonScreen(),
+                        ),
+                      );
+                    },
+                    child: _buildInfoCard(
+                      icon: Icons.timer_sharp,
+                      color: Colors.orange,
+                      title: 'Uptime',
+                      subtitle: '(Session)',
+                      value: _uptime,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildInfoCard(
-                    icon: Icons.download_for_offline_outlined,
-                    color: Colors.blue,
-                    title: 'Total Usage',
-                    subtitle: '(Month)',
-                    value: _totalUsage,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TotalUsageScreen(),
+                        ),
+                      );
+                    },
+                    child: _buildInfoCard(
+                      icon: Icons.download_for_offline_outlined,
+                      color: Colors.blue,
+                      title: 'Total Usage',
+                      subtitle: '(Month)',
+                      value: _totalUsage,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildInfoCard(
-                    icon: Icons.speed_outlined,
-                    color: Colors.green,
-                    title: 'Current Speed',
-                    subtitle: '',
-                    value: _currentSpeed.replaceFirst('/', ' Mbps /\n'),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CurrentSpeedScreen(),
+                        ),
+                      );
+                    },
+                    child: _buildInfoCard(
+                      icon: Icons.speed_outlined,
+                      color: Colors.green,
+                      title: 'Current Speed',
+                      subtitle: '(Down/Up)',
+                      value: _currentSpeed,
+                    ),
                   ),
                 ),
               ],
@@ -155,7 +185,11 @@ class _HomeState extends State<HomeScreen> {
             const SizedBox(height: 8),
             Text(
               title,
-              style: TextStyle(color: Colors.grey.shade700, fontSize: 13, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
               textAlign: TextAlign.center,
             ),
             if (subtitle.isNotEmpty)
@@ -169,6 +203,8 @@ class _HomeState extends State<HomeScreen> {
               value,
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
               textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

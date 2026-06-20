@@ -1,4 +1,4 @@
-package com.example.admin_mikrotik
+package com.matrixsphere.connectivity
 
 import io.flutter.embedding.android.FlutterActivity
 
