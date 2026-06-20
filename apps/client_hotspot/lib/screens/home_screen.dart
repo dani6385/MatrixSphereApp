@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'detailed_quota.dart';
+import 'home/detailed_quota.dart';
+import 'home/season.dart';
+import 'home/total_usage.dart';
+import 'home/current_speed.dart'; // Import current_speed.dart
 
 // Import library MikroTik API Anda di sini
 // Import library Iklan (contoh: google_mobile_ads) di sini
@@ -15,6 +18,9 @@ class _HomeState extends State<HomeScreen> {
   // Variabel untuk menyimpan data dari MikroTik
   String _sisaKuota = "24.7 GB";
   String _masaAktif = "21 Hari";
+  String _uptime = "3h 45m";
+  String _totalUsage = "25.3 GB";
+  String _currentSpeed = "50/10 Mbps"; // Current speed variable
   double _persenKuota = 0.75; // Contoh 75%
 
   // Logika Iklan (Pseudo-code)
@@ -105,20 +111,6 @@ class _HomeState extends State<HomeScreen> {
           ],
         ),
       ),
-      // Bottom Navigation Bar (Opsional, untuk navigasi antar )
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: accentColor,
-        unselectedItemColor: Colors.grey,
-        currentIndex: 0, // Home selected
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Pengaturan',
-          ),
-        ],
-      ),
     );
   }
 
@@ -188,7 +180,7 @@ class _HomeState extends State<HomeScreen> {
               const Divider(),
               const SizedBox(height: 12),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildStatusInfo(
                     'Masa Aktif',
@@ -196,11 +188,47 @@ class _HomeState extends State<HomeScreen> {
                     Icons.timer_outlined,
                     accentColor,
                   ),
-                  _buildStatusInfo(
-                    'Status',
-                    'Aktif',
-                    Icons.check_circle_outline,
-                    Colors.green,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const SeasonScreen()),
+                      );
+                    },
+                    child: _buildStatusInfo(
+                      'Uptime',
+                      _uptime,
+                      Icons.timer,
+                      accentColor,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const TotalUsageScreen()),
+                      );
+                    },
+                    child: _buildStatusInfo(
+                      'Total Usage',
+                      _totalUsage,
+                      Icons.data_usage,
+                      accentColor,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CurrentSpeedScreen()),
+                      );
+                    },
+                    child: _buildStatusInfo(
+                      'Current Speed',
+                      _currentSpeed,
+                      Icons.speed,
+                      accentColor,
+                    ),
                   ),
                 ],
               ),
