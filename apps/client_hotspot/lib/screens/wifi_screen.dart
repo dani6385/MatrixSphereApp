@@ -51,7 +51,11 @@ class _WifiScreenState extends State<WifiScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface.withAlpha(51),
+      backgroundColor: const Color(0xFFF0F4F8),
+      appBar: AppBar(
+        title: const Text('WiFi Management'),
+        backgroundColor: const Color(0xFF0A2342),
+      ),
       body: RefreshIndicator(
         onRefresh: _connectAndFetchData,
         child: _isLoading
@@ -69,8 +73,8 @@ class _WifiScreenState extends State<WifiScreen> {
                       if (_currentUserData != null)
                         _buildCurrentNetworkInfo(_currentUserData!),
 
-                      const SizedBox(height: 24),
-                      _buildSelfService(context), 
+                      const SizedBox(height: 30),
+                      _buildActionButtons(context), 
                     ],
                   ),
       ),
@@ -88,7 +92,7 @@ class _WifiScreenState extends State<WifiScreen> {
           children: [
             Text(
               'Currently Connected To',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: const Color(0xFF0A2342)),
             ),
             const SizedBox(height: 16),
             ListTile(
@@ -170,67 +174,32 @@ class _WifiScreenState extends State<WifiScreen> {
       return 'Unknown';
     }
   }
-  
-  Widget _buildSelfService(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+
+    Widget _buildActionButtons(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        const Text(
-          'Self-Service',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 16),
-        _serviceButton(
-          context,
-          icon: Icons.add_shopping_cart,
-          label: 'Extend Package / Buy Voucher',
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Voucher functionality not implemented yet.')),
-            );
-          },
-          primary: true,
-        ),
-        const SizedBox(height: 12),
-        _serviceButton(
-          context,
-          icon: Icons.qr_code_scanner,
-          label: 'Scan Voucher QR',
-          onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('QR scanner not implemented yet.')),
-            );
-          },
-        ),
-        const SizedBox(height: 12),
-        _serviceButton(
-          context,
-          icon: Icons.history,
-          label: 'Check Payment History',
-          onPressed: () {
-             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Payment history not implemented yet.')),
-            );
-          },
-        ),
+        _actionButton(context, icon: Icons.qr_code_scanner, label: 'Scan Voucher\n(QR)'),
+        _actionButton(context, icon: Icons.account_balance_wallet, label: 'Top-Up &\nBayar QR'),
+        _actionButton(context, icon: Icons.play_circle_fill, label: 'Aktivasi Trial\nGratis (3day)'),
       ],
     );
   }
-  
-  Widget _serviceButton(BuildContext context, {required IconData icon, required String label, required VoidCallback onPressed, bool primary = false}) {
-    return ElevatedButton.icon(
-      icon: Icon(icon),
-      label: Text(label),
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        foregroundColor: primary ? Colors.white : Theme.of(context).primaryColor, 
-        backgroundColor: primary ? Colors.green : Colors.white,
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+
+  Widget _actionButton(BuildContext context, {required IconData icon, required String label}) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF1a3b6e),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, color: Colors.white, size: 30),
         ),
-        elevation: 2,
-      ),
+        const SizedBox(height: 8),
+        Text(label, textAlign: TextAlign.center, style: const TextStyle(color: Colors.black87, fontSize: 12)),
+      ],
     );
   }
 }

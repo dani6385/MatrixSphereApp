@@ -14,7 +14,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final _mikrotikService = MikroTikService();
   bool _isLoading = true;
   String? _errorMessage;
-
   HotspotActiveUser? _userData;
 
   @override
@@ -58,160 +57,219 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
-      body: RefreshIndicator(
-        onRefresh: _connectAndFetchData,
-        child: _isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : _errorMessage != null
-                ? Center(child: Padding(padding: const EdgeInsets.all(16), child: Text(_errorMessage!, style: const TextStyle(color: Colors.red))))
-                : _userData == null
-                    ? const Center(child: Text('No user data found.'))
-                    : SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text('My Internet Status', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-                              const SizedBox(height: 24),
-                              _buildConnectionDashboard(context, _userData!),
-                              const SizedBox(height: 16),
-                              _buildDataUsage(context, _userData!),
-                              const SizedBox(height: 16),
-                              _buildInfoCards(context, _userData!),
-                              const SizedBox(height: 24),
-                              _buildFooterStatus(context),
-                            ],
+      backgroundColor: const Color(0xFF0A2342), // Dark blue background
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: _connectAndFetchData,
+          backgroundColor: const Color(0xFF1a3b6e),
+          color: Colors.white,
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator(color: Colors.white))
+              : _errorMessage != null
+                  ? Center(child: Padding(padding: const EdgeInsets.all(16), child: Text(_errorMessage!, style: const TextStyle(color: Colors.red))))
+                  : _userData == null
+                      ? const Center(child: Text('No user data found.', style: TextStyle(color: Colors.white)))
+                      : SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildAppBar(context),
+                                const SizedBox(height: 20),
+                                _buildWelcomeCard(context),
+                                const SizedBox(height: 20),
+                                _buildQuotaCard(context, _userData!),
+                                const SizedBox(height: 30),
+                                _buildPromoSection(context),
+                                const SizedBox(height: 20),
+                                _buildAdBanner(context),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+        ),
       ),
     );
   }
 
-  Widget _buildConnectionDashboard(BuildContext context, HotspotActiveUser user) {
+  Widget _buildAppBar(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.language, color: Colors.white, size: 40), // Placeholder for logo
+            const SizedBox(width: 8),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text('NetLink', style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+                Text('June 20, 2026', style: TextStyle(color: Colors.white70, fontSize: 12)),
+              ],
+            ),
+          ],
+        ),
+        IconButton(
+          icon: const Icon(Icons.notifications_none, color: Colors.white, size: 28),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWelcomeCard(BuildContext context) {
+    return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1a3b6e).withAlpha(204), // 0.8 opacity
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Text(
+          'Selamat Datang, User! | NetLink Hotspot',
+          style: TextStyle(color: Colors.white),
+        ));
+  }
+
+  Widget _buildQuotaCard(BuildContext context, HotspotActiveUser user) {
     final limit = double.tryParse(user.limitBytesTotal) ?? 0;
-    final used = user.totalBytesUsed.toDouble();
-    final percentage = limit > 0 ? used / limit : 0.0;
+    final remaining = user.remainingBytes.toDouble();
+    final percentage = limit > 0 ? remaining / limit : 0.0;
+    final remainingGB = (remaining / 1024 / 1024 / 1024).toStringAsFixed(1);
 
     return Card(
-      elevation: 4, shadowColor: Colors.black12, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4,
+      color: const Color(0xFF1a3b6e),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
         child: Column(
           children: [
-            const Text('Data Usage', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20),
-            CircularPercentIndicator(
-              radius: 80.0, lineWidth: 15.0, percent: percentage,
-              center: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(HotspotActiveUser.formatBytes(used.toString()), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
-                  Text('/ ${HotspotActiveUser.formatBytes(limit.toString())}', style: const TextStyle(fontSize: 14, color: Colors.grey)),
-                ],
-              ),
-              progressColor: Theme.of(context).primaryColor, backgroundColor: Colors.grey.shade300, circularStrokeCap: CircularStrokeCap.round,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CircularPercentIndicator(
+                  radius: 50.0,
+                  lineWidth: 8.0,
+                  percent: percentage,
+                  circularStrokeCap: CircularStrokeCap.round,
+                  progressColor: const Color(0xFF00FFC2),
+                  backgroundColor: Colors.white.withAlpha(51), // 0.2 opacity
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('SISA KUOTA', style: TextStyle(color: Colors.white70, fontSize: 14)),
+                      Text('$remainingGB GB', style: const TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
-            const Text('Remaining Time', style: TextStyle(fontSize: 14, color: Colors.grey)),
-            Text(user.sessionTimeLeft, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Divider(color: Colors.white30),
+            const SizedBox(height: 10),
+            const Text(
+              'Masa Aktif: 21 Hari | Berlaku s/d: 16 Juli 2028', // Placeholder text
+              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ),
+            const SizedBox(height: 20),
+            _buildInfoCards(context, user),
           ],
         ),
       ),
     );
   }
-  
-  Widget _buildDataUsage(BuildContext context, HotspotActiveUser user) {
-    final limit = int.tryParse(user.limitBytesTotal) ?? 0;
-    final used = user.totalBytesUsed;
-    final remaining = user.remainingBytes;
-    final percentage = limit > 0 ? used / limit : 0.0;
 
-    return Card(
-      elevation: 2, 
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Data Usage Details', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            LinearPercentIndicator(
-              lineHeight: 20.0,
-              percent: percentage,
-              center: Text(
-                '${(percentage * 100).toStringAsFixed(1)}%',
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-              ),
-              barRadius: const Radius.circular(10),
-              progressColor: Colors.blue,
-              backgroundColor: Colors.grey.shade300,
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Used', style: TextStyle(color: Colors.grey)),
-                    Text(HotspotActiveUser.formatBytes(used.toString()), style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const Text('Remaining', style: TextStyle(color: Colors.grey)),
-                    Text(HotspotActiveUser.formatBytes(remaining.toString()), style: const TextStyle(fontWeight: FontWeight.bold)),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),),);
-  }
-
-  Widget _buildInfoCards(BuildContext context, HotspotActiveUser user) {
+   Widget _buildInfoCards(BuildContext context, HotspotActiveUser user) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        _infoCard(context, icon: Icons.timer, label: 'Uptime (Session)', value: user.uptime, color: Colors.orange),
-        _infoCard(context, icon: Icons.downloading, label: 'Total Usage (Month)', value: user.monthlyUsage, color: Colors.blue),
-        _infoCard(context, icon: Icons.speed, label: 'Current Speed', value: user.currentSpeed, color: Colors.green),
+        _infoCard(context, icon: Icons.timer_outlined, label: 'Uptime\n(Session)', value: user.uptime, color: Colors.orangeAccent),
+        _infoCard(context, icon: Icons.data_usage_outlined, label: 'Total Usage\n(Month)', value: user.monthlyUsage, color: Colors.lightBlueAccent),
+        _infoCard(context, icon: Icons.speed_outlined, label: 'Current Speed', value: user.currentSpeed, color: Colors.greenAccent),
       ],
     );
   }
   
    Widget _infoCard(BuildContext context, {required IconData icon, required String label, required String value, required Color color}) {
     return Expanded(
-      child: Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              Icon(icon, size: 30, color: color),
-              const SizedBox(height: 8),
-              Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              const SizedBox(height: 4),
-              Text(value, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-            ],
-          ),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 12.0),
+         decoration: BoxDecoration(
+          color: Colors.white.withAlpha(13), // 0.05 opacity
+          borderRadius: BorderRadius.circular(12)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 28, color: color),
+            const SizedBox(height: 8),
+            Text(label, textAlign: TextAlign.center, style: const TextStyle(fontSize: 11, color: Colors.white70, height: 1.2)),
+            const SizedBox(height: 4),
+            Text(value, textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.white)),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildFooterStatus(BuildContext context) {
-    return const Text(
-      'Status: Connected via PPPoE.\nYour IP is masked for security.',
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 12, color: Colors.grey),
+  Widget _buildPromoSection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('MADING INFORMASI & PROMO', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        _promoItem(context, title: 'Promo Paket Hebat! - Hemat 30% Bulan Ini'),
+        _promoItem(context, title: 'Jaringan Stabil | Semua Sistem OK'),
+        _promoItem(context, title: 'Event Spesial: WiFi Gratis @ Alun-Alun'),
+      ],
     );
+  }
+
+  Widget _promoItem(BuildContext context, {required String title}) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      color: const Color(0xFF1a3b6e),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      child: ListTile(
+        title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 14)),
+        trailing: const Icon(Icons.chevron_right, color: Colors.white),
+        onTap: () {},
+      ),
+    );
+  }
+
+   Widget _buildAdBanner(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Container(
+              color: Colors.orange,
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              child: const Text('C', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text('IKLAN SPONSOR - Promo Kopi Lokal', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  Text('Google AdMob', style: TextStyle(color: Colors.grey, fontSize: 10)),
+                ],
+              ),
+            ),
+            const Icon(Icons.play_arrow, color: Colors.green),
+          ],
+        ));
   }
 }
