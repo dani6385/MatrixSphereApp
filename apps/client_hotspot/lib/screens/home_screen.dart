@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home/detailed_quota.dart';
-import 'home/season.dart';
-import 'home/total_usage.dart';
-import 'home/current_speed.dart'; // Import current_speed.dart
-
-// Import library MikroTik API Anda di sini
-// Import library Iklan (contoh: google_mobile_ads) di sini
+import 'widgets/mading_section.dart';
+import 'widgets/status_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,23 +15,11 @@ class _HomeState extends State<HomeScreen> {
   String _masaAktif = "21 Hari";
   String _uptime = "3h 45m";
   String _totalUsage = "25.3 GB";
-  String _currentSpeed = "50/10 Mbps"; // Current speed variable
+  String _currentSpeed = "50/10 Mbps"; // Format: Download/Upload
   double _persenKuota = 0.75; // Contoh 75%
-
-  // Logika Iklan (Pseudo-code)
-  // BannerAd? _bannerAd;
-  // bool _isBannerAdLoaded = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // 1. Panggil fungsi untuk mengambil data dari MikroTik API
-    // 2. Inisialisasi Iklan Banner
-  }
 
   @override
   Widget build(BuildContext context) {
-    // Definisi Warna Tema (Elegance & Professional)
     final Color primaryColor = const Color(0xFF0D1E40); // Deep Sapphire
     final Color accentColor = const Color(0xFF2196F3); // Modern Blue
     final Color cardColor = Colors.white;
@@ -62,21 +45,63 @@ class _HomeState extends State<HomeScreen> {
         ],
       ),
       body: SingleChildScrollView(
-        // Memungkinkan Scroll
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ==========================================
-            // 1. DASHBOARD STATUS (Elegant Card)
-            // ==========================================
-            _buildStatusCard(primaryColor, accentColor, cardColor),
+            // Kartu Status Utama (yang sudah ada)
+            StatusCard(
+              sisaKuota: _sisaKuota,
+              persenKuota: _persenKuota,
+              masaAktif: _masaAktif,
+              uptime: _uptime,
+              totalUsage: _totalUsage,
+              currentSpeed: _currentSpeed,
+              primaryColor: primaryColor,
+              accentColor: accentColor,
+              cardColor: cardColor,
+            ),
+            const SizedBox(height: 24),
+
+            // BAGIAN BARU: Tiga Kartu Info
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: _buildInfoCard(
+                    icon: Icons.timer_sharp,
+                    color: Colors.orange,
+                    title: 'Uptime',
+                    subtitle: '(Session)',
+                    value: _uptime,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildInfoCard(
+                    icon: Icons.download_for_offline_outlined,
+                    color: Colors.blue,
+                    title: 'Total Usage',
+                    subtitle: '(Month)',
+                    value: _totalUsage,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildInfoCard(
+                    icon: Icons.speed_outlined,
+                    color: Colors.green,
+                    title: 'Current Speed',
+                    subtitle: '',
+                    value: _currentSpeed.replaceFirst('/', ' Mbps /\n'),
+                  ),
+                ),
+              ],
+            ),
 
             const SizedBox(height: 24),
 
-            // ==========================================
-            // 3. MADING INFORMASI (List of Cards)
-            // ==========================================
+            // Mading Informasi (yang sudah ada)
             Text(
               'Mading Informasi & Promo',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -85,14 +110,10 @@ class _HomeState extends State<HomeScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            _buildMadingSection(cardColor, accentColor),
-
+            MadingSection(cardColor: cardColor, accentColor: accentColor),
             const SizedBox(height: 16),
 
-            // ==========================================
-            // 4. INTEGRASI IKLAN (Halus & Scrollable)
-            // ==========================================
-            // Contoh penempatan iklan banner yang menyatu dengan list
+            // Iklan (yang sudah ada)
             Container(
               height: 60,
               width: double.infinity,
@@ -114,210 +135,43 @@ class _HomeState extends State<HomeScreen> {
     );
   }
 
-  // =========================================================================
-  // WIDGET BUILDER HELPER (Untuk Kode yang Bersih)
-  // =========================================================================
-
-  Widget _buildStatusCard(
-    Color primaryColor,
-    Color accentColor,
-    Color cardColor,
-  ) {
-    return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const DetailedQuota()),
-        );
-      },
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        color: cardColor,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'SISA KUOTA',
-                        style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _sisaKuota,
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  // Circular Progress (Elegant)
-                  SizedBox(
-                    height: 60,
-                    width: 60,
-                    child: CircularProgressIndicator(
-                      value: _persenKuota,
-                      backgroundColor: Colors.grey.shade200,
-                      valueColor: AlwaysStoppedAnimation<Color>(accentColor),
-                      strokeWidth: 8,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const Divider(),
-              const SizedBox(height: 12),
-              Wrap(
-                alignment: WrapAlignment.spaceAround,
-                spacing: 12.0, // Horizontal space between items
-                runSpacing: 12.0, // Vertical space between lines
-                children: [
-                  _buildStatusInfo(
-                    'Masa Aktif',
-                    _masaAktif,
-                    Icons.timer_outlined,
-                    accentColor,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const SeasonScreen()),
-                      );
-                    },
-                    child: _buildStatusInfo(
-                      'Uptime',
-                      _uptime,
-                      Icons.timer,
-                      accentColor,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const TotalUsageScreen()),
-                      );
-                    },
-                    child: _buildStatusInfo(
-                      'Total Usage',
-                      _totalUsage,
-                      Icons.data_usage,
-                      accentColor,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const CurrentSpeedScreen()),
-                      );
-                    },
-                    child: _buildStatusInfo(
-                      'Current Speed',
-                      _currentSpeed,
-                      Icons.speed,
-                      accentColor,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatusInfo(
-    String label,
-    String value,
-    IconData icon,
-    Color iconColor,
-  ) {
-    return Row(
-      children: [
-        Icon(icon, size: 18, color: iconColor),
-        const SizedBox(width: 6),
-        Text(
-          '$label: ',
-          style: const TextStyle(color: Colors.grey, fontSize: 13),
-        ),
-        Text(
-          value,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 13,
-            color: Color(0xFF0D1E40),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMadingSection(Color cardColor, Color accentColor) {
-    // Contoh data Mading (Bisa diambil dari comment user MikroTik)
-    final List<Map<String, String>> madingMessages = [
-      {'title': 'Promo Paket Hebat!', 'desc': 'Hemat 30% Bulan Ini'},
-      {'title': 'Jaringan Stabil', 'desc': 'Semua Sistem OK'},
-      {'title': 'Event Spesial', 'desc': 'WiFi Gratis @ Alun-Alun Sabtu Ini'},
-    ];
-
-    return Column(
-      children: madingMessages
-          .map(
-            (msg) => _buildMadingCard(
-              msg['title']!,
-              msg['desc']!,
-              cardColor,
-              accentColor,
-            ),
-          )
-          .toList(),
-    );
-  }
-
-  Widget _buildMadingCard(
-    String title,
-    String desc,
-    Color cardColor,
-    Color accentColor,
-  ) {
+  // Widget helper untuk membuat kartu info kecil
+  Widget _buildInfoCard({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String subtitle,
+    required String value,
+  }) {
     return Card(
-      elevation: 1,
-      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: cardColor,
-      child: ListTile(
-        leading: Icon(Icons.info_outline, color: accentColor),
-        title: Text(
-          title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 30, color: color),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: TextStyle(color: Colors.grey.shade700, fontSize: 13, fontWeight: FontWeight.w500),
+              textAlign: TextAlign.center,
+            ),
+            if (subtitle.isNotEmpty)
+              Text(
+                subtitle,
+                style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
+                textAlign: TextAlign.center,
+              ),
+            const SizedBox(height: 6),
+            Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        subtitle: Text(
-          desc,
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
-        ),
-        trailing: const Icon(
-          Icons.arrow_forward_ios,
-          size: 14,
-          color: Colors.grey,
-        ),
-        onTap: () {
-          // Detail Mading
-        },
       ),
     );
   }

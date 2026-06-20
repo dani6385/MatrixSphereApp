@@ -1,4 +1,4 @@
-import 'screens/profile/profile_screen.dart';
+import 'screens/profile_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/status_screen.dart';
 import 'screens/wifi_screen.dart';

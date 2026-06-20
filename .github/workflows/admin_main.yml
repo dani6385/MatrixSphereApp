@@ -1,43 +1,19 @@
-name: Build, Release Admin to Repo Home & deploy
+name: Build and Distribute Admin App
 
 on:
   push:
-    branches: [ main ]
-    paths:
-      - 'apps/admin_mikrotik/**'
-      - 'pubspec.yaml'
-  workflow_dispatch:
+    branches:
+      - main
 
 jobs:
-  build_and_release:
+  build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      # Cache Setup
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
-
-      - name: Cache Pub
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: ${{ runner.os }}-pub-
-
-      # Setup Environment
-      - name: Setup Java & Flutter
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '17'
-      - uses: subosito/flutter-action@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
 
@@ -46,32 +22,20 @@ jobs:
           dart pub global activate melos
           melos bootstrap
 
-      # Build APK
       - name: Build APK
         run: |
           cd apps/admin_mikrotik
           flutter build apk --release --build-number=${{ github.run_number }}
 
-      # 1. UPLOAD KE FIREBASE APP DISTRIBUTION
       - name: Authenticate with Google Cloud
-          uses: google-github-actions/auth@v1
-          with:
-            credentials_json: ${{ secrets.GCLOUD_SERVICE_KEY }}
-              token: ${{ secrets.FIREBASE_TOKEN }}
-      - name: Build and Distribute
-        run: |
-          firebase appdistribution:distribute ...
-          groups: testers
-          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
-
-      # 2. UPLOAD KE GITHUB RELEASES (Home Repo)
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: google-github-actions/auth@v1
         with:
-          files: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
-          tag_name: v1.0.${{ github.run_number }}
-          name: Versi Baru - Build ${{ github.run_number }}
-          body: "APK terbaru telah diunggah ke Firebase App Distribution dan tersedia di sini."
-          allowUpdates: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_KEY }}
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.GCLOUD_SERVICE_KEY }}
+          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          token: ${{ secrets.FIREBASE_TOKEN }}
