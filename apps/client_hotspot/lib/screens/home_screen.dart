@@ -179,8 +179,10 @@ class _HomeState extends State<HomeScreen> {
               const SizedBox(height: 16),
               const Divider(),
               const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+              Wrap(
+                alignment: WrapAlignment.spaceAround,
+                spacing: 12.0, // Horizontal space between items
+                runSpacing: 12.0, // Vertical space between lines
                 children: [
                   _buildStatusInfo(
                     'Masa Aktif',
