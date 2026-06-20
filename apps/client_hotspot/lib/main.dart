@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Client Hotspot',
+      title: 'M|S Connectivity',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

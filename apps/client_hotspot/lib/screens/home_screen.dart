@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'home/detailed_quota.dart';
+
 // Import library MikroTik API Anda di sini
 // Import library Iklan (contoh: google_mobile_ads) di sini
 
@@ -6,10 +8,10 @@ class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeState extends State<HomeScreen> {
   // Variabel untuk menyimpan data dari MikroTik
   String _sisaKuota = "24.7 GB";
   String _masaAktif = "21 Hari";
@@ -67,21 +69,6 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24),
 
             // ==========================================
-            // 2. TOMBOL AKSI UTAMA (Modern Icons)
-            // ==========================================
-            Text(
-              'Aksi Cepat',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: primaryColor,
-              ),
-            ),
-            const SizedBox(height: 12),
-            _buildActionButtons(accentColor, cardColor),
-
-            const SizedBox(height: 24),
-
-            // ==========================================
             // 3. MADING INFORMASI (List of Cards)
             // ==========================================
             Text(
@@ -118,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      // Bottom Navigation Bar (Opsional, untuk navigasi antar screen)
+      // Bottom Navigation Bar (Opsional, untuk navigasi antar )
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: accentColor,
         unselectedItemColor: Colors.grey,
@@ -144,73 +131,81 @@ class _HomeScreenState extends State<HomeScreen> {
     Color accentColor,
     Color cardColor,
   ) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: cardColor,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'SISA KUOTA',
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DetailedQuota()),
+        );
+      },
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        color: cardColor,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'SISA KUOTA',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      _sisaKuota,
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(height: 4),
+                      Text(
+                        _sisaKuota,
+                        style: TextStyle(
+                          color: primaryColor,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                // Circular Progress (Elegant)
-                SizedBox(
-                  height: 60,
-                  width: 60,
-                  child: CircularProgressIndicator(
-                    value: _persenKuota,
-                    backgroundColor: Colors.grey.shade200,
-                    valueColor: AlwaysStoppedAnimation<Color>(accentColor),
-                    strokeWidth: 8,
+                    ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildStatusInfo(
-                  'Masa Aktif',
-                  _masaAktif,
-                  Icons.timer_outlined,
-                  accentColor,
-                ),
-                _buildStatusInfo(
-                  'Status',
-                  'Aktif',
-                  Icons.check_circle_outline,
-                  Colors.green,
-                ),
-              ],
-            ),
-          ],
+                  // Circular Progress (Elegant)
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: CircularProgressIndicator(
+                      value: _persenKuota,
+                      backgroundColor: Colors.grey.shade200,
+                      valueColor: AlwaysStoppedAnimation<Color>(accentColor),
+                      strokeWidth: 8,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const Divider(),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildStatusInfo(
+                    'Masa Aktif',
+                    _masaAktif,
+                    Icons.timer_outlined,
+                    accentColor,
+                  ),
+                  _buildStatusInfo(
+                    'Status',
+                    'Aktif',
+                    Icons.check_circle_outline,
+                    Colors.green,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -239,83 +234,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildActionButtons(Color accentColor, Color cardColor) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildActionButton(
-          Icons.qr_code_scanner,
-          'Scan Voucher',
-          accentColor,
-          cardColor,
-          () {
-            // Navigasi ke Scan Screen
-          },
-        ),
-        _buildActionButton(
-          Icons.account_balance_wallet_outlined,
-          'Bayar QRIS',
-          accentColor,
-          cardColor,
-          () {
-            // Navigasi ke Payment Screen
-          },
-        ),
-        // TOMBOL TRIAL BERBASIS IKLAN (Highlighted)
-        _buildActionButton(
-          Icons.play_circle_fill,
-          'Trial (Iklan)',
-          Colors.orange,
-          cardColor,
-          () {
-            // Pemicu Rewarded Ad
-          },
-          isHighlighted: true,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActionButton(
-    IconData icon,
-    String label,
-    Color color,
-    Color cardColor,
-    VoidCallback onPressed, {
-    bool isHighlighted = false,
-  }) {
-    return InkWell(
-      onTap: onPressed,
-      child: Column(
-        children: [
-          Container(
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              color: isHighlighted ? color.withAlpha(5) : color,
-              borderRadius: BorderRadius.circular(16),
-              border: isHighlighted ? Border.all(color: color, width: 2) : null,
-            ),
-            child: Icon(
-              icon,
-              color: isHighlighted ? color : Colors.white,
-              size: 30,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF0D1E40),
-            ),
-          ),
-        ],
-      ),
     );
   }
 
