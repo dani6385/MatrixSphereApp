@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home/detailed_quota.dart';
+import 'detailed_quota.dart';
 
 // Import library MikroTik API Anda di sini
 // Import library Iklan (contoh: google_mobile_ads) di sini
