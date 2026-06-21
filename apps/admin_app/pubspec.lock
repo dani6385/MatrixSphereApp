@@ -42,7 +42,7 @@ packages:
     source: hosted
     version: "1.1.2"
   cloud_firestore:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore
       sha256: "2d33da4465bdb81b6685c41b535895065adcb16261beb398f5f3bbc623979e9c"
@@ -122,7 +122,7 @@ packages:
     source: hosted
     version: "7.0.1"
   firebase_auth:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_auth
       sha256: "0fed2133bee1369ee1118c1fef27b2ce0d84c54b7819a2b17dada5cfec3b03ff"
@@ -146,7 +146,7 @@ packages:
     source: hosted
     version: "5.15.3"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       sha256: "7be63a3f841fc9663342f7f3a011a42aef6a61066943c90b1c434d79d5c995c5"
@@ -193,13 +193,29 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.6+16"
+  fl_chart:
+    dependency: "direct main"
+    description:
+      name: fl_chart
+      sha256: d0f0d49112f2f4b192481c16d05b6418bd7820e021e265a3c22db98acf7ed7fb
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.68.0"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_lints:
+    dependency: "direct dev"
+    description:
+      name: flutter_lints
+      sha256: "5398f14efa795ffb7a33e9b6a08798b26a180edac4ad7db3f231e40f82ce11e1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
   flutter_test:
-    dependency: transitive
+    dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -209,7 +225,7 @@ packages:
     source: sdk
     version: "0.0.0"
   get_it:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: get_it
       sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
@@ -232,6 +248,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.19.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -256,8 +280,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      sha256: c35bb79562d980e9a453fc715854e1ed39e24e7d0297a880ef54e17f9874a9d7
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.1"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       sha256: "25aee487596a6257655a1e091ec2ae66bc30e7af663592cc3a27e6591e05035c"
@@ -296,6 +328,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.11"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   path:
     dependency: transitive
     description:
@@ -312,8 +352,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  routeros_api:
+  provider:
     dependency: "direct main"
+    description:
+      name: provider
+      sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.5+1"
+  routeros_api:
+    dependency: transitive
     description:
       name: routeros_api
       sha256: "3e2e54270dcb6179b4706df25ce496133993893ff8d13322d1fa29992ca9d897"
@@ -321,12 +369,19 @@ packages:
     source: hosted
     version: "0.1.4"
   shared_core:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
-      path: "../shared_core"
+      path: "../../packages/shared_core"
       relative: true
     source: path
     version: "0.0.1"
+  shared_services:
+    dependency: "direct main"
+    description:
+      path: "../../packages/shared_services"
+      relative: true
+    source: path
+    version: "1.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -364,6 +419,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  syncfusion_flutter_charts:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_charts
+      sha256: a755274a8786b200b7a05f7414168cd5858871db74d0f1de2e57b20a8aaeb7a4
+      url: "https://pub.dev"
+    source: hosted
+    version: "26.2.14"
+  syncfusion_flutter_core:
+    dependency: transitive
+    description:
+      name: syncfusion_flutter_core
+      sha256: "6e67726b85812afc7105725a23620b876ab7f6b04b8410e211330ffb8c2cdbe8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "26.2.14"
   term_glyph:
     dependency: transitive
     description:

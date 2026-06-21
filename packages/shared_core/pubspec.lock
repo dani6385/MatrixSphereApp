@@ -42,7 +42,7 @@ packages:
     source: hosted
     version: "1.1.2"
   cloud_firestore:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore
       sha256: "2d33da4465bdb81b6685c41b535895065adcb16261beb398f5f3bbc623979e9c"
@@ -74,7 +74,7 @@ packages:
     source: hosted
     version: "1.19.1"
   device_info_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: device_info_plus
       sha256: a7fd703482b391a87d60b6061d04dfdeab07826b96f9abd8f5ed98068acc0074
@@ -90,7 +90,7 @@ packages:
     source: hosted
     version: "7.0.3"
   equatable:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: equatable
       sha256: "3e0141505477fd8ad55d6eb4e7776d3fe8430be8e497ccb1521370c3f21a3e2b"
@@ -122,7 +122,7 @@ packages:
     source: hosted
     version: "7.0.1"
   firebase_auth:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_auth
       sha256: "0fed2133bee1369ee1118c1fef27b2ce0d84c54b7819a2b17dada5cfec3b03ff"
@@ -146,7 +146,7 @@ packages:
     source: hosted
     version: "5.15.3"
   firebase_core:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core
       sha256: "7be63a3f841fc9663342f7f3a011a42aef6a61066943c90b1c434d79d5c995c5"
@@ -170,7 +170,7 @@ packages:
     source: hosted
     version: "2.24.1"
   firebase_database:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_database
       sha256: "35b37c04307b99c5f746387ce03292531c3aa1de91facffbd9cff5e069a8b5fd"
@@ -198,8 +198,16 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_lints:
+    dependency: "direct dev"
+    description:
+      name: flutter_lints
+      sha256: "3f41d009ba7172d5ff9be5f6e6e6abb4300e263aab8866d2a0842ed2a70f8f0c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   flutter_test:
-    dependency: transitive
+    dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -217,7 +225,7 @@ packages:
     source: hosted
     version: "7.7.0"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: "87721a4a50b19c7f1d49001e51409bddc46303966ce89a65af4f4e6004896412"
@@ -256,8 +264,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      sha256: "976c774dd944a42e83e2467f4cc670daef7eed6295b10b36ae8c85bcbf828235"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       sha256: "25aee487596a6257655a1e091ec2ae66bc30e7af663592cc3a27e6591e05035c"
@@ -289,7 +305,7 @@ packages:
     source: hosted
     version: "1.16.0"
   mobile_scanner:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: mobile_scanner
       sha256: "0b466a0a8a211b366c2e87f3345715faef9b6011c7147556ad22f37de6ba3173"
@@ -313,20 +329,20 @@ packages:
     source: hosted
     version: "2.1.8"
   routeros_api:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: routeros_api
       sha256: "3e2e54270dcb6179b4706df25ce496133993893ff8d13322d1fa29992ca9d897"
       url: "https://pub.dev"
     source: hosted
     version: "0.1.4"
-  shared_core:
+  shared_services:
     dependency: "direct main"
     description:
-      path: "../shared_core"
+      path: "../shared_services"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "1.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

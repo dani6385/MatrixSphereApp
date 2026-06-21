@@ -1,15 +1,16 @@
 name: shared_ui
-description: A new Flutter package.
-version: 0.0.1
-homepage:
+version: 1.0.0
+description: A collection of shared services for MatrixSphere.
+publish_to: 'none'
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  shared_services:
+    path: ../shared_services
+  mobile_scanner: ^6.0.0
+  image_picker: any
+  

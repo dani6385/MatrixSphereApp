@@ -209,7 +209,7 @@ packages:
     source: sdk
     version: "0.0.0"
   get_it:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: get_it
       sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
@@ -257,7 +257,7 @@ packages:
     source: hosted
     version: "3.0.2"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       sha256: "25aee487596a6257655a1e091ec2ae66bc30e7af663592cc3a27e6591e05035c"
@@ -313,7 +313,7 @@ packages:
     source: hosted
     version: "2.1.8"
   routeros_api:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: routeros_api
       sha256: "3e2e54270dcb6179b4706df25ce496133993893ff8d13322d1fa29992ca9d897"
@@ -321,12 +321,19 @@ packages:
     source: hosted
     version: "0.1.4"
   shared_core:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       path: "../shared_core"
       relative: true
     source: path
     version: "0.0.1"
+  shared_services:
+    dependency: "direct main"
+    description:
+      path: "../shared_services"
+      relative: true
+    source: path
+    version: "1.0.0"
   sky_engine:
     dependency: transitive
     description: flutter

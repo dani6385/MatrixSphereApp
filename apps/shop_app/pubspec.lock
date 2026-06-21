@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  cupertino_icons:
+    dependency: "direct main"
+    description:
+      name: cupertino_icons
+      sha256: "41e005c33bd814be4d3096aff55b1908d419fde52ca656c8c47719ec745873cd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.9"
   device_info_plus:
     dependency: transitive
     description:
@@ -198,8 +206,16 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_lints:
+    dependency: "direct dev"
+    description:
+      name: flutter_lints
+      sha256: "5398f14efa795ffb7a33e9b6a08798b26a180edac4ad7db3f231e40f82ce11e1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
   flutter_test:
-    dependency: transitive
+    dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
@@ -209,7 +225,7 @@ packages:
     source: sdk
     version: "0.0.0"
   get_it:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: get_it
       sha256: d85128a5dae4ea777324730dc65edd9c9f43155c109d5cc0a69cab74139fbac1
@@ -256,8 +272,16 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  lints:
+    dependency: transitive
+    description:
+      name: lints
+      sha256: c35bb79562d980e9a453fc715854e1ed39e24e7d0297a880ef54e17f9874a9d7
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.1"
   logger:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: logger
       sha256: "25aee487596a6257655a1e091ec2ae66bc30e7af663592cc3a27e6591e05035c"
@@ -313,7 +337,7 @@ packages:
     source: hosted
     version: "2.1.8"
   routeros_api:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: routeros_api
       sha256: "3e2e54270dcb6179b4706df25ce496133993893ff8d13322d1fa29992ca9d897"
@@ -321,12 +345,19 @@ packages:
     source: hosted
     version: "0.1.4"
   shared_core:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
-      path: "../shared_core"
+      path: "../../packages/shared_core"
       relative: true
     source: path
     version: "0.0.1"
+  shared_services:
+    dependency: "direct main"
+    description:
+      path: "../../packages/shared_services"
+      relative: true
+    source: path
+    version: "1.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -429,5 +460,5 @@ packages:
     source: hosted
     version: "1.1.5"
 sdks:
-  dart: ">=3.8.0 <4.0.0"
+  dart: ">=3.9.0 <4.0.0"
   flutter: ">=3.29.0"
