@@ -35,35 +35,54 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
   Future<void> _requestPermission() async {
     final status = await Permission.notification.request();
     if (!mounted) return;
+
     if (status.isGranted) {
       _navigateToHome();
-    } else if (status.isPermanentlyDenied) {
-      // Show a dialog to open app settings if permission is permanently denied
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Izin Diperlukan'),
-          content: const Text('Aplikasi ini memerlukan izin notifikasi untuk berfungsi. Silakan aktifkan di pengaturan aplikasi.'),
-          actions: [
-            TextButton(
-              child: const Text('Batal'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            TextButton(
-              child: const Text('Buka Pengaturan'),
-              onPressed: () {
-                openAppSettings();
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ),
-      );
-    } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Izin notifikasi diperlukan untuk melanjutkan.')),
-        );
+      return;
     }
+
+    // FIX: Unified dialog for both denied and permanentlyDenied states for better UX.
+    String title;
+    String content;
+    String confirmText;
+    VoidCallback onConfirm;
+
+    if (status.isPermanentlyDenied) {
+      title = 'Izin Dibutuhkan Secara Permanen';
+      content = 'Untuk fungsionalitas penuh, aplikasi ini memerlukan izin notifikasi. Silakan aktifkan secara manual di pengaturan aplikasi Anda.';
+      confirmText = 'Buka Pengaturan';
+      onConfirm = () {
+        openAppSettings();
+        Navigator.of(context).pop();
+      };
+    } else { // Handles the .denied case
+      title = 'Izin Diperlukan';
+      content = 'Izin notifikasi penting untuk memberi Anda pembaruan status dan promo. Tanpa itu, beberapa fitur mungkin tidak berfungsi.';
+      confirmText = 'Coba Lagi';
+      onConfirm = () {
+        Navigator.of(context).pop();
+        _requestPermission(); // Ask for permission again
+      };
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false, // User must interact with the dialog
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            child: const Text('Nanti Saja'),
+            onPressed: () => Navigator.of(context).pop(), // Allow user to dismiss
+          ),
+          ElevatedButton(
+            child: Text(confirmText),
+            onPressed: onConfirm,
+          ),
+        ],
+      ),
+    );
   }
 
   @override
