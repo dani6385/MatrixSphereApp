@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screen/home_screen.dart'; // Pastikan sudah mengimpor homescreen.dart
 import 'screen/status_screen.dart';
-import 'screen/wifi_screen.dart';
+import 'wifi_screen.dart';
 import 'screen/profile_screen.dart';
 import 'screen/settings_screen.dart';
 
