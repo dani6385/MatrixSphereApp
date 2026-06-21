@@ -1,11 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/theme_provider.dart';
+import 'status_screen.dart';
+import 'wifi_screen.dart';
+import 'profile_screen.dart';
+import 'setting_screen.dart';
 import 'widgets/home/detailed_quota.dart';
 import 'widgets/status_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  static final List<Widget> _widgetOptions = <Widget>[
+    const _HomePageContent(), // The actual home page with the cards
+    const StatusScreen(),
+    const WifiScreen(),
+    const ProfileScreen(),
+    const SettingScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = themeProvider.isDarkMode;
+
+    return Scaffold(
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.show_chart),
+            label: 'Status',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wifi),
+            label: 'WiFi',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed, // Ensures all labels are visible
+        backgroundColor: isDarkMode ? const Color(0xFF1F1F1F) : Colors.white,
+        selectedItemColor: Theme.of(context).colorScheme.primary,
+        unselectedItemColor: isDarkMode ? Colors.grey[400] : Colors.grey[600],
+        elevation: 8.0,
+      ),
+    );
+  }
+}
+
+// This new widget contains the content that was previously overriding the whole screen
+class _HomePageContent extends StatelessWidget {
+  const _HomePageContent();
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +145,7 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // Mading Informasi Section (Temporarily Removed)
+            // Mading Informasi Section (Temporarily Disabled but kept for future)
             // Text(
             //   'Mading Informasi & Promo',
             //   style: Theme.of(context).textTheme.titleMedium?.copyWith(

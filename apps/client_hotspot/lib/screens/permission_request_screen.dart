@@ -41,7 +41,6 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
       return;
     }
 
-    // FIX: Unified dialog for both denied and permanentlyDenied states for better UX.
     String title;
     String content;
     String confirmText;
@@ -73,12 +72,12 @@ class _PermissionRequestScreenState extends State<PermissionRequestScreen> {
         content: Text(content),
         actions: [
           TextButton(
-            child: const Text('Nanti Saja'),
             onPressed: () => Navigator.of(context).pop(), // Allow user to dismiss
+            child: const Text('Nanti Saja'),
           ),
           ElevatedButton(
-            child: Text(confirmText),
             onPressed: onConfirm,
+            child: Text(confirmText),
           ),
         ],
       ),
