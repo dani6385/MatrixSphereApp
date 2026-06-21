@@ -2,13 +2,16 @@
 # see: https://firebase.google.com/docs/studio/customize-workspace
 { pkgs, ... }: {
   # Which nixpkgs channel to use.
-  channel = "stable-24.05"; # or "unstable"
+  channel = "unstable"; # Using unstable channel for better package availability
   # Use https://search.nixos.org/packages to find packages
   packages = [
     pkgs.jdk21
     pkgs.unzip
     pkgs.chromium
-    pkgs.cmake  # Menambahkan cmake untuk build Linux
+    pkgs.cmake
+    pkgs.pkg-config # Diperlukan untuk pengembangan Linux
+    pkgs.ninja      # Diperlukan untuk pengembangan Linux
+    pkgs.android-sdk
   ];
   # Sets environment variables in the workspace
   env = {};
@@ -28,7 +31,7 @@
       enable = true;
       previews = {
         #web = { command = ["flutter" "run" "-d" "web-server" "--web-port" "$PORT" "--no-hot-reload"];manager = "web";};
-        # android = { ... };  <-- Beri tanda pagar di depan baris-baris ini
+        # android = { ... };
       };
     };
   };
