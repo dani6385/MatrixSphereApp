@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'providers/theme_provider.dart';
-import 'screens/home_screen.dart';
+import 'navigation_layout.dart'; // Import NavigationLayout
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
               ),
               useMaterial3: true,
             ),
-            home: const HomeScreen(),
+            home: const NavigationLayout(), // Set NavigationLayout as home
           );
         },
       ),
