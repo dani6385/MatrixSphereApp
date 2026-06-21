@@ -47,7 +47,8 @@
           "source": "**",
           "destination": "/index.html"
         }
-      ]
+      ],
+      "firebase": {}
     },
     {
       "target": "shop",
