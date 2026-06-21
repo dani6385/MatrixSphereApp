@@ -56,13 +56,12 @@ class _StatusScreenState extends State<StatusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
       body: RefreshIndicator(
         onRefresh: _fetchData,
         child: _isLoading
             ? const Center(child: CircularProgressIndicator())
             : _errorMessage != null
-                ? Center(child: Padding(padding: const EdgeInsets.all(16), child: Text(_errorMessage!, style: const TextStyle(color: Colors.red))))
+                ? Center(child: Padding(padding: const EdgeInsets.all(16), child: Text(_errorMessage!, style: TextStyle(color: Theme.of(context).colorScheme.error))))
                 : _userData == null
                     ? const Center(child: Text('No connection data found.'))
                     : ListView(
@@ -111,7 +110,7 @@ class _StatusScreenState extends State<StatusScreen> {
         if (!isLast)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Divider(height: 1, color: Colors.grey.shade300),
+            child: Divider(height: 1, color: Theme.of(context).dividerColor),
           ),
       ],
     );

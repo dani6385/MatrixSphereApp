@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'dart:math';
 import 'package:logger/logger.dart';
@@ -123,15 +124,15 @@ class MikroTikService {
   bool _isConnected = false;
   final Logger _logger = Logger();
 
-  final String _host = '192.168.30.1';
-  final String _user = 'user1234';
-  final String _pass = 'user1234';
+  String host = '192.168.30.1';
+  String user = 'user1234';
+  String pass = 'user1234';
 
   bool get isConnected => _isConnected;
 
-  Future<void> connect() async {
+  Future<void> connect({String? host, String? user, String? pass}) async {
     try {
-      _api = await RouterOSAPI.connect(host: _host, user: _user, pass: _pass);
+      _api = await RouterOSAPI.connect(host: host ?? this.host, user: user ?? this.user, pass: pass ?? this.pass);
       _isConnected = true;
     } catch (e) {
       _isConnected = false;

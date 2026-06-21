@@ -7,9 +7,8 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Profile', style: TextStyle(color: Colors.black)),
+        title: const Text('Profile'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
@@ -27,8 +26,8 @@ class ProfileScreen extends StatelessWidget {
               context,
               title: 'Account',
               items: [
-                _buildMenuListItem(Icons.person_outline, 'Edit Profile', () {}),
-                _buildMenuListItem(Icons.lock_outline, 'Change Password', () {}),
+                _buildMenuListItem(context, Icons.person_outline, 'Edit Profile', () {}),
+                _buildMenuListItem(context, Icons.lock_outline, 'Change Password', () {}),
               ],
             ),
             const SizedBox(height: 20),
@@ -36,8 +35,8 @@ class ProfileScreen extends StatelessWidget {
               context,
               title: 'Settings',
               items: [
-                _buildMenuListItem(Icons.notifications_outlined, 'Notifications', () {}),
-                _buildMenuListItem(Icons.language_outlined, 'Language', () {}),
+                _buildMenuListItem(context, Icons.notifications_outlined, 'Notifications', () {}),
+                _buildMenuListItem(context, Icons.language_outlined, 'Language', () {}),
               ],
             ),
             const SizedBox(height: 20),
@@ -45,8 +44,8 @@ class ProfileScreen extends StatelessWidget {
               context,
               title: 'Help & Support',
               items: [
-                _buildMenuListItem(Icons.help_outline, 'Help Center', () {}),
-                _buildMenuListItem(Icons.info_outline, 'About Us', () {}),
+                _buildMenuListItem(context, Icons.help_outline, 'Help Center', () {}),
+                _buildMenuListItem(context, Icons.info_outline, 'About Us', () {}),
               ],
             ),
             const SizedBox(height: 30),
@@ -64,17 +63,17 @@ class ProfileScreen extends StatelessWidget {
         CircleAvatar(
           radius: 50,
           backgroundImage: NetworkImage(avatarUrl),
-          backgroundColor: Colors.grey.shade300,
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
         ),
         const SizedBox(height: 16),
         Text(
           name,
-          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
         Text(
           email,
-          style: TextStyle(fontSize: 16, color: Colors.grey.shade600),
+          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       ],
     );
@@ -95,7 +94,7 @@ class ProfileScreen extends StatelessWidget {
                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                child: Text(
                  title,
-                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey.shade500),
+                 style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
                ),
              ),
             ...items,
@@ -105,11 +104,11 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuListItem(IconData icon, String title, VoidCallback onTap) {
+  Widget _buildMenuListItem(BuildContext context, IconData icon, String title, VoidCallback onTap) {
     return ListTile(
-      leading: Icon(icon, color: Colors.grey.shade600),
+      leading: Icon(icon, color: Theme.of(context).colorScheme.secondary),
       title: Text(title),
-      trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+      trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
       onTap: onTap,
     );
   }
@@ -127,8 +126,8 @@ class ProfileScreen extends StatelessWidget {
           );
         },
         style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.red,
-          backgroundColor: Colors.red.withAlpha(26), // FIX: Replaced withOpacity with withAlpha
+          foregroundColor: Theme.of(context).colorScheme.error,
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
           padding: const EdgeInsets.symmetric(vertical: 15),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

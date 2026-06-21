@@ -23,26 +23,24 @@ class _HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Color primaryColor = const Color(0xFF0D1E40); // Deep Sapphire
-    final Color accentColor = const Color(0xFF2196F3); // Modern Blue
-    final Color cardColor = Colors.white;
+    final Color primaryColor = Theme.of(context).colorScheme.primary;
+    final Color accentColor = Theme.of(context).colorScheme.secondary;
+    final Color cardColor = Theme.of(context).cardColor;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F7FA), // Light Gray Background
       appBar: AppBar(
         title: const Text(
           'NetLink Hotspot',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: primaryColor,
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_active, color: Colors.white),
+            icon: const Icon(Icons.notifications_active),
             onPressed: () {},
           ),
           IconButton(
-            icon: const Icon(Icons.person, color: Colors.white),
+            icon: const Icon(Icons.person),
             onPressed: () {},
           ),
         ],
@@ -136,7 +134,6 @@ class _HomeState extends State<HomeScreen> {
               'Mading Informasi & Promo',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
-                color: primaryColor,
               ),
             ),
             const SizedBox(height: 12),
@@ -148,7 +145,7 @@ class _HomeState extends State<HomeScreen> {
               height: 60,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey.shade300),
               ),
@@ -186,7 +183,7 @@ class _HomeState extends State<HomeScreen> {
             Text(
               title,
               style: TextStyle(
-                color: Colors.grey.shade700,
+                color: Theme.of(context).textTheme.bodySmall?.color,
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -195,7 +192,7 @@ class _HomeState extends State<HomeScreen> {
             if (subtitle.isNotEmpty)
               Text(
                 subtitle,
-                style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
+                style: TextStyle(color: Theme.of(context).textTheme.bodySmall?.color, fontSize: 11),
                 textAlign: TextAlign.center,
               ),
             const SizedBox(height: 6),

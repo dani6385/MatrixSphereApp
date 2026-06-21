@@ -51,10 +51,8 @@ class _WifiScreenState extends State<WifiScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F4F8),
       appBar: AppBar(
         title: const Text('WiFi Management'),
-        backgroundColor: const Color(0xFF0A2342),
       ),
       body: RefreshIndicator(
         onRefresh: _connectAndFetchData,
@@ -92,7 +90,7 @@ class _WifiScreenState extends State<WifiScreen> {
           children: [
             Text(
               'Currently Connected To',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold, color: const Color(0xFF0A2342)),
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             ListTile(
@@ -141,21 +139,21 @@ class _WifiScreenState extends State<WifiScreen> {
         padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
         child: Column(
           children: [
-            const Text('Your Connection Quality', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54)),
+            Text('Your Connection Quality', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.phone_iphone, size: 40, color: Colors.blueAccent),
+                Icon(Icons.phone_iphone, size: 40, color: Theme.of(context).colorScheme.primary),
                 _buildSignalIcon(user.signalStrength, size: 35.0), 
-                const Icon(Icons.router, size: 40, color: Colors.green),
+                Icon(Icons.router, size: 40, color: Theme.of(context).colorScheme.secondary),
               ],
             ),
             const SizedBox(height: 12),
             Text(
               _getSignalQualityText(user.signalStrength),
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
           ],
         ),
@@ -192,13 +190,13 @@ class _WifiScreenState extends State<WifiScreen> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1a3b6e),
+            color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: Colors.white, size: 30),
+          child: Icon(icon, color: Theme.of(context).colorScheme.onPrimary, size: 30),
         ),
         const SizedBox(height: 8),
-        Text(label, textAlign: TextAlign.center, style: const TextStyle(color: Colors.black87, fontSize: 12)),
+        Text(label, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodySmall),
       ],
     );
   }
