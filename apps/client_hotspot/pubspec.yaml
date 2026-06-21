@@ -1,4 +1,4 @@
-name: admin_mikrotik
+name: client_hotspot
 environment:
   sdk: ">=3.12.1 <4.0.0"
 dev_dependencies:
