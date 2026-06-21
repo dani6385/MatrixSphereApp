@@ -44,7 +44,10 @@ jobs:
       - name: Install Melos & Bootstrap
         run: |
           dart pub global activate melos
-          melos bootstrap
+          ls -la
+          rm -rf .dart_tool
+          rm -f pubspec.lock
+          melos bootstrap --verbose
 
       # Build APK
       - name: Build APK

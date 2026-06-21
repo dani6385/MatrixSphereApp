@@ -1,4 +1,6 @@
 name: client_hotspot
+publish_to: none
+resolution: workspace
 environment:
   sdk: ">=3.12.1 <4.0.0"
 dependencies:
