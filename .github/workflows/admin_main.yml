@@ -54,15 +54,15 @@ jobs:
 
       # 1. UPLOAD KE FIREBASE APP DISTRIBUTION
       - name: Authenticate with Google Cloud
-          uses: google-github-actions/auth@v1
-          with:
-            credentials_json: ${{ secrets.GCLOUD_SERVICE_KEY }}
-              token: ${{ secrets.FIREBASE_TOKEN }}
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_KEY }}
+
       - name: Build and Distribute
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
-          firebase appdistribution:distribute ...
-          groups: testers
-          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          firebase appdistribution:distribute apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk --groups "testers"
 
       # 2. UPLOAD KE GITHUB RELEASES (Home Repo)
       - name: Create GitHub Release
