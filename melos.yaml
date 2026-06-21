@@ -1,4 +1,4 @@
-name: my_monorepo
+name: MatrixSphereApp
 packages:
   - apps/*
   - packages/*
