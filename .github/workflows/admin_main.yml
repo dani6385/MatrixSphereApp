@@ -1,0 +1,43 @@
+name: Build and Distribute Admin App
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'apps/admin_mikrotik/**'
+      - 'pubspec.yaml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+
+      - name: Install Melos & Bootstrap
+        run: |
+          dart pub global activate melos
+          melos bootstrap
+
+      - name: Build APK
+        run: |
+          cd apps/admin_mikrotik
+          flutter build apk --release --build-number=${{ github.run_number }}
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCLOUD_SERVICE_KEY }}
+
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.GCLOUD_SERVICE_KEY }}
+          file: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          token: ${{ secrets.FIREBASE_TOKEN }}
