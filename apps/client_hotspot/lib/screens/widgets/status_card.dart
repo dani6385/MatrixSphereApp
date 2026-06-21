@@ -23,9 +23,19 @@ class StatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        // Corrected: Navigate to DetailedQuota, which is a widget, not a screen.
+        // We can show it in a dialog or a new screen.
+        // For now, let's show it in a new screen for simplicity.
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const DetailedQuota()),
+          MaterialPageRoute(builder: (context) => Scaffold(
+            appBar: AppBar(title: const Text('Detail Izin')),
+            body: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: DetailedQuota(),
+              ), // Corrected widget name
+            )
+          ),
         );
       },
       child: Card(

@@ -1,9 +1,8 @@
-import 'screens/profile_screen.dart';
-import 'screens/home_screen.dart';
-import 'screens/status_screen.dart';
-import 'screens/wifi_screen.dart';
-import 'screens/setting_screen.dart';
 import 'package:flutter/material.dart';
+import 'screens/home_screen.dart';
+import 'screens/wifi_screen.dart';
+import 'screens/status_screen.dart';
+import 'screens/setting_screen.dart';
 
 class NavigationLayout extends StatefulWidget {
   const NavigationLayout({super.key});
@@ -13,41 +12,48 @@ class NavigationLayout extends StatefulWidget {
 }
 
 class _NavigationLayoutState extends State<NavigationLayout> {
-  int _selectedIndex = 0;
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    StatusScreen(),
-    WifiScreen(),
-    ProfileScreen(),
-    SettingsScreen(),
-  ];
+  int _currentIndex = 0;
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const WifiScreen(),
+    const StatusScreen(),
+    const SettingScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _widgetOptions.elementAt(_selectedIndex),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _screens,
+      ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Beranda',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wifi),
+            label: 'Wi-Fi',
+          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.show_chart),
             label: 'Status',
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.wifi), label: 'Wifi'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'setting'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Pengaturan',
+          ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.green,
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
       ),
     );
   }
