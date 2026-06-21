@@ -2,8 +2,10 @@ name: Build and Distribute Admin App
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
+    paths:
+      - 'apps/admin_mikrotik/**'
+      - 'pubspec.yaml'
 
 jobs:
   build:
