@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'providers/theme_provider.dart';
 import 'screens/home_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _requestPermissions();
   runApp(const MyApp());
+}
+
+Future<void> _requestPermissions() async {
+  await Permission.notification.request();
 }
 
 class MyApp extends StatelessWidget {
@@ -18,8 +25,7 @@ class MyApp extends StatelessWidget {
         builder: (context, provider, child) {
           return MaterialApp(
             title: 'M|S Connectivity',
-            // Use the isDarkMode boolean to set the themeMode
-            themeMode: provider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+            themeMode: provider.themeMode,
             theme: ThemeData(
               brightness: Brightness.light,
               primarySwatch: Colors.blue,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../providers/theme_provider.dart';
+import '../providers/theme_provider.dart';
 import 'status_screen.dart';
 import 'wifi_screen.dart';
 import 'profile_screen.dart';
@@ -35,7 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDarkMode = themeProvider.isDarkMode;
+    // Correctly call the isDarkMode method with the context
+    final isDarkMode = themeProvider.isDarkMode(context);
 
     return Scaffold(
       body: Center(
@@ -83,7 +84,8 @@ class _HomePageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDarkMode = themeProvider.isDarkMode;
+    // Correctly call the isDarkMode method with the context
+    final isDarkMode = themeProvider.isDarkMode(context);
 
     // Define colors and data based on the theme
     final Color cardColor = isDarkMode ? const Color(0xFF2B2B2B) : Colors.white;
@@ -124,6 +126,7 @@ class _HomePageContent extends StatelessWidget {
                   onPressed: () {
                     // Handle notification tap
                   },
+                  color: isDarkMode ? Colors.white : Colors.black,
                 ),
               ],
             ),

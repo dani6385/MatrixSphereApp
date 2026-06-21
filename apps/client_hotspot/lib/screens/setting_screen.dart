@@ -8,8 +8,7 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final isDarkMode = themeProvider.isDarkMode;
-
+    final isDarkMode = themeProvider.isDarkMode(context);
     final Color iconColor = isDarkMode ? Colors.white : Colors.black54;
 
     return Scaffold(
@@ -20,20 +19,48 @@ class SettingScreen extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           _buildSectionHeader(context, 'Tampilan'),
-          SwitchListTile(
-            title: const Text('Mode Gelap'),
-            value: isDarkMode,
-            onChanged: (value) {
-              themeProvider.toggleTheme();
-            },
-            secondary: Icon(Icons.dark_mode, color: iconColor),
-            activeTrackColor: Theme.of(context).colorScheme.primary.withAlpha(128), // 128 is ~50% opacity
-            thumbColor: WidgetStateProperty.resolveWith<Color?>((Set<WidgetState> states) {
-              if (states.contains(WidgetState.selected)) {
-                return Theme.of(context).colorScheme.primary;
+          // ignore: deprecated_member_use
+          RadioListTile<ThemeMode>(
+            title: const Text('Terang'),
+            value: ThemeMode.light,
+            // ignore: deprecated_member_use
+            groupValue: themeProvider.themeMode,
+            // ignore: deprecated_member_use
+            onChanged: (newValue) {
+              if (newValue != null) {
+                Provider.of<ThemeProvider>(context, listen: false).setThemeMode(newValue);
               }
-              return Colors.grey;
-            }),
+            },
+            activeColor: Theme.of(context).colorScheme.primary,
+          ),
+          // ignore: deprecated_member_use
+          RadioListTile<ThemeMode>(
+            title: const Text('Gelap'),
+            value: ThemeMode.dark,
+            // ignore: deprecated_member_use
+            groupValue: themeProvider.themeMode,
+            // ignore: deprecated_member_use
+            onChanged: (newValue) {
+              if (newValue != null) {
+                Provider.of<ThemeProvider>(context, listen: false).setThemeMode(newValue);
+              }
+            },
+            activeColor: Theme.of(context).colorScheme.primary,
+          ),
+          // ignore: deprecated_member_use
+          RadioListTile<ThemeMode>(
+            title: const Text('Sistem'),
+            subtitle: Text('Otomatis mengikuti tema perangkat', style: Theme.of(context).textTheme.bodySmall),
+            value: ThemeMode.system,
+            // ignore: deprecated_member_use
+            groupValue: themeProvider.themeMode,
+            // ignore: deprecated_member_use
+            onChanged: (newValue) {
+              if (newValue != null) {
+                Provider.of<ThemeProvider>(context, listen: false).setThemeMode(newValue);
+              }
+            },
+            activeColor: Theme.of(context).colorScheme.primary,
           ),
           const Divider(),
           _buildSectionHeader(context, 'Info Akun'),
@@ -41,9 +68,7 @@ class SettingScreen extends StatelessWidget {
             leading: Icon(Icons.person, color: iconColor),
             title: const Text('Profil Pengguna'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // Navigate to profile screen
-            },
+            onTap: () {},
           ),
           const Divider(),
           _buildSectionHeader(context, 'Lainnya'),
@@ -52,32 +77,28 @@ class SettingScreen extends StatelessWidget {
             title: const Text('Tentang Aplikasi'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-                 showAboutDialog(
-                    context: context,
-                    applicationName: 'Hotspot Client',
-                    applicationVersion: '1.0.0',
-                    applicationLegalese: '© 2024 M|S Connectivity',
-                    children: <Widget>[
-                        const SizedBox(height: 15),
-                        const Text('Aplikasi untuk mengelola koneksi hotspot Anda.')
-                    ],
-                );
+              showAboutDialog(
+                context: context,
+                applicationName: 'M|S Connectivity',
+                applicationVersion: '1.0.0',
+                applicationLegalese: '© 2024 M|S Connectivity',
+                children: <Widget>[
+                  const SizedBox(height: 15),
+                  const Text('Aplikasi untuk mengelola koneksi internet Anda.'),
+                ],
+              );
             },
           ),
           ListTile(
             leading: Icon(Icons.privacy_tip, color: iconColor),
             title: const Text('Kebijakan Privasi'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {
-              // Navigate to privacy policy screen
-            },
+            onTap: () {},
           ),
-            ListTile(
+          ListTile(
             leading: Icon(Icons.logout, color: iconColor),
             title: const Text('Logout'),
-            onTap: () {
-              // Handle logout
-            },
+            onTap: () {},
           ),
         ],
       ),
@@ -91,7 +112,7 @@ class SettingScreen extends StatelessWidget {
         title,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.primary
+          color: Theme.of(context).colorScheme.primary,
         ),
       ),
     );
