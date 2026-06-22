@@ -1,6 +1,6 @@
 name: MatrixSphereApp
 
-packages:
-  - apps/**
-  - packages/**
+members:
+  - apps/*
+  - packages/*
   - .

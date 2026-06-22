@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
 
 class DetailedQuotaPage extends StatelessWidget {
-  const DetailedQuotaPage({super.key});
+  final double totalMainQuotaGB;
+  final double remainingMainQuotaGB;
+  final double totalBonusMalamGB;
+  final double remainingBonusMalamGB;
+
+  const DetailedQuotaPage({
+    super.key,
+    required this.totalMainQuotaGB,
+    required this.remainingMainQuotaGB,
+    required this.totalBonusMalamGB,
+    required this.remainingBonusMalamGB,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detail Kuota', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Detail Kuota',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         elevation: 0,
@@ -25,7 +39,7 @@ class DetailedQuotaPage extends StatelessWidget {
               color: Colors.green,
             ),
             const SizedBox(height: 16),
-            
+
             // Detail Kuota Malam
             _buildDetailedCard(
               title: 'Bonus Kuota Malam (00-06)',
@@ -60,8 +74,14 @@ class DetailedQuotaPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            Text(subtitle, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            Text(
+              subtitle,
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
+            ),
             const SizedBox(height: 15),
             Row(
               children: [
@@ -78,7 +98,9 @@ class DetailedQuotaPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 5),
-            Text('${remaining.toStringAsFixed(1)} GB dari ${total.toStringAsFixed(0)} GB'),
+            Text(
+              '${remaining.toStringAsFixed(1)} GB dari ${total.toStringAsFixed(0)} GB',
+            ),
           ],
         ),
       ),
@@ -95,7 +117,10 @@ class DetailedQuotaPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Penggunaan Media Sosial', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const Text(
+              'Penggunaan Media Sosial',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
             const SizedBox(height: 10),
             _buildAppRow('Facebook', '1.2 GB', 0.8),
             _buildAppRow('Instagram', '1.3 GB', 0.6),
@@ -111,10 +136,7 @@ class DetailedQuotaPage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(appName),
-          Text('$usage ($usage digunakan)'),
-        ],
+        children: [Text(appName), Text('$usage ($usage digunakan)')],
       ),
     );
   }

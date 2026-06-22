@@ -1,0 +1,20 @@
+name: shared_firebase
+description: "Sebuah paket bersama untuk konfigurasi Firebase."
+version: 0.0.1
+publish_to: none # Set 'none' jika ini paket internal
+
+# PENTING: Wajib ada untuk mode workspace
+resolution: workspace
+
+environment:
+  sdk: ^3.0.0 # Sesuaikan dengan versi SDK Dart/Flutter Anda
+
+dependencies:
+  # Masukkan dependensi Firebase yang Anda butuhkan di sini
+  firebase_core: ^3.0.0
+  firebase_auth: ^5.0.0
+  # ... dependensi lainnya
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
