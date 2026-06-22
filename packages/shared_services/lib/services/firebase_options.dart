@@ -40,22 +40,23 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'YOUR_API_KEY',
-    appId: 'YOUR_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    authDomain: 'YOUR_AUTH_DOMAIN',
-    databaseURL: 'YOUR_DATABASE_URL',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyCLNXG3wN-TBja2yldvwE_HKMVf-IC5i0I',
+    appId: '1:113584843327:web:2a68364f1662c7dacfe68a',
+    messagingSenderId: '113584843327',
+    projectId: 'matrixsphere-project',
+    authDomain: 'matrixsphere-project.firebaseapp.com',
+    databaseURL: 'https://matrixsphere-project-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'matrixsphere-project.firebasestorage.app',
+    measurementId: 'G-TTN6MCMND8',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_API_KEY',
-    appId: 'YOUR_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    databaseURL: 'YOUR_DATABASE_URL',
-    storageBucket: 'YOUR_STORAGE_BUCKET',
+    apiKey: 'AIzaSyBOYpg1A3sIMXIWefYVQl18zswoA2ovTGc',
+    appId: '1:113584843327:android:b70e92182020762fcfe68a',
+    messagingSenderId: '113584843327',
+    projectId: 'matrixsphere-project',
+    databaseURL: 'https://matrixsphere-project-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'matrixsphere-project.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(

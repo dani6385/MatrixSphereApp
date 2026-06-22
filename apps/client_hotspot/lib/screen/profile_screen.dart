@@ -1,7 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:shared_services/shared_services.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  // Instance dari FirestoreService
+  final FirestoreService _firestoreService = FirestoreService();
+  // Controller untuk TextField
+  final TextEditingController _nameController = TextEditingController();
+  
+  // ID Pengguna untuk contoh ini
+  final String _userId = 'user_123';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  /// Mengambil data pengguna dari Firestore saat halaman dimuat
+  void _loadUserData() async {
+    final userDoc = await _firestoreService.getUserData(_userId);
+    // Tambahkan pengecekan mounted di sini juga untuk praktik terbaik
+    if (!mounted) return;
+    if (userDoc != null && userDoc.exists) {
+      final userData = userDoc.data() as Map<String, dynamic>;
+      // Set teks di controller jika ada nama yang tersimpan
+      setState(() {
+        _nameController.text = userData['name'] ?? '';
+      });
+    }
+  }
+
+  /// Menyimpan data pengguna ke Firestore
+  void _saveUserData() async {
+    final name = _nameController.text.trim();
+    if (name.isNotEmpty) {
+      await _firestoreService.setUserData(_userId, {'name': name});
+      
+      // PERBAIKAN: Tambahkan pengecekan `mounted` sebelum menggunakan BuildContext
+      if (!mounted) return;
+      
+      // Menampilkan snackbar konfirmasi
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nama berhasil disimpan di Firestore!')),
+      );
+    } else {
+      // Pengecekan `mounted` tidak diperlukan di sini karena tidak ada `await` sebelumnya
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nama tidak boleh kosong.')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,12 +88,37 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 30),
+
+            // --- Fitur Edit Nama Baru ---
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Nama Lengkap',
+                hintText: 'Masukkan nama Anda...',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+                prefixIcon: const Icon(Icons.person_outline),
+              ),
+            ),
+            const SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: _saveUserData,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurple,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                minimumSize: const Size(double.infinity, 50), // Lebar penuh
+              ),
+              child: const Text('Simpan Perubahan', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            ),
+            const SizedBox(height: 20),
+            // --- Akhir Fitur Edit Nama ---
             
+            const Divider(),
+
             // Menu Profil
             Expanded(
               child: ListView(
                 children: [
-                  _buildMenuItem(Icons.edit_rounded, "Edit Profil"),
                   _buildMenuItem(Icons.notifications_active_rounded, "Notifikasi"),
                   _buildMenuItem(Icons.security_rounded, "Keamanan Akun"),
                   const Divider(),
@@ -71,5 +151,11 @@ class ProfileScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 }

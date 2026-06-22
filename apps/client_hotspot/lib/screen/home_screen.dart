@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../widget/home/detailed_quota.dart';
+import '../models/quota_model.dart';
+import '../models/user_quota_model.dart';
+import 'detail_quota_screen.dart';
 import '../widget/home/mading.dart';
+import '../notifiers/quota_notifier.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,69 +15,105 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Data Contoh (Mock Data)
-  final double totalMainQuotaGB = 50.0;
-  final double remainingMainQuotaGB = 36.2;
-  final double totalBonusMalamGB = 10.0;
-  final double remainingBonusMalamGB = 9.1;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<QuotaNotifier>(context, listen: false).fetchQuotas();
+    });
+  }
 
-  void _navigateToDetail() {
+  void _navigateToDetail(UserQuota userQuota) {
+    // Buat map yang bisa diserialisasi untuk dikirim ke detail screen
+    final Map<String, dynamic> serializableData = Map.fromEntries(
+      userQuota.quotas.map((q) => MapEntry(
+            q.nama.toLowerCase().replaceAll(' ', '_'),
+            q.toMap(),
+          )),
+    );
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => DetailedQuotaPage(
-          totalMainQuotaGB: totalMainQuotaGB,
-          remainingMainQuotaGB: remainingMainQuotaGB,
-          totalBonusMalamGB: totalBonusMalamGB,
-          remainingBonusMalamGB: remainingBonusMalamGB,
-        ),
+        builder: (context) => DetailQuotaScreen(quotaData: serializableData),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    double mainQuotaPercent = remainingMainQuotaGB / totalMainQuotaGB;
-    double bonusMalamPercent = remainingBonusMalamGB / totalBonusMalamGB;
-
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const HeaderWidget(userName: 'Budi'),
-              const SizedBox(height: 20),
-              MainQuotaCard(
-                totalQuotaGB: totalMainQuotaGB,
-                remainingQuotaGB: remainingMainQuotaGB,
-                percent: mainQuotaPercent,
-                validUntil: '15 November 2023',
-                onTap: _navigateToDetail,
+        child: Consumer<QuotaNotifier>(
+          builder: (context, notifier, child) {
+            if (notifier.isLoading && notifier.userQuotas.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (notifier.userQuotas.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Tidak ada data kuota. Tarik untuk memuat ulang.'),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () => notifier.fetchQuotas(),
+                      child: const Text('Muat Ulang'),
+                    )
+                  ],
+                ),
+              );
+            }
+
+            // Asumsi kita hanya peduli pada satu pengguna untuk sekarang
+            final userQuota = notifier.userQuotas.firstWhere((uq) => uq.userId == 'user_123', orElse: () => UserQuota(userId: 'unknown', quotas: []));
+
+            if (userQuota.quotas.isEmpty) {
+              return const Center(child: Text('Data kuota untuk user_123 tidak ditemukan.'));
+            }
+
+            // Cari kuota utama dan bonus
+            final mainQuota = userQuota.quotas.firstWhere((q) => q.nama == 'Kuota Utama', orElse: () => Quota.empty());
+            final bonusQuota = userQuota.quotas.firstWhere((q) => q.nama == 'Bonus Kuota', orElse: () => Quota.empty());
+
+            return RefreshIndicator(
+              onRefresh: () => notifier.fetchQuotas(),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(), // Memastikan refresh indicator selalu aktif
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    HeaderWidget(userName: userQuota.userId),
+                    const SizedBox(height: 20),
+                    MainQuotaCard(
+                      quota: mainQuota,
+                      onTap: () => _navigateToDetail(userQuota),
+                    ),
+                    const SizedBox(height: 20),
+                    BonusQuotaCard(
+                      quota: bonusQuota,
+                      onTap: () => _navigateToDetail(userQuota),
+                    ),
+                    const SizedBox(height: 20),
+                    const MadingWidget(),
+                    const SizedBox(height: 20),
+                    const AppQuotaCard(),
+                    const SizedBox(height: 20),
+                    const RoamingQuotaCard(),
+                  ],
+                ),
               ),
-              const SizedBox(height: 20),
-              BonusQuotaCard(
-                title: 'Bonus Kuota Malam (00-06)',
-                totalQuotaGB: totalBonusMalamGB,
-                remainingQuotaGB: remainingBonusMalamGB,
-                percent: bonusMalamPercent,
-                onTap: _navigateToDetail,
-              ),
-              const SizedBox(height: 20),
-              const MadingWidget(),
-              const SizedBox(height: 20),
-              const AppQuotaCard(),
-              const SizedBox(height: 20),
-              const RoamingQuotaCard(),
-              const SizedBox(height: 20),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
   }
 }
+
+// Widget lainnya tidak perlu diubah
 
 class HeaderWidget extends StatelessWidget {
   final String userName;
@@ -107,25 +147,13 @@ class HeaderWidget extends StatelessWidget {
 }
 
 class MainQuotaCard extends StatelessWidget {
-  final double totalQuotaGB;
-  final double remainingQuotaGB;
-  final double percent;
-  final String validUntil;
+  final Quota quota;
   final VoidCallback onTap;
 
-  const MainQuotaCard({
-    super.key,
-    required this.totalQuotaGB,
-    required this.remainingQuotaGB,
-    required this.percent,
-    required this.validUntil,
-    required this.onTap,
-  });
+  const MainQuotaCard({super.key, required this.quota, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final double usedQuotaGB = totalQuotaGB - remainingQuotaGB;
-
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -148,11 +176,8 @@ class MainQuotaCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Paket Utama: Super Data 50GB',
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              '${quota.nama}: Super Data ${quota.total.toStringAsFixed(0)}GB',
+              style: GoogleFonts.poppins(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
             Row(
@@ -168,7 +193,7 @@ class MainQuotaCard extends StatelessWidget {
                         height: 220,
                         width: 220,
                         child: CircularProgressIndicator(
-                          value: percent,
+                          value: quota.persentaseSisa,
                           strokeWidth: 20,
                           color: const Color(0xFF00C853),
                           backgroundColor: const Color(0xFFE0E0E0),
@@ -179,18 +204,12 @@ class MainQuotaCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '${remainingQuotaGB.toStringAsFixed(1)} GB',
-                            style: GoogleFonts.poppins(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            '${quota.sisa.toStringAsFixed(1)} GB',
+                            style: GoogleFonts.poppins(fontSize: 28, fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            'dari ${totalQuotaGB.toStringAsFixed(0)} GB',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                            ),
+                            'dari ${quota.total.toStringAsFixed(0)} GB',
+                            style: const TextStyle(fontSize: 14, color: Colors.grey),
                           ),
                         ],
                       ),
@@ -203,12 +222,12 @@ class MainQuotaCard extends StatelessWidget {
                   children: [
                     DetailRow(
                       label: 'Tersisa:',
-                      value: '${remainingQuotaGB.toStringAsFixed(1)} GB',
+                      value: '${quota.sisa.toStringAsFixed(1)} GB',
                     ),
                     const SizedBox(height: 10),
                     DetailRow(
                       label: 'Digunakan:',
-                      value: '${usedQuotaGB.toStringAsFixed(1)} GB',
+                      value: '${quota.digunakan.toStringAsFixed(1)} GB',
                     ),
                   ],
                 ),
@@ -222,7 +241,7 @@ class MainQuotaCard extends StatelessWidget {
               children: [
                 const Text('Masa Aktif:'),
                 Text(
-                  'Hingga $validUntil',
+                  'Hingga ${quota.validUntil}',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -256,20 +275,10 @@ class DetailRow extends StatelessWidget {
 }
 
 class BonusQuotaCard extends StatelessWidget {
-  final String title;
-  final double totalQuotaGB;
-  final double remainingQuotaGB;
-  final double percent;
+  final Quota quota;
   final VoidCallback onTap;
 
-  const BonusQuotaCard({
-    super.key,
-    required this.title,
-    required this.totalQuotaGB,
-    required this.remainingQuotaGB,
-    required this.percent,
-    required this.onTap,
-  });
+  const BonusQuotaCard({super.key, required this.quota, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -286,32 +295,26 @@ class BonusQuotaCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                title,
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+                quota.nama,
+                style: GoogleFonts.poppins(fontSize: 14, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${remainingQuotaGB.toStringAsFixed(1)} GB dari ${totalQuotaGB.toStringAsFixed(0)} GB',
+                    '${quota.sisa.toStringAsFixed(1)} GB dari ${quota.total.toStringAsFixed(0)} GB',
                     style: const TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   Text(
-                    '${(percent * 100).toStringAsFixed(0)}%',
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    '${quota.persentaseSisaInt}%',
+                    style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               const SizedBox(height: 5),
               LinearProgressIndicator(
-                value: percent,
+                value: quota.persentaseSisa,
                 color: const Color(0xFFFFC107),
                 backgroundColor: const Color(0xFFE0E0E0),
                 minHeight: 8,

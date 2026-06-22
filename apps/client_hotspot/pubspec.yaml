@@ -8,9 +8,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  shared_services:
+    path: ../../packages/shared_services
   cupertino_icons: ^1.0.8
   google_fonts: ^8.1.0
+  firebase_core: ^4.11.0
+  firebase_database: ^12.4.3
+  get_it: ^7.7.0
+  cloud_firestore: ^6.6.0
 flutter:
   uses-material-design: true
 
@@ -18,7 +23,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   melos: ^7.8.2
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 workspace:
   # list relative package paths if this package is part of a workspace
   # keep empty list if not using a workspace

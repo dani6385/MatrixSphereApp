@@ -1,17 +1,15 @@
-name: matrix_sphere
-publish_to: none
-packages:
-  - apps/*
-  - packages/*
+name: matrix_sphere_app
+description: A monorepo for MatrixSphereApp.
+publish_to: 'none'
+
 environment:
-  sdk: ">=3.12.1 <4.0.0"
+  sdk: '>=3.9.0 <4.0.0'
+
 dev_dependencies:
   melos: ^7.8.2
-workspaces:
-  members:
-  - apps/*
-  - packages/shared_firebase
 
+workspace:
+  - apps/admin_mikrotik
+  - apps/client_hotspot
 dependencies:
-  firebase_core: ^4.11.0
-  firebase_database: ^12.4.3
+  provider: ^6.1.5+1

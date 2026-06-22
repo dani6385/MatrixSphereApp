@@ -1,14 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import '../../packages/shared_firebase/firebase_options.dart';
+import 'package:shared_services/shared_services.dart';
 import 'navigation_layout.dart'; // Mengimpor file navigasi yang sudah kita buat
+import 'package:provider/provider.dart';
+import 'notifiers/quota_notifier.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MatrixSphereApp());
+  runApp(
+    // Langkah 3: Sediakan Notifier ke seluruh aplikasi
+    ChangeNotifierProvider(
+      create: (context) => QuotaNotifier(),
+      child: const MatrixSphereApp(),
+    ),
+  );
 }
 
 class MatrixSphereApp extends StatelessWidget {
@@ -17,14 +25,13 @@ class MatrixSphereApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false, // Menghilangkan banner debug di pojok kanan
+      debugShowCheckedModeBanner: false,
       title: 'Matrix Sphere',
       theme: ThemeData(
         primarySwatch: Colors.deepPurple,
-        useMaterial3: true, // Menggunakan desain modern Material 3
-        fontFamily: 'Roboto', // Kamu bisa mengganti font di sini nantinya
+        useMaterial3: true,
+        fontFamily: 'Roboto',
       ),
-      // Menghubungkan ke file navigasi sebagai halaman utama
       home: const NavigationLayout(),
     );
   }

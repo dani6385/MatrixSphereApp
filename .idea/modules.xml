@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+<module fileurl="file://$PROJECT_DIR$/apps/admin_mikrotik/melos_admin_mikrotik.iml" filepath="$PROJECT_DIR$/apps/admin_mikrotik/melos_admin_mikrotik.iml"/>
+<module fileurl="file://$PROJECT_DIR$/apps/client_hotspot/melos_client_hotspot.iml" filepath="$PROJECT_DIR$/apps/client_hotspot/melos_client_hotspot.iml"/>
+<module fileurl="file://$PROJECT_DIR$/melos_matrix_sphere_app.iml" filepath="$PROJECT_DIR$/melos_matrix_sphere_app.iml"/>
 <module fileurl="file://$PROJECT_DIR$/melos_matrix_sphere.iml" filepath="$PROJECT_DIR$/melos_matrix_sphere.iml"/>
 <module fileurl="file://$PROJECT_DIR$/melos_matrixsphereapp.iml" filepath="$PROJECT_DIR$/melos_matrixsphereapp.iml"/>
     </modules>
