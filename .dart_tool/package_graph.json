@@ -39,6 +39,7 @@
         "flutter",
         "get_it",
         "google_fonts",
+        "permission_handler",
         "shared_services"
       ],
       "devDependencies": [
@@ -186,7 +187,7 @@
     },
     {
       "name": "firebase_database",
-      "version": "12.4.3",
+      "version": "12.4.4",
       "dependencies": [
         "firebase_core",
         "firebase_core_platform_interface",

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_services/shared_services.dart';
+import '../services/firestore_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

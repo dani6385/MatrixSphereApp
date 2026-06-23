@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../notifiers/status_notifier.dart';
 import 'package:provider/provider.dart';
-import '../models/hotspot_status_model.dart';
 import 'dart:math';
+
+import '../notifiers/status_notifier.dart';
+import '../models/hotspot_status_model.dart';
 
 class StatusScreen extends StatefulWidget {
   const StatusScreen({super.key});
@@ -14,24 +14,13 @@ class StatusScreen extends StatefulWidget {
 }
 
 class _StatusScreenState extends State<StatusScreen> {
-  // PERBAIKAN: State lokal untuk menangani loading awal
-  bool _isInitialLoad = true;
-
   @override
   void initState() {
     super.initState();
+    // Panggil fetchHotspotStatus setelah frame pertama selesai dibangun
+    // untuk memastikan Notifier tersedia
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Panggil fetchHotspotStatus dan tunggu hingga selesai
-      Provider.of<StatusNotifier>(context, listen: false)
-          .fetchHotspotStatus()
-          .whenComplete(() {
-        // Setelah selesai (baik sukses atau gagal), hilangkan loading awal
-        if (mounted) {
-          setState(() {
-            _isInitialLoad = false;
-          });
-        }
-      });
+      Provider.of<StatusNotifier>(context, listen: false).fetchHotspotStatus();
     });
   }
 
@@ -43,39 +32,29 @@ class _StatusScreenState extends State<StatusScreen> {
   }
 
   String _formatDuration(Duration d) {
+    // Menambahkan mikrodetik untuk memastikan pembulatan ke atas yang benar
     d += const Duration(microseconds: 999999);
     return d.toString().split('.').first.padLeft(8, "0");
   }
 
   @override
   Widget build(BuildContext context) {
-    // PERBAIKAN: Jika ini adalah loading awal, langsung tampilkan spinner
-    if (_isInitialLoad) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Status Sesi Hotspot', style: TextStyle(fontWeight: FontWeight.bold)),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          foregroundColor: Colors.black,
-        ),
-        body: const Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: const Text('Status Sesi Hotspot', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: Text('Status Sesi Hotspot', style: GoogleFonts.poppins(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.black,
       ),
       body: Consumer<StatusNotifier>(
         builder: (context, notifier, child) {
+          // --- KONDISI LOADING ---
           if (notifier.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
+          // --- KONDISI ERROR ---
           if (notifier.errorMessage.isNotEmpty) {
             return Center(
               child: Padding(
@@ -101,6 +80,11 @@ class _StatusScreenState extends State<StatusScreen> {
                       icon: const Icon(Icons.refresh),
                       label: const Text('Coba Lagi'),
                       onPressed: () => notifier.fetchHotspotStatus(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
                     )
                   ],
                 ),
@@ -108,16 +92,13 @@ class _StatusScreenState extends State<StatusScreen> {
             );
           }
 
-          if (notifier.hotspotStatus == null) {
-            return const Center(child: Text('Sesi hotspot aktif tidak ditemukan.'));
-          }
-
-          final status = notifier.hotspotStatus!;
+          // --- KONDISI SUKSES ---
+          final status = notifier.hotspotStatus;
 
           return RefreshIndicator(
             onRefresh: () => notifier.fetchHotspotStatus(),
             child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
+              physics: const AlwaysScrollableScrollPhysics(), // Selalu bisa di-scroll untuk refresh
               padding: const EdgeInsets.all(16.0),
               children: [
                 _buildUserInfoCard(status),

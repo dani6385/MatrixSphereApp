@@ -2,7 +2,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_services/shared_services.dart';
+import 'firebase_options.dart';
 import 'navigation_layout.dart';
 import 'notifiers/quota_notifier.dart'; // Impor Notifier yang baru
 

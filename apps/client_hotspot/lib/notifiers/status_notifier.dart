@@ -1,78 +1,76 @@
+import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-import '../models/hotspot_status_model.dart';
+import 'package:flutter/material.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-// Simulasi Service untuk mengambil data sesi dari RTDB
-class HotspotSessionService {
-  Future<HotspotStatus?> getSessionStatusByIp(String ipAddress) async {
-    if (ipAddress == '192.168.88.112') {
-      return Future.delayed(const Duration(seconds: 1), () => HotspotStatus.mockData);
-    }
-    return null;
-  }
-}
+import '../models/hotspot_status_model.dart';
+import '../services/rtdb_service.dart';
 
-class StatusNotifier extends ChangeNotifier {
+class StatusNotifier with ChangeNotifier {
+  final RtdbService _rtdbService = RtdbService();
   final NetworkInfo _networkInfo = NetworkInfo();
-  final HotspotSessionService _sessionService = HotspotSessionService();
 
-  bool _isLoading = false;
+  HotspotStatus _hotspotStatus = HotspotStatus(
+    username: 'N/A',
+    ipAddress: '',
+    macAddress: '',
+    sessionStartTime: DateTime.now(),
+    bytesUp: 0,
+    bytesDown: 0,
+  );
+  HotspotStatus get hotspotStatus => _hotspotStatus;
+
+  bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  HotspotStatus? _hotspotStatus;
-  HotspotStatus? get hotspotStatus => _hotspotStatus;
-
+  // PERUBAHAN: Menambahkan properti untuk pesan error
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
 
   Future<void> fetchHotspotStatus() async {
     _isLoading = true;
-    _errorMessage = '';
-    _hotspotStatus = null;
+    _errorMessage = ''; // Hapus error lama saat memulai
     notifyListeners();
 
     try {
-      String? currentIp;
-
-      // Untuk platform mobile (bukan web), kita butuh izin lokasi
-      if (!kIsWeb) {
-        // 1. Minta izin lokasi
+      if (Platform.isAndroid || Platform.isIOS) {
         var status = await Permission.location.request();
-        
-        // 2. Periksa hasil permintaan izin
-        if (status.isGranted) {
-          // Jika diizinkan, lanjutkan untuk mendapatkan IP
-          currentIp = await _networkInfo.getWifiIP();
-        } else if (status.isDenied) {
-          // Jika ditolak sekali, berikan pesan yang jelas
-          throw Exception('Izin lokasi ditolak. Fitur ini tidak dapat berjalan tanpa izin lokasi untuk membaca info Wi-Fi.');
-        } else if (status.isPermanentlyDenied) {
-          // Jika ditolak permanen, sarankan pengguna membuka pengaturan
-          throw Exception('Izin lokasi ditolak permanen. Harap buka pengaturan aplikasi untuk memberikan izin lokasi.');
+        if (status.isDenied) {
+          // PERUBAHAN: Gunakan errorMessage
+          _errorMessage = 'Izin lokasi diperlukan untuk menemukan alamat IP Wi-Fi Anda. Mohon berikan izin di pengaturan aplikasi.';
+          _isLoading = false;
+          notifyListeners();
+          return;
         }
+      }
+
+      String? ipAddress = await _networkInfo.getWifiIP();
+      if (ipAddress != null) {
+        _rtdbService.getHotspotStatusStream(ipAddress).listen((status) {
+          if (status.macAddress == 'User tidak ditemukan') {
+            // PERUBAHAN: Gunakan errorMessage untuk kasus user tidak ditemukan
+            _errorMessage = 'Sesi hotspot aktif tidak ditemukan untuk perangkat Anda. Pastikan Anda terhubung ke jaringan hotspot yang benar.';
+          } else {
+            _hotspotStatus = status;
+          }
+          _isLoading = false;
+          notifyListeners();
+        }, onError: (error) {
+           // PERUBAHAN: Tangani error dari stream
+          _errorMessage = 'Gagal mendapatkan data: ${error.toString()}';
+          _isLoading = false;
+          notifyListeners();
+        });
       } else {
-        // Untuk web, gunakan IP simulasi
-        currentIp = '192.168.88.112';
+        // PERUBAHAN: Gunakan errorMessage
+        _errorMessage = 'Anda tidak terhubung ke jaringan Wi-Fi. Mohon sambungkan perangkat Anda untuk memeriksa status.';
+        _isLoading = false;
+        notifyListeners();
       }
-
-      if (currentIp == null) {
-        throw Exception('Tidak terhubung ke jaringan Wi-Fi atau IP tidak dapat dideteksi.');
-      }
-      
-      // 3. Gunakan IP untuk mencari data sesi di database (simulasi)
-      final sessionData = await _sessionService.getSessionStatusByIp(currentIp);
-
-      if (sessionData != null) {
-        _hotspotStatus = sessionData;
-      } else {
-        throw Exception('Sesi Anda untuk IP ($currentIp) tidak ditemukan. Silakan login kembali.');
-      }
-
     } catch (e) {
-      _errorMessage = e.toString().replaceFirst('Exception: ', ''); // Membersihkan prefix "Exception: "
-    } finally {
+      // PERUBAHAN: Gunakan errorMessage
+      _errorMessage = 'Terjadi kesalahan: ${e.toString()}';
       _isLoading = false;
       notifyListeners();
     }
