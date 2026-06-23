@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.matrixsphere.clientconnectivity"
+    namespace = "com.matrixsphere.connectivity"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
