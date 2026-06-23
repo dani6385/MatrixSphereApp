@@ -1,49 +1,235 @@
-import 'package:flutter/material.dart';
 
-class StatusScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../notifiers/status_notifier.dart';
+import 'package:provider/provider.dart';
+import '../models/hotspot_status_model.dart';
+import 'dart:math';
+
+class StatusScreen extends StatefulWidget {
   const StatusScreen({super.key});
 
   @override
+  State<StatusScreen> createState() => _StatusScreenState();
+}
+
+class _StatusScreenState extends State<StatusScreen> {
+  // PERBAIKAN: State lokal untuk menangani loading awal
+  bool _isInitialLoad = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Panggil fetchHotspotStatus dan tunggu hingga selesai
+      Provider.of<StatusNotifier>(context, listen: false)
+          .fetchHotspotStatus()
+          .whenComplete(() {
+        // Setelah selesai (baik sukses atau gagal), hilangkan loading awal
+        if (mounted) {
+          setState(() {
+            _isInitialLoad = false;
+          });
+        }
+      });
+    });
+  }
+
+  String _formatBytes(double bytes, int decimals) {
+    if (bytes <= 0) return "0 B";
+    const suffixes = ["B", "KB", "MB", "GB", "TB"];
+    var i = (log(bytes) / log(1024)).floor();
+    return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
+  }
+
+  String _formatDuration(Duration d) {
+    d += const Duration(microseconds: 999999);
+    return d.toString().split('.').first.padLeft(8, "0");
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // PERBAIKAN: Jika ini adalah loading awal, langsung tampilkan spinner
+    if (_isInitialLoad) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Status Sesi Hotspot', style: TextStyle(fontWeight: FontWeight.bold)),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          foregroundColor: Colors.black,
+        ),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: const Text('Status Sistem', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Status Sesi Hotspot', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.black,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView(
-          children: [
-            _buildStatusItem('Koneksi Internet', 'Stabil', Icons.wifi, Colors.green),
-            _buildStatusItem('Perangkat Terhubung', '12 User', Icons.people_alt, Colors.blue),
-            _buildStatusItem('Suhu Sistem', '45°C', Icons.thermostat, Colors.orange),
-            _buildStatusItem('Keamanan', 'Terlindungi', Icons.security, Colors.green),
-          ],
-        ),
+      body: Consumer<StatusNotifier>(
+        builder: (context, notifier, child) {
+          if (notifier.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (notifier.errorMessage.isNotEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.red[600], size: 60),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Gagal Memuat Status',
+                      style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      notifier.errorMessage,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey[700]),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Coba Lagi'),
+                      onPressed: () => notifier.fetchHotspotStatus(),
+                    )
+                  ],
+                ),
+              ),
+            );
+          }
+
+          if (notifier.hotspotStatus == null) {
+            return const Center(child: Text('Sesi hotspot aktif tidak ditemukan.'));
+          }
+
+          final status = notifier.hotspotStatus!;
+
+          return RefreshIndicator(
+            onRefresh: () => notifier.fetchHotspotStatus(),
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                _buildUserInfoCard(status),
+                const SizedBox(height: 20),
+                _buildSessionCard(status),
+                const SizedBox(height: 20),
+                _buildConnectionCard(status),
+              ],
+            ),
+          );
+        },
       ),
     );
   }
 
-  // Widget helper untuk membuat baris status yang profesional
-  Widget _buildStatusItem(String title, String status, IconData icon, Color color) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 15),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      elevation: 2,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: color.withAlpha(1),
-          child: Icon(icon, color: color),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-        trailing: Text(
-          status,
-          style: TextStyle(color: color, fontWeight: FontWeight.bold),
-        ),
+  Widget _buildUserInfoCard(HotspotStatus status) {
+    return InfoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.person_pin, color: Colors.blueAccent, size: 28),
+              const SizedBox(width: 12),
+              Text('Informasi Pengguna', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
+            ],
+          ),
+          const Divider(height: 24),
+          _buildDetailRow('Username', status.username),
+          _buildDetailRow('Paket/Profil', status.profile ?? 'Tidak diketahui', showDivider: false),
+        ],
       ),
+    );
+  }
+
+  Widget _buildSessionCard(HotspotStatus status) {
+    return InfoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.timer, color: Colors.green, size: 28),
+              const SizedBox(width: 12),
+              Text('Detail Sesi', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
+            ],
+          ),
+          const Divider(height: 24),
+          _buildDetailRow('Durasi Aktif (Uptime)', _formatDuration(status.uptime)),
+          _buildDetailRow('Data Upload', _formatBytes(status.bytesUp, 2)),
+          _buildDetailRow('Data Download', _formatBytes(status.bytesDown, 2), showDivider: false),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildConnectionCard(HotspotStatus status) {
+    return InfoCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.lan, color: Colors.purple, size: 28),
+              const SizedBox(width: 12),
+              Text('Informasi Koneksi', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 18)),
+            ],
+          ),
+          const Divider(height: 24),
+          _buildDetailRow('Alamat IP', status.ipAddress),
+          _buildDetailRow('Alamat MAC', status.macAddress, showDivider: false),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value, {bool showDivider = true}) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: TextStyle(color: Colors.grey[700], fontSize: 15)),
+            Flexible(
+              child: Text(
+                value,
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+                textAlign: TextAlign.end,
+              ),
+            ),
+          ],
+        ),
+        if (showDivider) const Divider(height: 24),
+      ],
+    );
+  }
+}
+
+class InfoCard extends StatelessWidget {
+  final Widget child;
+  const InfoCard({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15),
+        boxShadow: [BoxShadow(color: Colors.black.withAlpha(5), blurRadius: 10, offset: const Offset(0, 4))],
+      ),
+      child: child,
     );
   }
 }

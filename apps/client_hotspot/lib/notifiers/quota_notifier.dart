@@ -1,6 +1,6 @@
 
 import 'package:flutter/foundation.dart';
-import '../models/user_quota_model.dart'; // <- Ganti ke model yang benar
+import '../models/user_quota_model.dart';
 import '../services/rtdb_service.dart';
 
 class QuotaNotifier extends ChangeNotifier {
@@ -12,14 +12,16 @@ class QuotaNotifier extends ChangeNotifier {
   List<UserQuota> _userQuotas = [];
   List<UserQuota> get userQuotas => _userQuotas;
 
-  Future<void> fetchQuotas() async {
+  // --- REFACTOR: fetchQuotas sekarang membutuhkan mikrotikId ---
+  Future<void> fetchQuotas({required String mikrotikId}) async {
     _isLoading = true;
     notifyListeners();
 
     try {
-      _userQuotas = await _rtdbService.getQuotas();
+      _userQuotas = await _rtdbService.getQuotas(mikrotikId: mikrotikId);
     } catch (e) {
-      debugPrint("Error fetching quotas: $e");
+      debugPrint("Error fetching quotas for Mikrotik ID $mikrotikId: $e");
+      _userQuotas = []; // Kosongkan data jika ada error
     } finally {
       _isLoading = false;
       notifyListeners();

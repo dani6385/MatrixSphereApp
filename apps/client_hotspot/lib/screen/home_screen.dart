@@ -1,11 +1,12 @@
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../models/quota_model.dart';
 import '../models/user_quota_model.dart';
-import 'detail_quota_screen.dart';
-import '../widget/home/mading.dart';
+import '../screen/detail_quota_screen.dart';
 import '../notifiers/quota_notifier.dart';
 import 'package:provider/provider.dart';
+import '../widget/home/mading.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,16 +16,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // --- SIMULASI: Anggap kita sudah tahu ID Mikrotik saat ini ---
+  final String _currentMikrotikId = "mikrotik_A_id";
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<QuotaNotifier>(context, listen: false).fetchQuotas();
+      // --- PERUBAHAN: Kirim mikrotikId saat fetch data ---
+      Provider.of<QuotaNotifier>(context, listen: false).fetchQuotas(mikrotikId: _currentMikrotikId);
     });
   }
 
   void _navigateToDetail(UserQuota userQuota) {
-    // Buat map yang bisa diserialisasi untuk dikirim ke detail screen
     final Map<String, dynamic> serializableData = Map.fromEntries(
       userQuota.quotas.map((q) => MapEntry(
             q.nama.toLowerCase().replaceAll(' ', '_'),
@@ -38,6 +42,11 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => DetailQuotaScreen(quotaData: serializableData),
       ),
     );
+  }
+
+  Future<void> _handleRefresh() async {
+    // --- PERUBAHAN: Kirim mikrotikId saat refresh ---
+    await Provider.of<QuotaNotifier>(context, listen: false).fetchQuotas(mikrotikId: _currentMikrotikId);
   }
 
   @override
@@ -58,7 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     const Text('Tidak ada data kuota. Tarik untuk memuat ulang.'),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () => notifier.fetchQuotas(),
+                      // --- PERUBAHAN: Kirim mikrotikId saat fetch data ---
+                      onPressed: () => notifier.fetchQuotas(mikrotikId: _currentMikrotikId),
                       child: const Text('Muat Ulang'),
                     )
                   ],
@@ -66,21 +76,20 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             }
 
-            // Asumsi kita hanya peduli pada satu pengguna untuk sekarang
+            // Asumsi kita masih fokus pada user_123 dalam konteks Mikrotik ini
             final userQuota = notifier.userQuotas.firstWhere((uq) => uq.userId == 'user_123', orElse: () => UserQuota(userId: 'unknown', quotas: []));
 
             if (userQuota.quotas.isEmpty) {
-              return const Center(child: Text('Data kuota untuk user_123 tidak ditemukan.'));
+              return const Center(child: Text('Data kuota untuk user_123 di Mikrotik ini tidak ditemukan.'));
             }
 
-            // Cari kuota utama dan bonus
             final mainQuota = userQuota.quotas.firstWhere((q) => q.nama == 'Kuota Utama', orElse: () => Quota.empty());
             final bonusQuota = userQuota.quotas.firstWhere((q) => q.nama == 'Bonus Kuota', orElse: () => Quota.empty());
 
             return RefreshIndicator(
-              onRefresh: () => notifier.fetchQuotas(),
+              onRefresh: _handleRefresh,
               child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(), // Memastikan refresh indicator selalu aktif
+                physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -12,4 +12,7 @@ workspace:
   - apps/admin_mikrotik
   - apps/client_hotspot
 dependencies:
+  internet_connection_checker_plus: ^3.1.0
+  internet_speed_test: ^1.5.0
+  network_info_plus: ^8.1.0
   provider: ^6.1.5+1

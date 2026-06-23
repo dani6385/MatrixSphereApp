@@ -5,7 +5,7 @@ on:
     branches: [ main ]
     paths:
       - 'apps/admin_mikrotik/**'
-      - 'pubspec.yaml'
+      - 'apps/admin_mikrotik/pubspec.yaml'
   workflow_dispatch:
 
 jobs:

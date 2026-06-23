@@ -1,5 +1,5 @@
 
-import 'quota_model.dart';
+import '../models/quota_model.dart';
 
 class UserQuota {
   final String userId;
