@@ -1,4 +1,4 @@
-name: client_hotspot
+name: client_connectivity
 description: "Matrix Sphere Client."
 publish_to: none
 resolution: workspace

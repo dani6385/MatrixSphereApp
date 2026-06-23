@@ -710,7 +710,7 @@
       "languageVersion": "3.12"
     },
     {
-      "name": "client_hotspot",
+      "name": "client_connectivity",
       "rootUri": "../apps/client_hotspot",
       "packageUri": "lib/",
       "languageVersion": "3.12"
