@@ -1,6 +1,15 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.matrixsphere.connectivity">
+
+    <!-- PERUBAHAN: Menambahkan izin yang diperlukan -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- AKHIR PERUBAHAN -->
+
     <application
-        android:label="client_hotspot"
+        android:label="myapp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
