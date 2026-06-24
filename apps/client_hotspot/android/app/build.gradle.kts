@@ -18,7 +18,7 @@ android {
     // Blok compileOptions tidak lagi diperlukan karena sudah diatur oleh toolchain di atas.
 
     defaultConfig {
-        applicationId = "com.example.clientconnectivity"
+        applicationId = "com.matrixsphere.connectivity"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
