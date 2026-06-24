@@ -1,10 +1,10 @@
-import 'package:client_connectivity/navigation_layout.dart';
-import 'package:client_connectivity/screens/splash_screen.dart';
-import 'package:client_connectivity/screens/akun_screen.dart';
-import 'package:client_connectivity/screens/home_screen.dart';
-import 'package:client_connectivity/screens/settings_screen.dart';
-import 'package:client_connectivity/screens/status_screen.dart';
-import 'package:client_connectivity/screens/transaksi_screen.dart';
+import '/navigation_layout.dart';
+import 'package:shared_ui/shared_ui.dart';
+import '/screens/akun_screen.dart';
+import '/screens/home_screen.dart';
+import '/screens/settings_screen.dart';
+import '/screens/status_screen.dart';
+import '/screens/transaksi_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -716,6 +716,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "shared_ui",
+      "rootUri": "../packages/shared_ui",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///C:/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",

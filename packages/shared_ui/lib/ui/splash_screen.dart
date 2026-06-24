@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,6 +10,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  static const _permFlagKey = 'permissionsGranted';
+
   @override
   void initState() {
     super.initState();
@@ -17,17 +19,19 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initializeAndNavigate() async {
-    // Meminta izin yang diperlukan
-    await [
-      Permission.camera,
-      Permission.storage,
-      Permission.notification,
-    ].request();
-
-    // Menunggu sejenak untuk pengalaman pengguna yang lebih baik
+    final prefs = await SharedPreferences.getInstance();
+    final alreadyGranted = prefs.getBool(_permFlagKey) ?? false;
+    if (!alreadyGranted) {
+      // Request permissions only once (uncomment if needed)
+      await [
+        // Permission.camera,
+        // Permission.storage,
+        // Permission.notification,
+      ];
+      await prefs.setBool(_permFlagKey, true);
+    }
+    // Small delay for splash experience
     await Future.delayed(const Duration(seconds: 2));
-
-    // Navigasi ke halaman utama setelah izin diminta
     if (mounted) {
       context.go('/home');
     }
@@ -35,7 +39,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // UI untuk layar splash normal
     return const Scaffold(
       body: Center(
         child: Column(
