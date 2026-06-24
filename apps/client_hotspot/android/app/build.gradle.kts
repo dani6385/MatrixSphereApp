@@ -20,14 +20,16 @@ android {
     }
 
     signingConfigs {
+        // In a real application, you would use a secure keystore.
+        // For now, we'll use the debug signing configuration for simplicity.
+        /*
         create("release") {
-            // In a real application, you would use a secure keystore.
-            // For now, we'll use the debug keystore for simplicity.
             storeFile = file(System.getProperty("user.home") + "/.android/debug.keystore")
             storePassword = "android"
             keyAlias = "androiddebugkey"
             keyPassword = "android"
         }
+        */
     }
 
     defaultConfig {
@@ -40,7 +42,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
         }
     }
 }
