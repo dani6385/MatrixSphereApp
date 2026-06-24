@@ -1,65 +1,15 @@
-import 'dart:async';
-import 'dart:math' as math;
 import 'dart:ui';
+import 'package:client_connectivity/providers/device_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-/// Model untuk menampung informasi perangkat.
-class DeviceInfo {
-  final String paket;
-  final String ipAddress;
-  final String macAddress;
-  double tx; // Diubah menjadi double untuk pembaruan dinamis
-  double rx; // Diubah menjadi double untuk pembaruan dinamis
-  final String deviceModel;
-  final String firmwareVersion;
-  int uptimeSeconds; // Diubah menjadi int untuk pembaruan dinamis
-  final String serialNumber;
-
-  DeviceInfo({
-    required this.paket,
-    required this.ipAddress,
-    required this.macAddress,
-    required this.tx,
-    required this.rx,
-    required this.deviceModel,
-    required this.firmwareVersion,
-    required this.uptimeSeconds,
-    required this.serialNumber,
-  });
-}
-
-class StatusScreen extends StatefulWidget {
+class StatusScreen extends StatelessWidget {
   const StatusScreen({super.key});
 
   @override
-  State<StatusScreen> createState() => _StatusScreenState();
-}
-
-class _StatusScreenState extends State<StatusScreen> {
-  // Data awal perangkat, sekarang dalam bentuk objek.
-  final DeviceInfo _deviceInfo = DeviceInfo(
-    paket: 'Premium Wi‑Fi 100Mbps',
-    ipAddress: '192.168.88.254',
-    macAddress: '00:0C:29:E4:12:F1',
-    tx: 2.4, // Mbps
-    rx: 8.7, // Mbps
-    deviceModel: 'Samsung Galaxy A22 5G',
-    firmwareVersion: '12.11',
-    uptimeSeconds: 263529, // 3 hari 1 jam 12 menit 9 detik
-    serialNumber: 'SN-MXS-202412345',
-  );
-
-  Timer? _statusTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    _startDataSimulation();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final deviceInfo = Provider.of<DeviceProvider>(context).deviceInfo;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
@@ -105,21 +55,21 @@ class _StatusScreenState extends State<StatusScreen> {
                   ),
                   const SizedBox(height: 16),
                   // Menampilkan data dari state
-                  _infoCard('Paket', _deviceInfo.paket, isDark),
-                  _infoCard('IP Address', _deviceInfo.ipAddress, isDark),
-                  _infoCard('MAC Address', _deviceInfo.macAddress, isDark),
+                  _infoCard('Paket', deviceInfo.paket, isDark),
+                  _infoCard('IP Address', deviceInfo.ipAddress, isDark),
+                  _infoCard('MAC Address', deviceInfo.macAddress, isDark),
                   _infoCard(
                       'TX (Upload)',
-                      '${_deviceInfo.tx.toStringAsFixed(1)} Mbps',
+                      '${deviceInfo.tx.toStringAsFixed(1)} Mbps',
                       isDark),
                   _infoCard(
                       'RX (Download)',
-                      '${_deviceInfo.rx.toStringAsFixed(1)} Mbps',
+                      '${deviceInfo.rx.toStringAsFixed(1)} Mbps',
                       isDark),
-                  _infoCard('Device Model', _deviceInfo.deviceModel, isDark),
-                  _infoCard('Firmware Version', _deviceInfo.firmwareVersion, isDark),
-                  _infoCard('Uptime', _formatUptime(_deviceInfo.uptimeSeconds), isDark),
-                  _infoCard('Serial Number', _deviceInfo.serialNumber, isDark),
+                  _infoCard('Device Model', deviceInfo.deviceModel, isDark),
+                  _infoCard('Firmware Version', deviceInfo.firmwareVersion, isDark),
+                  _infoCard('Uptime', _formatUptime(deviceInfo.uptimeSeconds), isDark),
+                  _infoCard('Serial Number', deviceInfo.serialNumber, isDark),
                 ],
               ),
             ),
@@ -127,31 +77,6 @@ class _StatusScreenState extends State<StatusScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _statusTimer?.cancel(); // Hentikan timer saat widget tidak lagi digunakan
-    super.dispose();
-  }
-
-  // --- LOGIKA SIMULASI DATA ---
-
-  void _startDataSimulation() {
-    _statusTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!mounted) return;
-
-      setState(() {
-        // Perbarui uptime setiap detik
-        _deviceInfo.uptimeSeconds++;
-
-        // Simulasikan fluktuasi traffic (mirip di home_screen)
-        _deviceInfo.tx = math.max(
-            0.1, 2.5 + 1.5 * math.sin(DateTime.now().millisecondsSinceEpoch / 2000));
-        _deviceInfo.rx = math.max(
-            0.2, 9.0 + 5.0 * math.cos(DateTime.now().millisecondsSinceEpoch / 2500));
-      });
-    });
   }
 
   String _formatUptime(int totalSeconds) {

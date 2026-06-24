@@ -1,4 +1,5 @@
 import '/navigation_layout.dart';
+import 'package:client_connectivity/providers/device_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '/screens/akun_screen.dart';
 import '/screens/home_screen.dart';
@@ -42,8 +43,11 @@ final _router = GoRouter(
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => DeviceProvider()),
+      ],
       child: const ClientConnectivity(),
     ),
   );
