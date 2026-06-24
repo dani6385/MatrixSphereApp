@@ -1,12 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- PERUBAHAN: Menambahkan izin yang diperlukan -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Izin Jaringan -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!-- AKHIR PERUBAHAN -->
+
+    <!-- Izin Kamera -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Izin Penyimpanan (diperlukan untuk image_picker) -->
+    <!-- Untuk Android 10 (API 29) ke bawah -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <!-- Izin Notifikasi (untuk Android 13/Tiramisu ke atas) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
 
     <application
         android:label="Client Connectivity"
