@@ -15,13 +15,13 @@ Future<void> main() async {
     // Langkah 3: Sediakan Notifier ke seluruh aplikasi
     ChangeNotifierProvider(
       create: (context) => QuotaNotifier(),
-      child: const MyApp(),
+      child: const ConnectivityApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ConnectivityApp extends StatelessWidget {
+  const ConnectivityApp({super.key});
 
   @override
   Widget build(BuildContext context) {
