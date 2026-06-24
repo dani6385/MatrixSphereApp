@@ -1,22 +1,62 @@
+import 'dart:async';
+import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class StatusScreen extends StatelessWidget {
+/// Model untuk menampung informasi perangkat.
+class DeviceInfo {
+  final String paket;
+  final String ipAddress;
+  final String macAddress;
+  double tx; // Diubah menjadi double untuk pembaruan dinamis
+  double rx; // Diubah menjadi double untuk pembaruan dinamis
+  final String deviceModel;
+  final String firmwareVersion;
+  int uptimeSeconds; // Diubah menjadi int untuk pembaruan dinamis
+  final String serialNumber;
+
+  DeviceInfo({
+    required this.paket,
+    required this.ipAddress,
+    required this.macAddress,
+    required this.tx,
+    required this.rx,
+    required this.deviceModel,
+    required this.firmwareVersion,
+    required this.uptimeSeconds,
+    required this.serialNumber,
+  });
+}
+
+class StatusScreen extends StatefulWidget {
   const StatusScreen({super.key});
 
-  // Mock data – replace with real services when available
-  final Map<String, String> _deviceInfo = const {
-    'Paket': 'Premium Wi‑Fi 100Mbps',
-    'IP Address': '192.168.0.45',
-    'MAC Address': 'AA:BB:CC:DD:EE:FF',
-    'TX (Upload)': '25 Mbps',
-    'RX (Download)': '95 Mbps',
-    'Device Model': 'Samsung Galaxy a22 5G',
-    'Firmware Version': '12.11',
-    'Uptime': '3 days 04:12:09',
-    'Serial Number': 'nomber transaksi',
-  };
+  @override
+  State<StatusScreen> createState() => _StatusScreenState();
+}
+
+class _StatusScreenState extends State<StatusScreen> {
+  // Data awal perangkat, sekarang dalam bentuk objek.
+  final DeviceInfo _deviceInfo = DeviceInfo(
+    paket: 'Premium Wi‑Fi 100Mbps',
+    ipAddress: '192.168.88.254',
+    macAddress: '00:0C:29:E4:12:F1',
+    tx: 2.4, // Mbps
+    rx: 8.7, // Mbps
+    deviceModel: 'Samsung Galaxy A22 5G',
+    firmwareVersion: '12.11',
+    uptimeSeconds: 263529, // 3 hari 1 jam 12 menit 9 detik
+    serialNumber: 'SN-MXS-202412345',
+  );
+
+  Timer? _statusTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startDataSimulation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +88,38 @@ class StatusScreen extends StatelessWidget {
                 children: [
                   _buildHeader(isDark),
                   const SizedBox(height: 24),
-                  ..._deviceInfo.entries
-                      .map((e) => _infoCard(e.key, e.value, isDark))
-                      .toList(),
+                  // Tombol Top-up
+                  ElevatedButton(
+                    onPressed: () {
+                      // TODO: Implement top-up functionality
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isDark ? Colors.tealAccent : Colors.indigo,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    ),
+                    child: Text(
+                      'Top Up',
+                      style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  // Menampilkan data dari state
+                  _infoCard('Paket', _deviceInfo.paket, isDark),
+                  _infoCard('IP Address', _deviceInfo.ipAddress, isDark),
+                  _infoCard('MAC Address', _deviceInfo.macAddress, isDark),
+                  _infoCard(
+                      'TX (Upload)',
+                      '${_deviceInfo.tx.toStringAsFixed(1)} Mbps',
+                      isDark),
+                  _infoCard(
+                      'RX (Download)',
+                      '${_deviceInfo.rx.toStringAsFixed(1)} Mbps',
+                      isDark),
+                  _infoCard('Device Model', _deviceInfo.deviceModel, isDark),
+                  _infoCard('Firmware Version', _deviceInfo.firmwareVersion, isDark),
+                  _infoCard('Uptime', _formatUptime(_deviceInfo.uptimeSeconds), isDark),
+                  _infoCard('Serial Number', _deviceInfo.serialNumber, isDark),
                 ],
               ),
             ),
@@ -58,6 +127,41 @@ class StatusScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _statusTimer?.cancel(); // Hentikan timer saat widget tidak lagi digunakan
+    super.dispose();
+  }
+
+  // --- LOGIKA SIMULASI DATA ---
+
+  void _startDataSimulation() {
+    _statusTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) return;
+
+      setState(() {
+        // Perbarui uptime setiap detik
+        _deviceInfo.uptimeSeconds++;
+
+        // Simulasikan fluktuasi traffic (mirip di home_screen)
+        _deviceInfo.tx = math.max(
+            0.1, 2.5 + 1.5 * math.sin(DateTime.now().millisecondsSinceEpoch / 2000));
+        _deviceInfo.rx = math.max(
+            0.2, 9.0 + 5.0 * math.cos(DateTime.now().millisecondsSinceEpoch / 2500));
+      });
+    });
+  }
+
+  String _formatUptime(int totalSeconds) {
+    int days = totalSeconds ~/ (24 * 3600);
+    int hours = (totalSeconds % (24 * 3600)) ~/ 3600;
+    int minutes = (totalSeconds % 3600) ~/ 60;
+    int seconds = totalSeconds % 60;
+
+    String daysStr = days > 0 ? '${days}d ' : '';
+    return '$daysStr${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
   Widget _buildHeader(bool isDark) {
@@ -113,7 +217,7 @@ class StatusScreen extends StatelessWidget {
 
   IconData _iconForTitle(String title) {
     switch (title) {
-      case 'Paket yang Dibeli':
+      case 'Paket':
         return Icons.card_membership;
       case 'IP Address':
         return Icons.wifi;
