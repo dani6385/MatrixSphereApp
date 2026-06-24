@@ -9,8 +9,6 @@
       "name": "matrix_sphere_app",
       "version": "0.0.0",
       "dependencies": [
-        "app_settings",
-        "flutter_jailbreak_detection",
         "go_router",
         "image_picker",
         "internet_connection_checker_plus",
@@ -43,7 +41,6 @@
         "firebase_database",
         "fl_chart",
         "flutter",
-        "flutter_jailbreak_detection",
         "get_it",
         "go_router",
         "google_fonts",
@@ -164,21 +161,6 @@
       ]
     },
     {
-      "name": "flutter_jailbreak_detection",
-      "version": "1.10.0",
-      "dependencies": [
-        "flutter"
-      ]
-    },
-    {
-      "name": "app_settings",
-      "version": "7.0.0",
-      "dependencies": [
-        "flutter",
-        "plugin_platform_interface"
-      ]
-    },
-    {
       "name": "flutter_lints",
       "version": "6.0.0",
       "dependencies": [
@@ -201,6 +183,14 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "app_settings",
+      "version": "7.0.0",
+      "dependencies": [
+        "flutter",
+        "plugin_platform_interface"
       ]
     },
     {
@@ -654,13 +644,6 @@
       "dependencies": []
     },
     {
-      "name": "plugin_platform_interface",
-      "version": "2.1.8",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
       "name": "lints",
       "version": "6.1.0",
       "dependencies": []
@@ -732,6 +715,13 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
+      "dependencies": [
+        "meta"
       ]
     },
     {

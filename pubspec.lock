@@ -18,7 +18,7 @@ packages:
     source: hosted
     version: "0.3.2+1"
   app_settings:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: app_settings
       sha256: "64d50e666fd96ae90301bf71205f05019286f940ad6f5fed3d1be19c6af7546a"
@@ -334,14 +334,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_jailbreak_detection:
-    dependency: "direct main"
-    description:
-      name: flutter_jailbreak_detection
-      sha256: "67ff11ea41965152d24db7104da1f9b343f94ada64c2a9e309ec4d753a12d281"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.10.0"
   flutter_lints:
     dependency: transitive
     description:
