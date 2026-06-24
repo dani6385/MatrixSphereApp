@@ -15,13 +15,13 @@ Future<void> main() async {
     // Langkah 3: Sediakan Notifier ke seluruh aplikasi
     ChangeNotifierProvider(
       create: (context) => QuotaNotifier(),
-      child: const MatrixSphereApp(),
+      child: const MyApp(),
     ),
   );
 }
 
-class MatrixSphereApp extends StatelessWidget {
-  const MatrixSphereApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

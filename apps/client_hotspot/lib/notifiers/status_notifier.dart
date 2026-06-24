@@ -11,11 +11,12 @@ class StatusNotifier with ChangeNotifier {
   final RtdbService _rtdbService = RtdbService();
   final NetworkInfo _networkInfo = NetworkInfo();
 
+  // PERBAIKAN: Gunakan millidetik untuk timestamp
   HotspotStatus _hotspotStatus = HotspotStatus(
     username: 'N/A',
     ipAddress: '',
     macAddress: '',
-    sessionStartTime: DateTime.now(),
+    sessionStartTime: DateTime.now().millisecondsSinceEpoch,
     bytesUp: 0,
     bytesDown: 0,
   );
@@ -24,7 +25,6 @@ class StatusNotifier with ChangeNotifier {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  // PERUBAHAN: Menambahkan properti untuk pesan error
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
 
@@ -37,7 +37,6 @@ class StatusNotifier with ChangeNotifier {
       if (Platform.isAndroid || Platform.isIOS) {
         var status = await Permission.location.request();
         if (status.isDenied) {
-          // PERUBAHAN: Gunakan errorMessage
           _errorMessage = 'Izin lokasi diperlukan untuk menemukan alamat IP Wi-Fi Anda. Mohon berikan izin di pengaturan aplikasi.';
           _isLoading = false;
           notifyListeners();
@@ -49,7 +48,6 @@ class StatusNotifier with ChangeNotifier {
       if (ipAddress != null) {
         _rtdbService.getHotspotStatusStream(ipAddress).listen((status) {
           if (status.macAddress == 'User tidak ditemukan') {
-            // PERUBAHAN: Gunakan errorMessage untuk kasus user tidak ditemukan
             _errorMessage = 'Sesi hotspot aktif tidak ditemukan untuk perangkat Anda. Pastikan Anda terhubung ke jaringan hotspot yang benar.';
           } else {
             _hotspotStatus = status;
@@ -57,19 +55,16 @@ class StatusNotifier with ChangeNotifier {
           _isLoading = false;
           notifyListeners();
         }, onError: (error) {
-           // PERUBAHAN: Tangani error dari stream
           _errorMessage = 'Gagal mendapatkan data: ${error.toString()}';
           _isLoading = false;
           notifyListeners();
         });
       } else {
-        // PERUBAHAN: Gunakan errorMessage
         _errorMessage = 'Anda tidak terhubung ke jaringan Wi-Fi. Mohon sambungkan perangkat Anda untuk memeriksa status.';
         _isLoading = false;
         notifyListeners();
       }
     } catch (e) {
-      // PERUBAHAN: Gunakan errorMessage
       _errorMessage = 'Terjadi kesalahan: ${e.toString()}';
       _isLoading = false;
       notifyListeners();

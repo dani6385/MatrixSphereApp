@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/firestore_service.dart';
 
@@ -9,57 +10,92 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  // Instance dari FirestoreService
   final FirestoreService _firestoreService = FirestoreService();
-  // Controller untuk TextField
   final TextEditingController _nameController = TextEditingController();
   
-  // ID Pengguna untuk contoh ini
-  final String _userId = 'user_123';
+  // PERBAIKAN: Gunakan User? yang nullable dan state isLoading
+  User? _user;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _loadCurrentUser();
   }
 
-  /// Mengambil data pengguna dari Firestore saat halaman dimuat
-  void _loadUserData() async {
-    final userDoc = await _firestoreService.getUserData(_userId);
-    // Tambahkan pengecekan mounted di sini juga untuk praktik terbaik
-    if (!mounted) return;
-    if (userDoc != null && userDoc.exists) {
-      final userData = userDoc.data() as Map<String, dynamic>;
-      // Set teks di controller jika ada nama yang tersimpan
+  /// Mengambil data pengguna yang sedang login dari Firebase Auth
+  Future<void> _loadCurrentUser() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (mounted) {
       setState(() {
-        _nameController.text = userData['name'] ?? '';
+        _user = user;
+        _isLoading = false;
+      });
+
+      if (_user != null) {
+        _loadUserData(); // Muat data dari Firestore setelah mendapatkan user
+      }
+    }
+  }
+
+  /// Mengambil data nama dari Firestore
+  Future<void> _loadUserData() async {
+    if (_user == null) return;
+    final userDoc = await _firestoreService.getUserData(_user!.uid);
+    if (mounted && userDoc != null && userDoc.exists) {
+      final userData = userDoc.data() as Map<String, dynamic>;
+      setState(() {
+        _nameController.text = userData['name'] ?? _user!.displayName ?? '';
       });
     }
   }
 
   /// Menyimpan data pengguna ke Firestore
-  void _saveUserData() async {
+  Future<void> _saveUserData() async {
+    if (_user == null) return;
     final name = _nameController.text.trim();
     if (name.isNotEmpty) {
-      await _firestoreService.setUserData(_userId, {'name': name});
-      
-      // PERBAIKAN: Tambahkan pengecekan `mounted` sebelum menggunakan BuildContext
+      await _firestoreService.setUserData(_user!.uid, {'name': name});
       if (!mounted) return;
-      
-      // Menampilkan snackbar konfirmasi
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nama berhasil disimpan di Firestore!')),
+        const SnackBar(content: Text('Nama berhasil diperbarui!')),
       );
     } else {
-      // Pengecekan `mounted` tidak diperlukan di sini karena tidak ada `await` sebelumnya
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Nama tidak boleh kosong.')),
       );
     }
   }
 
+  /// Proses Logout
+  Future<void> _handleLogout() async {
+    await FirebaseAuth.instance.signOut();
+    // Pindah ke halaman login atau home setelah logout
+    // Navigator.of(context).pushReplacementNamed('/login');
+  }
+
   @override
   Widget build(BuildContext context) {
+    // Tampilkan loading indicator jika sedang memuat data user
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    // Tampilkan pesan jika tidak ada user yang login
+    if (_user == null) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            'Anda belum login. Silakan login untuk melihat profil Anda.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        ),
+      );
+    }
+
+    // Tampilkan UI profil jika user sudah login
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
@@ -72,24 +108,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            // Header Foto Profil
-            const Center(
+            Center(
               child: Column(
                 children: [
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: Colors.deepPurple,
-                    child: Icon(Icons.person, size: 60, color: Colors.white),
+                    child: Text(_user!.email![0].toUpperCase(), style: const TextStyle(fontSize: 40, color: Colors.white)),
                   ),
-                  SizedBox(height: 15),
-                  Text("Pengguna Pro", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                  Text("pro.user@matrixsphere.com", style: TextStyle(color: Colors.grey)),
+                  const SizedBox(height: 15),
+                  // Gunakan nama dari controller jika sudah diisi, jika tidak, tampilkan pesan
+                  Text(_nameController.text.isNotEmpty ? _nameController.text : "Nama Belum Diatur", style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  Text(_user!.email ?? "Email tidak tersedia", style: const TextStyle(color: Colors.grey)),
                 ],
               ),
             ),
             const SizedBox(height: 30),
 
-            // --- Fitur Edit Nama Baru ---
+            // Fitur Edit Nama
             TextField(
               controller: _nameController,
               decoration: InputDecoration(
@@ -106,12 +142,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 backgroundColor: Colors.deepPurple,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                minimumSize: const Size(double.infinity, 50), // Lebar penuh
+                minimumSize: const Size(double.infinity, 50),
               ),
               child: const Text('Simpan Perubahan', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 20),
-            // --- Akhir Fitur Edit Nama ---
             
             const Divider(),
 
@@ -122,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildMenuItem(Icons.notifications_active_rounded, "Notifikasi"),
                   _buildMenuItem(Icons.security_rounded, "Keamanan Akun"),
                   const Divider(),
-                  _buildMenuItem(Icons.logout_rounded, "Keluar", isLogout: true),
+                  _buildMenuItem(Icons.logout_rounded, "Keluar", isLogout: true, onTap: _handleLogout),
                 ],
               ),
             ),
@@ -132,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title, {bool isLogout = false}) {
+  Widget _buildMenuItem(IconData icon, String title, {bool isLogout = false, VoidCallback? onTap}) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -146,9 +181,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ),
         trailing: const Icon(Icons.chevron_right_rounded),
-        onTap: () {
-          // Aksi klik menu di sini
-        },
+        onTap: onTap, // Gunakan onTap yang dilewatkan
       ),
     );
   }

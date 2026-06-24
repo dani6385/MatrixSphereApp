@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'dart:math';
 
 import '../notifiers/status_notifier.dart';
 import '../models/hotspot_status_model.dart';
@@ -17,25 +16,12 @@ class _StatusScreenState extends State<StatusScreen> {
   @override
   void initState() {
     super.initState();
-    // Panggil fetchHotspotStatus setelah frame pertama selesai dibangun
-    // untuk memastikan Notifier tersedia
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<StatusNotifier>(context, listen: false).fetchHotspotStatus();
     });
   }
 
-  String _formatBytes(double bytes, int decimals) {
-    if (bytes <= 0) return "0 B";
-    const suffixes = ["B", "KB", "MB", "GB", "TB"];
-    var i = (log(bytes) / log(1024)).floor();
-    return '${(bytes / pow(1024, i)).toStringAsFixed(decimals)} ${suffixes[i]}';
-  }
-
-  String _formatDuration(Duration d) {
-    // Menambahkan mikrodetik untuk memastikan pembulatan ke atas yang benar
-    d += const Duration(microseconds: 999999);
-    return d.toString().split('.').first.padLeft(8, "0");
-  }
+  // PERBAIKAN: Fungsi _formatBytes dihapus karena tidak lagi digunakan.
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +35,10 @@ class _StatusScreenState extends State<StatusScreen> {
       ),
       body: Consumer<StatusNotifier>(
         builder: (context, notifier, child) {
-          // --- KONDISI LOADING ---
           if (notifier.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // --- KONDISI ERROR ---
           if (notifier.errorMessage.isNotEmpty) {
             return Center(
               child: Padding(
@@ -92,13 +76,12 @@ class _StatusScreenState extends State<StatusScreen> {
             );
           }
 
-          // --- KONDISI SUKSES ---
           final status = notifier.hotspotStatus;
 
           return RefreshIndicator(
             onRefresh: () => notifier.fetchHotspotStatus(),
             child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(), // Selalu bisa di-scroll untuk refresh
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.all(16.0),
               children: [
                 _buildUserInfoCard(status),
@@ -128,7 +111,7 @@ class _StatusScreenState extends State<StatusScreen> {
           ),
           const Divider(height: 24),
           _buildDetailRow('Username', status.username),
-          _buildDetailRow('Paket/Profil', status.profile ?? 'Tidak diketahui', showDivider: false),
+          _buildDetailRow('Paket/Profil', status.username, showDivider: false),
         ],
       ),
     );
@@ -147,9 +130,10 @@ class _StatusScreenState extends State<StatusScreen> {
             ],
           ),
           const Divider(height: 24),
-          _buildDetailRow('Durasi Aktif (Uptime)', _formatDuration(status.uptime)),
-          _buildDetailRow('Data Upload', _formatBytes(status.bytesUp, 2)),
-          _buildDetailRow('Data Download', _formatBytes(status.bytesDown, 2), showDivider: false),
+          _buildDetailRow('Durasi Aktif (Uptime)', status.sessionDuration),
+          _buildDetailRow('Data Upload', status.formattedBytesUp),
+          // PERBAIKAN: Memperbaiki kesalahan ketik dari 'status.formattedBytesDown' menjadi status.formattedBytesDown
+          _buildDetailRow('Data Download', status.formattedBytesDown, showDivider: false),
         ],
       ),
     );

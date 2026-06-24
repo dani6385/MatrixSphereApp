@@ -24,15 +24,20 @@ class RtdbService {
         final List<UserQuota> userQuotas = [];
 
         allUsersData.forEach((userId, userData) {
-          final quotaData = Map<String, dynamic>.from(userData['quota'] as Map);
-          final List<Quota> quotas = [];
+          // PERBAIKAN: Tambahkan pengecekan keamanan untuk 'quota'
+          if (userData != null && userData['quota'] != null) {
+            final quotaData = Map<String, dynamic>.from(userData['quota'] as Map);
+            final List<Quota> quotas = [];
 
-          quotaData.forEach((key, value) {
-            final quota = Quota.fromMap(Map<String, dynamic>.from(value as Map));
-            quotas.add(quota);
-          });
+            quotaData.forEach((key, value) {
+              final quota = Quota.fromMap(Map<String, dynamic>.from(value as Map));
+              quotas.add(quota);
+            });
 
-          userQuotas.add(UserQuota(userId: userId, quotas: quotas));
+            userQuotas.add(UserQuota(userId: userId, quotas: quotas));
+          } else {
+             developer.log('User data or quota is null for user $userId in Mikrotik $mikrotikId', name: 'RtdbService');
+          }
         });
 
         return userQuotas;
@@ -45,47 +50,55 @@ class RtdbService {
     }
   }
 
-  // --- BARU: Method untuk mendapatkan status hotspot berdasarkan IP ---
+  // --- PERBAIKAN: Method untuk mendapatkan status hotspot dengan penanganan error yang lebih baik ---
   Stream<HotspotStatus> getHotspotStatusStream(String ipAddress) {
     final controller = StreamController<HotspotStatus>();
 
-    _dbRef.child('mikrotiks').onValue.listen((event) async {
-      if (event.snapshot.exists && event.snapshot.value != null) {
-        final allMikrotiks = Map<String, dynamic>.from(event.snapshot.value as Map);
-        String? targetUserKey;
-        String? targetMikrotikKey;
+    _dbRef.child('mikrotiks').onValue.listen((event) {
+      try { // PERBAIKAN: Bungkus logika dengan try-catch
+        if (event.snapshot.exists && event.snapshot.value != null) {
+          final allMikrotiks = Map<String, dynamic>.from(event.snapshot.value as Map);
+          String? targetUserKey;
+          String? targetMikrotikKey;
 
-        // Cari pengguna dengan IP yang cocok
-        allMikrotiks.forEach((mikrotikId, mikrotikData) {
-          final users = Map<String, dynamic>.from(mikrotikData['users'] as Map);
-          users.forEach((userId, userData) {
-            if (userData['ipAddress'] == ipAddress) {
-              targetUserKey = userId;
-              targetMikrotikKey = mikrotikId;
+          // Cari pengguna dengan IP yang cocok
+          allMikrotiks.forEach((mikrotikId, mikrotikData) {
+            // PERBAIKAN: Pastikan mikrotikData adalah Map dan memiliki 'users'
+            if (mikrotikData is Map && mikrotikData.containsKey('users') && mikrotikData['users'] is Map) {
+              final users = Map<String, dynamic>.from(mikrotikData['users'] as Map);
+              users.forEach((userId, userData) {
+                 // PERBAIKAN: Pastikan userData adalah Map dan memiliki 'ipAddress'
+                if (userData is Map && userData['ipAddress'] == ipAddress) {
+                  targetUserKey = userId;
+                  targetMikrotikKey = mikrotikId;
+                }
+              });
             }
           });
-        });
 
-        if (targetUserKey != null && targetMikrotikKey != null) {
-          // Jika ditemukan, dengarkan perubahan pada pengguna tersebut
-          final userRef = _dbRef.child('mikrotiks/$targetMikrotikKey/users/$targetUserKey');
-          userRef.onValue.listen((userEvent) {
-            if (userEvent.snapshot.exists && userEvent.snapshot.value != null) {
-              final data = Map<String, dynamic>.from(userEvent.snapshot.value as Map);
-              controller.add(HotspotStatus.fromMap(data));
-            }
-          });
-        } else {
-          // Jika tidak ditemukan, kirim status default/error
-          controller.add(HotspotStatus.fromMap({
-            'username': 'N/A',
-            'ipAddress': ipAddress, // Tampilkan IP yang dicari
-            'macAddress': 'User tidak ditemukan',
-            'sessionStartTime': 0,
-            'bytesUp': 0,
-            'bytesDown': 0,
-          }));
+          if (targetUserKey != null && targetMikrotikKey != null) {
+            // Jika ditemukan, dengarkan perubahan pada pengguna tersebut
+            final userRef = _dbRef.child('mikrotiks/$targetMikrotikKey/users/$targetUserKey');
+            userRef.onValue.listen((userEvent) {
+              if (userEvent.snapshot.exists && userEvent.snapshot.value != null) {
+                final data = Map<String, dynamic>.from(userEvent.snapshot.value as Map);
+                controller.add(HotspotStatus.fromMap(data));
+              }
+            });
+          } else {
+            // Jika tidak ditemukan, kirim status default
+            controller.add(HotspotStatus.defaultStatus(ipAddress: ipAddress, message: 'User tidak ditemukan'));
+          }
         }
+      } catch (e, stackTrace) {
+        developer.log(
+          'Error in getHotspotStatusStream', 
+          name: 'RtdbService', 
+          error: e, 
+          stackTrace: stackTrace
+        );
+        // Kirim status error ke stream
+        controller.add(HotspotStatus.defaultStatus(ipAddress: ipAddress, message: 'Terjadi kesalahan data'));
       }
     });
 
