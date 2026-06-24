@@ -15,11 +15,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    kotlinkotlin {
-        compilerOptions {
-            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11)
-        }
-    }
+    // PERBAIKAN: Menghapus blok kotlinOptions yang sudah usang.
+    // Versi target JVM Kotlin sekarang secara otomatis diambil dari compileOptions di atas.
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
