@@ -1,4 +1,4 @@
-package com.matrixsphere.client_connectivity
+package com.matrixsphere.connectivity
 
 import io.flutter.embedding.android.FlutterActivity
 
