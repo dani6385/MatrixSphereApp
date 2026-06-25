@@ -2,9 +2,10 @@ name: shared_services
 version: 1.0.0
 description: A collection of shared services for MatrixSphere.
 publish_to: 'none'
+resolution: workspace
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.12.1 <4.0.0'
 
 dependencies:
   flutter:           # <--- INI WAJIB ADA
