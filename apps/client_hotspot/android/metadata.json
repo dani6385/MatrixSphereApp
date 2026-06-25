@@ -1,8 +1,0 @@
-{
-  "name": "CC Client Connectivity",
-  "description": "Aplikasi pengelola Hotspot Mikrotik dengan fitur monitoring trafik, voucher, mading informasi, dan sistem notifikasi masa aktif.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
-}
