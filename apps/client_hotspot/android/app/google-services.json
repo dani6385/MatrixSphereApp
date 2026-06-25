@@ -3,35 +3,25 @@
     "project_number": "113584843327",
     "firebase_url": "https://matrixsphere-project-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "matrixsphere-project",
-    "storage_bucket": "matrixsphere-project.appspot.com"
+    "storage_bucket": "matrixsphere-project.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:113584843327:android:75f67fdb0d1692eecfe68a",
+        "mobilesdk_app_id": "1:113584843327:android:6897bc592fb95218cfe68a",
         "android_client_info": {
           "package_name": "com.matrixsphere.connectivity"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "113584843327-7c8isdpq81f1851m4a0ersdnk1b1c376.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDPLy4z3f2Z7J5g4f6N8jH9k3D0b"
+          "current_key": "AIzaSyBOYpg1A3sIMXIWefYVQl18zswoA2ovTGc"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "113584843327-7c8isdpq81f1851m4a0ersdnk1b1c376.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     }
