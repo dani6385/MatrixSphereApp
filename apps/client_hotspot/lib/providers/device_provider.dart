@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 import 'dart:math' as math;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart'; // Tambahkan ini
+import 'package:network_info_plus/network_info_plus.dart';
 import 'package:flutter/foundation.dart';
 
 /// Model untuk menampung semua informasi terkait perangkat.
@@ -53,8 +54,10 @@ class DeviceProvider with ChangeNotifier {
       // Gunakan package untuk mengambil info asli
       final packageInfo = await PackageInfo.fromPlatform();
       final deviceInfoPlugin = DeviceInfoPlugin();
+      final networkInfo = NetworkInfo();
       String model = 'Unknown';
       String version = 'Unknown';
+      String? ip = await networkInfo.getWifiIP();
 
       if (kIsWeb) {
         final webInfo = await deviceInfoPlugin.webBrowserInfo;
@@ -80,7 +83,7 @@ class DeviceProvider with ChangeNotifier {
         osVersion: version,
         // Menggunakan data dari package_info_plus
         appVersion: '${packageInfo.version}+${packageInfo.buildNumber}',
-        ipAddress: '192.168.50.1',
+        ipAddress: ip ?? 'Tidak terhubung ke WiFi',
         uptimeSeconds: math.Random().nextInt(10000) + 3600,
         tx: 1.5,
         rx: 5.8,
