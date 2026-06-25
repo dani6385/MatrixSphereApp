@@ -1,75 +1,121 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'dart:math' as math;
-import 'package:flutter/material.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart'; // Tambahkan ini
+import 'package:flutter/foundation.dart';
 
-/// Model untuk menampung informasi perangkat.
+/// Model untuk menampung semua informasi terkait perangkat.
 class DeviceInfo {
-  final String paket;
-  final String ipAddress;
-  final String macAddress;
-  double tx;
-  double rx;
   final String deviceModel;
-  final String firmwareVersion;
+  final String osVersion;
+  final String ipAddress;
+  final String appVersion;
   int uptimeSeconds;
-  final String serialNumber;
+  double tx; // Kecepatan Upload dalam Mbps
+  double rx; // Kecepatan Download dalam Mbps
 
   DeviceInfo({
-    required this.paket,
+    required this.deviceModel,
+    required this.osVersion,
     required this.ipAddress,
-    required this.macAddress,
+    required this.appVersion,
+    required this.uptimeSeconds,
     required this.tx,
     required this.rx,
-    required this.deviceModel,
-    required this.firmwareVersion,
-    required this.uptimeSeconds,
-    required this.serialNumber,
   });
 }
 
+
 class DeviceProvider with ChangeNotifier {
-  Timer? _statusTimer;
+  DeviceInfo? _deviceInfo;
+  bool _isLoading = true;
+  String? _errorMessage;
+  Timer? _updateTimer;
 
-  // Data awal perangkat, sekarang dikelola oleh Provider.
-  final DeviceInfo _deviceInfo = DeviceInfo(
-    paket: 'Premium Wi‑Fi 100Mbps',
-    ipAddress: '192.168.88.1', // <- Kita satukan IP Address di sini
-    macAddress: '00:0C:29:E4:12:F1',
-    tx: 2.4, // Mbps
-    rx: 8.7, // Mbps
-    deviceModel: 'Samsung Galaxy A22 5G',
-    firmwareVersion: '12.11',
-    uptimeSeconds: 263529, // 3 hari 1 jam 12 menit 9 detik
-    serialNumber: 'SN-MXS-202412345',
-  );
-
-  DeviceInfo get deviceInfo => _deviceInfo;
+  // Getters untuk mengakses state dari UI
+  DeviceInfo? get deviceInfo => _deviceInfo;
+  bool get isLoading => _isLoading;
+  String? get errorMessage => _errorMessage;
 
   DeviceProvider() {
-    _startDataSimulation();
+    // Saat provider diinisialisasi, langsung ambil data perangkat.
+    fetchDeviceInfo();
   }
 
-  void _startDataSimulation() {
-    _statusTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      // Perbarui uptime setiap detik
-      _deviceInfo.uptimeSeconds++;
+  /// Mengambil data awal perangkat dari sumber data (misal: API).
+  /// Di sini, kita simulasikan dengan delay.
+  Future<void> fetchDeviceInfo() async {
+    _isLoading = true;
+    notifyListeners();
 
-      // Simulasikan fluktuasi traffic
-      _deviceInfo.tx = math.max(
-          0.1, 2.5 + 1.5 * math.sin(DateTime.now().millisecondsSinceEpoch / 2000));
-      _deviceInfo.rx = math.max(
-          0.2, 9.0 + 5.0 * math.cos(DateTime.now().millisecondsSinceEpoch / 2500));
+    try {
+      // Gunakan package untuk mengambil info asli
+      final packageInfo = await PackageInfo.fromPlatform();
+      final deviceInfoPlugin = DeviceInfoPlugin();
+      String model = 'Unknown';
+      String version = 'Unknown';
 
-      // Beri tahu semua listener (widget) bahwa data telah berubah
+      if (kIsWeb) {
+        final webInfo = await deviceInfoPlugin.webBrowserInfo;
+        model = webInfo.browserName.name;
+        version = webInfo.appVersion ?? 'N/A';
+      } else if (Platform.isAndroid) {
+        final androidInfo = await deviceInfoPlugin.androidInfo;
+        model = '${androidInfo.manufacturer} ${androidInfo.model}';
+        version = 'Android ${androidInfo.version.release}';
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfoPlugin.iosInfo;
+        model = iosInfo.name;
+        version = 'iOS ${iosInfo.systemVersion}';
+      } else if (Platform.isWindows) {
+        final windowsInfo = await deviceInfoPlugin.windowsInfo;
+        model = 'Windows PC';
+        version = 'Build ${windowsInfo.buildNumber}';
+      }
+
+      // Gabungkan data asli dengan data simulasi (traffic, uptime)
+      _deviceInfo = DeviceInfo(
+        deviceModel: model,
+        osVersion: version,
+        // Menggunakan data dari package_info_plus
+        appVersion: '${packageInfo.version}+${packageInfo.buildNumber}',
+        ipAddress: '192.168.50.1',
+        uptimeSeconds: math.Random().nextInt(10000) + 3600,
+        tx: 1.5,
+        rx: 5.8,
+      );
+      _startPeriodicUpdates();
+    } catch (e) {
+      _errorMessage = "Gagal mengambil data perangkat.";
+    } finally {
+      _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  /// Memulai timer yang berjalan setiap detik untuk memperbarui data dinamis.
+  void _startPeriodicUpdates() {
+    _updateTimer?.cancel(); // Batalkan timer sebelumnya jika ada
+    _updateTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_deviceInfo != null) {
+        // Tambah uptime setiap detik
+        _deviceInfo!.uptimeSeconds++;
+
+        // Simulasikan fluktuasi traffic Tx dan Rx
+        _deviceInfo!.tx = (1.5 + math.sin(timer.tick * 0.2) * 1.2 + math.Random().nextDouble() * 0.5).clamp(0.1, 15.0);
+        _deviceInfo!.rx = (6.0 + math.cos(timer.tick * 0.15) * 5.5 + math.Random().nextDouble() * 2.0).clamp(0.2, 30.0);
+
+        // Beri tahu listener (UI) bahwa ada data baru
+        notifyListeners();
+      }
     });
   }
 
   @override
   void dispose() {
-    _statusTimer?.cancel();
+    // Hentikan timer saat provider tidak lagi digunakan untuk mencegah memory leak.
+    _updateTimer?.cancel();
     super.dispose();
   }
 }
-
-

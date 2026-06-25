@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:client_connectivity/main.dart'; // Impor ThemeProvider
+import '../main.dart'; // Impor ThemeProvider
+import '../providers/device_provider.dart'; // Menggunakan relative path yang benar
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,16 +30,13 @@ class _HomeScreenState extends State<HomeScreen>
   double _cpuUsage = 14.0;
   double _ramUsage = 482.0; // MB
   final double _ramMax = 1024.0; // MB
-  double _diskUsage = 24.8; // GB
+  final double _diskUsage = 24.8; // GB
   final double _diskMax = 64.0; // GB
   double _cpuTemp = 42.5; // °C
-  int _uptimeSeconds = 1312450; // Sekitar 15 hari
 
   // Traffic Stats
   List<FlSpot> _txSpots = []; // Upload
   List<FlSpot> _rxSpots = []; // Download
-  double _currentTx = 2.4; // Mbps
-  double _currentRx = 8.7; // Mbps
 
   // Log Terminal Stats
   List<Map<String, dynamic>> _logs = [];
@@ -131,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen>
     ];
 
     // Mulai generator data berkala
-    _startSimulatedData();
+    _startLocalSimulatedData();
   }
 
   @override
@@ -143,14 +141,15 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
-  void _startSimulatedData() {
+  // Timer ini sekarang hanya untuk data yang belum ada di provider (CPU, RAM, dll)
+  void _startLocalSimulatedData() {
+    final deviceProvider = Provider.of<DeviceProvider>(context, listen: false);
+
     _statTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) return;
       if (_isRebooting || !_isConnected) return;
-
       setState(() {
         _tickCount++;
-        _uptimeSeconds++;
 
         // Simulasikan Fluktuasi CPU (Base 8-30% dengan sesekali spike)
         double targetCpu =
@@ -179,26 +178,19 @@ class _HomeScreenState extends State<HomeScreen>
               .toStringAsFixed(1),
         );
 
-        // Simulasikan Trafik Jaringan (Mbps)
-        double newTx = 1.2 + 2.5 * (0.6 + 0.4 * math.sin(_tickCount * 0.25));
-        if (_tickCount % 10 == 0) newTx += 6.5; // upload burst
-        _currentTx = double.parse(math.max(0.1, newTx).toStringAsFixed(1));
-
-        double newRx = 4.5 + 8.0 * (0.5 + 0.5 * math.cos(_tickCount * 0.18));
-        if (_tickCount % 7 == 0) newRx += 15.2; // download burst
-        _currentRx = double.parse(math.max(0.2, newRx).toStringAsFixed(1));
-
+        // Data traffic (hanya untuk grafik, angka diambil dari provider)
+        final deviceInfo = deviceProvider.deviceInfo;
         // Geser data grafik ke kiri
         _txSpots.removeAt(0);
         _rxSpots.removeAt(0);
 
         for (int i = 0; i < _txSpots.length; i++) {
-          _txSpots[i] = FlSpot(i.toDouble(), _txSpots[i].y);
-          _rxSpots[i] = FlSpot(i.toDouble(), _rxSpots[i].y);
+          _txSpots[i] = FlSpot(i.toDouble(), _txSpots[i].y); // Keep old spots
+          _rxSpots[i] = FlSpot(i.toDouble(), _rxSpots[i].y); // Keep old spots
         }
 
-        _txSpots.add(FlSpot(14.0, _currentTx));
-        _rxSpots.add(FlSpot(14.0, _currentRx));
+        _txSpots.add(FlSpot(14.0, deviceInfo?.tx ?? 0.0));
+        _rxSpots.add(FlSpot(14.0, deviceInfo?.rx ?? 0.0));
 
         // Tambah log baru secara acak setiap beberapa detik
         if (_tickCount % 6 == 0 && !_isLogPaused) {
@@ -319,8 +311,6 @@ class _HomeScreenState extends State<HomeScreen>
           _connectionStatus = 'Connecting';
           _cpuUsage = 0.0;
           _ramUsage = 0.0;
-          _currentTx = 0.0;
-          _currentRx = 0.0;
         });
 
         // 2 detik kemudian terhubung
@@ -330,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen>
             _isRebooting = false;
             _isConnected = true;
             _connectionStatus = 'Connected';
-            _uptimeSeconds = 0; // Reset uptime karena reboot
+            // Uptime akan di-reset oleh provider
             _cpuUsage = 15.0;
             _ramUsage = 478.0;
 
@@ -398,8 +388,8 @@ class _HomeScreenState extends State<HomeScreen>
                       'WAN - Connected',
                       '1 Gbps',
                       true,
-                      _currentRx,
-                      _currentTx,
+                      Provider.of<DeviceProvider>(context, listen: false).deviceInfo?.rx ?? 0.0,
+                      Provider.of<DeviceProvider>(context, listen: false).deviceInfo?.tx ?? 0.0,
                       isDark,
                     ),
                     _buildInterfaceTile(
@@ -407,8 +397,8 @@ class _HomeScreenState extends State<HomeScreen>
                       'LAN - Local Bridge',
                       '1 Gbps',
                       true,
-                      _currentTx * 0.9,
-                      _currentRx * 0.9,
+                      (Provider.of<DeviceProvider>(context, listen: false).deviceInfo?.tx ?? 0.0) * 0.9,
+                      (Provider.of<DeviceProvider>(context, listen: false).deviceInfo?.rx ?? 0.0) * 0.9,
                       isDark,
                     ),
                     _buildInterfaceTile(
@@ -511,8 +501,8 @@ class _HomeScreenState extends State<HomeScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: isUp
-                      ? const Color(0xFF10B981).withValues(alpha: 0.2)
-                      : Colors.red.withValues(alpha: 0.2),
+                      ? const Color(0xFF10B981).withAlpha(51) // 0.2 * 255
+                      : Colors.red.withAlpha(51), // 0.2 * 255
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
@@ -1298,6 +1288,8 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final deviceProvider = Provider.of<DeviceProvider>(context);
+    final deviceInfo = deviceProvider.deviceInfo;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // Skema Warna Dashboard
@@ -1332,7 +1324,7 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                 ),
                 Text(
-                  'MikroTik RB4011iGS+ (v7.12)',
+                  deviceInfo != null ? '${deviceInfo.deviceModel} (v${deviceInfo.osVersion})' : 'Loading...',
                   style: GoogleFonts.roboto(
                     fontSize: 11,
                     color: Colors.white70,
@@ -1360,10 +1352,12 @@ class _HomeScreenState extends State<HomeScreen>
                     Color pulseColor = const Color(
                       0xFF10B981,
                     ); // Green connected
-                    if (_connectionStatus == 'Rebooting')
+                    if (_connectionStatus == 'Rebooting') {
                       pulseColor = Colors.red;
-                    if (_connectionStatus == 'Connecting')
+                    }
+                    if (_connectionStatus == 'Connecting') {
                       pulseColor = Colors.orange;
+                    }
 
                     return Container(
                       width: 8,
@@ -1373,9 +1367,7 @@ class _HomeScreenState extends State<HomeScreen>
                         color: pulseColor,
                         boxShadow: [
                           BoxShadow(
-                            color: pulseColor.withValues(
-                              alpha: 0.6 * _pulseController.value,
-                            ),
+                            color: pulseColor.withAlpha((_pulseController.value * 153).clamp(0, 255).toInt()),
                             blurRadius: 6.0 * _pulseController.value,
                             spreadRadius: 3.0 * _pulseController.value,
                           ),
@@ -1407,7 +1399,21 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       body: Stack(
         children: [
-          SingleChildScrollView(
+          // Tampilkan konten utama atau indikator loading
+          deviceProvider.isLoading
+              ? Center(
+                  child: CircularProgressIndicator(
+                    color: isDark ? Colors.white : Theme.of(context).primaryColor,
+                  ),
+                )
+              : deviceProvider.errorMessage != null
+                  ? Center(
+                      child: Text(
+                        'Error: ${deviceProvider.errorMessage}',
+                        style: TextStyle(color: textSecondary),
+                      ),
+                    )
+                  : SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -1415,7 +1421,7 @@ class _HomeScreenState extends State<HomeScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // --- TOP WELCOME / UPTIME CARD ---
-                  _buildUptimeCard(cardColor, textPrimary, textSecondary),
+                  _buildUptimeCard(deviceInfo!, cardColor, textPrimary, textSecondary),
                   const SizedBox(height: 16),
 
                   // --- SYSTEM HEALTH GRID (CPU, RAM, TEMP, STORAGE) ---
@@ -1434,6 +1440,7 @@ class _HomeScreenState extends State<HomeScreen>
                   // --- TRAFFIC MONITOR (GRAPH) ---
                   _buildTrafficCard(
                     cardColor,
+                    deviceInfo,
                     textPrimary,
                     textSecondary,
                     isDark,
@@ -1482,7 +1489,7 @@ class _HomeScreenState extends State<HomeScreen>
           // --- REBOOT OVERLAY ---
           if (_isRebooting)
             Container(
-              color: Colors.black.withValues(alpha: 0.85),
+              color: Colors.black.withAlpha(217), // 0.85 * 255
               width: double.infinity,
               height: double.infinity,
               child: Center(
@@ -1532,7 +1539,7 @@ class _HomeScreenState extends State<HomeScreen>
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.red.withValues(alpha: 0.2),
+                            color: Colors.red.withAlpha(51), // 0.2 * 255
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -1558,6 +1565,7 @@ class _HomeScreenState extends State<HomeScreen>
   // --- UI BUILDING BLOCKS ---
 
   Widget _buildUptimeCard(
+    DeviceInfo deviceInfo,
     Color cardColor,
     Color textPrimary,
     Color textSecondary,
@@ -1570,7 +1578,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withAlpha(3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -1584,7 +1592,7 @@ class _HomeScreenState extends State<HomeScreen>
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0EA5E9).withValues(alpha: 0.1),
+                  color: const Color(0xFF0EA5E9).withAlpha(26), // 0.1 * 255
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -1598,7 +1606,7 @@ class _HomeScreenState extends State<HomeScreen>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'IP Address: 192.168.88.1',
+                    'IP Address: ${deviceInfo.ipAddress}',
                     style: GoogleFonts.roboto(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -1629,7 +1637,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
               ),
               Text(
-                _formatUptime(_uptimeSeconds),
+                _formatUptime(deviceInfo.uptimeSeconds),
                 style: GoogleFonts.shareTechMono(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -1725,7 +1733,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: Colors.black.withAlpha(2),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -1761,7 +1769,7 @@ class _HomeScreenState extends State<HomeScreen>
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: percent,
-              backgroundColor: progressColor.withValues(alpha: 0.1),
+              backgroundColor: progressColor.withAlpha(26), // 0.1 * 255
               valueColor: AlwaysStoppedAnimation<Color>(progressColor),
               minHeight: 6,
             ),
@@ -1778,6 +1786,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildTrafficCard(
     Color cardColor,
+    DeviceInfo deviceInfo,
     Color textPrimary,
     Color textSecondary,
     bool isDark,
@@ -1790,7 +1799,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withAlpha(3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -1841,7 +1850,7 @@ class _HomeScreenState extends State<HomeScreen>
                 style: GoogleFonts.openSans(fontSize: 12, color: textSecondary),
               ),
               Text(
-                '${_currentTx.toStringAsFixed(1)} Mbps',
+                '${deviceInfo.tx.toStringAsFixed(1)} Mbps',
                 style: GoogleFonts.shareTechMono(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
@@ -1854,7 +1863,7 @@ class _HomeScreenState extends State<HomeScreen>
                 style: GoogleFonts.openSans(fontSize: 12, color: textSecondary),
               ),
               Text(
-                '${_currentRx.toStringAsFixed(1)} Mbps',
+                '${deviceInfo.rx.toStringAsFixed(1)} Mbps',
                 style: GoogleFonts.shareTechMono(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,
@@ -1955,8 +1964,8 @@ class _HomeScreenState extends State<HomeScreen>
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          const Color(0xFF0EA5E9).withValues(alpha: 0.15),
-                          const Color(0xFF2563EB).withValues(alpha: 0.0),
+                          const Color(0xFF0EA5E9).withAlpha(38), // 0.15 * 255
+                          const Color(0xFF2563EB).withAlpha(0),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -1976,8 +1985,8 @@ class _HomeScreenState extends State<HomeScreen>
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          const Color(0xFFF97316).withValues(alpha: 0.15),
-                          const Color(0xFFEA580C).withValues(alpha: 0.0),
+                          const Color(0xFFF97316).withAlpha(38), // 0.15 * 255
+                          const Color(0xFFEA580C).withAlpha(0),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -2079,7 +2088,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
+            color: Colors.black.withAlpha(2),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -2090,7 +2099,7 @@ class _HomeScreenState extends State<HomeScreen>
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: iconColor.withValues(alpha: 0.1),
+              color: iconColor.withAlpha(26), // 0.1 * 255
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: iconColor, size: 20),
@@ -2207,7 +2216,7 @@ class _HomeScreenState extends State<HomeScreen>
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black.withValues(alpha: 0.015)),
+            border: Border.all(color: Colors.black.withAlpha(15)),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -2216,7 +2225,7 @@ class _HomeScreenState extends State<HomeScreen>
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: activeColor.withValues(alpha: 0.15),
+                  color: activeColor.withAlpha(38), // 0.15 * 255
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: activeColor, size: 20),
@@ -2251,7 +2260,7 @@ class _HomeScreenState extends State<HomeScreen>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
+            color: Colors.black.withAlpha(3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -2402,7 +2411,7 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                               margin: const EdgeInsets.only(right: 6),
                               decoration: BoxDecoration(
-                                color: logColor.withValues(alpha: 0.15),
+                                color: logColor.withAlpha(38), // 0.15 * 255
                                 borderRadius: BorderRadius.circular(3),
                               ),
                               child: Text(

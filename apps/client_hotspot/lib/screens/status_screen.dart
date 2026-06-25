@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+
 class StatusScreen extends StatelessWidget {
   const StatusScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final deviceInfo = Provider.of<DeviceProvider>(context).deviceInfo;
+    final deviceProvider = Provider.of<DeviceProvider>(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
@@ -31,50 +32,61 @@ class StatusScreen extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
           child: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _buildHeader(isDark),
-                  const SizedBox(height: 24),
-                  // Tombol Top-up
-                  ElevatedButton(
-                    onPressed: () {
-                      // TODO: Implement top-up functionality
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isDark ? Colors.tealAccent : Colors.indigo,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-                    ),
-                    child: Text(
-                      'Top Up',
-                      style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Menampilkan data dari state
-                  _infoCard('Paket', deviceInfo.paket, isDark),
-                  _infoCard('IP Address', deviceInfo.ipAddress, isDark),
-                  _infoCard('MAC Address', deviceInfo.macAddress, isDark),
-                  _infoCard(
-                      'TX (Upload)',
-                      '${deviceInfo.tx.toStringAsFixed(1)} Mbps',
-                      isDark),
-                  _infoCard(
-                      'RX (Download)',
-                      '${deviceInfo.rx.toStringAsFixed(1)} Mbps',
-                      isDark),
-                  _infoCard('Device Model', deviceInfo.deviceModel, isDark),
-                  _infoCard('Firmware Version', deviceInfo.firmwareVersion, isDark),
-                  _infoCard('Uptime', _formatUptime(deviceInfo.uptimeSeconds), isDark),
-                  _infoCard('Serial Number', deviceInfo.serialNumber, isDark),
-                ],
-              ),
-            ),
+            // Tampilkan indikator loading atau pesan error jika perlu
+            child: deviceProvider.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : deviceProvider.errorMessage != null
+                    ? Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            'Error: ${deviceProvider.errorMessage}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      )
+                    : _buildStatusContent(context, deviceProvider.deviceInfo!, isDark),
           ),
         ),
+      ),
+    );
+  }
+
+  // Memisahkan konten utama ke dalam widget baru
+  Widget _buildStatusContent(BuildContext context, DeviceInfo deviceInfo, bool isDark) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildHeader(isDark),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: () {
+              // TODO: Implement top-up functionality
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isDark ? Colors.tealAccent : Colors.indigo,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+            child: Text(
+              'Top Up',
+              style: GoogleFonts.inter(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 16),
+          //_infoCard('Paket', deviceInfo.paket, isDark),
+          _infoCard('IP Address', deviceInfo.ipAddress, isDark),
+          //_infoCard('MAC Address', deviceInfo.macAddress, isDark),
+          _infoCard('TX (Upload)', '${deviceInfo.tx.toStringAsFixed(1)} Mbps', isDark),
+          _infoCard('RX (Download)', '${deviceInfo.rx.toStringAsFixed(1)} Mbps', isDark),
+          _infoCard('Device Model', deviceInfo.deviceModel, isDark),
+          _infoCard('OS Version', deviceInfo.osVersion, isDark),
+          _infoCard('Uptime', _formatUptime(deviceInfo.uptimeSeconds), isDark),
+          //_infoCard('Serial Number', deviceInfo.serialNumber, isDark),
+        ],
       ),
     );
   }
@@ -154,7 +166,7 @@ class StatusScreen extends StatelessWidget {
         return Icons.download;
       case 'Device Model':
         return Icons.devices;
-      case 'Firmware Version':
+      case 'OS Version':
         return Icons.system_update;
       case 'Uptime':
         return Icons.timer;

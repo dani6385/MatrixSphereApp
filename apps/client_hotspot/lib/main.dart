@@ -1,5 +1,5 @@
 import '/navigation_layout.dart';
-import 'package:client_connectivity/providers/device_provider.dart';
+import 'providers/device_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '/screens/akun_screen.dart';
 import '/screens/home_screen.dart';
@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
 
 // Konfigurasi GoRouter yang terpusat
 final _router = GoRouter(

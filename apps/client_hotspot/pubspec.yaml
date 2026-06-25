@@ -10,6 +10,9 @@ dependencies:
     sdk: flutter
   shared_services:
     path: ../../packages/shared_services
+  shared_ui:
+    path: ../../packages/shared_ui
+  http: ^1.2.1
   cupertino_icons: ^1.0.8
   google_fonts: ^8.1.0
   firebase_core: ^4.11.0
@@ -22,8 +25,12 @@ dependencies:
   go_router: ^17.3.0
   image_picker: ^1.2.2
   app_settings: ^7.0.0
-  shared_ui:
-    path: ../../packages/shared_ui
+  device_info_plus: ^11.1.0
+  network_info_plus: any
+  internet_connection_checker_plus: ^3.1.0
+  internet_speed_test: ^1.5.0
+  provider: ^6.1.5+1
+  package_info_plus: ^9.0.0
 
 flutter:
   uses-material-design: true

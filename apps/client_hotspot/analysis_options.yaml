@@ -9,7 +9,11 @@
 # packages, and plugins designed to encourage good coding practices.
 # Use the correct path for the flutter_lints package. Some setups expect
 # flutter_lints.yaml as the filename instead of flutter.yaml.
-#include: package:flutter_lints/flutter_lints.yaml
+analyzer:
+  errors:
+    prefer_final_fields: ignore
+    unnecessary_string_interpolations: ignore
+include: package:flutter_lints/flutter.yaml
 
 linter:
   # The lint rules applied to this project can be customized in the

@@ -5,8 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 class AkunScreen extends StatelessWidget {
   const AkunScreen({super.key});
 
-  // Mock user data – replace with real provider when available
-  final Map<String, String> _userInfo = const {
+  // Mock user data – declared as static const for efficiency.
+  static const Map<String, String> _userInfo = {
     'Nama': 'Budi Santoso',
     'Email': 'budi.santoso@example.com',
     'Telepon': '+62 812 3456 7890',
@@ -45,7 +45,7 @@ class AkunScreen extends StatelessWidget {
                 children: [
                   _profileHeader(isDark),
                   const SizedBox(height: 24),
-                  ..._userInfo.entries.map((e) => _infoTile(e.key, e.value, isDark)).toList(),
+                  ..._userInfo.entries.map((e) => _infoTile(e.key, e.value, isDark)),
                 ],
               ),
             ),
@@ -65,10 +65,10 @@ class AkunScreen extends StatelessWidget {
             backgroundColor: Colors.transparent,
           ),
           const SizedBox(height: 12),
-          Text(_userInfo['Nama'] ?? 'User',
+          Text(_userInfo['Nama'] ?? 'Nama Pengguna',
               style: GoogleFonts.oswald(fontSize: 26, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
           const SizedBox(height: 4),
-          Text(_userInfo['Email'] ?? '',
+          Text(_userInfo['Email'] ?? 'email@example.com',
               style: GoogleFonts.openSans(fontSize: 14, color: isDark ? Colors.white70 : Colors.black54)),
         ],
       ),
