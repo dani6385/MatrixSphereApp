@@ -1,6 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application
-        android:label="client_hotspot"
+    <!-- Izin yang diperlukan untuk konektivitas internet dan status jaringan -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- Izin untuk mengakses kamera (diperlukan untuk scan QR) -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Izin untuk menampilkan notifikasi (diperlukan untuk Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Izin untuk mengakses galeri/media (Image Picker) -->
+    <!-- Untuk Android 13 (API 33) dan yang lebih baru -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- Untuk Android 12 (API 32) dan yang lebih lama -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+     <application
+        android:label="CC Client Connectivity"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -57,7 +57,7 @@ class OfferBoardWidget extends StatelessWidget {
               return ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: provider.offers.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (context, index) {
                   final offer = provider.offers[index];
                   return _OfferCard(offer: offer);
