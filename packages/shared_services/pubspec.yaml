@@ -11,7 +11,7 @@ dependencies:
   flutter:           # <--- INI WAJIB ADA
     sdk: flutter     # <--- INI WAJIB ADA
   logger: ^2.4.0
-  
+  shared_ui:
   get_it: ^7.6.0
   shared_preferences: ^2.3.0
   routeros_api: ^0.1.4
