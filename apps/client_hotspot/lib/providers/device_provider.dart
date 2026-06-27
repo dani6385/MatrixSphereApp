@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:io' show Platform;
+//import 'dart:io' show Platform;
 import 'dart:math' as math;
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:package_info_plus/package_info_plus.dart'; // Tambahkan ini
-import 'package:network_info_plus/network_info_plus.dart';
+//import 'package:device_info_plus/device_info_plus.dart';
+//import 'package:package_info_plus/package_info_plus.dart'; // Tambahkan ini
+//import 'package:network_info_plus/network_info_plus.dart';
 import 'package:flutter/foundation.dart';
 
 /// Model untuk menampung semua informasi terkait perangkat.
@@ -12,6 +12,7 @@ class DeviceInfo {
   final String osVersion;
   final String ipAddress;
   final String appVersion;
+  final String serialNumber;
   int uptimeSeconds;
   double tx; // Kecepatan Upload dalam Mbps
   double rx; // Kecepatan Download dalam Mbps
@@ -24,9 +25,9 @@ class DeviceInfo {
     required this.uptimeSeconds,
     required this.tx,
     required this.rx,
+    required this.serialNumber,
   });
 }
-
 
 class DeviceProvider with ChangeNotifier {
   DeviceInfo? _deviceInfo;
@@ -52,7 +53,7 @@ class DeviceProvider with ChangeNotifier {
 
     try {
       // Gunakan package untuk mengambil info asli
-      final packageInfo = await PackageInfo.fromPlatform();
+      /*final packageInfo = await PackageInfo.fromPlatform();
       final deviceInfoPlugin = DeviceInfoPlugin();
       final networkInfo = NetworkInfo();
       String model = 'Unknown';
@@ -87,6 +88,18 @@ class DeviceProvider with ChangeNotifier {
         uptimeSeconds: math.Random().nextInt(10000) + 3600,
         tx: 1.5,
         rx: 5.8,
+        serialNumber: "R58R50XXXXM",
+      );
+      */
+      _deviceInfo = DeviceInfo(
+        deviceModel: "Samsung SM-A226B",
+        osVersion: "Android 13",
+        appVersion: "1.0.0+1",
+        ipAddress: "192.168.30.246",
+        uptimeSeconds: 13445, // Simulasi uptime
+        tx: 0.8, // Simulasi upload
+        rx: 5.4, // Simulasi download
+        serialNumber: "R58R50XXXXM",
       );
       _startPeriodicUpdates();
     } catch (e) {
@@ -106,8 +119,16 @@ class DeviceProvider with ChangeNotifier {
         _deviceInfo!.uptimeSeconds++;
 
         // Simulasikan fluktuasi traffic Tx dan Rx
-        _deviceInfo!.tx = (1.5 + math.sin(timer.tick * 0.2) * 1.2 + math.Random().nextDouble() * 0.5).clamp(0.1, 15.0);
-        _deviceInfo!.rx = (6.0 + math.cos(timer.tick * 0.15) * 5.5 + math.Random().nextDouble() * 2.0).clamp(0.2, 30.0);
+        _deviceInfo!.tx =
+            (1.5 +
+                    math.sin(timer.tick * 0.2) * 1.2 +
+                    math.Random().nextDouble() * 0.5)
+                .clamp(0.1, 15.0);
+        _deviceInfo!.rx =
+            (6.0 +
+                    math.cos(timer.tick * 0.15) * 5.5 +
+                    math.Random().nextDouble() * 2.0)
+                .clamp(0.2, 30.0);
 
         // Beri tahu listener (UI) bahwa ada data baru
         notifyListeners();

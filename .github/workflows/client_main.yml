@@ -76,6 +76,6 @@ jobs:
           tag_name: v1.0.${{ github.run_number }}
           name: Versi Baru - Build ${{ github.run_number }}
           body: "APK terbaru telah diunggah ke Firebase App Distribution dan tersedia di sini."
-          allowUpdates: true
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
