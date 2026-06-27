@@ -1,10 +1,18 @@
+import 'package:client_hotspot/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:client_hotspot/providers/offer_provider.dart';
 
-import '../../theme/app_theme.dart';
+import 'package:provider/provider.dart';
+import '../../providers/device_provider.dart';
+import '../../providers/session_provider.dart';
+import 'package:shared_ui/shared_ui.dart';
+import '../home_screen/widgets/device_info_widget.dart';
+import './widgets/voucher_redemption_dialog.dart';
 import './widgets/offer_board_widget.dart';
+
 import './widgets/quota_dial_widget.dart';
-import './widgets/session_info_widget.dart';
 import './widgets/speed_card_widget.dart';
 import './widgets/topup_button_widget.dart';
 
@@ -16,78 +24,112 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // Replace with [Riverpod/Bloc] for production state management
-  final _sessionData = _SessionData(
-    username: 'budi.santoso',
-    packageName: 'Paket Harian 1GB',
-    quotaUsedPercent: 62.5,
-    quotaUsedMB: 625,
-    quotaTotalMB: 1000,
-    uptime: '02:34:17',
-    sessionTime: '03:10:00',
-    downloadSpeed: 8.4,
-    uploadSpeed: 2.1,
-    ipAddress: '192.168.10.45',
-    macAddress: 'A4:C3:F0:8B:2D:1E',
-    ssid: 'HotspotKafe-01',
-    expiresAt: '27 Jun 2026, 23:59',
-  );
+  void _logout(BuildContext context) {
+    // Panggil provider untuk mereset state sesi
+    Provider.of<SessionProvider>(context, listen: false).logout();
+    // Arahkan pengguna kembali ke halaman login
+    context.go(AppRoutes.loginScreen);
+  }
 
+  void _showVoucherDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => const VoucherRedemptionDialog(),
+    );
+  }
+
+  /// Menangani aksi pull-to-refresh dengan memuat ulang data dari provider.
+  Future<void> _handleRefresh() async {
+    // Menggunakan context.read() untuk mendapatkan provider tanpa listen.
+    final sessionProvider = context.read<SessionProvider>();
+    final offerProvider = context.read<OfferProvider>();
+
+    // Menjalankan kedua future secara bersamaan dan menunggu keduanya selesai.
+    await Future.wait([
+      sessionProvider.fetchSessionInfo(),
+      offerProvider.fetchOffers(),
+    ]);
+  }
   @override
   Widget build(BuildContext context) {
     final isTablet = MediaQuery.of(context).size.width >= 600;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: _buildAppBar(context)),
-            SliverPadding(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 0,
-                bottom: bottomPadding + 80,
-              ),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const SizedBox(height: 8),
-                  QuotaDialWidget(
-                    usedPercent: _sessionData.quotaUsedPercent,
-                    usedMB: _sessionData.quotaUsedMB,
-                    totalMB: _sessionData.quotaTotalMB,
-                    packageName: _sessionData.packageName,
-                    expiresAt: _sessionData.expiresAt,
+    return Consumer2<DeviceProvider, SessionProvider>(
+      builder: (context, deviceProvider, sessionProvider, child) {
+        final deviceInfo = deviceProvider.deviceInfo;
+        final sessionInfo = sessionProvider.sessionInfo;
+
+        return Scaffold(
+          backgroundColor: AppTheme.backgroundLight,
+          body: RefreshIndicator(
+            onRefresh: _handleRefresh,
+            child: SafeArea(
+              bottom: false,
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(child: _buildAppBar(context, sessionInfo)),
+                  SliverPadding(
+                    padding: EdgeInsets.only(
+                      left: 16,
+                      right: 16,
+                      top: 0,
+                      bottom: bottomPadding + 80,
+                    ),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        if (sessionProvider.isLoading && sessionInfo == null) // Hanya tampilkan loading awal
+                          const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(32.0),
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        else if (sessionInfo != null) ...[
+                          const SizedBox(height: 8),
+                          QuotaDialWidget(
+                            usedPercent: sessionInfo.quotaUsedPercent,
+                            usedMB: sessionInfo.quotaUsedMB,
+                            totalMB: sessionInfo.quotaTotalMB,
+                            packageName: sessionInfo.packageName,
+                            expiresAt: sessionInfo.expiresAt,
+                          ),
+                        ],
+                        const SizedBox(height: 16),
+                        // Menggunakan data dari DeviceProvider
+                        SpeedCardWidget(
+                          downloadSpeed: deviceInfo?.rx ?? 0.0,
+                          uploadSpeed: deviceInfo?.tx ?? 0.0,
+                          isTablet: isTablet,
+                        ),
+                        const SizedBox(height: 16),
+                        // Membungkus tombol dengan GestureDetector untuk menambahkan aksi                      
+                        InkWell(
+                          onTap: _showVoucherDialog,
+                          borderRadius: BorderRadius.circular(12),
+                          child: IgnorePointer(
+                            child: TopupButtonWidget(
+                                username: sessionInfo?.username ?? '...'),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const OfferBoardWidget(),
+                        const SizedBox(height: 20),
+                        // Menampilkan DeviceInfoWidget yang sudah ada
+                        const DeviceInfoWidget(),
+                      ]),
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  SessionInfoWidget(
-                    uptime: _sessionData.uptime,
-                    sessionTime: _sessionData.sessionTime,
-                    isTablet: isTablet,
-                  ),
-                  const SizedBox(height: 16),
-                  SpeedCardWidget(
-                    downloadSpeed: _sessionData.downloadSpeed,
-                    uploadSpeed: _sessionData.uploadSpeed,
-                    isTablet: isTablet,
-                  ),
-                  const SizedBox(height: 16),
-                  TopupButtonWidget(username: _sessionData.username),
-                  const SizedBox(height: 20),
-                  OfferBoardWidget(),
-                ]),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, SessionInfo? sessionInfo) {
     final now = DateTime.now();
     final hour = now.hour;
     String greeting;
@@ -117,7 +159,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                _sessionData.username,
+                sessionInfo?.username ?? 'Memuat...',
                 style: GoogleFonts.dmSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -163,6 +205,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+          IconButton(
+            icon: const Icon(
+              Icons.logout_outlined,
+              color: Color(0xFF757575),
+            ),
+            onPressed: () => _logout(context),
+          ),
           const SizedBox(width: 8),
           Container(
             width: 40,
@@ -186,36 +235,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
-
-class _SessionData {
-  final String username;
-  final String packageName;
-  final double quotaUsedPercent;
-  final int quotaUsedMB;
-  final int quotaTotalMB;
-  final String uptime;
-  final String sessionTime;
-  final double downloadSpeed;
-  final double uploadSpeed;
-  final String ipAddress;
-  final String macAddress;
-  final String ssid;
-  final String expiresAt;
-
-  const _SessionData({
-    required this.username,
-    required this.packageName,
-    required this.quotaUsedPercent,
-    required this.quotaUsedMB,
-    required this.quotaTotalMB,
-    required this.uptime,
-    required this.sessionTime,
-    required this.downloadSpeed,
-    required this.uploadSpeed,
-    required this.ipAddress,
-    required this.macAddress,
-    required this.ssid,
-    required this.expiresAt,
-  });
 }

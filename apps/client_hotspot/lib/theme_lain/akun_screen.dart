@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class AkunScreen extends StatelessWidget {
   const AkunScreen({super.key});
@@ -28,9 +29,7 @@ class AkunScreen extends StatelessWidget {
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: isDark
-                ? [const Color(0xFF212121), const Color(0xFF424242)]
-                : [const Color(0xFFE3F2FD), const Color(0xFF90CAF9)],
+            colors: AppColors.color(isDark),
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -62,14 +61,14 @@ class AkunScreen extends StatelessWidget {
           CircleAvatar(
             radius: 60,
             backgroundImage: AssetImage('assets/profile_placeholder.png'),
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppColors.transparent,
           ),
           const SizedBox(height: 12),
           Text(_userInfo['Nama'] ?? 'Nama Pengguna',
-              style: GoogleFonts.oswald(fontSize: 26, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
+              style: GoogleFonts.oswald(fontSize: 26, fontWeight: FontWeight.bold, color: isDark ? Colors.white : AppColors.lightText,)),
           const SizedBox(height: 4),
           Text(_userInfo['Email'] ?? 'email@example.com',
-              style: GoogleFonts.openSans(fontSize: 14, color: isDark ? Colors.white70 : Colors.black54)),
+              style: GoogleFonts.openSans(fontSize: 14, color: isDark ? Colors.white : AppColors.lightText,)),
         ],
       ),
     );
@@ -77,7 +76,7 @@ class AkunScreen extends StatelessWidget {
 
   Widget _infoTile(String title, String value, bool isDark) {
     return Card(
-      color: isDark ? Colors.white10 : Colors.white,
+      color: isDark ? Colors.white : AppColors.lightText,
       margin: const EdgeInsets.symmetric(vertical: 8),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 4,

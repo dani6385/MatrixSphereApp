@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../theme/app_theme.dart';
+import 'package:shared_ui/shared_ui.dart';
 import './widgets/bayar_qr_tab_widget.dart';
 import './widgets/member_tab_widget.dart';
 import './widgets/scan_qr_tab_widget.dart';

@@ -12,12 +12,14 @@
       "version": "0.0.0",
       "dependencies": [
         "go_router",
+        "google_generative_ai",
         "image_picker",
         "internet_connection_checker_plus",
         "internet_speed_test",
         "network_info_plus",
         "permission_handler",
-        "provider"
+        "provider",
+        "shared_ui"
       ],
       "devDependencies": [
         "melos"
@@ -39,7 +41,9 @@
         "google_fonts",
         "network_info_plus",
         "package_info_plus",
+        "permission_handler",
         "provider",
+        "shared_services",
         "shared_ui",
         "sizer"
       ],
@@ -79,6 +83,7 @@
       "dependencies": [
         "cloud_firestore",
         "firebase_core",
+        "firebase_database",
         "flutter",
         "get_it",
         "logger",
@@ -183,6 +188,13 @@
       ]
     },
     {
+      "name": "google_generative_ai",
+      "version": "0.4.7",
+      "dependencies": [
+        "http"
+      ]
+    },
+    {
       "name": "go_router",
       "version": "17.3.0",
       "dependencies": [
@@ -191,6 +203,17 @@
         "flutter_web_plugins",
         "logging",
         "meta"
+      ]
+    },
+    {
+      "name": "firebase_database",
+      "version": "12.4.4",
+      "dependencies": [
+        "firebase_core",
+        "firebase_core_platform_interface",
+        "firebase_database_platform_interface",
+        "firebase_database_web",
+        "flutter"
       ]
     },
     {
@@ -739,6 +762,30 @@
       "name": "logging",
       "version": "1.3.0",
       "dependencies": []
+    },
+    {
+      "name": "firebase_database_web",
+      "version": "0.2.7+10",
+      "dependencies": [
+        "collection",
+        "firebase_core",
+        "firebase_core_web",
+        "firebase_database_platform_interface",
+        "flutter",
+        "flutter_web_plugins"
+      ]
+    },
+    {
+      "name": "firebase_database_platform_interface",
+      "version": "0.4.0+3",
+      "dependencies": [
+        "_flutterfire_internals",
+        "collection",
+        "firebase_core",
+        "flutter",
+        "meta",
+        "plugin_platform_interface"
+      ]
     },
     {
       "name": "firebase_core_platform_interface",

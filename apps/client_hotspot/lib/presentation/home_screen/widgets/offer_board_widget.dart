@@ -1,45 +1,12 @@
 import 'package:flutter/material.dart';
-
-import '../../../core/app_export.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_ui/shared_ui.dart';
+import '../../../providers/offer_provider.dart';
+import '../../../widgets/custom_image_widget.dart';
 
 class OfferBoardWidget extends StatelessWidget {
-  OfferBoardWidget({super.key});
-
-  final List<Map<String, dynamic>> _offers = [
-    {
-      'title': 'Paket Weekend Special',
-      'subtitle': 'Nikmati internet 3 hari + bonus 2 hari gratis',
-      'tag': 'PROMO',
-      'tagColor': AppTheme.secondary,
-      'imageUrl':
-          'https://images.unsplash.com/photo-1707757840354-7598d2224d3b',
-      'semanticLabel':
-          'Person using laptop in a bright cafe with coffee on table',
-      'bgColor': const Color(0xFFFFF3E0),
-    },
-    {
-      'title': 'Member Bulanan',
-      'subtitle': 'Akses tanpa batas 30 hari, kecepatan hingga 20 Mbps',
-      'tag': 'TERLARIS',
-      'tagColor': AppTheme.primary,
-      'imageUrl':
-          'https://img.rocket.new/generatedImages/rocket_gen_img_1bfc1f750-1782544013481.png',
-      'semanticLabel':
-          'Entrepreneur working on laptop with fast wifi connection',
-      'bgColor': const Color(0xFFE8F5E9),
-    },
-    {
-      'title': 'Voucher Pelajar',
-      'subtitle': 'Khusus pelajar & mahasiswa, hemat 30%',
-      'tag': 'DISKON',
-      'tagColor': const Color(0xFF6A1B9A),
-      'imageUrl':
-          'https://images.unsplash.com/photo-1625111382375-900a8741c425',
-      'semanticLabel':
-          'Students studying together with laptops in university library',
-      'bgColor': const Color(0xFFF3E5F5),
-    },
-  ];
+  const OfferBoardWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +39,30 @@ class OfferBoardWidget extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         SizedBox(
-          height: 160,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: _offers.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 12),
-            itemBuilder: (context, i) {
-              final offer = _offers[i];
-              return _OfferCard(offer: offer);
+          height: 160, // Tinggi kontainer untuk list
+          child: Consumer<OfferProvider>(
+            builder: (context, provider, child) {
+              if (provider.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (provider.errorMessage != null) {
+                return Center(child: Text(provider.errorMessage!));
+              }
+
+              if (provider.offers.isEmpty) {
+                return const Center(child: Text('Tidak ada penawaran saat ini.'));
+              }
+
+              return ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: provider.offers.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 12),
+                itemBuilder: (context, index) {
+                  final offer = provider.offers[index];
+                  return _OfferCard(offer: offer);
+                },
+              );
             },
           ),
         ),
@@ -90,7 +73,7 @@ class OfferBoardWidget extends StatelessWidget {
 }
 
 class _OfferCard extends StatelessWidget {
-  final Map<String, dynamic> offer;
+  final Offer offer;
 
   const _OfferCard({required this.offer});
 
@@ -99,7 +82,7 @@ class _OfferCard extends StatelessWidget {
     return Container(
       width: 240,
       decoration: BoxDecoration(
-        color: offer['bgColor'] as Color,
+        color: offer.bgColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -117,11 +100,11 @@ class _OfferCard extends StatelessWidget {
               right: -20,
               top: -10,
               child: CustomImageWidget(
-                imageUrl: offer['imageUrl'] as String,
+                imageUrl: offer.imageUrl,
                 width: 120,
                 height: 120,
                 fit: BoxFit.cover,
-                semanticLabel: offer['semanticLabel'] as String,
+                semanticLabel: offer.semanticLabel,
               ),
             ),
             Padding(
@@ -135,11 +118,11 @@ class _OfferCard extends StatelessWidget {
                       vertical: 3,
                     ),
                     decoration: BoxDecoration(
-                      color: offer['tagColor'] as Color,
+                      color: offer.tagColor,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      offer['tag'] as String,
+                      offer.tag,
                       style: GoogleFonts.dmSans(
                         fontSize: 10,
                         fontWeight: FontWeight.w700,
@@ -150,7 +133,7 @@ class _OfferCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    offer['title'] as String,
+                    offer.title,
                     style: GoogleFonts.dmSans(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
@@ -161,7 +144,7 @@ class _OfferCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    offer['subtitle'] as String,
+                    offer.subtitle,
                     style: GoogleFonts.dmSans(
                       fontSize: 11,
                       color: const Color(0xFF5C5C5C),

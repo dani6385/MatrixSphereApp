@@ -54,4 +54,25 @@ class FirestoreService {
       return null;
     }
   }
+
+  /// Mengambil semua dokumen dari koleksi 'offers'.
+  ///
+  /// Mengembalikan `List<QueryDocumentSnapshot>` yang berisi semua penawaran.
+  Future<List<QueryDocumentSnapshot>> getOffers() async {
+    try {
+      final querySnapshot = await _db.collection('offers').orderBy('order', descending: false).get();
+      developer.log('Successfully retrieved ${querySnapshot.docs.length} offers.', name: 'FirestoreService');
+      return querySnapshot.docs;
+    } catch (e, stackTrace) {
+      developer.log(
+        'Error getting offers from Firestore',
+        name: 'FirestoreService',
+        error: e,
+        stackTrace: stackTrace,
+        level: 1000, // SEVERE
+      );
+      // Lemparkan kembali error agar provider bisa menanganinya
+      rethrow;
+    }
+  }
 }

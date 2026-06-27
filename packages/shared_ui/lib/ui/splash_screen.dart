@@ -33,7 +33,8 @@ class _SplashScreenState extends State<SplashScreen> {
     // Small delay for splash experience
     await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
-      context.go('/home');
+      // Arahkan ke halaman login setelah splash screen
+      context.go('/login');
     }
   }
 

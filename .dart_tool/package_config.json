@@ -242,6 +242,24 @@
       "languageVersion": "3.6"
     },
     {
+      "name": "firebase_database",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_database-12.4.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "firebase_database_platform_interface",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_database_platform_interface-0.4.0+3",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "firebase_database_web",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_database_web-0.2.7+10",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
       "name": "fixnum",
       "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/fixnum-1.1.1",
       "packageUri": "lib/",
@@ -324,6 +342,12 @@
       "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/google_fonts-8.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.9"
+    },
+    {
+      "name": "google_generative_ai",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/google_generative_ai-0.4.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
     },
     {
       "name": "graphs",

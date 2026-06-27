@@ -1,9 +1,9 @@
 import 'dart:async';
-//import 'dart:io' show Platform;
+import 'dart:io' show Platform;
 import 'dart:math' as math;
-//import 'package:device_info_plus/device_info_plus.dart';
-//import 'package:package_info_plus/package_info_plus.dart'; // Tambahkan ini
-//import 'package:network_info_plus/network_info_plus.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:package_info_plus/package_info_plus.dart'; // Tambahkan ini
+import 'package:network_info_plus/network_info_plus.dart';
 import 'package:flutter/foundation.dart';
 
 /// Model untuk menampung semua informasi terkait perangkat.
@@ -52,54 +52,47 @@ class DeviceProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      // Gunakan package untuk mengambil info asli
-      /*final packageInfo = await PackageInfo.fromPlatform();
+      // Gunakan package untuk mengambil info asli      
+      final packageInfo = await PackageInfo.fromPlatform();
       final deviceInfoPlugin = DeviceInfoPlugin();
       final networkInfo = NetworkInfo();
       String model = 'Unknown';
       String version = 'Unknown';
+      String serial = 'Unknown';
       String? ip = await networkInfo.getWifiIP();
 
       if (kIsWeb) {
         final webInfo = await deviceInfoPlugin.webBrowserInfo;
         model = webInfo.browserName.name;
         version = webInfo.appVersion ?? 'N/A';
+        serial = 'N/A';
       } else if (Platform.isAndroid) {
         final androidInfo = await deviceInfoPlugin.androidInfo;
         model = '${androidInfo.manufacturer} ${androidInfo.model}';
         version = 'Android ${androidInfo.version.release}';
+        serial = androidInfo.id; // Menggunakan 'id' sebagai pengganti 'serialNumber'
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfoPlugin.iosInfo;
         model = iosInfo.name;
         version = 'iOS ${iosInfo.systemVersion}';
+        serial = iosInfo.identifierForVendor ?? 'N/A';
       } else if (Platform.isWindows) {
         final windowsInfo = await deviceInfoPlugin.windowsInfo;
         model = 'Windows PC';
         version = 'Build ${windowsInfo.buildNumber}';
+        serial = windowsInfo.computerName;
       }
 
       // Gabungkan data asli dengan data simulasi (traffic, uptime)
       _deviceInfo = DeviceInfo(
         deviceModel: model,
         osVersion: version,
-        // Menggunakan data dari package_info_plus
         appVersion: '${packageInfo.version}+${packageInfo.buildNumber}',
         ipAddress: ip ?? 'Tidak terhubung ke WiFi',
-        uptimeSeconds: math.Random().nextInt(10000) + 3600,
-        tx: 1.5,
-        rx: 5.8,
-        serialNumber: "R58R50XXXXM",
-      );
-      */
-      _deviceInfo = DeviceInfo(
-        deviceModel: "Samsung SM-A226B",
-        osVersion: "Android 13",
-        appVersion: "1.0.0+1",
-        ipAddress: "192.168.30.246",
         uptimeSeconds: 13445, // Simulasi uptime
         tx: 0.8, // Simulasi upload
         rx: 5.4, // Simulasi download
-        serialNumber: "R58R50XXXXM",
+        serialNumber: serial,
       );
       _startPeriodicUpdates();
     } catch (e) {

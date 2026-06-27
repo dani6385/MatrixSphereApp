@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../theme/app_theme.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class DeviceInfoWidget extends StatelessWidget {
   final String packageName;

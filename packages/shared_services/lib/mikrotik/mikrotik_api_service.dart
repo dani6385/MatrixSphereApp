@@ -10,8 +10,14 @@ class MikroTikApiService {
   final String _macAddress = "${(math.Random().nextInt(90) + 10).toRadixString(16).toUpperCase()}:${(math.Random().nextInt(90) + 10).toRadixString(16).toUpperCase()}:${(math.Random().nextInt(90) + 10).toRadixString(16).toUpperCase()}";
   final String _boardName = ["hEX S", "RB4011iGS+", "hAP ac²", "CCR1009-7G-1C-1S+"][math.Random().nextInt(4)];
   final String _version = "7.${math.Random().nextInt(5) + 12}.${math.Random().nextInt(3)}";
-  final String _paket = ["Basic 20Mbps", "Standard 50Mbps", "Premium 100Mbps"][math.Random().nextInt(3)];
   final String _serialNumber = "SN-MXS-${DateTime.now().year}${math.Random().nextInt(90000) + 10000}";
+  // Data simulasi untuk sesi pengguna
+  final String _username = 'budi.santoso';
+  final String _packageName = 'Paket Harian 1GB';
+  final double _quotaUsedPercent = 62.5;
+  final int _quotaUsedMB = 625;
+  final int _quotaTotalMB = 1000;
+  final String _expiresAt = '27 Jun 2026, 23:59';
 
   String _formatUptime(Duration d) {
     return "${d.inDays}d ${d.inHours % 24}h ${d.inMinutes % 60}m ${d.inSeconds % 60}s";
@@ -39,11 +45,47 @@ class MikroTikApiService {
       "version": _version, // Firmware version
       "board-name": _boardName, // Device Model
       // Data di bawah ini tidak ada di API asli, kita tambahkan untuk UI
-      "paket": _paket,
       "serial-number": _serialNumber,
+      // Data sesi pengguna
+      "username": _username,
+      "package-name": _packageName,
+      "quota-used-percent": _quotaUsedPercent,
+      "quota-used-mb": _quotaUsedMB,
+      "quota-total-mb": _quotaTotalMB,
+      "expires-at": _expiresAt,
       // Data traffic simulasi
       "simulated-tx": tx, // Upload in Mbps
       "simulated-rx": rx, // Download in Mbps
+    };
+  }
+
+  /// Mensimulasikan penggunaan voucher.
+  ///
+  /// Di dunia nyata, ini akan menjadi panggilan HTTP POST ke endpoint
+  /// seperti `/rest/ip/hotspot/user/profile/add` atau sejenisnya.
+  Future<Map<String, dynamic>> redeemVoucher(String voucherCode) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    if (voucherCode.toUpperCase().contains('INVALID')) {
+      throw Exception('Kode voucher tidak valid atau sudah digunakan.');
+    }
+
+    // Simulasi penambahan kuota 2GB
+    final newTotalMB = _quotaTotalMB + 2000;
+    final newQuotaUsedPercent = (_quotaUsedMB / newTotalMB) * 100;
+
+    // Mengembalikan data sesi yang diperbarui
+    return {
+      "username": _username,
+      "package-name": "Paket Voucher 2GB", // Nama paket bisa diubah
+      "quota-used-percent": newQuotaUsedPercent,
+      "quota-used-mb": _quotaUsedMB,
+      "quota-total-mb": newTotalMB,
+      "expires-at": "30 Jul 2026, 23:59", // Masa aktif diperpanjang
+      // ... sertakan data lain yang tidak berubah jika perlu
+      "serial-number": _serialNumber,
+      "board-name": _boardName,
+      "version": _version,
     };
   }
 

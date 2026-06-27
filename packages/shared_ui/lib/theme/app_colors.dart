@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Light Theme Colors
-  static const backgroundColor = Colors.transparent;
-  static Color color(bool isDark) =>
-      isDark ? const Color(0xFF1E293B) : Colors.white;
+  static const backgroundColor = Color.fromARGB(0, 122, 122, 122);
+  static List<Color> color(bool isDark) => isDark
+      ? [const Color(0xFF212121), const Color(0xFF424242)]
+      : [const Color(0xFFE3F2FD), const Color(0xFF90CAF9)];
+  static const transparent = Colors.transparent;
   static const lightBackground = Color(0xFFF8FAFC);
   static const lightCard = Colors.white;
   static const lightText = Color(0xFF1E293B);

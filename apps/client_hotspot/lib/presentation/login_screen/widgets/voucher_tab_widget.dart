@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../theme/app_theme.dart';
+import 'package:shared_ui/shared_ui.dart';
 import '../../../routes/app_routes.dart';
 
 class VoucherTabWidget extends StatefulWidget {

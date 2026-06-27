@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../../../providers/device_provider.dart';
 import '../../../routes/app_routes.dart';
 
 class TrialTabWidget extends StatefulWidget {
@@ -12,11 +14,23 @@ class TrialTabWidget extends StatefulWidget {
 
 class _TrialTabWidgetState extends State<TrialTabWidget> {
   bool _isLoading = false;
-  // Mock MAC address — in production, retrieve from device
-  // Replace with [Riverpod/Bloc] + actual MAC retrieval for production
-  final String _macAddress = 'A4:C3:F0:8B:2D:1E';
+  String _deviceIdentifier = 'Loading...';
+  String _trialUsername = 'Loading...';
 
-  String get _trialUsername => 'T-${_macAddress.replaceAll(':', '')}';
+  @override
+  void initState() {
+    super.initState();
+    // Menggunakan post-frame callback untuk mengakses provider setelah build pertama
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final deviceProvider = Provider.of<DeviceProvider>(context, listen: false);
+      final deviceInfo = deviceProvider.deviceInfo;
+      setState(() {
+        _deviceIdentifier = deviceInfo?.serialNumber ?? 'Tidak Tersedia';
+        // Membuat username trial dari serial number
+        _trialUsername = 'T-${_deviceIdentifier.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '')}';
+      });
+    });
+  }
 
   Future<void> _loginTrial() async {
     setState(() => _isLoading = true);
@@ -85,8 +99,8 @@ class _TrialTabWidgetState extends State<TrialTabWidget> {
             child: Column(
               children: [
                 _InfoRow(
-                  label: 'MAC Address',
-                  value: _macAddress,
+                  label: 'Device ID',
+                  value: _deviceIdentifier,
                   icon: Icons.devices_rounded,
                 ),
                 const Padding(

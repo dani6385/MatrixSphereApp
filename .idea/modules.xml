@@ -3,9 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
 <module fileurl="file://$PROJECT_DIR$/apps/admin_mikrotik/melos_admin_mikrotik.iml" filepath="$PROJECT_DIR$/apps/admin_mikrotik/melos_admin_mikrotik.iml"/>
-<module fileurl="file://$PROJECT_DIR$/apps/client_hotspot/melos_client_connectivity.iml" filepath="$PROJECT_DIR$/apps/client_hotspot/melos_client_connectivity.iml"/>
-<module fileurl="file://$PROJECT_DIR$/melos_matrix_sphere_app.iml" filepath="$PROJECT_DIR$/melos_matrix_sphere_app.iml"/>
 <module fileurl="file://$PROJECT_DIR$/apps/client_hotspot/melos_client_hotspot.iml" filepath="$PROJECT_DIR$/apps/client_hotspot/melos_client_hotspot.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/shared_services/melos_shared_services.iml" filepath="$PROJECT_DIR$/packages/shared_services/melos_shared_services.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/shared_ui/melos_shared_ui.iml" filepath="$PROJECT_DIR$/packages/shared_ui/melos_shared_ui.iml"/>
+<module fileurl="file://$PROJECT_DIR$/melos_matrix_sphere_app.iml" filepath="$PROJECT_DIR$/melos_matrix_sphere_app.iml"/>
+<module fileurl="file://$PROJECT_DIR$/apps/client_hotspot/melos_client_connectivity.iml" filepath="$PROJECT_DIR$/apps/client_hotspot/melos_client_connectivity.iml"/>
 <module fileurl="file://$PROJECT_DIR$/melos_matrix_sphere.iml" filepath="$PROJECT_DIR$/melos_matrix_sphere.iml"/>
 <module fileurl="file://$PROJECT_DIR$/melos_matrixsphereapp.iml" filepath="$PROJECT_DIR$/melos_matrixsphereapp.iml"/>
     </modules>
