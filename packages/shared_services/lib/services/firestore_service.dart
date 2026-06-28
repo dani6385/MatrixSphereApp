@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:developer' as developer;
+import 'package:logger/logger.dart';
+
 
 class FirestoreService {
   // Mendapatkan instance dari Cloud Firestore
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final Logger _logger = Logger(); // Buat satu instance untuk kelas ini
 
   /// Menambahkan atau memperbarui data pengguna di koleksi 'users'.
   ///
@@ -15,14 +17,12 @@ class FirestoreService {
       // Menggunakan .set(data) untuk menulis data. Jika dokumen sudah ada, ia akan diperbarui.
       // Jika belum ada, dokumen baru akan dibuat.
       await _db.collection('users').doc(userId).set(data, SetOptions(merge: true));
-      developer.log('User data saved successfully for $userId', name: 'FirestoreService');
+      _logger.i('User data saved successfully for $userId');
     } catch (e, stackTrace) {
-      developer.log(
+      _logger.e(
         'Error saving user data to Firestore',
-        name: 'FirestoreService',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // SEVERE
       );
       // Lemparkan kembali error agar UI bisa menanganinya jika perlu
       rethrow;
@@ -37,19 +37,17 @@ class FirestoreService {
     try {
       final doc = await _db.collection('users').doc(userId).get();
       if (doc.exists) {
-        developer.log('User data successfully retrieved for $userId', name: 'FirestoreService');
+        _logger.i('User data successfully retrieved for $userId');
         return doc;
       } else {
-        developer.log('User document not found for $userId', name: 'FirestoreService', level: 800); // INFO
+        _logger.w('User document not found for $userId');
         return null;
       }
     } catch (e, stackTrace) {
-      developer.log(
+      _logger.e(
         'Error getting user data from Firestore',
-        name: 'FirestoreService',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // SEVERE
       );
       return null;
     }
@@ -61,15 +59,13 @@ class FirestoreService {
   Future<List<QueryDocumentSnapshot>> getOffers() async {
     try {
       final querySnapshot = await _db.collection('offers').orderBy('order', descending: false).get();
-      developer.log('Successfully retrieved ${querySnapshot.docs.length} offers.', name: 'FirestoreService');
+      _logger.i('Successfully retrieved ${querySnapshot.docs.length} offers.');
       return querySnapshot.docs;
     } catch (e, stackTrace) {
-      developer.log(
+      _logger.e(
         'Error getting offers from Firestore',
-        name: 'FirestoreService',
         error: e,
         stackTrace: stackTrace,
-        level: 1000, // SEVERE
       );
       // Lemparkan kembali error agar provider bisa menanganinya
       rethrow;

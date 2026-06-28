@@ -1,8 +1,11 @@
 import 'package:client_hotspot/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_services/services/rtdb_service.dart';
+
+
+
 import 'package:sizer/sizer.dart';
 import 'package:shared_services/shared_services.dart';
 import '../widgets/custom_error_widget.dart';
@@ -11,8 +14,16 @@ import 'package:shared_ui/shared_ui.dart';
 import 'providers/offer_provider.dart';
 import 'providers/session_provider.dart';
 
+final logger = Logger();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 🚨 CRITICAL: Menangkap semua error Flutter dan mencatatnya dengan logger
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+    logger.e("Caught Flutter Error", error: details.exception, stackTrace: details.stack);
+  };
 
   bool hasShownError = false;
 
@@ -56,15 +67,15 @@ class MyApp extends StatelessWidget {
         // Provider yang bergantung pada provider lain (SessionProvider -> RtdbService)
         ChangeNotifierProxyProvider<RtdbService, SessionProvider>(
           create: (context) => SessionProvider(context.read<RtdbService>()),
-          update: (context, rtdbService, previousSessionProvider) =>
-              SessionProvider(rtdbService),
+          update: (context, rtdbService, previous) =>
+              previous ?? SessionProvider(rtdbService),
         ),
 
         // Provider untuk penawaran (OfferProvider -> FirestoreService)
         ChangeNotifierProxyProvider<FirestoreService, OfferProvider>(
           create: (context) => OfferProvider(context.read<FirestoreService>()),
-          update: (context, firestoreService, previousOfferProvider) =>
-              OfferProvider(firestoreService),
+          update: (context, firestoreService, previous) =>
+              previous ?? OfferProvider(firestoreService),
         ),
       ],
       child: Sizer(

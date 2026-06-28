@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:shared_services/services/rtdb_service.dart';
+import 'package:shared_services/shared_services.dart';
+import 'package:logger/logger.dart';
+
+final Logger logger = Logger();
 
 /// Model untuk menampung data sesi pengguna yang aktif.
 class SessionInfo {
@@ -71,9 +74,12 @@ class SessionProvider with ChangeNotifier {
       }
     } catch (e, stackTrace) {
       _errorMessage = "Gagal memuat data sesi dari RTDB.";
-      // Untuk debugging, Anda bisa print errornya
-      debugPrint('Error in fetchSessionInfo: $e');
-      debugPrint(stackTrace.toString());
+      // Menggunakan logger untuk output yang lebih baik
+      logger.e(
+        'Error in fetchSessionInfo',
+        error: e,
+        stackTrace: stackTrace,
+      );
     } finally {
       _isLoading = false;
       notifyListeners();

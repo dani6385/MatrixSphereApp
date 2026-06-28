@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
       offerProvider.fetchOffers(),
     ]);
   }
+
   @override
   Widget build(BuildContext context) {
     final isTablet = MediaQuery.of(context).size.width >= 600;
@@ -60,6 +61,29 @@ class _HomeScreenState extends State<HomeScreen> {
         final deviceInfo = deviceProvider.deviceInfo;
         final sessionInfo = sessionProvider.sessionInfo;
 
+        // 1. Loading State: Tampilkan loading indicator jika salah satu provider sedang memuat data awal.
+        // Pengecekan `sessionInfo == null` memastikan kita hanya menampilkan ini saat pemuatan pertama.
+        if ((sessionProvider.isLoading && sessionInfo == null) || (deviceProvider.isLoading && deviceInfo == null)) {
+          return const Scaffold(
+            backgroundColor: AppTheme.backgroundLight,
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        // 2. Error State: Jika pemuatan selesai tapi data sesi tidak ada, tampilkan pesan error.
+        // Ini menangani kasus di mana fetchSessionInfo() gagal.
+        if (sessionInfo == null) {
+          return Scaffold(
+            body: RefreshIndicator(
+              onRefresh: _handleRefresh,
+              child: const Center(
+                child: Text("Gagal memuat sesi. Tarik ke bawah untuk mencoba lagi."),
+              ),
+            ),
+          );
+        }
+
+        // 3. Success State: Data berhasil dimuat, tampilkan UI utama.
         return Scaffold(
           backgroundColor: AppTheme.backgroundLight,
           body: RefreshIndicator(
@@ -78,14 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     sliver: SliverList(
                       delegate: SliverChildListDelegate([
-                        if (sessionProvider.isLoading && sessionInfo == null) // Hanya tampilkan loading awal
-                          const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(32.0),
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
-                        else if (sessionInfo != null) ...[
                           const SizedBox(height: 8),
                           QuotaDialWidget(
                             usedPercent: sessionInfo.quotaUsedPercent,
@@ -94,7 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             packageName: sessionInfo.packageName,
                             expiresAt: sessionInfo.expiresAt,
                           ),
-                        ],
                         const SizedBox(height: 16),
                         // Menggunakan data dari DeviceProvider
                         SpeedCardWidget(
@@ -103,13 +118,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           isTablet: isTablet,
                         ),
                         const SizedBox(height: 16),
-                        // Membungkus tombol dengan GestureDetector untuk menambahkan aksi                      
+                        // Membungkus tombol dengan GestureDetector untuk menambahkan aksi
                         InkWell(
                           onTap: _showVoucherDialog,
                           borderRadius: BorderRadius.circular(12),
                           child: IgnorePointer(
                             child: TopupButtonWidget(
-                                username: sessionInfo?.username ?? '...'),
+                              username: sessionInfo.username,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -206,10 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           IconButton(
-            icon: const Icon(
-              Icons.logout_outlined,
-              color: Color(0xFF757575),
-            ),
+            icon: const Icon(Icons.logout_outlined, color: Color(0xFF757575)),
             onPressed: () => _logout(context),
           ),
           const SizedBox(width: 8),

@@ -40,6 +40,7 @@
         "fluttertoast",
         "go_router",
         "google_fonts",
+        "logger",
         "network_info_plus",
         "package_info_plus",
         "permission_handler",
