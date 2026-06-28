@@ -806,6 +806,12 @@
       "languageVersion": "3.10"
     },
     {
+      "name": "slide_to_act",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/slide_to_act-2.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "source_span",
       "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/source_span-1.10.2",
       "packageUri": "lib/",

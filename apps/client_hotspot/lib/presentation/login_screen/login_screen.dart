@@ -1,235 +1,183 @@
+import 'widgets/member_tab_widget.dart';
+import '../../routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import 'package:shared_ui/shared_ui.dart';
-import './widgets/bayar_qr_tab_widget.dart';
-import './widgets/member_tab_widget.dart';
-import './widgets/scan_qr_tab_widget.dart';
-import './widgets/trial_tab_widget.dart';
-import './widgets/voucher_tab_widget.dart';
+import 'package:slide_to_act/slide_to_act.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
-  // Replace with [Riverpod/Bloc] for production auth state management
-  int _selectedTab = 0;
-
-  final List<_LoginMethod> _methods = const [
-    _LoginMethod(label: 'Voucher', icon: Icons.confirmation_number_outlined),
-    _LoginMethod(label: 'Member', icon: Icons.person_outline_rounded),
-    _LoginMethod(label: 'Scan QR', icon: Icons.qr_code_scanner_rounded),
-    _LoginMethod(label: 'Bayar QR', icon: Icons.qr_code_2_rounded),
-    _LoginMethod(label: 'Trial', icon: Icons.timer_outlined),
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: _methods.length, vsync: this);
-    _tabController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        setState(() => _selectedTab = _tabController.index);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  // Helper untuk menampilkan popup (modal bottom sheet)
+  void _showPopup(BuildContext context, {required String title, required Widget child}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.8,
+          minChildSize: 0.5,
+          maxChildSize: 0.9,
+          builder: (_, controller) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              child: Column(
+                children: [
+                  // Handle
+                  Container(
+                    width: 40,
+                    height: 5,
+                    margin: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  // Title
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      title,
+                      style: GoogleFonts.dmSans(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  // Content
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: controller,
+                      child: child,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-    final isTablet = size.width >= 600;
-
     return Scaffold(
       backgroundColor: AppTheme.backgroundLight,
       body: SafeArea(
-        child: isTablet ? _buildTabletLayout(theme) : _buildPhoneLayout(theme),
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              // Logo atau Judul
+              Text(
+                'Selamat Datang',
+                style: GoogleFonts.dmSans(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primary,
+                ),
+              ),
+              Text(
+                'Pilih metode login Anda',
+                style: GoogleFonts.dmSans(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 40),
+
+              // Grid 2x2 untuk tombol
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.2,
+                children: [
+                  _LoginMenuButton(
+                    icon: Icons.confirmation_number_outlined,
+                    label: 'Vouchers',
+                    onTap: () => _showPopup(context, title: 'Gunakan Voucher', child: const Center(child: Text('UI Voucher di sini'))),
+                  ),
+                  _LoginMenuButton(
+                    icon: Icons.person_outline,
+                    label: 'Member',
+                    onTap: () => _showPopup(context, title: 'Login Member', child: const MemberTabWidget()),
+                  ),
+                  _LoginMenuButton(
+                    icon: Icons.qr_code_scanner_rounded,
+                    label: 'Scan QR',
+                    onTap: () => _showPopup(context, title: 'Scan QR Code', child: const Center(child: Text('UI Scan QR di sini'))),
+                  ),
+                  _LoginMenuButton(
+                    icon: Icons.qr_code_2_rounded,
+                    label: 'Bayar QR',
+                    onTap: () => _showPopup(context, title: 'Pembayaran QRIS', child: const Center(child: Text('UI Pembayaran QRIS di sini'))),
+                  ),
+                ],
+              ),
+              const Spacer(),
+
+              // Slider untuk Trial
+              SlideAction(
+                text: 'Geser untuk coba gratis',
+                textStyle: GoogleFonts.dmSans(color: Colors.white, fontWeight: FontWeight.w600),
+                outerColor: AppTheme.primary,
+                innerColor: Colors.white,
+                sliderButtonIcon: const Icon(Icons.wifi, color: AppTheme.primary),
+                onSubmit: () {
+                  // Aksi setelah slider selesai digeser
+                  // Kita bisa langsung navigasi atau tampilkan popup konfirmasi
+                  context.go(AppRoutes.homeScreen);
+                  return null; // Return null untuk animasi default
+                },
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        ),
       ),
     );
   }
+}
 
-  Widget _buildPhoneLayout(ThemeData theme) {
-    return Column(
-      children: [
-        _buildHeader(theme),
-        Expanded(child: _buildLoginCard(theme)),
-      ],
-    );
-  }
+// Widget kustom untuk tombol menu agar tidak duplikat kode
+class _LoginMenuButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
 
-  Widget _buildTabletLayout(ThemeData theme) {
-    return Center(
-      child: SizedBox(
-        width: 480,
+  const _LoginMenuButton({required this.icon, required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(color: Colors.grey.withAlpha(1), blurRadius: 10, offset: const Offset(0, 5)),
+          ],
+        ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            _buildHeader(theme),
-            Expanded(child: _buildLoginCard(theme)),
+            Icon(icon, size: 40, color: AppTheme.primary),
+            const SizedBox(height: 8),
+            Text(label, style: GoogleFonts.dmSans(fontWeight: FontWeight.bold, fontSize: 16)),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildHeader(ThemeData theme) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
-      child: Column(
-        children: [
-          Container(
-            width: 64,
-            height: 64,
-            decoration: BoxDecoration(
-              color: AppTheme.primary,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.primary.withAlpha(77),
-                  blurRadius: 16,
-                  offset: const Offset(0, 6),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.wifi_rounded,
-              color: Colors.white,
-              size: 34,
-            ),
-          ),
-          const SizedBox(height: 14),
-          Text(
-            'MikroLogin',
-            style: GoogleFonts.dmSans(
-              fontSize: 26,
-              fontWeight: FontWeight.w700,
-              color: const Color(0xFF1A1A1A),
-              letterSpacing: -0.5,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Pilih metode login untuk melanjutkan',
-            style: GoogleFonts.dmSans(
-              fontSize: 13,
-              fontWeight: FontWeight.w400,
-              color: const Color(0xFF757575),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLoginCard(ThemeData theme) {
-    return Container(
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(15),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          _buildMethodTabs(theme),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                VoucherTabWidget(),
-                MemberTabWidget(),
-                ScanQrTabWidget(),
-                BayarQrTabWidget(),
-                TrialTabWidget(),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMethodTabs(ThemeData theme) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: List.generate(_methods.length, (i) {
-          final isSelected = _selectedTab == i;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: InkWell(
-              onTap: () {
-                setState(() => _selectedTab = i);
-                _tabController.animateTo(i);
-              },
-              borderRadius: BorderRadius.circular(24),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 220),
-                curve: Curves.easeOutCubic,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? AppTheme.primary
-                      : const Color(0xFFF5F5F5),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      _methods[i].icon,
-                      size: 16,
-                      color: isSelected
-                          ? Colors.white
-                          : const Color(0xFF757575),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      _methods[i].label,
-                      style: GoogleFonts.dmSans(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: isSelected
-                            ? Colors.white
-                            : const Color(0xFF757575),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-}
-
-class _LoginMethod {
-  final String label;
-  final IconData icon;
-  const _LoginMethod({required this.label, required this.icon});
 }
