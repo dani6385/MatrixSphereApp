@@ -41,6 +41,7 @@
         "go_router",
         "google_fonts",
         "logger",
+        "mobile_scanner",
         "network_info_plus",
         "package_info_plus",
         "permission_handler",
@@ -1537,6 +1538,16 @@
         "collection",
         "meta",
         "pub_semver"
+      ]
+    },
+    {
+      "name": "mobile_scanner",
+      "version": "5.2.3",
+      "dependencies": [
+        "flutter",
+        "flutter_web_plugins",
+        "plugin_platform_interface",
+        "web"
       ]
     }
   ],

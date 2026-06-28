@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../../routes/app_routes.dart';
 
 class ScanQrTabWidget extends StatefulWidget {
@@ -12,42 +14,43 @@ class ScanQrTabWidget extends StatefulWidget {
 }
 
 class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _scanLineController;
-  bool _isScanning = false;
+    {
+  final MobileScannerController _cameraController = MobileScannerController(
+    detectionSpeed: DetectionSpeed.normal,
+    facing: CameraFacing.back,
+  );
   bool _isLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _scanLineController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
-  }
+  bool _isCameraStarted = false;
 
   @override
   void dispose() {
-    _scanLineController.dispose();
+    _cameraController.dispose();
     super.dispose();
   }
 
-  Future<void> _simulateScan() async {
+  void _startCamera() {
     setState(() {
-      _isScanning = true;
-      _isLoading = false;
+      _isCameraStarted = true;
     });
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      setState(() {
-        _isScanning = false;
-        _isLoading = true;
-      });
-      await Future.delayed(const Duration(milliseconds: 800));
-      if (mounted) {
-        context.go(AppRoutes.homeScreen);
-      }
+  }
+
+  Future<void> _onDetect(BarcodeCapture capture) async {
+    if (_isLoading) return; // Mencegah deteksi berulang saat sedang proses
+
+    final String? code = capture.barcodes.first.rawValue;
+
+    if (code == null) {
+      Fluttertoast.showToast(msg: "QR Code tidak valid.");
+      return;
     }
+
+    setState(() => _isLoading = true);
+    _cameraController.stop(); // Hentikan kamera setelah kode terdeteksi
+
+    // Di sini Anda akan memproses 'code' (misalnya, validasi ke server)
+    // Untuk sekarang, kita simulasi proses dan langsung login
+    await Future.delayed(const Duration(milliseconds: 800));
+    if (mounted) context.go(AppRoutes.homeScreen);
   }
 
   @override
@@ -66,125 +69,53 @@ class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
           ),
           const SizedBox(height: 20),
           // QR Viewfinder mockup
-          Container(
+          SizedBox(
             width: 220,
             height: 220,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF5F5F5),
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: _isScanning ? AppTheme.primary : const Color(0xFFDDDDDD),
-                width: 2,
-              ),
-            ),
-            child: Stack(
-              children: [
-                // Corner markers
-                ..._buildCorners(),
-                if (_isScanning)
-                  AnimatedBuilder(
-                    animation: _scanLineController,
-                    builder: (context, _) {
-                      return Positioned(
-                        top: 20 + (_scanLineController.value * 160),
-                        left: 20,
-                        right: 20,
-                        child: Container(
-                          height: 2,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.transparent,
-                                AppTheme.primary,
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
+              child: _isCameraStarted
+                  ? Stack(
+                      children: [
+                        MobileScanner(
+                          controller: _cameraController,
+                          onDetect: _onDetect,
                         ),
-                      );
-                    },
-                  ),
-                Center(
-                  child: _isScanning
-                      ? Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.qr_code_scanner_rounded,
-                              size: 48,
-                              color: Color(0xFF00897B),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Memindai...',
-                              style: GoogleFonts.dmSans(
-                                fontSize: 13,
-                                color: AppTheme.primary,
-                              ),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.qr_code_2_rounded,
-                              size: 64,
-                              color: const Color(0xFF9E9E9E).withAlpha(128),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Tekan tombol untuk\nmulai scan',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.dmSans(
-                                fontSize: 12,
-                                color: const Color(0xFF9E9E9E),
-                              ),
-                            ),
-                          ],
-                        ),
-                ),
-              ],
+                        _buildScannerOverlay(),
+                      ],
+                    )
+                  : _buildCameraPlaceholder(),
             ),
           ),
           const SizedBox(height: 24),
           SizedBox(
             width: double.infinity,
             height: 50,
-            child: FilledButton.icon(
-              onPressed: (_isScanning || _isLoading) ? null : _simulateScan,
-              style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.primary,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              icon: _isLoading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2.5,
-                      ),
-                    )
-                  : const Icon(
-                      Icons.qr_code_scanner_rounded,
-                      color: Colors.white,
+            child: _isCameraStarted
+                ? FilledButton.icon(
+                    onPressed: _isLoading ? null : () => _cameraController.stop(),
+                    style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
+                    icon: const Icon(Icons.stop_circle_outlined, color: Colors.white),
+                    label: Text('Hentikan Scan', style: GoogleFonts.dmSans(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white)),
+                  )
+                : FilledButton.icon(
+                    onPressed: _isLoading ? null : _startCamera,
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
-              label: Text(
-                _isScanning
-                    ? 'Memindai QR...'
-                    : _isLoading
-                    ? 'Memproses...'
-                    : 'Buka Kamera & Scan',
-                style: GoogleFonts.dmSans(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
-              ),
-            ),
+                    icon: _isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+                          )
+                        : const Icon(Icons.qr_code_scanner_rounded, color: Colors.white),
+                    label: Text(
+                      _isLoading ? 'Memproses...' : 'Buka Kamera & Scan',
+                      style: GoogleFonts.dmSans(fontSize: 15, fontWeight: FontWeight.w600, color: Colors.white),
+                    ),
+                  ),
           ),
           const SizedBox(height: 12),
           Text(
@@ -200,71 +131,103 @@ class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
     );
   }
 
-  List<Widget> _buildCorners() {
-    const color = AppTheme.primary;
-    const size = 20.0;
-    const thickness = 3.0;
-    return [
-      // Top-left
-      Positioned(
-        top: 12,
-        left: 12,
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: color, width: thickness),
-              left: BorderSide(color: color, width: thickness),
+  Widget _buildCameraPlaceholder() {
+    return Container(
+      color: const Color(0xFFF5F5F5),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.qr_code_2_rounded,
+              size: 64,
+              color: const Color(0xFF9E9E9E).withAlpha(128),
             ),
-          ),
+            const SizedBox(height: 8),
+            Text(
+              'Tekan tombol untuk\nmulai scan',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.dmSans(
+                fontSize: 12,
+                color: const Color(0xFF9E9E9E),
+              ),
+            ),
+          ],
         ),
       ),
-      // Top-right
-      Positioned(
-        top: 12,
-        right: 12,
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: color, width: thickness),
-              right: BorderSide(color: color, width: thickness),
-            ),
-          ),
-        ),
-      ),
-      // Bottom-left
-      Positioned(
-        bottom: 12,
-        left: 12,
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: color, width: thickness),
-              left: BorderSide(color: color, width: thickness),
-            ),
-          ),
-        ),
-      ),
-      // Bottom-right
-      Positioned(
-        bottom: 12,
-        right: 12,
-        child: Container(
-          width: size,
-          height: size,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(color: color, width: thickness),
-              right: BorderSide(color: color, width: thickness),
-            ),
-          ),
-        ),
-      ),
-    ];
+    );
   }
+
+  Widget _buildScannerOverlay() {
+    return Container(
+      decoration: ShapeDecoration(
+        shape: QrScannerOverlayShape(
+          borderColor: AppTheme.primary,
+          borderRadius: 12,
+          borderLength: 24,
+          borderWidth: 6,
+          cutOutSize: 200,
+        ),
+      ),
+    );
+  }
+}
+
+/// Helper class untuk menggambar overlay pada scanner.
+/// Anda bisa memindahkan ini ke file terpisah jika diinginkan.
+class QrScannerOverlayShape extends ShapeBorder {
+  final Color borderColor;
+  final double borderWidth;
+  final double overlayColor;
+  final double borderRadius;
+  final double borderLength;
+  final double cutOutSize;
+
+  const QrScannerOverlayShape({
+    this.borderColor = Colors.white,
+    this.borderWidth = 3.0,
+    this.overlayColor = 0.8,
+    this.borderRadius = 0,
+    this.borderLength = 40,
+    this.cutOutSize = 250,
+  });
+
+  @override
+  EdgeInsetsGeometry get dimensions => const EdgeInsets.all(10);
+
+  @override
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
+    return Path()
+      ..fillType = PathFillType.evenOdd
+      ..addPath(getOuterPath(rect), Offset.zero);
+  }
+
+  @override
+  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
+    Path getLeftTopPath(Rect rect) {
+      return Path()
+        ..moveTo(rect.left, rect.top + borderLength)
+        ..lineTo(rect.left, rect.top)
+        ..lineTo(rect.left + borderLength, rect.top);
+    }
+
+    return getLeftTopPath(rect)
+      ..lineTo(
+          rect.right - borderLength, rect.top)
+      ..lineTo(rect.right, rect.top)
+      ..lineTo(rect.right, rect.top + borderLength)
+      ..lineTo(rect.right, rect.bottom - borderLength)
+      ..lineTo(rect.right, rect.bottom)
+      ..lineTo(rect.right - borderLength, rect.bottom)
+      ..lineTo(rect.left + borderLength, rect.bottom)
+      ..lineTo(rect.left, rect.bottom)
+      ..lineTo(rect.left, rect.bottom - borderLength)
+      ..lineTo(rect.left, rect.top + borderLength);
+  }
+
+  @override
+  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
+
+  @override
+  ShapeBorder scale(double t) => this;
 }

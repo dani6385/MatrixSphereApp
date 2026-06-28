@@ -14,7 +14,7 @@ class SessionInfo {
   final int quotaTotalMB;
   final String expiresAt;
 
-  SessionInfo({
+  const SessionInfo({
     required this.username,
     required this.packageName,
     required this.quotaUsedPercent,

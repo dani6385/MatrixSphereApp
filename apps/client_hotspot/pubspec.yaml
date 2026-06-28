@@ -52,6 +52,7 @@ dependencies:
   shared_services: ^1.0.0
   cloud_firestore: ^6.6.0
   logger: ^2.7.0
+  mobile_scanner: ^5.1.1
 
 dev_dependencies:
   flutter_test:
@@ -104,4 +105,4 @@ flutter:
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package
+  # see https://flutter.dev/to/f
