@@ -6,6 +6,10 @@ class AppColors {
   static List<Color> color(bool isDark) => isDark
       ? [const Color(0xFF212121), const Color(0xFF424242)]
       : [const Color(0xFFE3F2FD), const Color(0xFF90CAF9)];
+  static List<Color> selectionColors(bool isSelected) => isSelected
+      ? [const Color(0xFF00897B), const Color(0xFF424242)]
+      : [const Color(0xFFE3F2FD), const Color(0xFF90CAF9)];
+  
   static const transparent = Colors.transparent;
   static const lightBackground = Color(0xFFF8FAFC);
   static const lightCard = Colors.white;
@@ -16,7 +20,7 @@ class AppColors {
   static const darkCard = Color(0xFF1E293B);
   static const darkText = Colors.white;
 
-  static const primary = Color(0xFF4F46E5);
+  static const primary = Color(0xFF00897B);
   static const progressSpeed = Colors.tealAccent;
   static const progressPull = Colors.purpleAccent;
   static const boxShadow = Color.fromARGB(5, 0, 0, 0);
