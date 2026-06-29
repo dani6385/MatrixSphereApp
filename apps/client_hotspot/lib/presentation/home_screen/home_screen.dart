@@ -1,5 +1,6 @@
 import 'package:client_hotspot/routes/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:client_hotspot/providers/offer_provider.dart';
@@ -24,6 +25,30 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Meminta izin yang diperlukan saat layar pertama kali dimuat.
+    // Menggunakan WidgetsBinding untuk memastikan context sudah siap.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _requestPermissionsAndFetchData();
+    });
+  }
+
+  /// Meminta izin lokasi dan kemudian memicu pengambilan data.
+  Future<void> _requestPermissionsAndFetchData() async {
+    final status = await Permission.location.request();
+    if (status.isGranted) {
+      // Jika izin diberikan, panggil provider untuk mengambil data.
+      // context.read() aman digunakan di sini.
+      context.read<DeviceProvider>().fetchDeviceInfo();
+    } else {
+      // Opsional: Tampilkan pesan kepada pengguna bahwa izin diperlukan
+      // untuk fungsionalitas penuh.
+      // Misalnya, menggunakan ScaffoldMessenger.
+    }
+  }
+
   void _logout(BuildContext context) {
     // Panggil provider untuk mereset state sesi
     Provider.of<SessionProvider>(context, listen: false).logout();
@@ -42,12 +67,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _handleRefresh() async {
     // Menggunakan context.read() untuk mendapatkan provider tanpa listen.
     final sessionProvider = context.read<SessionProvider>();
+    final deviceProvider = context.read<DeviceProvider>();
     final offerProvider = context.read<OfferProvider>();
 
     // Menjalankan kedua future secara bersamaan dan menunggu keduanya selesai.
     await Future.wait([
       sessionProvider.fetchSessionInfo(),
       offerProvider.fetchOffers(),
+      deviceProvider.fetchDeviceInfo(), // Tambahkan fetch device info ke refresh
     ]);
   }
 

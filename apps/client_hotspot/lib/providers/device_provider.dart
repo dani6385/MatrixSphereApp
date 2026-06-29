@@ -41,13 +41,14 @@ class DeviceProvider with ChangeNotifier {
   String? get errorMessage => _errorMessage;
 
   DeviceProvider() {
-    // Saat provider diinisialisasi, langsung ambil data perangkat.
-    fetchDeviceInfo();
+    // Data tidak lagi diambil secara otomatis di konstruktor.
+    // fetchDeviceInfo() akan dipanggil dari UI setelah izin didapatkan.
   }
 
   /// Mengambil data awal perangkat dari sumber data (misal: API).
   /// Di sini, kita simulasikan dengan delay.
   Future<void> fetchDeviceInfo() async {
+    if (_isLoading) return; // Mencegah fetch berulang jika sedang loading
     _isLoading = true;
     notifyListeners();
 
