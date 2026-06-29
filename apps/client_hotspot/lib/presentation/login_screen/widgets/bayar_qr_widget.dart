@@ -5,14 +5,14 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../routes/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class BayarQrTabWidget extends StatefulWidget {
-  const BayarQrTabWidget({super.key});
+class BayarQrWidget extends StatefulWidget {
+  const BayarQrWidget({super.key});
 
   @override
-  State<BayarQrTabWidget> createState() => _BayarQrTabWidgetState();
+  State<BayarQrWidget> createState() => _BayarQrWidgetState();
 }
 
-class _BayarQrTabWidgetState extends State<BayarQrTabWidget> {
+class _BayarQrWidgetState extends State<BayarQrWidget> {
   String _selectedPackage = '1 Jam - Rp 3.000';
   bool _isWaiting = false;
 

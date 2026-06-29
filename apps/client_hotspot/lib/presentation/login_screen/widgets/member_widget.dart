@@ -4,14 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../../../routes/app_routes.dart';
 
-class MemberTabWidget extends StatefulWidget {
-  const MemberTabWidget({super.key});
+class MemberWidget extends StatefulWidget {
+  const MemberWidget({super.key});
 
   @override
-  State<MemberTabWidget> createState() => _MemberTabWidgetState();
+  State<MemberWidget> createState() => _MemberWidgetState();
 }
 
-class _MemberTabWidgetState extends State<MemberTabWidget> {
+class _MemberWidgetState extends State<MemberWidget> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -19,7 +19,7 @@ class _MemberTabWidgetState extends State<MemberTabWidget> {
   bool _rememberMe = false;
   bool _isLoading = false;
 
-  // Replace with [Riverpod/Bloc] for production auth state
+  // TODO: Replace with [Riverpod/Bloc] for production auth state
 
   @override
   void dispose() {

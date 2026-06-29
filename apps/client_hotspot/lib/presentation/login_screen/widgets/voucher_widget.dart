@@ -4,19 +4,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../../../routes/app_routes.dart';
 
-class VoucherTabWidget extends StatefulWidget {
-  const VoucherTabWidget({super.key});
+class VoucherWidget extends StatefulWidget {
+  const VoucherWidget({super.key});
 
   @override
-  State<VoucherTabWidget> createState() => _VoucherTabWidgetState();
+  State<VoucherWidget> createState() => _VoucherWidgetState();
 }
 
-class _VoucherTabWidgetState extends State<VoucherTabWidget> {
+class _VoucherWidgetState extends State<VoucherWidget> {
   final _formKey = GlobalKey<FormState>();
   final _voucherController = TextEditingController();
   bool _isLoading = false;
 
-  // Replace with [Riverpod/Bloc] for production auth state
+  // TODO: Replace with [Riverpod/Bloc] for production auth state
 
   @override
   void dispose() {

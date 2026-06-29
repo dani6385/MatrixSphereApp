@@ -1,183 +1,324 @@
-import 'widgets/member_tab_widget.dart';
-import '../../routes/app_routes.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_ui/shared_ui.dart';
-import 'package:slide_to_act/slide_to_act.dart';
 
-class LoginScreen extends StatelessWidget {
+import 'package:shared_ui/shared_ui.dart';
+import 'widgets/bayar_qr_widget.dart';
+import 'widgets/member_widget.dart';
+import 'widgets/scan_qr_widget.dart';
+import 'widgets/trial_widget.dart';
+import 'widgets/voucher_widget.dart';
+
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
-  // Helper untuk menampilkan popup (modal bottom sheet)
-  void _showPopup(BuildContext context, {required String title, required Widget child}) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return DraggableScrollableSheet(
-          initialChildSize: 0.8,
-          minChildSize: 0.5,
-          maxChildSize: 0.9,
-          builder: (_, controller) {
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen>
+    with SingleTickerProviderStateMixin {
+  final int _selected = 0;
+
+  final List<_LoginMethod> _methods = const [
+    _LoginMethod(label: 'Voucher', icon: Icons.confirmation_number_outlined, widget: VoucherWidget()),
+    _LoginMethod(label: 'Member', icon: Icons.person_outline_rounded, widget: MemberWidget()),
+    _LoginMethod(label: 'Scan QR', icon: Icons.qr_code_scanner_rounded, widget: ScanQrWidget()),
+    _LoginMethod(label: 'Bayar QR', icon: Icons.qr_code_2_rounded, widget: BayarQrWidget()),
+    _LoginMethod(label: 'Trial', icon: Icons.timer_outlined, widget: TrialWidget()),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+    final isTablet = size.width >= 600;
+
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundLight,
+      body: SafeArea(
+        child: isTablet ? _buildTabletLayout(theme) : _buildPhoneLayout(theme),
+      ),
+    );
+  }
+
+  Widget _buildPhoneLayout(ThemeData theme) {
+    return Column(
+      children: [
+        _buildHeader(theme),
+        Expanded(child: _buildLoginCard(theme)),
+      ],
+    );
+  }
+
+  Widget _buildTabletLayout(ThemeData theme) {
+    return Center(
+      child: SizedBox(
+        width: 480,
+        child: Column(
+          children: [
+            _buildHeader(theme),
+            Expanded(child: _buildLoginCard(theme)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(ThemeData theme) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
+      child: Column(
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              color: AppTheme.primary,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.primary.withAlpha(77),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.wifi_rounded,
+              color: Colors.white,
+              size: 34,
+            ),
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'MikroLogin',
+            style: GoogleFonts.dmSans(
+              fontSize: 26,
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF1A1A1A),
+              letterSpacing: -0.5,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Pilih metode login untuk melanjutkan',
+            style: GoogleFonts.dmSans(
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+              color: const Color(0xFF757575),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoginCard(ThemeData theme) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(15),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          const SizedBox(height: 20),
+          _buildMethods(theme),
+          // Karena semua metode login sekarang menggunakan popup,
+          // area di bawahnya tidak lagi diperlukan untuk menampilkan widget.
+          // Kita bisa memberikan sedikit ruang kosong.
+          const Spacer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMethods(ThemeData theme) {
+    // Mengubah dari SingleChildScrollView horizontal menjadi Grid
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: _methods.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 3.5, // Menyesuaikan rasio agar tidak terlalu tinggi
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        itemBuilder: (context, i) {
+          final isSelected = _selected == i;
+          return InkWell(
+            onTap: () {
+              // Menampilkan popup untuk setiap metode login
+              if (i == 0) {
+                _showVoucherPopup();
+              } else if (i == 1) {
+                _showMemberPopup();
+              } else if (i == 2) {
+                _showScanQrPopup();
+              } else if (i == 3) {
+                _showBayarQrPopup();
+              } else if (i == 4) {
+                _showTrialPopup();
+              }
+            },
+            borderRadius: BorderRadius.circular(24),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 220),
+              curve: Curves.easeOutCubic,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 8,
               ),
-              child: Column(
+              decoration: BoxDecoration(
+                // Karena semua tombol membuka popup, tidak ada yang akan berada
+                // dalam status 'selected' di UI utama.
+                color: (isSelected && ![0, 1, 2, 3, 4].contains(i))
+                    ? AppTheme.primary
+                    : const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Handle
-                  Container(
-                    width: 40,
-                    height: 5,
-                    margin: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                  Icon(
+                    _methods[i].icon,
+                    size: 16,
+                    color: (isSelected && ![0, 1, 2, 3, 4].contains(i))
+                        ? Colors.white
+                        : const Color(0xFF757575),
                   ),
-                  // Title
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text(
-                      title,
-                      style: GoogleFonts.dmSans(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  const Divider(height: 1),
-                  // Content
-                  Expanded(
-                    child: SingleChildScrollView(
-                      controller: controller,
-                      child: child,
+                  const SizedBox(width: 8),
+                  Text(
+                    _methods[i].label,
+                    style: GoogleFonts.dmSans(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: (isSelected && ![0, 1, 2, 3, 4].contains(i)) ? Colors.white : const Color(0xFF757575),
                     ),
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  /// Menampilkan dialog popup yang berisi VoucherWidget.
+  void _showVoucherPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          // Membatasi tinggi dialog agar tidak terlalu besar di layar kecil.
+          child: const SizedBox(
+            height: 320,
+            child: VoucherWidget(),
+          ),
         );
       },
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
-              // Logo atau Judul
-              Text(
-                'Selamat Datang',
-                style: GoogleFonts.dmSans(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.primary,
-                ),
-              ),
-              Text(
-                'Pilih metode login Anda',
-                style: GoogleFonts.dmSans(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
-              ),
-              const SizedBox(height: 40),
-
-              // Grid 2x2 untuk tombol
-              GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisSpacing: 16,
-                mainAxisSpacing: 16,
-                childAspectRatio: 1.2,
-                children: [
-                  _LoginMenuButton(
-                    icon: Icons.confirmation_number_outlined,
-                    label: 'Vouchers',
-                    onTap: () => _showPopup(context, title: 'Gunakan Voucher', child: const Center(child: Text('UI Voucher di sini'))),
-                  ),
-                  _LoginMenuButton(
-                    icon: Icons.person_outline,
-                    label: 'Member',
-                    onTap: () => _showPopup(context, title: 'Login Member', child: const MemberTabWidget()),
-                  ),
-                  _LoginMenuButton(
-                    icon: Icons.qr_code_scanner_rounded,
-                    label: 'Scan QR',
-                    onTap: () => _showPopup(context, title: 'Scan QR Code', child: const Center(child: Text('UI Scan QR di sini'))),
-                  ),
-                  _LoginMenuButton(
-                    icon: Icons.qr_code_2_rounded,
-                    label: 'Bayar QR',
-                    onTap: () => _showPopup(context, title: 'Pembayaran QRIS', child: const Center(child: Text('UI Pembayaran QRIS di sini'))),
-                  ),
-                ],
-              ),
-              const Spacer(),
-
-              // Slider untuk Trial
-              SlideAction(
-                text: 'Geser untuk coba gratis',
-                textStyle: GoogleFonts.dmSans(color: Colors.white, fontWeight: FontWeight.w600),
-                outerColor: AppTheme.primary,
-                innerColor: Colors.white,
-                sliderButtonIcon: const Icon(Icons.wifi, color: AppTheme.primary),
-                onSubmit: () {
-                  // Aksi setelah slider selesai digeser
-                  // Kita bisa langsung navigasi atau tampilkan popup konfirmasi
-                  context.go(AppRoutes.homeScreen);
-                  return null; // Return null untuk animasi default
-                },
-              ),
-              const SizedBox(height: 20),
-            ],
+  /// Menampilkan dialog popup yang berisi MemberWidget.
+  void _showMemberPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
           ),
-        ),
-      ),
+          child: const SizedBox(
+            height: 320,
+            child: MemberWidget(),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Menampilkan dialog popup yang berisi ScanQrWidget.
+  void _showScanQrPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: const SizedBox(
+            // Sesuaikan tinggi agar pas dengan konten ScanQrWidget
+            height: 480,
+            child: ScanQrWidget(),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Menampilkan dialog popup yang berisi BayarQrWidget.
+  void _showBayarQrPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: const SizedBox(
+            // Sesuaikan tinggi agar pas dengan konten BayarQrWidget
+            height: 480,
+            child: BayarQrWidget(),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Menampilkan dialog popup yang berisi TrialWidget.
+  void _showTrialPopup() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: const SizedBox(
+            // TrialWidget memiliki konten yang cukup panjang
+            height: 520,
+            child: TrialWidget(),
+          ),
+        );
+      },
     );
   }
 }
 
-// Widget kustom untuk tombol menu agar tidak duplikat kode
-class _LoginMenuButton extends StatelessWidget {
-  final IconData icon;
+class _LoginMethod {
   final String label;
-  final VoidCallback onTap;
-
-  const _LoginMenuButton({required this.icon, required this.label, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(color: Colors.grey.withAlpha(1), blurRadius: 10, offset: const Offset(0, 5)),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 40, color: AppTheme.primary),
-            const SizedBox(height: 8),
-            Text(label, style: GoogleFonts.dmSans(fontWeight: FontWeight.bold, fontSize: 16)),
-          ],
-        ),
-      ),
-    );
-  }
+  final IconData icon;
+  final Widget? widget;
+  const _LoginMethod({required this.label, required this.icon, this.widget});
 }

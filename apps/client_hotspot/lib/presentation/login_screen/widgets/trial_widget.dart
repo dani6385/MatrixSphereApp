@@ -1,36 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import '../../../providers/device_provider.dart';
 import '../../../routes/app_routes.dart';
 
-class TrialTabWidget extends StatefulWidget {
-  const TrialTabWidget({super.key});
+class TrialWidget extends StatefulWidget {
+  const TrialWidget({super.key});
 
   @override
-  State<TrialTabWidget> createState() => _TrialTabWidgetState();
+  State<TrialWidget> createState() => _TrialWidgetState();
 }
 
-class _TrialTabWidgetState extends State<TrialTabWidget> {
+class _TrialWidgetState extends State<TrialWidget> {
   bool _isLoading = false;
-  String _deviceIdentifier = 'Loading...';
-  String _trialUsername = 'Loading...';
+  // Mock MAC address — in production, retrieve from device
+  // TODO: Replace with [Riverpod/Bloc] + actual MAC retrieval for production
+  final String _macAddress = 'A4:C3:F0:8B:2D:1E';
 
-  @override
-  void initState() {
-    super.initState();
-    // Menggunakan post-frame callback untuk mengakses provider setelah build pertama
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final deviceProvider = Provider.of<DeviceProvider>(context, listen: false);
-      final deviceInfo = deviceProvider.deviceInfo;
-      setState(() {
-        _deviceIdentifier = deviceInfo?.serialNumber ?? 'Tidak Tersedia';
-        // Membuat username trial dari serial number
-        _trialUsername = 'T-${_deviceIdentifier.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '')}';
-      });
-    });
-  }
+  String get _trialUsername => 'T-${_macAddress.replaceAll(':', '')}';
 
   Future<void> _loginTrial() async {
     setState(() => _isLoading = true);
@@ -99,8 +85,8 @@ class _TrialTabWidgetState extends State<TrialTabWidget> {
             child: Column(
               children: [
                 _InfoRow(
-                  label: 'Device ID',
-                  value: _deviceIdentifier,
+                  label: 'MAC Address',
+                  value: _macAddress,
                   icon: Icons.devices_rounded,
                 ),
                 const Padding(

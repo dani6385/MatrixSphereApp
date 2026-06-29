@@ -70,14 +70,21 @@ class _HomeScreenState extends State<HomeScreen> {
           );
         }
 
-        // 2. Error State: Jika pemuatan selesai tapi data sesi tidak ada, tampilkan pesan error.
-        // Ini menangani kasus di mana fetchSessionInfo() gagal.
-        if (sessionInfo == null) {
+        // 2. Error State: Tampilkan pesan error jika salah satu provider gagal memuat data.
+        // Ini menangani kasus di mana fetchSessionInfo() atau fetchDeviceInfo() gagal.
+        if (sessionInfo == null || deviceInfo == null) {
+          // Gabungkan pesan error dari kedua provider jika ada.
+          final sessionError = sessionProvider.errorMessage ?? "Gagal memuat sesi.";
+          final deviceError = deviceProvider.errorMessage ?? "Gagal memuat info perangkat.";
+          // Tampilkan pesan yang relevan.
+          final displayError = sessionInfo == null ? sessionError : deviceError;
+
           return Scaffold(
+            backgroundColor: AppTheme.backgroundLight,
             body: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: const Center(
-                child: Text("Gagal memuat sesi. Tarik ke bawah untuk mencoba lagi."),
+              child: Center(
+                child: Text("$displayError Tarik ke bawah untuk mencoba lagi."),
               ),
             ),
           );
@@ -113,8 +120,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(height: 16),
                         // Menggunakan data dari DeviceProvider
                         SpeedCardWidget(
-                          downloadSpeed: deviceInfo?.rx ?? 0.0,
-                          uploadSpeed: deviceInfo?.tx ?? 0.0,
+                          downloadSpeed: deviceInfo.rx,
+                          uploadSpeed: deviceInfo.tx,
                           isTablet: isTablet,
                         ),
                         const SizedBox(height: 16),
@@ -175,7 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                sessionInfo?.username ?? 'Memuat...',
+                sessionInfo?.username ?? 'Pengguna',
                 style: GoogleFonts.dmSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
