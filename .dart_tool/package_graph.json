@@ -1,7 +1,7 @@
 {
   "roots": [
     "admin_mikrotik",
-    "client_hotspot",
+    "client_connectivity",
     "matrix_sphere_app",
     "shared_services",
     "shared_ui"
@@ -26,31 +26,25 @@
       ]
     },
     {
-      "name": "client_hotspot",
+      "name": "client_connectivity",
       "version": "1.0.0+1",
       "dependencies": [
         "cached_network_image",
-        "cloud_firestore",
         "connectivity_plus",
-        "cupertino_icons",
-        "device_info_plus",
+        "dio",
         "fl_chart",
         "flutter",
+        "flutter_riverpod",
         "flutter_svg",
         "fluttertoast",
         "go_router",
         "google_fonts",
-        "image_picker",
-        "logger",
-        "mobile_scanner",
-        "network_info_plus",
-        "package_info_plus",
         "permission_handler",
-        "provider",
+        "shared_preferences",
         "shared_services",
         "shared_ui",
         "sizer",
-        "slide_to_act"
+        "web"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -293,7 +287,7 @@
     },
     {
       "name": "google_fonts",
-      "version": "8.1.0",
+      "version": "6.3.3",
       "dependencies": [
         "crypto",
         "flutter",
@@ -303,7 +297,7 @@
     },
     {
       "name": "flutter_lints",
-      "version": "6.0.0",
+      "version": "5.0.0",
       "dependencies": [
         "lints"
       ]
@@ -327,32 +321,49 @@
       ]
     },
     {
-      "name": "slide_to_act",
-      "version": "2.0.2",
+      "name": "flutter_riverpod",
+      "version": "2.6.1",
       "dependencies": [
+        "collection",
+        "flutter",
+        "meta",
+        "riverpod",
+        "state_notifier"
+      ]
+    },
+    {
+      "name": "fl_chart",
+      "version": "0.65.0",
+      "dependencies": [
+        "equatable",
         "flutter"
       ]
     },
     {
-      "name": "mobile_scanner",
-      "version": "5.2.3",
+      "name": "fluttertoast",
+      "version": "8.2.14",
       "dependencies": [
         "flutter",
         "flutter_web_plugins",
-        "plugin_platform_interface",
         "web"
       ]
     },
     {
-      "name": "sizer",
-      "version": "3.1.3",
+      "name": "dio",
+      "version": "5.10.0",
       "dependencies": [
-        "flutter"
+        "async",
+        "collection",
+        "dio_web_adapter",
+        "http_parser",
+        "meta",
+        "mime",
+        "path"
       ]
     },
     {
       "name": "connectivity_plus",
-      "version": "7.2.0",
+      "version": "6.1.5",
       "dependencies": [
         "collection",
         "connectivity_plus_platform_interface",
@@ -360,15 +371,6 @@
         "flutter_web_plugins",
         "meta",
         "nm",
-        "web"
-      ]
-    },
-    {
-      "name": "fluttertoast",
-      "version": "9.1.0",
-      "dependencies": [
-        "flutter",
-        "flutter_web_plugins",
         "web"
       ]
     },
@@ -384,6 +386,11 @@
       ]
     },
     {
+      "name": "web",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
       "name": "flutter_svg",
       "version": "2.3.0",
       "dependencies": [
@@ -395,49 +402,12 @@
       ]
     },
     {
-      "name": "device_info_plus",
-      "version": "13.1.0",
+      "name": "sizer",
+      "version": "2.0.15",
       "dependencies": [
-        "device_info_plus_platform_interface",
-        "ffi",
-        "file",
         "flutter",
-        "flutter_web_plugins",
-        "meta",
-        "web",
-        "win32",
-        "win32_registry"
+        "universal_io"
       ]
-    },
-    {
-      "name": "package_info_plus",
-      "version": "10.1.0",
-      "dependencies": [
-        "clock",
-        "ffi",
-        "flutter",
-        "flutter_web_plugins",
-        "http",
-        "meta",
-        "package_info_plus_platform_interface",
-        "path",
-        "web",
-        "win32"
-      ]
-    },
-    {
-      "name": "fl_chart",
-      "version": "1.2.0",
-      "dependencies": [
-        "equatable",
-        "flutter",
-        "vector_math"
-      ]
-    },
-    {
-      "name": "cupertino_icons",
-      "version": "1.0.9",
-      "dependencies": []
     },
     {
       "name": "yaml_edit",
@@ -963,7 +933,7 @@
     },
     {
       "name": "lints",
-      "version": "6.1.0",
+      "version": "5.1.1",
       "dependencies": []
     },
     {
@@ -1026,15 +996,53 @@
       ]
     },
     {
-      "name": "web",
-      "version": "1.1.1",
+      "name": "state_notifier",
+      "version": "1.0.0",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "riverpod",
+      "version": "2.6.1",
+      "dependencies": [
+        "collection",
+        "meta",
+        "stack_trace",
+        "state_notifier"
+      ]
+    },
+    {
+      "name": "equatable",
+      "version": "2.0.8",
+      "dependencies": [
+        "collection",
+        "meta"
+      ]
+    },
+    {
+      "name": "dio_web_adapter",
+      "version": "2.2.0",
+      "dependencies": [
+        "dio",
+        "http_parser",
+        "meta",
+        "web"
+      ]
+    },
+    {
+      "name": "mime",
+      "version": "2.0.0",
       "dependencies": []
     },
     {
-      "name": "plugin_platform_interface",
-      "version": "2.1.8",
+      "name": "http_parser",
+      "version": "4.1.2",
       "dependencies": [
-        "meta"
+        "collection",
+        "source_span",
+        "string_scanner",
+        "typed_data"
       ]
     },
     {
@@ -1114,40 +1122,12 @@
       ]
     },
     {
-      "name": "win32_registry",
-      "version": "3.0.3",
+      "name": "universal_io",
+      "version": "2.3.1",
       "dependencies": [
         "collection",
-        "ffi",
-        "ffi_leak_tracker",
         "meta",
-        "win32"
-      ]
-    },
-    {
-      "name": "device_info_plus_platform_interface",
-      "version": "8.1.0",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "plugin_platform_interface"
-      ]
-    },
-    {
-      "name": "package_info_plus_platform_interface",
-      "version": "4.1.0",
-      "dependencies": [
-        "flutter",
-        "meta",
-        "plugin_platform_interface"
-      ]
-    },
-    {
-      "name": "equatable",
-      "version": "2.0.8",
-      "dependencies": [
-        "collection",
-        "meta"
+        "typed_data"
       ]
     },
     {
@@ -1207,13 +1187,10 @@
       "dependencies": []
     },
     {
-      "name": "http_parser",
-      "version": "4.1.2",
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
       "dependencies": [
-        "collection",
-        "source_span",
-        "string_scanner",
-        "typed_data"
+        "meta"
       ]
     },
     {
@@ -1277,11 +1254,6 @@
         "file_selector_platform_interface",
         "flutter"
       ]
-    },
-    {
-      "name": "mime",
-      "version": "2.0.0",
-      "dependencies": []
     },
     {
       "name": "flutter_plugin_android_lifecycle",
