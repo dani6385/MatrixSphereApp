@@ -48,15 +48,17 @@ jobs:
 
       # Build APK
       - name: Build APK
+        id: build_apk
         run: |
           cd apps/client_connectivity
-          flutter build apk --release --build-number=${{ github.run_number }}
+          flutter build apk --release --build-number=${{ github.run_number }} --verbose
 
       # 1. UPLOAD KE FIREBASE APP DISTRIBUTION
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
+        continue-on-error: true
         with:
-          appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }} # Pastikan Anda membuat secret ini
+          appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }}
           token: ${{ secrets.FIREBASE_TOKEN }}
           groups: testers
           file: apps/client_connectivity/build/app/outputs/flutter-apk/app-release.apk

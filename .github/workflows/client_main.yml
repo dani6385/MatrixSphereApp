@@ -1,11 +1,11 @@
-name: Build, Release Admin to Repo Home & deploy
+name: Build, Release Client to Repo Home & deploy
 
 on:
   push:
     branches: [ main ]
     paths:
-      - 'apps/admin_mikrotik/**'
-      - 'apps/admin_mikrotik/pubspec.yaml'
+      - 'apps/client_connectivity/**'
+      - 'apps/client_connectivity/pubspec.yaml'
   workflow_dispatch:
 
 jobs:
@@ -35,8 +35,12 @@ jobs:
       - name: Setup Java & Flutter
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-home-cache-cleanup: true
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.x'
@@ -52,26 +56,23 @@ jobs:
       # Build APK
       - name: Build APK
         run: |
-          cd apps/admin_mikrotik
-          flutter build apk --release --verbose --build-number=${{ github.run_number }}
+          cd apps/client_hotspot
+          flutter build apk --release --build-number=${{ github.run_number }}
 
       # 1. UPLOAD KE FIREBASE APP DISTRIBUTION
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v1
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          credentials_json: ${{ secrets.GCLOUD_SERVICE_KEY }}
-
-      - name: Build and Distribute
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: |
-          firebase appdistribution:distribute apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk --groups "testers"
+          appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }}
+          token: ${{ secrets.FIREBASE_TOKEN }}
+          groups: testers
+          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
 
       # 2. UPLOAD KE GITHUB RELEASES (Home Repo)
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: apps/admin_mikrotik/build/app/outputs/flutter-apk/app-release.apk
+          files: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
           tag_name: v1.0.${{ github.run_number }}
           name: Versi Baru - Build ${{ github.run_number }}
           body: "APK terbaru telah diunggah ke Firebase App Distribution dan tersedia di sini."
