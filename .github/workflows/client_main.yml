@@ -56,7 +56,7 @@ jobs:
       # Build APK
       - name: Build APK
         run: |
-          cd apps/client_hotspot
+          cd apps/client_connectivity
           flutter build apk --release --build-number=${{ github.run_number }}
 
       # 1. UPLOAD KE FIREBASE APP DISTRIBUTION
