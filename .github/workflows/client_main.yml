@@ -79,3 +79,50 @@ jobs:
 
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # job windows
+  build_desktop:
+    needs: build_and_release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Pub
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
+      - name: Install Melos & Bootstrap
+        run: |
+          dart pub global activate melos
+          melos bootstrap --verbose
+
+      - name: Build Windows
+        if: runner.os == 'Windows'
+        run: flutter build windows --release
+        working-directory: apps/client_connectivity
+
+      - name: Build Linux
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+          flutter build linux --release
+        working-directory: apps/client_connectivity
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-client-${{ matrix.os }}
+          path: |
+            apps/client_connectivity/build/windows/runner/Release/
+            apps/client_connectivity/build/linux/x64/release/bundle/
