@@ -38,7 +38,8 @@ jobs:
         working-directory: apps/client_connectivity
 
       - name: List build directory
-        run: dir apps/client_connectivity/build/windows/x64/runner/Release /s
+        shell: powershell
+        run: Get-ChildItem -Path "apps/client_connectivity/build/windows/x64/runner/Release/" -Recurse
 
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
