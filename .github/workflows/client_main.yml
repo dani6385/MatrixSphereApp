@@ -25,7 +25,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: '3.22.0'
           channel: 'stable'
 
       - name: Install Melos & Bootstrap
@@ -37,11 +37,14 @@ jobs:
         run: flutter build windows --release
         working-directory: apps/client_connectivity
 
+      - name: List build directory
+        run: dir apps/client_connectivity/build/windows/x64/runner/Release /s
+
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-client-windows
-          path: apps/client_connectivity/build/windows/runner/Release/
+          path: apps/client_connectivity/build/windows/x64/runner/Release/
 
   # Langkah 2: Build Linux (setelah Windows selesai)
   build_linux:
@@ -59,7 +62,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: '3.22.0'
           channel: 'stable'
 
       - name: Install Melos & Bootstrap
@@ -99,7 +102,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: '3.22.0'
           channel: 'stable'
 
       - name: Install Melos & Bootstrap
@@ -108,7 +111,7 @@ jobs:
           melos bootstrap --verbose
 
       - name: Build Web
-        run: flutter build web --release --web-renderer html --csp
+        run: flutter build web --release --web-renderer=html
         working-directory: apps/client_connectivity
 
       - name: Authenticate to Google Cloud
@@ -163,7 +166,7 @@ jobs:
           gradle-home-cache-cleanup: true
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          flutter-version: '3.22.0'
 
       - name: Install Melos & Bootstrap
         run: |
