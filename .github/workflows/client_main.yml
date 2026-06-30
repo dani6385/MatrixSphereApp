@@ -49,7 +49,7 @@ jobs:
 
   # Langkah 2: Build Linux (setelah Windows selesai)
   build_linux:
-    needs: build_windows
+    
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,7 +63,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.x'
           channel: 'stable'
 
       - name: Install Melos & Bootstrap
@@ -85,7 +85,7 @@ jobs:
           path: apps/client_connectivity/build/linux/x64/release/bundle/
 
   build_and_deploy_web:
-    needs: build_windows
+    
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -132,7 +132,7 @@ jobs:
 
   # build Android
   build_and_release:
-    needs: build_windows
+    
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
