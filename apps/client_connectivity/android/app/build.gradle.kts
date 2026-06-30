@@ -14,12 +14,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     
-    configurations.all {
-        resolutionStrategy {
-            force("androidx.exifinterface:exifinterface:1.4.1")
-        }
-    }
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.matrixsphere.connectivity"
@@ -48,4 +42,10 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("androidx.exifinterface:exifinterface:1.4.1")
+    }
 }
