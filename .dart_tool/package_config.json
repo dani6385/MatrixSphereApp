@@ -537,7 +537,7 @@
     },
     {
       "name": "network_info_plus",
-      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/network_info_plus-8.1.0",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/network_info_plus-8.2.0",
       "packageUri": "lib/",
       "languageVersion": "3.10"
     },
@@ -819,7 +819,7 @@
     },
     {
       "name": "sqflite_darwin",
-      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_darwin-2.4.3",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/sqflite_darwin-2.4.3+1",
       "packageUri": "lib/",
       "languageVersion": "3.12"
     },

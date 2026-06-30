@@ -43,3 +43,9 @@ kotlin {
 flutter {
     source = "../.."
 }
+
+configurations.all {
+    resolutionStrategy {
+        force("androidx.exifinterface:exifinterface:1.4.1")
+    }
+}
