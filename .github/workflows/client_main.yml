@@ -11,7 +11,6 @@ on:
 jobs:
   # job windows
   build_desktop:
-    needs: build_and_release
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -58,6 +57,7 @@ jobs:
             apps/client_connectivity/build/linux/x64/release/bundle/
   # build Android
   build_and_release:
+    needs: build_desktop
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -96,9 +96,6 @@ jobs:
       - name: Install Melos & Bootstrap
         run: |
           dart pub global activate melos
-          ls -la
-          rm -rf .dart_tool
-          rm -f pubspec.lock
           melos bootstrap --verbose
 
       # Build APK
@@ -114,13 +111,13 @@ jobs:
           appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }}
           token: ${{ secrets.FIREBASE_TOKEN }}
           groups: testers
-          file: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
+          file: apps/client_connectivity/build/app/outputs/flutter-apk/app-release.apk
 
       # 2. UPLOAD KE GITHUB RELEASES (Home Repo)
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: apps/client_hotspot/build/app/outputs/flutter-apk/app-release.apk
+          files: apps/client_connectivity/build/app/outputs/flutter-apk/app-release.apk
           tag_name: v1.0.${{ github.run_number }}
           name: Versi Baru - Build ${{ github.run_number }}
           body: "APK terbaru telah diunggah ke Firebase App Distribution dan tersedia di sini."
