@@ -124,13 +124,11 @@ jobs:
       - name: Deploy to Firebase Hosting
         run: |
           npm install -g firebase-tools
-          # Menggunakan token yang sudah terautentikasi via Workload Identity
-          firebase deploy --only hosting --project matrixsphere-organisation --target client-sph-connect
+          # Gunakan format ini untuk menargetkan situs spesifik
+          firebase deploy --only hosting:client-sph-connect --project matrixsphere-organisation --token "${{ secrets.FIREBASE_TOKEN }}"
         working-directory: apps/client_connectivity
-        env:
-          # Firebase CLI akan menggunakan kredensial dari step 'auth' secara otomatis
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
-  # build Android
+        
+        # build Android
   build_and_release:
     
     runs-on: ubuntu-latest
