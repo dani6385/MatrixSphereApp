@@ -93,30 +93,44 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Cache Pub
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
       - uses: subosito/flutter-action@v2
-        with: { channel: 'stable' }
+        with:
+          flutter-version: '3.x'
+          channel: 'stable'
+
       - name: Install Melos & Bootstrap
         run: |
           dart pub global activate melos
           melos bootstrap --verbose
+
       - name: Build Web
         run: flutter build web --release
         working-directory: apps/client_connectivity
-      
+
       - name: Authenticate to Google Cloud
         id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: 'projects/867626788516/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
-          service_account: 'github-actions-deployer@matrixsphere-organisation.iam.gserviceaccount.com'
+          service_account: 'github-actions-deployer@YOUR_PROJECT_ID.iam.gserviceaccount.com'
 
-      # --- PERBAIKAN DI SINI ---
       - name: Deploy to Firebase Hosting
-        run: |
-          npm install -g firebase-tools
-          # Secara eksplisit menargetkan situs 'client-sph-connect'
-          firebase deploy --only hosting:client-sph-connect --project matrixsphere-organisation --non-interactive
-        working-directory: apps/client_connectivity
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
+          channelId: live
+          projectId: matrixsphere-organisation
+          # Menargetkan situs spesifik yang benar
+          target: client-sph-connect
 
   # build Android
   build_and_release:
