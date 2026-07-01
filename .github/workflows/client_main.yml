@@ -9,7 +9,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  
   # Langkah 1: Build Windows terlebih dahulu
   build_windows:
     runs-on: windows-latest
