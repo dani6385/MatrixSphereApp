@@ -1,0 +1,30 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Flutter
+.metadata
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+
+# Dart
+.dart_tool/
+pubspec.lock
+
+# Melos
+.melos_cache/
