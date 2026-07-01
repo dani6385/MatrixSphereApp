@@ -9,7 +9,14 @@
           "client-sph-connect"
         ]
       }
+    },
+    "matrixsphere-c3de9": {
+      "hosting": {
+        "client-sph-connect": [
+          "client-sph-connect"
+        ]
+      }
     }
-  }
+  },
+  "etags": {}
 }
-
