@@ -123,13 +123,12 @@ jobs:
           service_account: 'github-actions-deployer@YOUR_PROJECT_ID.iam.gserviceaccount.com'
 
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ steps.auth.outputs.credentials_file_path }}'
-          projectId: 'matrixsphere-organisation'
-          entryPoint: apps/client_connectivity # Menentukan direktori root untuk firebase.json
-
+        run: |
+          npm install -g firebase-tools
+          firebase hosting:deploy --project matrixsphere-organisation
+        working-directory: apps/client_connectivity
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
   # build Android
   build_and_release:
     
