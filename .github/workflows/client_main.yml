@@ -119,8 +119,8 @@ jobs:
         id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: 'projects/113584843327/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
-          service_account: 'firebase-adminsdk-fbsvc@matrixsphere-project.iam.gserviceaccount.com'
+          workload_identity_provider: 'projects/YOUR_PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
+          service_account: 'github-actions-deployer@YOUR_PROJECT_ID.iam.gserviceaccount.com'
 
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -167,7 +167,7 @@ jobs:
           gradle-home-cache-cleanup: true
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: '3.x'
 
       - name: Install Melos & Bootstrap
         run: |
