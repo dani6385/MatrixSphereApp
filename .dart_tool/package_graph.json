@@ -167,14 +167,14 @@
     },
     {
       "name": "internet_connection_checker_plus",
-      "version": "3.1.0",
+      "version": "3.1.1",
       "dependencies": [
         "http"
       ]
     },
     {
       "name": "image_picker",
-      "version": "1.2.2",
+      "version": "1.2.3",
       "dependencies": [
         "flutter",
         "image_picker_android",
@@ -1231,7 +1231,7 @@
     },
     {
       "name": "cross_file",
-      "version": "0.3.5+2",
+      "version": "0.3.5+3",
       "dependencies": [
         "meta",
         "web"
