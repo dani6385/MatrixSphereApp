@@ -2,7 +2,7 @@ name: Build, Release Client to Repo Home & deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master  ]
     paths:
       - 'apps/client_connectivity/**'
       - 'apps/client_connectivity/pubspec.yaml'
