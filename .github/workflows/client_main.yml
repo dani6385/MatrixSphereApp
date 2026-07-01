@@ -5,7 +5,6 @@ on:
     branches: [ main ]
     paths:
       - 'apps/client_connectivity/**'
-      - 'apps/client_connectivity/pubspec.yaml'
   workflow_dispatch:
 
 jobs:
@@ -24,7 +23,6 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
           channel: 'stable'
 
       - name: Install Melos & Bootstrap
@@ -56,7 +54,6 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
           channel: 'stable'
 
       - name: Install Melos & Bootstrap
@@ -94,7 +91,6 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
           channel: 'stable'
 
       - name: Install Melos & Bootstrap
@@ -106,6 +102,7 @@ jobs:
         run: flutter build web --release
         working-directory: apps/client_connectivity
 
+      # --- PERBAIKAN SINTAKSIS DAN AUTENTIKASI ---
       - name: Authenticate to Google Cloud
         id: auth
         uses: google-github-actions/auth@v2
@@ -117,13 +114,14 @@ jobs:
         uses: firebase/firebase-tools-action@v0
         with:
           args: deploy --only hosting --project matrixsphere-organisation
-        working-directory: apps/client_connectivity/build/web
+        # Direktori kerja harus menunjuk ke folder yang berisi firebase.json
+        working-directory: apps/client_connectivity
 
-  build_and_release:
+  build_and_release_android:
     runs-on: ubuntu-latest
     permissions:
-      contents: 'write'
-      id-token: 'write'
+      contents: 'write' # Izin untuk membuat GitHub Release
+      id-token: 'write'  # Izin untuk autentikasi ke Google Cloud
     steps:
       - uses: actions/checkout@v4
 
@@ -137,15 +135,16 @@ jobs:
             ~/.pub-cache
           key: ${{ runner.os }}-${{ hashFiles('**/pubspec.lock', '**/*.gradle*', '**/gradle-wrapper.properties') }}
 
+      # Setup Environment
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-          
+      
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.x'
+          channel: 'stable'
 
       - name: Install Melos & Bootstrap
         run: |
@@ -156,6 +155,7 @@ jobs:
         run: flutter build apk --release --build-number=${{ github.run_number }}
         working-directory: apps/client_connectivity
 
+      # --- PERBAIKAN AUTENTIKASI ---
       - name: Authenticate to Google Cloud
         id: auth-android
         uses: google-github-actions/auth@v2
@@ -167,6 +167,8 @@ jobs:
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{ secrets.FIREBASE_CLIENT_APP_ID }}
+          # Menggunakan file kredensial dari langkah auth, bukan token
+          serviceCredentialsFile: ${{ steps.auth-android.outputs.credentials_file_path }}
           groups: testers
           file: apps/client_connectivity/build/app/outputs/flutter-apk/app-release.apk
 
