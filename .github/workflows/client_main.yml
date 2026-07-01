@@ -126,8 +126,8 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ steps.auth.outputs.credentials_file_path }}'
-          projectId: 'matrixsphere-project'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          projectId: 'matrixsphere-organisation'
           entryPoint: apps/client_connectivity # Menentukan direktori root untuk firebase.json
 
   # build Android
