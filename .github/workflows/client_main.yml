@@ -115,7 +115,7 @@ jobs:
         with:
           args: deploy --only hosting --project matrixsphere-organisation
         # Direktori kerja harus menunjuk ke folder yang berisi firebase.json
-        working-directory: apps/client_connectivity
+          working-directory: apps/client_connectivity
 
   build_and_release_android:
     runs-on: ubuntu-latest
