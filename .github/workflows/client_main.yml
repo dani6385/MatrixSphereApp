@@ -112,7 +112,7 @@ jobs:
           melos bootstrap --verbose
 
       - name: Build Web
-        run: flutter build web --release --web-renderer=html
+        run: flutter build web --release
         working-directory: apps/client_connectivity
 
       - name: Authenticate to Google Cloud
