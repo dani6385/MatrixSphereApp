@@ -123,15 +123,14 @@ jobs:
           service_account: 'github-actions-deployer@YOUR_PROJECT_ID.iam.gserviceaccount.com'
 
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_TOKEN }}'
-          channelId: live
-          projectId: matrixsphere-organisation
-          # Menargetkan situs spesifik yang benar
-          target: client-sph-connect
-
+        run: |
+          npm install -g firebase-tools
+          # Menggunakan token yang sudah terautentikasi via Workload Identity
+          firebase deploy --only hosting --project matrixsphere-organisation --target client-sph-connect
+        working-directory: apps/client_connectivity
+        env:
+          # Firebase CLI akan menggunakan kredensial dari step 'auth' secara otomatis
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
   # build Android
   build_and_release:
     
