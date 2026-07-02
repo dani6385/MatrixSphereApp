@@ -5,6 +5,8 @@ import 'package:sizer/sizer.dart';
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
 
+
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -28,7 +30,7 @@ void main() async {
   // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
-  ]).then((value) {
+  ]).then((_) {
     GoRouter.optionURLReflectsImperativeAPIs = true;
     runApp(MyApp());
   });
