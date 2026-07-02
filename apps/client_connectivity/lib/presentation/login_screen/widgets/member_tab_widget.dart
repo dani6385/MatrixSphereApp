@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_services/services/ip_sync_service.dart';
-import 'package:shared_services/services/services_provider.dart';
+import 'package:shared_services/shared_services.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_theme.dart';
 

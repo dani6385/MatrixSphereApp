@@ -280,8 +280,7 @@ class _UsageChartWidgetState extends State<UsageChartWidget> {
                         });
                       },
                   touchTooltipData: LineTouchTooltipData(
-                    tooltipBgColor: const Color(0xFF1A1A1A),
-                    tooltipRoundedRadius: 10,
+                    getTooltipColor: (touchedSpot) => const Color(0xFF1A1A1A),
                     getTooltipItems: (spots) {
                       return spots.map((spot) {
                         return LineTooltipItem(

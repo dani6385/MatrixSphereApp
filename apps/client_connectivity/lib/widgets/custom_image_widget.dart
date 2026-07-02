@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../core/app_export.dart';
 
@@ -137,21 +136,24 @@ class CustomImageWidget extends StatelessWidget {
             semanticLabel: semanticLabel,
           );
         case ImageType.network:
-          return CachedNetworkImage(
+          return Image.network(
+            imageUrl!,
             height: height,
             width: width,
             fit: fit,
-            imageUrl: imageUrl!,
             color: color,
-            placeholder: (context, url) => SizedBox(
-              height: 30,
-              width: 30,
-              child: LinearProgressIndicator(
-                color: Colors.grey.shade200,
-                backgroundColor: Colors.grey.shade100,
-              ),
-            ),
-            errorWidget: (context, url, error) =>
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return SizedBox(
+                height: 30,
+                width: 30,
+                child: LinearProgressIndicator(
+                  color: Colors.grey.shade200,
+                  backgroundColor: Colors.grey.shade100,
+                ),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) =>
                 errorWidget ??
                 Image.asset(
                   placeHolder,
