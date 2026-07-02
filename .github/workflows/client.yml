@@ -8,6 +8,7 @@ on:
       - 'apps/client_connectivity/pubspec.yaml'
   workflow_dispatch:
 
+# Definisi Template untuk reusable steps agar lebih bersih
 jobs:
   build_all:
     strategy:
@@ -49,3 +50,24 @@ jobs:
       - name: Build ${{ matrix.platform }}
         run: flutter build ${{ matrix.build_cmd }}
         working-directory: apps/client_connectivity
+
+  build_web_deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: 'stable', cache: true }
+      
+      - run: flutter pub get
+        working-directory: apps/client_connectivity
+      
+      - run: flutter build web --release
+        working-directory: apps/client_connectivity
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting --project matrixsphere-c3de9
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
