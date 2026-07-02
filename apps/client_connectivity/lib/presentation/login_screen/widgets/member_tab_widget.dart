@@ -1,12 +1,15 @@
 // File: apps/client_connectivity/lib/presentation/login_screen/widgets/member_tab_widget.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_services/services/ip_sync_service.dart';
+import 'package:shared_services/services/services_provider.dart';
 import '../../../routes/app_routes.dart';
 import '../../../theme/app_theme.dart';
 
-class MemberTabWidget extends StatefulWidget {
+class MemberTabWidget extends ConsumerStatefulWidget {
   /// Jika true, widget ditampilkan di dalam dialog.
   /// Ini akan menutup dialog saat berhasil, bukan menavigasi.
   final bool isPopupMode;
@@ -43,10 +46,10 @@ class MemberTabWidget extends StatefulWidget {
   }
 
   @override
-  State<MemberTabWidget> createState() => _MemberTabWidgetState();
+  ConsumerState<MemberTabWidget> createState() => _MemberTabWidgetState();
 }
 
-class _MemberTabWidgetState extends State<MemberTabWidget> {
+class _MemberTabWidgetState extends ConsumerState<MemberTabWidget> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -62,22 +65,54 @@ class _MemberTabWidgetState extends State<MemberTabWidget> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
+    setState(() => _isLoading = true); 
 
-    // Simulasi panggilan jaringan untuk otentikasi
-    await Future.delayed(const Duration(milliseconds: 1500));
+    try {
+      // --- BAGIAN INTEGRASI DENGAN SERVICE ---
 
-    if (mounted) {
-      // Di aplikasi nyata, Anda akan memvalidasi kredensial di sini.
-      // Untuk demo, kita anggap selalu berhasil.
+      // 1. Simulasi otentikasi pengguna (di dunia nyata, ini akan memvalidasi username/password)
+      await Future.delayed(const Duration(milliseconds: 1000));
+      final String userId = 'user_123'; // ID pengguna didapat setelah login berhasil
 
+      // 2. Dapatkan service dari provider
+      final ipSyncService = ref.read(ipSyncServiceProvider);
+
+      // 3. Siapkan konfigurasi (di dunia nyata, ini didapat dari Firestore/Remote Config)
+      final mikrotikConfig = MikroTikRestApiConfig(
+        host: '192.168.88.1', // Ganti dengan IP router Anda
+        username: 'api-user', // Ganti dengan user REST API Anda
+        password: 'api-password',
+      );
+
+      // 4. Jalankan sinkronisasi IP
+      final response = await ipSyncService.syncIpAddress(
+        mikrotikId: 'mikrotik_A_id', // ID router yang sedang digunakan
+        userId: userId,
+        mikrotikRestApiConfig: mikrotikConfig,
+      );
+
+      // 5. Tampilkan feedback berdasarkan hasil sinkronisasi
+      if (!mounted) return;
+      final snackBar = SnackBar(
+        content: Text('Status Sinkronisasi: ${response.status.name}'),
+        backgroundColor: (response.status == IpSyncStatus.syncFailed) ? Colors.red : Colors.green,
+      );
+      ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
+
+      // 6. Lanjutkan navigasi
       if (widget.isPopupMode) {
-        // Dalam mode popup, tutup dialog dan berikan flag sukses.
         Navigator.of(context).pop(true);
       } else {
-        // Perilaku asli: navigasi ke layar beranda.
         context.go(AppRoutes.homeScreen);
       }
+    } catch (e) {
+      // Tangani error yang mungkin tidak tertangkap di dalam service
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Terjadi error: $e'), backgroundColor: Colors.red),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 

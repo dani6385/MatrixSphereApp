@@ -1,5 +1,15 @@
 // File: d:\MatrixSphereApp\apps\client_connectivity\android\build.gradle
 
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.2.1' // Pastikan versi 8.x
+    }
+}
+
 allprojects {
     repositories {
         google()
