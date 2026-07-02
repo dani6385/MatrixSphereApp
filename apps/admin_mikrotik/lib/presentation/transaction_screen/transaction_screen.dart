@@ -401,7 +401,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: AppTheme.primaryContainer,
+              color: AppTheme.primary,
               borderRadius: BorderRadius.circular(36),
             ),
             child: const Icon(
@@ -466,7 +466,7 @@ class _TransactionCard extends StatelessWidget {
       case TransactionStatus.failed:
         return const Color(0xFFFFEBEE);
       case TransactionStatus.all:
-        return AppTheme.primaryContainer;
+        return AppTheme.primary;
     }
   }
 
@@ -521,7 +521,7 @@ class _TransactionCard extends StatelessWidget {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryContainer,
+                    color: AppTheme.primary,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(

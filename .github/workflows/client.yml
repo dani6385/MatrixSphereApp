@@ -109,7 +109,7 @@ jobs:
           key: win-${{ hashFiles('**/pubspec.lock') }}
       - name: Build Windows
         run: |
-          flutter config --enable-windows-desktop
+          $env:CL = "/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS"
           flutter build windows --release
         working-directory: apps/client_connectivity
 

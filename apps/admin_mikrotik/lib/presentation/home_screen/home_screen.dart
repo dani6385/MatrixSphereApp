@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_ui/themes/app_theme.dart';
-
+import 'package:shared_ui/theme/app_theme.dart';
 import 'package:shared_ui/shared_ui.dart';
 import './widgets/offer_board_widget.dart';
 import './widgets/quota_dial_widget.dart';

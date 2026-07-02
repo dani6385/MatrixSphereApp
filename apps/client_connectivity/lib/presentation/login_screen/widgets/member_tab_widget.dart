@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/theme/app_theme.dart';
 import '../../../routes/app_routes.dart';
 
 class MemberTabWidget extends ConsumerStatefulWidget {
@@ -35,7 +36,7 @@ class MemberTabWidget extends ConsumerStatefulWidget {
         ..showSnackBar(
           const SnackBar(
             content: Text('Login berhasil! Anda sekarang terhubung.'),
-            backgroundColor: Colors.green,
+            backgroundColor: AppTheme.success,
           ),
         );
       // Arahkan ke home
@@ -92,7 +93,7 @@ class _MemberTabWidgetState extends ConsumerState<MemberTabWidget> {
       if (!mounted) return;
       final snackBar = SnackBar(
         content: Text('Status Sinkronisasi: ${response.status.name}'),
-        backgroundColor: (response.status == IpSyncStatus.syncFailed) ? Colors.red : Colors.green,
+        backgroundColor: (response.status == IpSyncStatus.syncFailed) ? AppTheme.error : AppTheme.success,
       );
       ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
 
@@ -106,7 +107,7 @@ class _MemberTabWidgetState extends ConsumerState<MemberTabWidget> {
       // Tangani error yang mungkin tidak tertangkap di dalam service
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi error: $e'), backgroundColor: Colors.red),
+        SnackBar(content: Text('Terjadi error: $e'), backgroundColor: AppTheme.error),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);

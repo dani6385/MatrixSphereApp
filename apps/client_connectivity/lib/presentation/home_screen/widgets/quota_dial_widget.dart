@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_ui/shared_ui.dart';
+import 'package:shared_ui/theme/app_theme.dart';
 
 class QuotaDialWidget extends StatefulWidget {
   final double usedPercent;
@@ -49,9 +49,9 @@ class _QuotaDialWidgetState extends State<QuotaDialWidget>
   }
 
   Color get _dialColor {
-    if (widget.usedPercent >= 90) return AppColors.error;
-    if (widget.usedPercent >= 75) return AppColors.warning;
-    return AppColors.primary;
+    if (widget.usedPercent >= 90) return AppTheme.error;
+    if (widget.usedPercent >= 75) return AppTheme.warning;
+    return AppTheme.primary;
   }
 
   @override

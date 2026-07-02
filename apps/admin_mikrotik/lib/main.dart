@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
 import 'package:firebase_core/firebase_core.dart'; // Add Firebase Core import
-import 'package:shared_ui/themes/app_theme.dart';
+import 'package:shared_ui/theme/app_theme.dart';
 import 'core/firebase_options.dart'; // Add Firebase Options import
 import 'package:go_router/go_router.dart';
 
 import 'core/routes/app_router.dart';
+import 'routes/app_routes.dart';
 import 'widgets/custom_error_widget.dart';
 
 void main() async {
