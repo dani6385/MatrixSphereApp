@@ -60,10 +60,13 @@ jobs:
 
       - name: Build ${{ matrix.platform }}
         run: |
-          set CL=/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
-          flutter build ${{ matrix.build_cmd }} --release
+          if [ "${{ matrix.platform }}" == "windows" ]; then
+            flutter build windows --release --dart-define=CMAKE_ARGS="-D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS=1"
+          else
+            flutter build ${{ matrix.build_cmd }} --release
+          fi
         working-directory: apps/client_connectivity
-
+        
   build_web_deploy:
     runs-on: ubuntu-latest
     
