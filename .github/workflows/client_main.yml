@@ -175,11 +175,18 @@ jobs:
           dart pub global activate melos
           melos bootstrap --verbose
 
-      # Build APK
+      - name: Install Dependencies
+        run: flutter pub get
+        working-directory: apps/client_connectivity
+
+      # TAMBAHKAN LANGKAH INI
+      - name: Configure Flutter SDK Path
+        run: flutter config --no-analytics
+        working-directory: apps/client_connectivity
+
       - name: Build APK
-        run: |
-          cd apps/client_connectivity
-          flutter build apk --release --build-number=${{ github.run_number }}
+        run: flutter build apk --release
+        working-directory: apps/client_connectivity
 
       # 1. UPLOAD KE FIREBASE APP DISTRIBUTION
       - name: Upload to Firebase App Distribution
