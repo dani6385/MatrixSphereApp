@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
-import 'package:firebase_core/firebase_core.dart'; // Add Firebase Core import
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_ui/theme/app_theme.dart';
-import 'core/firebase_options.dart'; // Add Firebase Options import
+import 'package:shared_ui/navigation/app_navigation.dart';
+import 'core/firebase_options.dart';
 import 'package:go_router/go_router.dart';
 
-import 'core/routes/app_router.dart';
+import 'navigation/admin_app_navigation.dart';
 import 'routes/app_routes.dart';
 import 'widgets/custom_error_widget.dart';
 
@@ -42,7 +43,12 @@ void main() async {
   ]).then((_) {
     GoRouter.optionURLReflectsImperativeAPIs = true;
     runApp(
-      const ProviderScope(child: MyApp()), // Wrap MyApp with ProviderScope
+      ProviderScope(
+        overrides: [
+          appNavigationProvider.overrideWithValue(AdminAppNavigation()),
+        ],
+        child: const MyApp()
+      ),
     );
   });
 }

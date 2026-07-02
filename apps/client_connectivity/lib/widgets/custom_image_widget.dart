@@ -82,7 +82,7 @@ class CustomImageWidget extends StatelessWidget {
   }
 
   ///build the image with border radius
-  _buildCircleImage() {
+  Widget _buildCircleImage() {
     if (radius != null) {
       return ClipRRect(
         borderRadius: radius ?? BorderRadius.zero,

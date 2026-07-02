@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
-import 'package:firebase_core/firebase_core.dart'; // Add Firebase Core import
-import 'core/firebase_options.dart'; // Add Firebase Options import
-import 'package:shared_ui/shared_ui.dart'; // Import shared UI for themes
-import 'core/routes/app_router.dart'; // Import the router configuration
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'core/firebase_options.dart';
+import 'package:shared_ui/shared_ui.dart';
+
+import 'core/routes/app_routes.dart';
 import 'widgets/custom_error_widget.dart';
+import 'package:shared_ui/theme/app_theme.dart';
 
 
 void main() async {
@@ -39,7 +41,9 @@ void main() async {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
   ]).then((_) {    
     runApp(
-      const ProviderScope(child: MyApp()), // Wrap MyApp with ProviderScope
+      const ProviderScope(
+        child: MyApp(),
+      ),
     );
   });
 }
@@ -53,8 +57,8 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, screenType) {
         return MaterialApp.router(
           title: 'Shop Sphere',
-          theme: lightTheme,
-          darkTheme: darkTheme,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.light,
           // 🚨 CRITICAL: NEVER REMOVE OR MODIFY
           builder: (context, child) {
