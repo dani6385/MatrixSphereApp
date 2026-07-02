@@ -10,81 +10,77 @@ on:
 
 # Definisi Template untuk reusable steps agar lebih bersih
 jobs:
-  build_all:
-    strategy:
-      matrix:
-        include:
-          - os: windows-latest
-            platform: windows
-            build_cmd: windows
-            
-          - os: ubuntu-latest
-            platform: linux
-            build_cmd: linux
-          - os: ubuntu-latest
-            platform: android
-            build_cmd: apk --release
-    
-    runs-on: ${{ matrix.os }}
+  # 1. BUILD WINDOWS
+  build_windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup MSVC
-        if: matrix.platform == 'windows'
-        uses: ilammy/msvc-dev-cmd@v1
-
-      # Cache Terpadu
-      - name: Cache Pub & Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-build-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
-
       - uses: subosito/flutter-action@v2
+        with: { channel: 'stable', cache: true }
+      - name: Build Windows
+        run: |
+          flutter config --enable-windows-desktop
+          flutter build windows --release
+        working-directory: apps/client_connectivity
+      - uses: actions/upload-artifact@v4
         with:
-          channel: 'stable'
-          cache: true # Fitur bawaan untuk mempercepat cache SDK
+          name: build-client-windows
+          path: apps/client_connectivity/build/windows/x64/runner/Release/
+
+  # 2. BUILD LINUX
+  build_linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: 'stable', cache: true }
+      - name: Build Linux
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+          flutter config --enable-linux-desktop
+          flutter build linux --release
+        working-directory: apps/client_connectivity
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build-client-linux
+          path: apps/client_connectivity/build/linux/x64/release/bundle/
+
+  # 3. BUILD ANDROID, WEB, & DEPLOY
+  build_mobile_web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { java-version: '21', distribution: 'temurin', cache: 'gradle' }
+      - uses: subosito/flutter-action@v2
+        with: { channel: 'stable', cache: true }
 
       - name: Install Dependencies
         run: flutter pub get
         working-directory: apps/client_connectivity
 
-      - name: Install Linux Dependencies
-        if: matrix.platform == 'linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
-
-      - name: Build ${{ matrix.platform }}
-        run: |
-          if [ "${{ matrix.platform }}" == "windows" ]; then
-            flutter build windows --release --config-only
-            # Tambahkan flag ke CMakeCache.txt jika diperlukan, atau:
-            flutter build windows --release --build-arg="/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS"
-          else
-            flutter build ${{ matrix.build_cmd }} --release
-          fi
-        working-directory: apps/client_connectivity
-  build_web_deploy:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
-        with: { channel: 'stable', cache: true }
-      
-      - run: flutter pub get
-        working-directory: apps/client_connectivity
-      
-      - run: flutter build web --release
+      # Build Android
+      - name: Build APK
+        run: flutter build apk --release
         working-directory: apps/client_connectivity
 
-      - name: Deploy to Firebase
+      # Build Web & Deploy
+      - name: Build Web
+        run: flutter build web --release
+        working-directory: apps/client_connectivity
+      
+      - name: Deploy to Firebase Hosting
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only hosting --project matrixsphere-c3de9
+          args: deploy --only hosting --project matrixsphere-c3de9 --non-interactive
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: apps/client_connectivity
+
+      # Upload APK Artifact
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: apps/client_connectivity/build/app/outputs/flutter-apk/app-release.apk
