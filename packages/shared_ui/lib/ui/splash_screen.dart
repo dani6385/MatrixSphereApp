@@ -23,7 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final alreadyGranted = prefs.getBool(_permFlagKey) ?? false;
     if (!alreadyGranted) {
       // Request permissions only once (uncomment if needed)
-      await [
+      /*late*/ [
         // Permission.camera,
         // Permission.storage,
         // Permission.notification,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
+import '../../../widgets/custom_image_widget.dart';
 
 class OfferBoardWidget extends StatelessWidget {
   OfferBoardWidget({super.key});
@@ -76,7 +77,7 @@ class OfferBoardWidget extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: _offers.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            separatorBuilder: (context, index) => const SizedBox(width: 12),
             itemBuilder: (context, i) {
               final offer = _offers[i];
               return _OfferCard(offer: offer);

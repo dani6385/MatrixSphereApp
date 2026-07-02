@@ -84,6 +84,18 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _LoginMethodButton(
+                        icon: Icons.hourglass_empty_rounded,
+                        label: 'Trial',
+                        onPressed: () => TrialTabWidget.showAsDialog(context),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),

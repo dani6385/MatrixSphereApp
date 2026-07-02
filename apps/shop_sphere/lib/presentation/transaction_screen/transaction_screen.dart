@@ -221,7 +221,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         bottomPadding + 88,
                       ),
                       itemCount: filtered.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      separatorBuilder: (context, index) => const SizedBox(height: 10),
                       itemBuilder: (context, index) => _TransactionCard(
                         transaction: filtered[index],
                         formatDate: _formatDate,
@@ -359,7 +359,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: statuses.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        separatorBuilder: (context, index) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final (status, label) = statuses[index];
           final isSelected = _selectedStatus == status;
@@ -401,7 +401,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: AppTheme.primaryContainer,
+              color: AppTheme.primary.withAlpha(25),
               borderRadius: BorderRadius.circular(36),
             ),
             child: const Icon(
@@ -466,7 +466,7 @@ class _TransactionCard extends StatelessWidget {
       case TransactionStatus.failed:
         return const Color(0xFFFFEBEE);
       case TransactionStatus.all:
-        return AppTheme.primaryContainer;
+        return AppTheme.primary.withAlpha(25);
     }
   }
 
@@ -521,7 +521,7 @@ class _TransactionCard extends StatelessWidget {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryContainer,
+                    color: AppTheme.primary.withAlpha(25),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
@@ -530,7 +530,7 @@ class _TransactionCard extends StatelessWidget {
                     size: 22,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width:.12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

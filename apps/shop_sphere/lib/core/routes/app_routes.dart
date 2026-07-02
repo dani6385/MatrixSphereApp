@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shop_sphere/presentation/home_screen/home_screen.dart';
+import '../../presentation/home_screen/home_screen.dart';
 
 class AppRoutes {
   static const String initial = '/';

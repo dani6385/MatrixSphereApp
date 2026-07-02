@@ -59,7 +59,7 @@ class AppTheme {
     colorScheme: ColorScheme.fromSeed(
       seedColor: primary,
       brightness: Brightness.dark,
-      background: darkBackground,
+      surface: darkBackground,
     ),
   );
 }
