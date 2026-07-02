@@ -57,6 +57,8 @@ jobs:
       - name: Build ${{ matrix.platform }}
         run: flutter build ${{ matrix.build_cmd }} --release
         working-directory: apps/client_connectivity
+        env:
+          CL: ${{ matrix.extra_env }}
 
   build_web_deploy:
     runs-on: ubuntu-latest
