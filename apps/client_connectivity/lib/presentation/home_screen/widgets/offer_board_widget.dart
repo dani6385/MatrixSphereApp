@@ -1,6 +1,8 @@
+import 'package:client_connectivity/core/app_export.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/app_export.dart';
+
+import 'package:shared_ui/shared_ui.dart';
 
 class OfferBoardWidget extends StatelessWidget {
   OfferBoardWidget({super.key});
@@ -10,7 +12,7 @@ class OfferBoardWidget extends StatelessWidget {
       'title': 'Paket Weekend Special',
       'subtitle': 'Nikmati internet 3 hari + bonus 2 hari gratis',
       'tag': 'PROMO',
-      'tagColor': AppTheme.secondary,
+      'tagColor': AppColors.primary,
       'imageUrl':
           'https://images.unsplash.com/photo-1707757840354-7598d2224d3b',
       'semanticLabel':
@@ -21,7 +23,7 @@ class OfferBoardWidget extends StatelessWidget {
       'title': 'Member Bulanan',
       'subtitle': 'Akses tanpa batas 30 hari, kecepatan hingga 20 Mbps',
       'tag': 'TERLARIS',
-      'tagColor': AppTheme.primary,
+      'tagColor': AppColors.primary,
       'imageUrl':
           'https://img.rocket.new/generatedImages/rocket_gen_img_1bfc1f750-1782544013481.png',
       'semanticLabel':
@@ -64,7 +66,7 @@ class OfferBoardWidget extends StatelessWidget {
                 style: GoogleFonts.dmSans(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.primary,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
             ),

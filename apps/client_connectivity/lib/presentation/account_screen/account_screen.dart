@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../theme/app_theme.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 enum LoginMethod { voucher, member, scanQr, bayarQr, trial }
 
@@ -22,7 +22,7 @@ class AccountScreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: CustomScrollView(
         slivers: [
           _buildAppBar(context, colorScheme),
@@ -65,7 +65,7 @@ class AccountScreen extends StatelessWidget {
                         icon: _loginMethodIcon(_userData.loginMethod),
                         label: 'Metode Login',
                         value: _loginMethodLabel(_userData.loginMethod),
-                        valueColor: AppTheme.primary,
+                        valueColor: theme.primaryColor,
                         valueBold: true,
                       ),
                       _InfoItem(
@@ -89,7 +89,7 @@ class AccountScreen extends StatelessWidget {
   SliverAppBar _buildAppBar(BuildContext context, ColorScheme colorScheme) {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       expandedHeight: 0,
@@ -171,15 +171,15 @@ class _ProfileAvatarCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppTheme.primary,
-            AppTheme.primary.withAlpha(204),
+            Theme.of(context).primaryColor,
+            Theme.of(context).primaryColor.withAlpha(204),
             const Color(0xFF00695C),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withAlpha(77),
+            color: Theme.of(context).primaryColor.withAlpha(77),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -214,12 +214,12 @@ class _ProfileAvatarCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppTheme.primary, width: 2),
+                  border: Border.all(color: Theme.of(context).primaryColor, width: 2),
                 ),
                 child: Icon(
                   Icons.camera_alt_rounded,
                   size: 13,
-                  color: AppTheme.primary,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
             ],
@@ -357,7 +357,7 @@ class _InfoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.cardLight,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFEEEEEE)),
         boxShadow: [
@@ -385,10 +385,10 @@ class _InfoCard extends StatelessWidget {
                       width: 38,
                       height: 38,
                       decoration: BoxDecoration(
-                        color: AppTheme.primary.withAlpha(20),
+                        color: Theme.of(context).primaryColor.withAlpha(20),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(item.icon, size: 18, color: AppTheme.primary),
+                      child: Icon(item.icon, size: 18, color: Theme.of(context).primaryColor),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -509,7 +509,7 @@ class _LoginMethodBadge extends StatelessWidget {
         );
       case LoginMethod.member:
         return (
-          AppTheme.primary,
+          AppColors.primary,
           const Color(0xFFE0F2F1),
           'Akses penuh sebagai anggota terdaftar',
         );

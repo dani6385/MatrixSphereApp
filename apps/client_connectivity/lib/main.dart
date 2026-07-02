@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
       builder: (context, orientation, screenType) {
         return MaterialApp.router(
           title: 'CC Client Connectivity',
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
+          theme: ThemeData.light(),
+          darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.light,
           // 🚨 CRITICAL: NEVER REMOVE OR MODIFY
           builder: (context, child) {

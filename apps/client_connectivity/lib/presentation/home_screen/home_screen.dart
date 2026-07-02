@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../theme/app_theme.dart';
+import 'package:shared_ui/shared_ui.dart';
 import './widgets/offer_board_widget.dart';
 import './widgets/quota_dial_widget.dart';
 import './widgets/session_info_widget.dart';
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: AppColors.lightBackground,
       body: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 8,
                     height: 8,
                     decoration: const BoxDecoration(
-                      color: AppTheme.secondary,
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -168,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppTheme.primary,
+              color: AppColors.primary,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
