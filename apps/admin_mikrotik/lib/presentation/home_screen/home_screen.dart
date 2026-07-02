@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_ui/themes/app_theme.dart';
 
 import 'package:shared_ui/shared_ui.dart';
 import './widgets/offer_board_widget.dart';
@@ -154,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     width: 8,
                     height: 8,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppTheme.secondary,
                       shape: BoxShape.circle,
                     ),

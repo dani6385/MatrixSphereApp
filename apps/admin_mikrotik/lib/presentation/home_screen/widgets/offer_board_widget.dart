@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_ui/themes/app_theme.dart';
 
 import 'package:shared_ui/shared_ui.dart';
+
+import '../../../widgets/custom_image_widget.dart';
 
 class OfferBoardWidget extends StatelessWidget {
   OfferBoardWidget({super.key});
