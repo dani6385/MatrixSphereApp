@@ -2,17 +2,17 @@ name: client_connectivity
 description: A new Flutter project.
 publish_to: none
 version: 1.0.0+1
-resolution: workspace
+
 
 environment:
-  sdk: ^3.12.1
+  sdk: '>=3.5.0 <4.0.0'
 
 dependencies:
   flutter:       # CRITICAL: Required for every Flutter project - DO NOT REMOVE
     sdk: flutter # CRITICAL: Required for every Flutter project - DO NOT REMOVE
   
   # CRITICAL: Core UI and responsive design - DO NOT REMOVE OR MODIFY
-  sizer: ^2.0.15              # Required for responsive design system
+  sizer: ^3.1.3              # Required for responsive design system
   flutter_svg: ^2.0.9        # Required for SVG icon support
   google_fonts: ^6.2.1       # Required for typography (replaces local fonts)
   shared_preferences: ^2.2.2 # Required for local data storage
@@ -20,10 +20,10 @@ dependencies:
   
   # Feature dependencies - safe to modify
   cached_network_image: ^3.3.1
-  connectivity_plus: ^6.1.4
+  connectivity_plus: ^7.2.0
   dio: ^5.4.0
-  fluttertoast: ^8.2.4
-  fl_chart: ^0.65.0
+  fluttertoast: ^9.1.0
+  fl_chart: ^1.2.0
   go_router: ^17.3.0
   permission_handler: ^12.0.3
   flutter_riverpod: ^2.5.1
@@ -37,7 +37,7 @@ dependencies:
 dev_dependencies:
   flutter_test:    # CRITICAL: Required for Flutter project testing - DO NOT REMOVE
     sdk: flutter   # CRITICAL: Required for Flutter project testing - DO NOT REMOVE
-  flutter_lints: ^5.0.0 # CRITICAL: Required for code quality - DO NOT REMOVE
+  flutter_lints: ^6.0.0 # CRITICAL: Required for code quality - DO NOT REMOVE
 
 flutter:
   uses-material-design: true # CRITICAL: Required for Material icon font - DO NOT REMOVE

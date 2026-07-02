@@ -26,8 +26,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.0' # Sesuaikan dengan versi Flutter Anda
-          channel: 'stable'
+          channel: 'stable' # Menghapus flutter-version agar mengambil yang paling baru
           cache: true
 
       # 4. Ambil Dependencies (Pub Get)
