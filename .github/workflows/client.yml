@@ -17,7 +17,7 @@ jobs:
           - os: windows-latest
             platform: windows
             build_cmd: windows
-            extra_env: 'CL=/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS'
+            
           - os: ubuntu-latest
             platform: linux
             build_cmd: linux
@@ -63,7 +63,7 @@ jobs:
           set CL=/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS
           flutter build ${{ matrix.build_cmd }} --release
         working-directory: apps/client_connectivity
-        
+
   build_web_deploy:
     runs-on: ubuntu-latest
     
