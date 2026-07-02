@@ -1,0 +1,67 @@
+name: Build and Deploy MatrixSphere
+
+on:
+  push:
+    branches:
+      - main  # Atau ganti ke 'master' jika itu nama branch utama Anda
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Ambil kode dari Repositori
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Java 21 (Wajib untuk sqflite dan Gradle terbaru)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      # 3. Setup Flutter
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0' # Sesuaikan dengan versi Flutter Anda
+          channel: 'stable'
+          cache: true
+
+      # 4. Ambil Dependencies (Pub Get)
+      # Kita gunakan working-directory karena file pubspec.yaml ada di folder apps/client_connectivity
+      - name: Install Dependencies
+        run: flutter pub get
+        working-directory: apps/client_connectivity
+
+      # 5. Build APK (Android)
+      - name: Build APK
+        run: flutter build apk --release
+        working-directory: apps/client_connectivity
+        env:
+          # Memberitahu Android di mana Flutter berada agar tidak muncul "Flutter SDK not found"
+          FLUTTER_ROOT: ${{ env.FLUTTER_HOME }}
+
+      # 6. Build Flutter Web
+      - name: Build Web
+        run: flutter build web --release
+        working-directory: apps/client_connectivity
+
+      # 7. Deploy ke Firebase Hosting
+      - name: Deploy to Firebase Hosting
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting --project matrixsphere-c3de9 --non-interactive
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          # Penting: Jalankan perintah firebase dari dalam folder yang ada file firebase.json
+          PROJECT_PATH: apps/client_connectivity
+
+      # 8. Upload Hasil APK ke GitHub Artifacts (Agar bisa Anda download)
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: apps/client_connectivity/build/app/outputs/flutter-apk/app-release.apk
