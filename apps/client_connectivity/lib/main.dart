@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
@@ -32,7 +33,9 @@ void main() async {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
   ]).then((_) {
     GoRouter.optionURLReflectsImperativeAPIs = true;
-    runApp(MyApp());
+    runApp(
+      const ProviderScope(child: MyApp()), // Wrap MyApp with ProviderScope
+    );
   });
 }
 
