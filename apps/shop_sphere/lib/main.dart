@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_ui/navigation/app_navigation.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shop_sphere/navigation/shop_app_navigation.dart';
 import 'core/firebase_options.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -33,16 +35,20 @@ void main() async {
 
       return CustomErrorWidget(errorDetails: details);
     }
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   };
 
   // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
-  ]).then((_) {    
+  ]).then((_) {
     runApp(
-      const ProviderScope(
-        child: MyApp(),
+      ProviderScope(
+        // 💡 Override provider untuk menggunakan implementasi navigasi spesifik
+        overrides: [
+          appNavigationProvider.overrideWithValue(ShopAppNavigation()),
+        ],
+        child: const MyApp(),
       ),
     );
   });

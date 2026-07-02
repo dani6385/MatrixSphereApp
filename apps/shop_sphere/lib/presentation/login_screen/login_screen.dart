@@ -1,128 +1,179 @@
-// File: apps/client_connectivity/lib/presentation/login_screen/login_screen.dart
-
-
-import './widgets/scan_qr_tab_widget.dart';
-import './widgets/member_tab_widget.dart';
-import './widgets/bayar_qr_tab_widget.dart';
-import './widgets/voucher_tab_widget.dart';
-import './widgets/trial_tab_widget.dart';
-
-import 'package:shared_ui/shared_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_ui/shared_ui.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.wifi_tethering_rounded,
-                  size: 80,
-                  color: AppTheme.primary,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Selamat Datang',
-                  style: GoogleFonts.dmSans(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Pilih metode untuk terhubung ke jaringan internet.',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.dmSans(
-                    fontSize: 16,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                const SizedBox(height: 40),
-                // Grid of login buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: _LoginMethodButton(
-                        icon: Icons.confirmation_number_outlined,
-                        label: 'Voucher',
-                        onPressed: () => VoucherTabWidget.showAsDialog(context),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _LoginMethodButton(
-                        icon: Icons.person_outline,
-                        label: 'Member',
-                        onPressed: () => MemberTabWidget.showAsDialog(context),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _LoginMethodButton(
-                        icon: Icons.qr_code_scanner_rounded,
-                        label: 'Scan QR',
-                        onPressed: () => ScanQrTabWidget.showAsDialog(context),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _LoginMethodButton(
-                        icon: Icons.qr_code_2_rounded,
-                        label: 'Bayar QR',
-                        onPressed: () => BayarQrTabWidget.showAsDialog(context),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                _LoginMethodButton(
-                  icon: Icons.hourglass_empty_rounded,
-                  label: 'Coba Gratis (Trial)',
-                  onPressed: () => TrialTabWidget.showAsDialog(context),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginMethodButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback? onPressed;
-
-  const _LoginMethodButton({
-    required this.icon,
-    required this.label,
-    this.onPressed,
-  });
+class _LoginScreenState extends State<LoginScreen> {
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon, size: 20),
-      label: Text(label, style: const TextStyle(fontSize: 12)),
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundLight,
+      appBar: AppBar(
+        title: Text(
+          'Login',
+          style: GoogleFonts.dmSans(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: const Color(0xFF1A1A1A),
+          ),
+        ),
+        backgroundColor: AppTheme.backgroundLight,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Selamat Datang Kembali!',
+              style: GoogleFonts.dmSans(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF1A1A1A),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Masuk untuk melanjutkan petualangan belanjamu.',
+              style: GoogleFonts.dmSans(
+                fontSize: 15,
+                color: const Color(0xFF5C5C5C),
+              ),
+            ),
+            const SizedBox(height: 40),
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Email',
+                hintText: 'contoh@email.com',
+                prefixIcon: const Icon(Icons.email_outlined, color: AppTheme.secondary),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: AppTheme.primary),
+                ),
+                filled: true,
+                fillColor: AppTheme.cardLight,
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              obscureText: _obscureText,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                hintText: 'Masukkan password Anda',
+                prefixIcon: const Icon(Icons.lock_outline, color: AppTheme.secondary),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                    color: AppTheme.secondary,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: Color(0xFFEEEEEE)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: AppTheme.primary),
+                ),
+                filled: true,
+                fillColor: AppTheme.cardLight,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  // TODO: Implement forgot password logic
+                },
+                child: Text(
+                  'Lupa Password?',
+                  style: GoogleFonts.dmSans(
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                foregroundColor: Colors.white,
+                minimumSize: const Size(double.infinity, 52),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                textStyle: GoogleFonts.dmSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                elevation: 2,
+                shadowColor: AppTheme.primary.withOpacity(0.4),
+              ),
+              onPressed: () {
+                // TODO: Implement login logic
+              },
+              child: const Text('Login'),
+            ),
+            const SizedBox(height: 32),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Belum punya akun?',
+                  style: GoogleFonts.dmSans(color: const Color(0xFF5C5C5C)),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // TODO: Navigate to sign up screen
+                  },
+                  child: Text(
+                    'Daftar di sini',
+                    style: GoogleFonts.dmSans(
+                      color: AppTheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
