@@ -15,10 +15,13 @@ jobs:
         include:
           - os: windows-latest
             platform: windows
+            build_cmd: windows
           - os: ubuntu-latest
             platform: linux
+            build_cmd: linux
           - os: ubuntu-latest
             platform: android
+            build_cmd: apk --release
     
     runs-on: ${{ matrix.os }}
     steps:
@@ -44,5 +47,5 @@ jobs:
         working-directory: apps/client_connectivity
 
       - name: Build ${{ matrix.platform }}
-        run: flutter build ${{ matrix.platform }} --release
+        run: flutter build ${{ matrix.build_cmd }}
         working-directory: apps/client_connectivity
