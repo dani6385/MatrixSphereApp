@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
+import 'package:firebase_core/firebase_core.dart'; // Add Firebase Core import
+import 'firebase_options.dart'; // Add Firebase Options import
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
@@ -10,6 +12,11 @@ import '../widgets/custom_error_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   bool hasShownError = false;
 

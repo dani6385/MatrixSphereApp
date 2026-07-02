@@ -6,6 +6,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        // START: FlutterFire Configuration
+        classpath 'com.google.gms:google-services:4.4.4'
+        // END: FlutterFire Configuration
         classpath 'com.android.tools.build:gradle:8.2.1' // Pastikan versi 8.x
     }
 }

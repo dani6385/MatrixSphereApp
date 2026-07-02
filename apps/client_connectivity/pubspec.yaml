@@ -31,6 +31,7 @@ dependencies:
     path: ../../packages/shared_ui
   shared_services:
     path: ../../packages/shared_services
+  firebase_core: ^4.11.0
 
 
 dev_dependencies:

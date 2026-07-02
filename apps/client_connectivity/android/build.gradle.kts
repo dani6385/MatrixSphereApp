@@ -1,3 +1,8 @@
+plugins {
+    id("com.android.application") version "8.4.1" apply false
+    id("dev.flutter.flutter-gradle-plugin") version "1.0.0" apply false
+}
+
 allprojects {
     repositories {
         google()
