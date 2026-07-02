@@ -11,6 +11,8 @@ dev_dependencies:
 workspace:
   - apps/client_connectivity
   - apps/admin_mikrotik
+  - apps/shop_sphere
+  - apps/seller_sphere
   - packages/shared_ui
   - packages/shared_services
 dependencies:
@@ -23,4 +25,3 @@ dependencies:
   permission_handler: ^12.0.3
   provider: ^6.1.5+1
   shared_ui: ^1.0.0
-  
