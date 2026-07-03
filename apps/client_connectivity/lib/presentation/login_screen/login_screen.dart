@@ -1,9 +1,13 @@
-import 'package:client_connectivity/presentation/login_screen/widgets/scan_qr_tab_widget.dart';
-import 'package:client_connectivity/presentation/login_screen/widgets/member_tab_widget.dart';
-import 'package:client_connectivity/presentation/login_screen/widgets/bayar_qr_tab_widget.dart';
-import 'package:client_connectivity/presentation/login_screen/widgets/voucher_tab_widget.dart';
-import 'widgets/trial_tab_widget.dart';
-import 'package:shared_ui/theme/app_theme.dart';
+// File: apps/client_connectivity/lib/presentation/login_screen/login_screen.dart
+
+
+import './widgets/scan_qr_tab_widget.dart';
+import './widgets/member_tab_widget.dart';
+import './widgets/bayar_qr_tab_widget.dart';
+import './widgets/voucher_tab_widget.dart';
+import './widgets/trial_tab_widget.dart';
+
+import 'package:shared_ui/shared_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -85,16 +89,10 @@ class LoginScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _LoginMethodButton(
-                        icon: Icons.hourglass_empty_rounded,
-                        label: 'Trial',
-                        onPressed: () => TrialTabWidget.showAsDialog(context),
-                      ),
-                    ),
-                  ],
+                _LoginMethodButton(
+                  icon: Icons.hourglass_empty_rounded,
+                  label: 'Coba Gratis (Trial)',
+                  onPressed: () => TrialTabWidget.showAsDialog(context),
                 ),
               ],
             ),

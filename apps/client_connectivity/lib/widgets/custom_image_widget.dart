@@ -9,7 +9,7 @@ extension ImageTypeExtension on String {
       return ImageType.network;
     } else if (endsWith('.svg')) {
       return ImageType.svg;
-    } else if (startsWith('file://')) {
+    } else if (startsWith('file: //')) {
       return ImageType.file;
     } else {
       return ImageType.png;
@@ -21,8 +21,7 @@ enum ImageType { svg, png, network, file, unknown }
 
 // ignore_for_file: must_be_immutable
 class CustomImageWidget extends StatelessWidget {
-  const CustomImageWidget({
-    super.key,
+  const CustomImageWidget({super.key, 
     this.imageUrl,
     this.height,
     this.width,
@@ -83,7 +82,7 @@ class CustomImageWidget extends StatelessWidget {
   }
 
   ///build the image with border radius
-  Widget _buildCircleImage() {
+  _buildCircleImage() {
     if (radius != null) {
       return ClipRRect(
         borderRadius: radius ?? BorderRadius.zero,
@@ -95,7 +94,7 @@ class CustomImageWidget extends StatelessWidget {
   }
 
   ///build the image with border and border radius style
-  Widget _buildImageWithBorder() {
+  _buildImageWithBorder() {
     if (border != null) {
       return Container(
         decoration: BoxDecoration(border: border, borderRadius: radius),
@@ -176,6 +175,6 @@ class CustomImageWidget extends StatelessWidget {
           );
       }
     }
-    return const SizedBox();
+    return SizedBox();
   }
 }

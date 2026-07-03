@@ -35,7 +35,7 @@ class MemberTabWidget extends ConsumerStatefulWidget {
         ..showSnackBar(
           const SnackBar(
             content: Text('Login berhasil! Anda sekarang terhubung.'),
-            backgroundColor: AppTheme.success,
+            backgroundColor: Colors.green,
           ),
         );
       // Arahkan ke home
@@ -92,7 +92,7 @@ class _MemberTabWidgetState extends ConsumerState<MemberTabWidget> {
       if (!mounted) return;
       final snackBar = SnackBar(
         content: Text('Status Sinkronisasi: ${response.status.name}'),
-        backgroundColor: (response.status == IpSyncStatus.syncFailed) ? AppTheme.error : AppTheme.success,
+        backgroundColor: (response.status == IpSyncStatus.syncFailed) ? Colors.red : Colors.green,
       );
       ScaffoldMessenger.of(context)..hideCurrentSnackBar()..showSnackBar(snackBar);
 
@@ -106,7 +106,7 @@ class _MemberTabWidgetState extends ConsumerState<MemberTabWidget> {
       // Tangani error yang mungkin tidak tertangkap di dalam service
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi error: $e'), backgroundColor: AppTheme.error),
+        SnackBar(content: Text('Terjadi error: $e'), backgroundColor: Colors.red),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);

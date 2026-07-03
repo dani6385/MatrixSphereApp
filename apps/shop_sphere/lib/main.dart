@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_ui/navigation/app_navigation.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shop_sphere/config/shop_bottom_nav_config.dart';
 import 'package:shop_sphere/navigation/shop_app_navigation.dart';
 import 'core/firebase_options.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 import 'core/routes/app_routes.dart';
 import 'widgets/custom_error_widget.dart';
-import 'package:shared_ui/theme/app_theme.dart';
-
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,9 +42,10 @@ void main() async {
   ]).then((_) {
     runApp(
       ProviderScope(
-        // 💡 Override provider untuk menggunakan implementasi navigasi spesifik
+        // 💡 Override provider untuk menggunakan implementasi spesifik aplikasi
         overrides: [
           appNavigationProvider.overrideWithValue(ShopAppNavigation()),
+          bottomNavConfigProvider.overrideWithValue(ShopBottomNavConfig()),
         ],
         child: const MyApp(),
       ),
