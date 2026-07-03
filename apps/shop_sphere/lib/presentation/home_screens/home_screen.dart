@@ -6,7 +6,7 @@ import 'widgets/home_search_bar.dart';
 import 'widgets/promo_carousel.dart';
 import 'widgets/category_list.dart';
 import 'widgets/flash_sale_section.dart';
-import 'widgets/product_recommendation_grid.dart';
+import '../product_screens/product_recommendation_grid.dart';
 import 'package:logger/logger.dart';
 
 class HomeScreen extends StatelessWidget {

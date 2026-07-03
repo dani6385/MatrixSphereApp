@@ -5,10 +5,14 @@ import 'widgets/app_navigation.dart';
 import 'presentation/home_screens/home_screen.dart';
 import 'presentation/cart_screens/cart_screen.dart';
 import 'presentation/profile_screens/profile_screen.dart';
+import 'presentation/order_screens/order_history_screen.dart';
+import 'presentation/product_screens/product_detail_screen.dart';
+import 'presentation/checkout_screens/checkout_screen.dart';
 import 'presentation/auth_screens/login_screen.dart';
 import 'providers/device_provider.dart';
 import 'providers/session_provider.dart';
 import 'providers/cart_provider.dart';
+import 'providers/order_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,6 +58,21 @@ final GoRouter _router = GoRouter(
       path: '/login',
       builder: (context, state) => const LoginScreen(),
     ),
+    GoRoute(
+      path: '/product/:productId',
+      builder: (context, state) {
+        final productId = state.pathParameters['productId']!;
+        return ProductDetailScreen(productId: productId);
+      },
+    ),
+    GoRoute(
+      path: '/checkout',
+      builder: (context, state) => const CheckoutScreen(),
+    ),
+    GoRoute(
+      path: '/orders',
+      builder: (context, state) => const OrderHistoryScreen(),
+    ),
   ],
 );
 
@@ -67,6 +86,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DeviceProvider()),
         ChangeNotifierProvider(create: (_) => SessionProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => OrderProvider()),
       ],
       child: MaterialApp.router(
         title: 'MatrixSphere App',

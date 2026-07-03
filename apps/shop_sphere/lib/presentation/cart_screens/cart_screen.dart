@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_sphere/providers/cart_provider.dart';
+import 'package:shop_sphere/providers/session_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class CartScreen extends StatelessWidget {
@@ -124,7 +126,24 @@ class CartScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // Handle checkout logic
+              final session = Provider.of<SessionProvider>(context, listen: false);
+              if (session.isLoggedIn) {
+                // Jika sudah login, lanjut ke halaman checkout
+                context.push('/checkout');
+              } else {
+                // Jika belum login, tampilkan dialog dan arahkan ke halaman login
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Anda Belum Login'),
+                    content: const Text('Silakan login terlebih dahulu untuk melanjutkan checkout.'),
+                    actions: [
+                      TextButton(onPressed: () => context.pop(), child: const Text('Nanti')),
+                      TextButton(onPressed: () => context.go('/login'), child: const Text('Login')),
+                    ],
+                  ),
+                );
+              }
             },
             child: const Text('Checkout'),
           ),

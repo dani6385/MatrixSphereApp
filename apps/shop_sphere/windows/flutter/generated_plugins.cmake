@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   firebase_core
   firebase_database
+  geolocator_windows
   permission_handler_windows
 )
 

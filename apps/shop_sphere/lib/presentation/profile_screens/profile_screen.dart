@@ -115,7 +115,7 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.list_alt_rounded,
           title: 'Pesanan Saya',
           onTap: () {
-            // Navigasi ke layar Pesanan Saya
+            context.push('/orders');
           },
         ),
         _buildMenuItem(

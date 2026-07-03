@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 // Impor widget kartu produk dari shared_ui
 import 'package:shop_sphere/providers/cart_provider.dart';
 import 'package:shared_ui/shared_ui.dart'; 
@@ -62,7 +63,7 @@ class ProductRecommendationGrid extends StatelessWidget {
               imageUrl: product['imageUrl'],
               rating: product['rating'],
               onTap: () {
-                // Navigasi ke detail produk
+                context.push('/product/${product['id']}');
               },
               onAddToCart: () {
                 cartProvider.addItem(
