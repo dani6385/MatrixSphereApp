@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:logger/logger.dart';
+
+final logger = Logger();
 
 class SellerProfileProvider with ChangeNotifier {
   // Lokasi default dummy (Bandung)
@@ -14,6 +17,6 @@ class SellerProfileProvider with ChangeNotifier {
     _storeAddress = newAddress;
     notifyListeners();
     // Di aplikasi nyata, Anda akan menyimpan ini ke database (misalnya, Firestore).
-    print('Lokasi toko baru disimpan: $newAddress');
+    logger.i('Lokasi toko baru disimpan: $newAddress');
   }
 }

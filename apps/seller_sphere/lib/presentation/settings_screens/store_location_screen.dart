@@ -3,6 +3,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart'; // This import is already present.
 import 'package:provider/provider.dart'; // This import is already present.
 import 'package:seller_sphere/providers/seller_profile_provider.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
+import 'package:logger/logger.dart';
+import 'package:shared_ui/shared_ui.dart';
+
+final logger = Logger();
 
 class StoreLocationScreen extends StatefulWidget {
   const StoreLocationScreen({super.key});
@@ -11,15 +16,46 @@ class StoreLocationScreen extends StatefulWidget {
   State<StoreLocationScreen> createState() => _StoreLocationScreenState();
 }
 
-class _StoreLocationScreenState extends State<StoreLocationScreen> {
+class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTickerProviderStateMixin {
   late GoogleMapController _mapController;
   LatLng? _pickedLocation;
   bool _isLoading = true;
+  bool _isSaving = false;
+  bool _isSearching = false;
+  final _searchController = TextEditingController();
+  late AnimationController _animationController;
+  late Animation<double> _radiusAnimation;
+  late Animation<Color?> _colorAnimation;
+  String _currentAddress = 'Pilih lokasi di peta atau cari alamat.';
+  bool _isFetchingAddress = false;
 
   @override
   void initState() {
     super.initState();
     _initializeMap();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
+
+    _radiusAnimation = Tween<double>(begin: 0, end: 50).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    );
+
+    _colorAnimation = ColorTween(
+      begin: AppColors.beginend,
+      end: AppColors.beginend,
+    ).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.ease),
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _animationController.dispose();
+    super.dispose();
   }
 
   Future<void> _initializeMap() async {
@@ -28,6 +64,8 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> {
       _pickedLocation = sellerProfile.storeLocation;
       _isLoading = false;
     });
+    // Setelah inisialisasi, langsung dapatkan alamat dari lokasi awal
+    if (_pickedLocation != null) _updateAddressFromLatLng(_pickedLocation!);
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -37,6 +75,8 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> {
   void _selectLocation(LatLng position) {
     setState(() {
       _pickedLocation = position;
+      _updateAddressFromLatLng(position);
+      _animationController.forward(from: 0.0);
     });
   }
 
@@ -53,24 +93,96 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> {
       final currentLocation = LatLng(position.latitude, position.longitude);
       setState(() {
         _pickedLocation = currentLocation;
+        _updateAddressFromLatLng(currentLocation);
+        _animationController.forward(from: 0.0);
       });
       _mapController.animateCamera(CameraUpdate.newLatLngZoom(currentLocation, 16));
     } catch (e) {
-      // Handle error
-      print('Error mendapatkan lokasi: $e');
+      logger.e('Error mendapatkan lokasi saat ini', error: e);
     }
   }
 
-  void _saveLocation() {
-    if (_pickedLocation == null) return;
-    // Di aplikasi nyata, Anda akan menggunakan Geocoding untuk mendapatkan alamat dari LatLng
-    final newAddress = 'Alamat di Lat: ${_pickedLocation!.latitude.toStringAsFixed(4)}, Lng: ${_pickedLocation!.longitude.toStringAsFixed(4)}';
-    Provider.of<SellerProfileProvider>(context, listen: false).setStoreLocation(_pickedLocation!, newAddress);
+  void _toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      if (!_isSearching) {
+        _searchController.clear();
+      }
+    });
+  }
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Lokasi toko berhasil disimpan!')),
-    );
-    Navigator.of(context).pop();
+  Future<void> _searchAndGoToLocation() async {
+    final address = _searchController.text;
+    if (address.isEmpty) return;
+
+    try {
+      List<geocoding.Location> locations = await geocoding.locationFromAddress(address);
+      if (locations.isNotEmpty) {
+        final location = locations.first;
+        final newPosition = LatLng(location.latitude, location.longitude);
+        _selectLocation(newPosition); // Ini sudah memanggil _updateAddressFromLatLng
+        _mapController.animateCamera(CameraUpdate.newLatLngZoom(newPosition, 16));
+        _toggleSearch(); // Tutup search bar setelah lokasi ditemukan
+      }
+    } catch (e) {
+      logger.e('Gagal mencari alamat', error: e);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Alamat tidak ditemukan. Coba dengan kata kunci lain.')),
+      );
+    }
+  }
+
+  Future<void> _updateAddressFromLatLng(LatLng position) async {
+    setState(() {
+      _isFetchingAddress = true;
+    });
+    try {
+      List<geocoding.Placemark> placemarks = await geocoding.placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+      if (placemarks.isNotEmpty) {
+        final p = placemarks[0];
+        setState(() {
+          _currentAddress = '${p.street}, ${p.subLocality}, ${p.locality}, ${p.administrativeArea} ${p.postalCode}';
+        });
+      }
+    } catch (e) {
+      logger.w('Gagal mendapatkan alamat dari LatLng', error: e);
+      setState(() {
+        _currentAddress = 'Tidak dapat mengambil alamat untuk lokasi ini.';
+      });
+    }
+    setState(() => _isFetchingAddress = false);
+  }
+
+  Future<void> _saveLocation() async {
+    if (_pickedLocation == null) return;
+
+    setState(() {
+      _isSaving = true;
+    });
+
+    try {
+      // Gunakan alamat yang sudah ada di state
+      final addressToSave = _currentAddress;
+
+      if (!mounted) return;
+      Provider.of<SellerProfileProvider>(context, listen: false).setStoreLocation(_pickedLocation!, addressToSave);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Lokasi toko berhasil disimpan!')),
+      );
+      Navigator.of(context).pop();
+    } catch (e) {
+      logger.e('Gagal melakukan geocoding', error: e);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gagal mendapatkan alamat. Coba lagi.')),
+      );
+    }
+    setState(() => _isSaving = false);
   }
 
   @override
@@ -79,11 +191,32 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Atur Lokasi Toko'),
+        title: _isSearching
+            ? TextField(
+                controller: _searchController,
+                autofocus: true,
+                decoration: const InputDecoration(
+                  hintText: 'Cari alamat...',
+                  border: InputBorder.none,
+                ),
+                onSubmitted: (_) => _searchAndGoToLocation(),
+              )
+            : const Text('Atur Lokasi Toko'),
         actions: [
+          if (_isSearching)
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _searchAndGoToLocation,
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _toggleSearch,
+            ),
           IconButton(
             icon: const Icon(Icons.check),
-            onPressed: _saveLocation,
+            // Nonaktifkan tombol saat menyimpan untuk mencegah klik ganda
+            onPressed: (_pickedLocation == null || _isSaving) ? null : _saveLocation,
             tooltip: 'Simpan Lokasi',
           ),
         ],
@@ -91,34 +224,114 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Stack(
-              children: [
-                GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: _pickedLocation ?? initialLocation,
-                    zoom: 16.0,
+              children: [ 
+                AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, _) {
+                    return GoogleMap(
+                      onMapCreated: _onMapCreated,
+                      initialCameraPosition: CameraPosition(target: _pickedLocation ?? initialLocation, zoom: 16.0),
+                      onTap: _selectLocation,
+                      markers: _buildMarkers(),
+                      circles: _pickedLocation == null ? {} : {
+                        Circle(
+                          circleId: const CircleId('c1'),
+                          center: _pickedLocation!,
+                          radius: _radiusAnimation.value,
+                          fillColor: _colorAnimation.value ?? Colors.transparent,
+                          strokeWidth: 0,
+                        ),
+                      },
+                    );
+                  },
                   ),
-                  onTap: _selectLocation,
-                  markers: (_pickedLocation == null)
-                      ? {}
-                      : {
-                          Marker(
-                            markerId: const MarkerId('m1'),
-                            position: _pickedLocation!,
-                          ),
-                        },
-                ),
                 Positioned(
-                  bottom: 20,
-                  right: 20,
+                  bottom: 90, // Disesuaikan agar tidak tertutup panel alamat
+                  right: 16,
                   child: FloatingActionButton(
                     onPressed: _getCurrentLocation,
                     tooltip: 'Lokasi Saat Ini',
                     child: const Icon(Icons.my_location),
                   ),
                 ),
+                _AddressDisplayPanel(
+                  isFetchingAddress: _isFetchingAddress,
+                  currentAddress: _currentAddress,
+                ),
+                if (_isSaving)
+                  Container(
+                    color: AppColors.black,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
               ],
             ),
+    );
+  }
+
+  Set<Marker> _buildMarkers() {
+    if (_pickedLocation == null) {
+      return {};
+    }
+    return {
+      Marker(
+        markerId: const MarkerId('m1'),
+        position: _pickedLocation!,
+        draggable: true,
+        onDragEnd: (newPosition) {
+          // Panggil _selectLocation saat drag selesai
+          _selectLocation(newPosition);
+        },
+      ),
+    };
+  }
+}
+
+/// Widget untuk menampilkan panel alamat di bagian bawah layar.
+class _AddressDisplayPanel extends StatelessWidget {
+  const _AddressDisplayPanel({
+    required this.isFetchingAddress,
+    required this.currentAddress,
+  });
+
+  final bool isFetchingAddress;
+  final String currentAddress;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Material(
+        elevation: 4.0,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          constraints: const BoxConstraints(minHeight: 70), // Memberi tinggi minimum
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Icon(Icons.location_on, color: Colors.grey),
+              const SizedBox(width: 12),
+              Expanded(
+                child: isFetchingAddress
+                    ? const Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        ],
+                      )
+                    : Text(currentAddress, maxLines: 2, overflow: TextOverflow.ellipsis),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

@@ -26,6 +26,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Aplikasi ini membutuhkan akses ke galeri untuk memilih gambar produk.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Aplikasi ini membutuhkan akses ke kamera untuk mengambil gambar profil atau produk.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Aplikasi ini membutuhkan akses lokasi untuk membantu Anda mengatur lokasi toko.</string>
 	<!-- Izinkan Flutter untuk merender tampilan platform (Google Maps) -->

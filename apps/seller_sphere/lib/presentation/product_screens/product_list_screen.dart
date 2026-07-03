@@ -18,6 +18,16 @@ class ProductListScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Daftar Produk'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.settings),
+                tooltip: 'Pengaturan',
+                onPressed: () {
+                  // Navigasi ke halaman pengaturan menggunakan GoRouter
+                  context.push('/settings');
+                },
+              ),
+            ],
           ),
           body: products.isEmpty
               ? const Center(

@@ -26,6 +26,10 @@ class AppColors {
   static const Color iconBackground = Color(0xFFF1F3F5);
 
   // Warna khusus untuk mode gelap (opsional)
-  static const Color darkBackground = Color(0xFF161B22);
-  static const Color textdark = Color(0x00000000);
+  static const Color darkBackground = Color(0xFF121212); // Latar belakang umum mode gelap
+  static const Color darkSurface = Color(0xFF1E1E1E); // Latar belakang kartu/widget mode gelap
+  static const Color textDark = Color(0xFFE0E0E0); // Teks utama mode gelap
+  static const Color textSecondaryDark = Color(0xFFB0B0B0); // Teks sekunder mode gelap
+  static const Color beginend = Color(0x0D00C896); // Warna untuk animasi, dibuat transparan dari 'secondary'
+  static const Color black = Colors.black;
 }
