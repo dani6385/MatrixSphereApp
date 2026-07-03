@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:shared_services/shared_services.dart';
+
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_search_bar.dart';
 import 'widgets/promo_carousel.dart';

@@ -27,4 +27,5 @@ class AppColors {
 
   // Warna khusus untuk mode gelap (opsional)
   static const Color darkBackground = Color(0xFF161B22);
+  static const Color textdark = Color(0x00000000);
 }
