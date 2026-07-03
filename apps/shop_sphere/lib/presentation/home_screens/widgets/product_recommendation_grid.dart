@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 // Impor widget kartu produk dari shared_ui
+import 'package:shop_sphere/providers/cart_provider.dart';
 import 'package:shared_ui/shared_ui.dart'; 
 
 class ProductRecommendationGrid extends StatelessWidget {
@@ -39,6 +41,8 @@ class ProductRecommendationGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverGrid(
@@ -59,6 +63,18 @@ class ProductRecommendationGrid extends StatelessWidget {
               rating: product['rating'],
               onTap: () {
                 // Navigasi ke detail produk
+              },
+              onAddToCart: () {
+                cartProvider.addItem(
+                  productId: product['id'],
+                  name: product['name'],
+                  price: product['price'],
+                  imageUrl: product['imageUrl'],
+                );
+                // Tampilkan notifikasi singkat
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('${product['name']} ditambahkan ke keranjang!')),
+                );
               },
             );
           },
