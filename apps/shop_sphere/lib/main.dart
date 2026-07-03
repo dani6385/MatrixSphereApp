@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:shop_sphere/presentation/home_screens/home_screen.dart';
+
+import 'app_navigation.dart';
+
 
 void main() {
   // Memastikan semua binding Flutter siap sebelum aplikasi berjalan.
@@ -26,16 +28,17 @@ class MyApp extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final poppinsTheme = GoogleFonts.poppinsTextTheme(textTheme);
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Shop Sphere',
       debugShowCheckedModeBanner: false,
+      // Menggunakan router dari AppNavigation yang ada di shared_ui
+      routerConfig: AppNavigation.router,
       theme: ThemeData(
         scaffoldBackgroundColor: AppColors.background,
         primaryColor: AppColors.primary,
         textTheme: poppinsTheme,
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
     );
   }
 }
