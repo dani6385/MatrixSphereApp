@@ -16,21 +16,21 @@
             "type": "dart"
         },
         {
-            "name": "client_hotspot",
-            "cwd": "apps\\client_hotspot",
+            "name": "client_connectivity",
+            "cwd": "apps\\client_connectivity",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "client_hotspot (profile mode)",
-            "cwd": "apps\\client_hotspot",
+            "name": "client_connectivity (profile mode)",
+            "cwd": "apps\\client_connectivity",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "client_hotspot (release mode)",
-            "cwd": "apps\\client_hotspot",
+            "name": "client_connectivity (release mode)",
+            "cwd": "apps\\client_connectivity",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
