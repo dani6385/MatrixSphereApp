@@ -1,91 +1,128 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../presentation/home_screens/home_screen.dart';
-import '../presentation/login_screens/login_screen.dart';
-import '../presentation/login_screens/providers/auth_provider.dart';
-import '../presentation/order_screens/order_list_screen.dart';
-import '../presentation/order_screens/providers/order_detail_screen.dart';
-import '../presentation/product_screens/models/add_product_screen.dart';
-import '../presentation/product_screens/models/product_detail_screen.dart';
-import '../presentation/product_screens/models/product_list_screen.dart';
-import '../presentation/profile_screens/edit_profile_screen.dart';
-import '../presentation/profile_screens/profile_screen.dart';
-import '../presentation/settings_screens/providers/store_location_screen.dart';
-import '../presentation/settings_screens/setting_screen.dart';
-import '../utils/go_router_refresh_stream.dart';
+import 'package:seller_sphere/presentation/home_screens/home_screen.dart';
+import 'package:seller_sphere/presentation/login_screens/login_screen.dart';
+import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
+import 'package:seller_sphere/presentation/order_screens/order_list_screen.dart';
+import 'package:seller_sphere/presentation/order_screens/providers/order_detail_screen.dart';
+import 'package:seller_sphere/presentation/product_screens/add_product_screen.dart';
+import 'package:seller_sphere/presentation/product_screens/product_detail_screen.dart';
+import 'package:seller_sphere/presentation/product_screens/product_list_screen.dart';
+import 'package:seller_sphere/presentation/profile_screens/edit_profile_screen.dart';
+import 'package:seller_sphere/presentation/profile_screens/profile_screen.dart';
+import 'package:seller_sphere/presentation/settings_screens/providers/store_location_screen.dart';
+import 'package:seller_sphere/presentation/settings_screens/setting_screen.dart';
+import 'package:seller_sphere/utils/go_router_refresh_stream.dart';
+import 'package:seller_sphere/widgets/app_navigation.dart';
 
-// Provider tunggal untuk GoRouter
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
 final goRouterProvider = Provider<GoRouter>((ref) {
   final authNotifier = ref.watch(authProvider.notifier);
 
   return GoRouter(
+    navigatorKey: _rootNavigatorKey,
     refreshListenable: GoRouterRefreshStream(authNotifier.stream),
     initialLocation: '/',
+    debugLogDiagnostics: true,
+
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const SellerHomeScreen(),
+      // Rute Shell Utama dengan Navigasi Bawah
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return AppNavigation(navigationShell: navigationShell);
+        },
+        branches: [
+          // Cabang 1: HOME
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/', 
+                builder: (context, state) => const SellerHomeScreen(),
+              ),
+            ],
+          ),
+
+          // Cabang 2: PRODUK (dengan sub-rute)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/products',
+                builder: (context, state) => const ProductListScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'detail/:productId', //  /products/detail/123
+                    builder: (context, state) => ProductDetailScreen(productId: state.pathParameters['productId']!),
+                  ),
+                ]
+              ),
+            ],
+          ),
+
+          // Cabang 3: TRANSAKSI (dengan sub-rute)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/orders',
+                builder: (context, state) => const OrderListScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':orderId', // /orders/abc
+                    builder: (context, state) => OrderDetailScreen(orderId: state.pathParameters['orderId']!),
+                  ),
+                ]
+              ),
+            ],
+          ),
+
+          // Cabang 4: AKUN (dengan sub-rute)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (context, state) => const ProfileScreen(),
+                 routes: [
+                  GoRoute(
+                    path: 'edit', // /profile/edit
+                    builder: (context, state) => const EditProfileScreen(),
+                  ),
+                ]
+              ),
+            ],
+          ),
+        ],
       ),
+
+      // Rute level atas (tanpa BottomNav)
       GoRoute(
         path: '/login',
+        name: 'login',
         builder: (context, state) => const LoginScreen(),
-      ),
-      GoRoute(
-        path: '/settings',
-        builder: (context, state) => const SettingScreen(),
-        routes: [
-          GoRoute(
-            path: 'location', //  /settings/location
-            builder: (context, state) => const StoreLocationScreen(),
-          ),
-        ],
-      ),
-      GoRoute(
-        path: '/profile',
-        builder: (context, state) => const ProfileScreen(),
-        routes: [
-          GoRoute(
-            path: 'edit', // /profile/edit
-            builder: (context, state) => const EditProfileScreen(),
-          ),
-        ],
-      ),
-      GoRoute(
-        path: '/products',
-        builder: (context, state) => const ProductListScreen(),
       ),
       GoRoute(
         path: '/add-product',
         builder: (context, state) => const AddProductScreen(),
       ),
+       GoRoute(
+          path: '/edit-product/:productId',
+          builder: (context, state) {
+            final productId = state.pathParameters['productId']!;
+            return AddProductScreen(productId: productId);
+          },
+        ),
       GoRoute(
-        path: '/edit-product/:productId',
-        builder: (context, state) {
-          final productId = state.pathParameters['productId']!;
-          return AddProductScreen(productId: productId);
-        },
-      ),
-      GoRoute(
-        path: '/product/:productId',
-        builder: (context, state) {
-          final productId = state.pathParameters['productId']!;
-          return ProductDetailScreen(productId: productId);
-        },
-      ),
-      GoRoute(
-        path: '/orders',
-        builder: (context, state) => const OrderListScreen(),
+        path: '/settings',
+        builder: (context, state) => const SettingScreen(),
         routes: [
-          GoRoute(
-            path: ':orderId', // /orders/order123
-            builder: (context, state) {
-              final orderId = state.pathParameters['orderId']!;
-              return OrderDetailScreen(orderId: orderId);
-            },
+           GoRoute(
+            path: 'location',
+            builder: (context, state) => const StoreLocationScreen(),
           ),
-        ],
+        ]
       ),
     ],
+
     redirect: (context, state) {
       final isAuthenticated = authNotifier.isAuthenticated;
       final isLoggingIn = state.matchedLocation == '/login';
@@ -93,11 +130,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       if (!isAuthenticated && !isLoggingIn) {
         return '/login';
       }
-
       if (isAuthenticated && isLoggingIn) {
         return '/';
       }
-
       return null;
     },
   );

@@ -7,36 +7,23 @@ class SellerHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Dashboard Penjual'),
-        backgroundColor: AppColors.surface,
-        elevation: 1,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.push('/settings/location'),
-            tooltip: 'Pengaturan',
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          // Bagian Ringkasan
-          _buildSummarySection(),
-          const SizedBox(height: 24),
+    // Scaffold dan AppBar dihapus. Widget root sekarang adalah ListView.
+    return ListView(
+      padding: const EdgeInsets.all(16.0),
+      children: [
+        // Bagian Ringkasan
+        _buildSummarySection(),
+        const SizedBox(height: 24),
 
-          // Bagian Pesanan Terbaru
-          _buildSectionHeader('Pesanan Terbaru'),
-          _buildRecentOrders(),
-          const SizedBox(height: 24),
+        // Bagian Pesanan Terbaru
+        _buildSectionHeader('Pesanan Terbaru'),
+        _buildRecentOrders(),
+        const SizedBox(height: 24),
 
-          // Bagian Aksi Cepat
-          _buildSectionHeader('Aksi Cepat'),
-          _buildQuickActions(context),
-        ],
-      ),
+        // Bagian Aksi Cepat
+        _buildSectionHeader('Aksi Cepat'),
+        _buildQuickActions(context),
+      ],
     );
   }
 
@@ -101,7 +88,6 @@ class SellerHomeScreen extends StatelessWidget {
   }
 
   Widget _buildRecentOrders() {
-    // Data dummy untuk pesanan
     return Card(
       child: Column(
         children: [
