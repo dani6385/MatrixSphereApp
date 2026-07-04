@@ -5,12 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/presentation/product_screens/providers/product_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class ProductListScreen extends ConsumerWidget { // 1. Ubah menjadi ConsumerWidget
+class ProductListScreen extends ConsumerWidget {
   const ProductListScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) { // 2. Tambahkan WidgetRef
-    // 3. Gunakan ref.watch untuk mendapatkan state dari provider
+  Widget build(BuildContext context, WidgetRef ref) {
     final productState = ref.watch(productProvider);
     final products = productState.products;
 
@@ -29,7 +28,6 @@ class ProductListScreen extends ConsumerWidget { // 1. Ubah menjadi ConsumerWidg
             icon: const Icon(Icons.settings),
             tooltip: 'Pengaturan',
             onPressed: () {
-              // Navigasi ke halaman pengaturan menggunakan GoRouter
               context.push('/settings');
             },
           ),
@@ -80,25 +78,26 @@ class ProductListScreen extends ConsumerWidget { // 1. Ubah menjadi ConsumerWidg
                           icon: const Icon(Icons.delete, color: Colors.redAccent),
                           tooltip: 'Hapus',
                           onPressed: () {
-                            // Tampilkan dialog konfirmasi sebelum menghapus
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
                                 title: const Text('Konfirmasi Hapus'),
-                                content: Text('Apakah Anda yakin ingin menghapus "${product.name}"?'),
+                                content: Text(
+                                    'Apakah Anda yakin ingin menghapus "${product.name}"?'),
                                 actions: [
                                   TextButton(
                                     child: const Text('Batal'),
                                     onPressed: () => Navigator.of(ctx).pop(),
                                   ),
                                   TextButton(
-                                    child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+                                    child: const Text('Hapus',
+                                        style: TextStyle(color: Colors.red)),
                                     onPressed: () {
-                                      // 4. Gunakan ref.read untuk memanggil metode provider
                                       ref.read(productProvider.notifier).deleteProduct(product.id);
                                       Navigator.of(ctx).pop();
                                       ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(content: Text('Produk berhasil dihapus.')),
+                                        const SnackBar(
+                                            content: Text('Produk berhasil dihapus.')),
                                       );
                                     },
                                   ),
@@ -115,4 +114,7 @@ class ProductListScreen extends ConsumerWidget { // 1. Ubah menjadi ConsumerWidg
             ),
     );
   }
+}
+
+class productProvider {
 }

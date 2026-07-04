@@ -6,9 +6,10 @@ import 'package:seller_sphere/presentation/login_screens/login_screen.dart';
 import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
 import 'package:seller_sphere/presentation/order_screens/order_list_screen.dart';
 import 'package:seller_sphere/presentation/order_screens/providers/order_detail_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/add_product_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/product_detail_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/product_list_screen.dart';
+import 'package:seller_sphere/presentation/product_screens/models/add_product_screen.dart';
+import 'package:seller_sphere/presentation/product_screens/models/product_detail_screen.dart';
+// PERBAIKAN: Path impor diperbaiki untuk menyertakan /models/
+import 'package:seller_sphere/presentation/product_screens/models/product_list_screen.dart';
 import 'package:seller_sphere/presentation/profile_screens/edit_profile_screen.dart';
 import 'package:seller_sphere/presentation/profile_screens/profile_screen.dart';
 import 'package:seller_sphere/presentation/settings_screens/providers/store_location_screen.dart';

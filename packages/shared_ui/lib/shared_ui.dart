@@ -1,5 +1,5 @@
 export 'theme/app_theme.dart';
-export 'theme/app_collor.dart';
+export 'theme/app_color.dart';
 export 'ui/splash_screen.dart';
 
 export 'src/widgets/primary_button.dart';

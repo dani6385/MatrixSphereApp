@@ -40,13 +40,13 @@ class SellerHomeScreen extends StatelessWidget {
           title: 'Pendapatan (Hari Ini)',
           value: 'Rp 1.250.000',
           icon: Icons.monetization_on,
-          color: Colors.green,
+          color: AppColors.primary,
         ),
         _buildSummaryCard(
           title: 'Pesanan Baru',
           value: '5',
           icon: Icons.shopping_cart,
-          color: Colors.orange,
+          color: AppColors.error,
         ),
       ],
     );

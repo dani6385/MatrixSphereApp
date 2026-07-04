@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_ui/theme/app_collor.dart';
+import 'package:shared_ui/theme/app_color.dart';
 
 // Menggunakan AppColors untuk warna
 

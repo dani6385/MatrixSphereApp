@@ -46,7 +46,6 @@ class ProductDetailScreen extends ConsumerWidget {
                   itemCount: product.imageUrls.length,
                   itemBuilder: (context, index) {
                     final imageUrl = product.imageUrls[index];
-                    // Hanya gambar pertama yang memiliki Hero tag
                     if (index == 0) {
                       return Hero(
                         tag: 'product_image_${product.id}',
@@ -64,7 +63,7 @@ class ProductDetailScreen extends ConsumerWidget {
                   return Opacity(
                     opacity: value,
                     child: Transform.translate(
-                      offset: Offset(0, 20 * (1 - value)), // Efek slide-up
+                      offset: Offset(0, 20 * (1 - value)),
                       child: child,
                     ),
                   );
@@ -99,15 +98,13 @@ class ProductDetailScreen extends ConsumerWidget {
                 ),
               ),
             ],
-          );
+          ),
         );
       },
     );
   }
 
-  void _shareProduct(BuildContext context, Product product, NumberFormat currencyFormatter) {
-    // Di aplikasi nyata, Anda mungkin ingin menyertakan deep link ke produk Anda.
-    // Contoh: final productUrl = 'https://tokosaya.com/produk/${product.id}';
+   void _shareProduct(BuildContext context, Product product, NumberFormat currencyFormatter) {
     final String shareText = '''
 Lihat produk keren ini di toko kami!
 
@@ -116,8 +113,8 @@ Harga: ${currencyFormatter.format(product.price)}
 
 Cek sekarang!''';
 
-    // Menggunakan Share.share untuk memicu dialog berbagi
-    Share.share(shareText, subject: 'Rekomendasi Produk: ${product.name}');
+    // PERBAIKAN: Mencoba hanya dengan argumen teks utama
+    SharePlus.share(shareText as ShareParams);
   }
 
   Widget _buildDetailRow(BuildContext context, IconData icon, String label, String value) {
