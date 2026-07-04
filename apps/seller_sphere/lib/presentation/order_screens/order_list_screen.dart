@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
+// Impor provider dari lokasi yang benar
 import 'package:seller_sphere/presentation/order_screens/providers/order_provider.dart';
 
-
-class OrderListScreen extends StatelessWidget {
+class OrderListScreen extends ConsumerWidget {
   const OrderListScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final orderProvider = Provider.of<OrderProvider>(context);
-    final orders = orderProvider.orders;
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Gunakan ref.watch untuk mendapatkan state dari provider
+    final orderState = ref.watch(orderProvider);
+    final orders = orderState.orders;
 
     return Scaffold(
       appBar: AppBar(

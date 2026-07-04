@@ -1,64 +1,60 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:seller_sphere/presentation/profile_screens/providers/seller_profile_provider.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget { // 1. Ubah menjadi ConsumerWidget
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Menggunakan Consumer agar UI update saat data profil berubah
-    return Consumer<SellerProfileProvider>(
-      builder: (context, provider, child) {
-        final profile = provider.profile;
+  Widget build(BuildContext context, WidgetRef ref) { // 2. Tambahkan WidgetRef
+    // 3. Gunakan ref.watch untuk mendapatkan state dari provider
+    final profile = ref.watch(sellerProfileProvider).profile;
 
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Profil Toko'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.edit),
-                tooltip: 'Edit Profil',
-                onPressed: () {
-                  context.push('/profile/edit');
-                },
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Profil Toko'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            tooltip: 'Edit Profil',
+            onPressed: () {
+              context.push('/profile/edit');
+            },
           ),
-          body: ListView(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            children: [
-              // Bagian Avatar dan Nama
-              _buildProfileHeader(context, profile),
-              const SizedBox(height: 24),
-              const Divider(),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        children: [
+          // Bagian Avatar dan Nama
+          _buildProfileHeader(context, profile),
+          const SizedBox(height: 24),
+          const Divider(),
 
-              // Informasi Detail
-              _buildProfileInfoTile(
-                context,
-                icon: Icons.email_outlined,
-                title: 'Email',
-                subtitle: profile.email,
-              ),
-              _buildProfileInfoTile(
-                context,
-                icon: Icons.phone_outlined,
-                title: 'Nomor Telepon',
-                subtitle: profile.phone,
-              ),
-              _buildProfileInfoTile(
-                context,
-                icon: Icons.location_on_outlined,
-                title: 'Alamat Toko',
-                subtitle: profile.address,
-                onTap: () => context.push('/set-location'),
-              ),
-            ],
+          // Informasi Detail
+          _buildProfileInfoTile(
+            context,
+            icon: Icons.email_outlined,
+            title: 'Email',
+            subtitle: profile.email,
           ),
-        );
-      },
+          _buildProfileInfoTile(
+            context,
+            icon: Icons.phone_outlined,
+            title: 'Nomor Telepon',
+            subtitle: profile.phone,
+          ),
+          _buildProfileInfoTile(
+            context,
+            icon: Icons.location_on_outlined,
+            title: 'Alamat Toko',
+            subtitle: profile.address,
+            onTap: () => context.push('/set-location'),
+          ),
+        ],
+      ),
     );
   }
 
@@ -107,6 +103,8 @@ class ProfileScreen extends StatelessWidget {
         return FileImage(file);
       }
     }
-    return const AssetImage('assets/images/default_avatar.png'); // Pastikan Anda punya aset ini
+    // Jika URL tidak valid atau file tidak ada, kembalikan gambar default
+    // Pastikan Anda memiliki aset ini di pubspec.yaml
+    return const AssetImage('assets/images/default_avatar.png');
   }
 }

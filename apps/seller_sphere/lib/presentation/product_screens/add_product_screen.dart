@@ -1,21 +1,24 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/presentation/product_screens/providers/product_provider.dart';
+import 'package:shared_ui/shared_ui.dart';
 
-class AddProductScreen extends StatefulWidget {
-  final String? productId; // Make productId optional
+// 1. Ubah menjadi ConsumerStatefulWidget
+class AddProductScreen extends ConsumerStatefulWidget {
+  final String? productId;
 
   const AddProductScreen({super.key, this.productId});
 
   @override
-  State<AddProductScreen> createState() => _AddProductScreenState();
+  // 2. Ubah return type menjadi ConsumerState
+  ConsumerState<AddProductScreen> createState() => _AddProductScreenState();
 }
 
-class _AddProductScreenState extends State<AddProductScreen> {
+// 3. Ubah State menjadi ConsumerState
+class _AddProductScreenState extends ConsumerState<AddProductScreen> {
   final _formKey = GlobalKey<FormState>();
   File? _productImage;
   final _nameController = TextEditingController();
@@ -28,13 +31,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   void didChangeDependencies() {
     if (_isInit) {
       if (widget.productId != null) {
-        // Edit mode
-        _existingProduct = Provider.of<ProductProvider>(context, listen: false)
-            .findById(widget.productId!);
+        // Edit mode: Gunakan ref.read untuk mengakses provider
+        _existingProduct = ref.read(productProvider).findById(widget.productId!);
         _nameController.text = _existingProduct!.name;
         _priceController.text = _existingProduct!.price.toStringAsFixed(0);
         _descriptionController.text = _existingProduct!.description;
-        // Set initial image from existing product
         if (_existingProduct!.imagePath.isNotEmpty) {
           _productImage = File(_existingProduct!.imagePath);
         }
@@ -65,7 +66,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   void _submitForm() {
     final isValid = _formKey.currentState?.validate() ?? false;
-    // In edit mode, image is not mandatory to change
     if (!isValid || (_productImage == null && _existingProduct == null)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -76,11 +76,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
       return;
     }
 
-    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    // 4. Gunakan ref.read untuk memanggil metode pada notifier
+    final productNotifier = ref.read(productProvider.notifier);
 
     if (_existingProduct != null) {
-      // Update existing product
-      productProvider.updateProduct(
+      productNotifier.updateProduct(
         id: _existingProduct!.id,
         name: _nameController.text,
         price: double.parse(_priceController.text),
@@ -88,8 +88,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         newImageFile: _productImage,
       );
     } else {
-      // Add new product
-      productProvider.addProduct(
+      productNotifier.addProduct(
         name: _nameController.text,
         price: double.parse(_priceController.text),
         description: _descriptionController.text,
@@ -97,7 +96,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
       );
     }
 
-    // Tampilkan pesan sukses dan kembali ke layar sebelumnya
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -117,16 +115,13 @@ class _AddProductScreenState extends State<AddProductScreen> {
     final isEditMode = _existingProduct != null;
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          isEditMode ? 'Edit Produk' : 'Tambah Produk Baru',
-        ),
+        title: Text(isEditMode ? 'Edit Produk' : 'Tambah Produk Baru'),
       ),
       body: Form(
         key: _formKey,
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            // Image Picker
             GestureDetector(
               onTap: _pickImage,
               child: Container(
@@ -154,11 +149,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
             ),
             const SizedBox(height: 24),
 
-            // Form Fields
             TextFormField(
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Nama Produk'),
-              validator: (value) => (value == null || value.isEmpty) ? 'Nama produk tidak boleh kosong' : null,
+              validator: (value) =>
+                  (value == null || value.isEmpty) ? 'Nama produk tidak boleh kosong' : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -166,18 +161,19 @@ class _AddProductScreenState extends State<AddProductScreen> {
               decoration: const InputDecoration(labelText: 'Harga', prefixText: 'Rp '),
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              validator: (value) => (value == null || value.isEmpty) ? 'Harga tidak boleh kosong' : null,
+              validator: (value) =>
+                  (value == null || value.isEmpty) ? 'Harga tidak boleh kosong' : null,
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: _descriptionController,
               decoration: const InputDecoration(labelText: 'Deskripsi Produk'),
               maxLines: 4,
-              validator: (value) => (value == null || value.isEmpty) ? 'Deskripsi tidak boleh kosong' : null,
+              validator: (value) =>
+                  (value == null || value.isEmpty) ? 'Deskripsi tidak boleh kosong' : null,
             ),
             const SizedBox(height: 32),
 
-            // Submit Button
             ElevatedButton(
               onPressed: _submitForm,
               style: ElevatedButton.styleFrom(

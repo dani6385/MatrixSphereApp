@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _emailController = TextEditingController(text: 'seller@example.com');
+  final _passwordController = TextEditingController(text: 'password123');
   bool _isLoading = false;
   bool _isPasswordVisible = false;
 
@@ -37,11 +37,11 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      // Panggil metode login dari AuthProvider
-      await Provider.of<AuthProvider>(context, listen: false).login(
-        _emailController.text,
-        _passwordController.text,
-      );
+      // Panggil metode login dari AuthNotifier menggunakan ref
+      await ref.read(authProvider.notifier).login(
+            _emailController.text,
+            _passwordController.text,
+          );
       // GoRouter akan menangani pengalihan secara otomatis setelah state berubah.
     } catch (error) {
       if (!mounted) return;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:seller_sphere/presentation/profile_screens/providers/seller_profile_provider.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:logger/logger.dart';
@@ -9,14 +9,14 @@ import 'package:shared_ui/shared_ui.dart';
 
 final logger = Logger();
 
-class StoreLocationScreen extends StatefulWidget {
+class StoreLocationScreen extends ConsumerStatefulWidget { // 1. Ubah menjadi ConsumerStatefulWidget
   const StoreLocationScreen({super.key});
 
   @override
-  State<StoreLocationScreen> createState() => _StoreLocationScreenState();
+  ConsumerState<StoreLocationScreen> createState() => _StoreLocationScreenState(); // 2. Ubah return type
 }
 
-class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTickerProviderStateMixin {
+class _StoreLocationScreenState extends ConsumerState<StoreLocationScreen> with SingleTickerProviderStateMixin { // 3. Ubah State menjadi ConsumerState
   late GoogleMapController _mapController;
   LatLng? _pickedLocation;
   bool _isLoading = true;
@@ -59,7 +59,8 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
   }
 
   Future<void> _initializeMap() async {
-    final sellerProfile = Provider.of<SellerProfileProvider>(context, listen: false);
+    // 4. Gunakan ref.read untuk mengakses provider
+    final sellerProfile = ref.read(sellerProfileProvider);
     setState(() {
       _pickedLocation = sellerProfile.profile.location;
       _isLoading = false;
@@ -141,7 +142,7 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
         position.latitude,
         position.longitude,
       );
-      if (placemarks.isNotEmpty) {
+      if ( placemarks.isNotEmpty) {
         final p = placemarks[0];
         setState(() {
           _currentAddress = '${p.street}, ${p.subLocality}, ${p.locality}, ${p.administrativeArea} ${p.postalCode}';
@@ -167,7 +168,8 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
       final addressToSave = _currentAddress;
       
       if (!mounted) return;
-      Provider.of<SellerProfileProvider>(context, listen: false).setStoreLocation(_pickedLocation!, addressToSave);
+      // 5. Gunakan ref.read untuk memanggil metode pada notifier
+      ref.read(sellerProfileProvider.notifier).setStoreLocation(_pickedLocation!, addressToSave);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Lokasi toko berhasil disimpan!')),
@@ -185,7 +187,7 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    final initialLocation = Provider.of<SellerProfileProvider>(context, listen: false).profile.location;
+    final initialLocation = ref.read(sellerProfileProvider).profile.location;
 
     return Scaffold(
       appBar: AppBar(
@@ -221,13 +223,15 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Stack(
-              children: [ 
+              children: [
                 AnimatedBuilder(
                   animation: _animationController,
                   builder: (context, _) {
                     return GoogleMap(
                       onMapCreated: _onMapCreated,
-                      initialCameraPosition: CameraPosition(target: _pickedLocation ?? initialLocation ?? const LatLng(0, 0), zoom: 16.0),
+                      initialCameraPosition: CameraPosition(
+                          target: _pickedLocation ?? initialLocation ?? const LatLng(0, 0),
+                          zoom: 16.0),
                       onTap: _selectLocation,
                       markers: _buildMarkers(),
                       circles: _pickedLocation == null ? {} : {
@@ -241,7 +245,7 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
                       },
                     );
                   },
-                  ),
+                ),
                 Positioned(
                   bottom: 90,
                   right: 16,

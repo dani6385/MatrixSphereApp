@@ -1,29 +1,31 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ThemeProvider with ChangeNotifier {
-  static const themeStatus = "THEME_STATUS";
-  bool _isDarkMode = false;
+// 1. Definisikan Provider Riverpod Global
+final themeProvider = StateNotifierProvider<ThemeNotifier, bool>((ref) {
+  return ThemeNotifier();
+});
 
-  bool get isDarkMode => _isDarkMode;
+// 2. Buat StateNotifier untuk mengelola state tema
+class ThemeNotifier extends StateNotifier<bool> {
+  static const _themeStatus = "THEME_STATUS";
 
-  ThemeProvider() {
+  // Inisialisasi state awal ke false (light mode) dan langsung muat tema tersimpan
+  ThemeNotifier() : super(false) {
     _loadTheme();
   }
 
   /// Mengubah tema dan menyimpan preferensi ke perangkat.
   void toggleTheme(bool isOn) async {
-    _isDarkMode = isOn;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool(themeStatus, isOn);
-    notifyListeners();
+    state = isOn;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool(_themeStatus, isOn);
   }
 
   /// Memuat preferensi tema saat aplikasi dimulai.
   Future<void> _loadTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    // Default ke false (light mode) jika tidak ada preferensi yang tersimpan.
-    _isDarkMode = prefs.getBool(themeStatus) ?? false;
-    notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    // Muat state, default ke false jika tidak ada yang tersimpan
+    state = prefs.getBool(_themeStatus) ?? false;
   }
 }

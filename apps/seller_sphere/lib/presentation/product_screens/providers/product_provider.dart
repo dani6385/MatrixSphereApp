@@ -1,6 +1,10 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+
+// 1. Definisikan provider Riverpod
+final productProvider = ChangeNotifierProvider((ref) => ProductProvider());
 
 final Logger _logger = Logger();
 

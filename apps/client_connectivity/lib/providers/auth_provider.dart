@@ -8,19 +8,15 @@ class AuthState {
 
 // 2. Buat Notifier untuk mengelola state autentikasi.
 class AuthNotifier extends StateNotifier<AuthState> {
-  // Inisialisasi state awal (pengguna belum terautentikasi).
   AuthNotifier() : super(AuthState(false));
-
-  // ======== PERBAIKAN: Tambahkan getter di sini ======== //
-  /// Getter untuk memeriksa status autentikasi dari luar notifier.
-  bool get isAuthenticated => state.isAuthenticated;
-  // ==================================================== //
 
   /// Simulasi proses login.
   Future<void> login(String email, String password) async {
+    // Simulasi penundaan jaringan.
     await Future.delayed(const Duration(seconds: 1));
 
-    if (email == 'seller@example.com' && password == 'password123') {
+    // Logika validasi dummy untuk klien.
+    if (email == 'client@example.com' && password == 'password') {
       state = AuthState(true);
     } else {
       throw Exception('Email atau password salah.');

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart'; // Pastikan path ini benar
-import 'package:seller_sphere/providers/theme_provider.dart'; // Pastikan path ini benar
-import 'package:seller_sphere/presentation/settings_screens/providers/notification_provider.dart';
+import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
+import 'package:seller_sphere/providers/theme_provider.dart'; // Impor provider Riverpod
+import 'package:seller_sphere/presentation/settings_screens/providers/notification_provider.dart'; // Impor provider Riverpod
 
-class SettingScreen extends StatelessWidget {
+// Pastikan ini adalah ConsumerWidget
+class SettingScreen extends ConsumerWidget {
   const SettingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final notificationProvider = Provider.of<NotificationProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Gunakan ref.watch untuk mendapatkan state dari provider Riverpod
+    final isDarkMode = ref.watch(themeProvider);
+    final areNotificationsEnabled = ref.watch(notificationProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,18 +32,19 @@ class SettingScreen extends StatelessWidget {
           SwitchListTile(
             title: const Text('Mode Gelap'),
             subtitle: const Text('Aktifkan untuk tema gelap'),
-            value: themeProvider.isDarkMode,
+            value: isDarkMode,
             onChanged: (bool value) {
-              // Panggil method di provider untuk mengubah tema
-              themeProvider.toggleTheme(value);
+              // Gunakan ref.read(...).notifier untuk memanggil metode pada notifier
+              ref.read(themeProvider.notifier).toggleTheme(value);
             },
           ),
           SwitchListTile(
             title: const Text('Notifikasi'),
             subtitle: const Text('Izinkan aplikasi mengirim notifikasi'),
-            value: notificationProvider.areNotificationsEnabled,
+            value: areNotificationsEnabled,
             onChanged: (bool value) {
-              notificationProvider.toggleNotifications(value);
+              // Gunakan ref.read(...).notifier untuk memanggil metode pada notifier
+              ref.read(notificationProvider.notifier).toggleNotifications(value);
             },
           ),
           ListTile(
@@ -73,9 +76,9 @@ class SettingScreen extends StatelessWidget {
                     TextButton(
                       child: const Text('Keluar', style: TextStyle(color: Colors.red)),
                       onPressed: () {
-                        // Tutup dialog terlebih dahulu
                         Navigator.of(ctx).pop();
-                        Provider.of<AuthProvider>(context, listen: false).logout();
+                        // Panggilan logout ini sudah benar
+                        ref.read(authProvider.notifier).logout();
                       },
                     ),
                   ],

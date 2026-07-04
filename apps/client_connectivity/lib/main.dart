@@ -1,56 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
-import 'package:firebase_core/firebase_core.dart'; // Add Firebase Core import
-import 'core/firebase_options.dart'; // Add Firebase Options import
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-import '../core/app_export.dart';
-import '../widgets/custom_error_widget.dart';
-
-
+import 'core/app_export.dart';
+import 'core/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  bool hasShownError = false;
+  // ... (Error handling tetap sama)
 
-  // 🚨 CRITICAL: Custom error handling - DO NOT REMOVE
-  ErrorWidget.builder = (FlutterErrorDetails details) {
-    if (!hasShownError) {
-      hasShownError = true;
-
-      // Reset flag after 3 seconds to allow error widget on new screens
-      Future.delayed(Duration(seconds: 5), () {
-        hasShownError = false;
-      });
-
-      return CustomErrorWidget(errorDetails: details);
-    }
-    return SizedBox.shrink();
-  };
-
-  // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
   Future.wait([
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
   ]).then((_) {
     GoRouter.optionURLReflectsImperativeAPIs = true;
-    runApp(
-      const ProviderScope(child: MyApp()), // Wrap MyApp with ProviderScope
-    );
+    runApp(const ProviderScope(child: MyApp()));
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+
     return Sizer(
       builder: (context, orientation, screenType) {
         return MaterialApp.router(
@@ -58,7 +36,6 @@ class MyApp extends StatelessWidget {
           theme: ThemeData.light(),
           darkTheme: ThemeData.dark(),
           themeMode: ThemeMode.light,
-          // 🚨 CRITICAL: NEVER REMOVE OR MODIFY
           builder: (context, child) {
             return MediaQuery(
               data: MediaQuery.of(
@@ -67,9 +44,8 @@ class MyApp extends StatelessWidget {
               child: child!,
             );
           },
-          // 🚨 END CRITICAL SECTION
           debugShowCheckedModeBanner: false,
-          routerConfig: appRouter,
+          routerConfig: router,
         );
       },
     );

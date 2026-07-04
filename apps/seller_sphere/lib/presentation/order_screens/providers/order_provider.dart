@@ -1,4 +1,8 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// 1. Definisikan provider di sini
+final orderProvider = ChangeNotifierProvider((ref) => OrderProvider());
 
 /// Enum untuk status pesanan.
 enum OrderStatus {

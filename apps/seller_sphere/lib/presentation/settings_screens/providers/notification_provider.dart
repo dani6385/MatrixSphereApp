@@ -1,35 +1,32 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NotificationProvider with ChangeNotifier {
-  static const notificationStatus = "NOTIFICATION_STATUS";
-  // Secara default, notifikasi dianggap aktif.
-  bool _areNotificationsEnabled = true;
+// 1. Definisikan Provider Riverpod Global
+final notificationProvider = StateNotifierProvider<NotificationNotifier, bool>((ref) {
+  return NotificationNotifier();
+});
 
-  bool get areNotificationsEnabled => _areNotificationsEnabled;
+// 2. Buat StateNotifier untuk mengelola state notifikasi
+class NotificationNotifier extends StateNotifier<bool> {
+  static const _notificationStatus = "NOTIFICATION_STATUS";
 
-  NotificationProvider() {
+  // Inisialisasi state awal ke true (notifikasi aktif) dan muat status tersimpan
+  NotificationNotifier() : super(true) {
     _loadNotificationStatus();
   }
 
   /// Mengubah status notifikasi dan menyimpannya ke perangkat.
   void toggleNotifications(bool isEnabled) async {
-    _areNotificationsEnabled = isEnabled;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(notificationStatus, isEnabled);
-    notifyListeners();
-
-    // Di sini Anda bisa menambahkan logika untuk mendaftar/berhenti
-    // dari layanan push notification seperti Firebase Cloud Messaging.
-    // Contoh:
-    // if (isEnabled) { FirebaseMessaging.instance.subscribeToTopic('news'); }
-    // else { FirebaseMessaging.instance.unsubscribeFromTopic('news'); }
+    state = isEnabled;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_notificationStatus, isEnabled);
+    // Logika tambahan seperti subscribe/unsubscribe ke topik FCM bisa ditambahkan di sini
   }
 
   /// Memuat status notifikasi yang tersimpan saat aplikasi dimulai.
   Future<void> _loadNotificationStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    _areNotificationsEnabled = prefs.getBool(notificationStatus) ?? true;
-    notifyListeners();
+    // Muat state, default ke true jika tidak ada yang tersimpan
+    state = prefs.getBool(_notificationStatus) ?? true;
   }
 }

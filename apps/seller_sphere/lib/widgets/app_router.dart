@@ -1,59 +1,96 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/presentation/home_screens/home_screen.dart';
 import 'package:seller_sphere/presentation/login_screens/login_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/product_list_screen.dart';
-import 'package:seller_sphere/presentation/settings_screens/setting_screen.dart';
-import 'package:seller_sphere/presentation/profile_screens/profile_screen.dart'; // Pastikan path ini benar
-import 'package:seller_sphere/presentation/profile_screens/providers/edit_profile_screen.dart';
 import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
+import 'package:seller_sphere/presentation/order_screens/order_list_screen.dart';
+import 'package:seller_sphere/presentation/order_screens/providers/order_detail_screen.dart';
+import 'package:seller_sphere/presentation/product_screens/add_product_screen.dart';
+import 'package:seller_sphere/presentation/product_screens/product_list_screen.dart';
+import 'package:seller_sphere/presentation/profile_screens/edit_profile_screen.dart';
+import 'package:seller_sphere/presentation/profile_screens/profile_screen.dart';
+import 'package:seller_sphere/presentation/settings_screens/providers/store_location_screen.dart';
+import 'package:seller_sphere/presentation/settings_screens/setting_screen.dart';
+import 'package:seller_sphere/utils/go_router_refresh_stream.dart';
 
-class AppRouter {
-  final AuthProvider authProvider;
+// Provider tunggal untuk GoRouter
+final goRouterProvider = Provider<GoRouter>((ref) {
+  final authNotifier = ref.watch(authProvider.notifier);
 
-  AppRouter(this.authProvider);
-
-  late final GoRouter router = GoRouter(
-    // Daftarkan authProvider agar GoRouter dapat mendengarkan perubahannya.
-    refreshListenable: authProvider,
+  return GoRouter(
+    refreshListenable: GoRouterRefreshStream(authNotifier.stream),
     initialLocation: '/',
     routes: [
-      // Rute untuk halaman utama (Daftar Produk)
       GoRoute(
         path: '/',
-        builder: (context, state) => const ProductListScreen(),
+        builder: (context, state) => const SellerHomeScreen(),
       ),
-      // Rute untuk halaman Pengaturan
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => const LoginScreen(),
+      ),
       GoRoute(
         path: '/settings',
         builder: (context, state) => const SettingScreen(),
+        routes: [
+          GoRoute(
+            path: 'location', //  /settings/location
+            builder: (context, state) => const StoreLocationScreen(),
+          ),
+        ],
       ),
-      // Rute untuk halaman Profil
       GoRoute(
         path: '/profile',
         builder: (context, state) => const ProfileScreen(),
         routes: [
           GoRoute(
-            path: 'edit', // Ini akan menjadi sub-rute: /profile/edit
+            path: 'edit', // /profile/edit
             builder: (context, state) => const EditProfileScreen(),
           ),
         ],
       ),
-      // Rute untuk halaman Login
       GoRoute(
-        path: '/login',
-        builder: (context, state) => const LoginScreen(),
+        path: '/products',
+        builder: (context, state) => const ProductListScreen(),
+      ),
+      GoRoute(
+        path: '/add-product',
+        builder: (context, state) => const AddProductScreen(),
+      ),
+      GoRoute(
+        path: '/edit-product/:productId',
+        builder: (context, state) {
+          final productId = state.pathParameters['productId']!;
+          return AddProductScreen(productId: productId);
+        },
+      ),
+      GoRoute(
+        path: '/orders',
+        builder: (context, state) => const OrderListScreen(),
+        routes: [
+          GoRoute(
+            path: ':orderId', // /orders/order123
+            builder: (context, state) {
+              final orderId = state.pathParameters['orderId']!;
+              return OrderDetailScreen(orderId: orderId);
+            },
+          ),
+        ],
       ),
     ],
     redirect: (context, state) {
-      final isAuthenticated = authProvider.isAuthenticated;
+      final isAuthenticated = authNotifier.isAuthenticated;
       final isLoggingIn = state.matchedLocation == '/login';
 
-      // Jika belum login dan tidak sedang di halaman login, arahkan ke /login.
-      if (!isAuthenticated && !isLoggingIn) return '/login';
-      // Jika sudah login dan mencoba mengakses halaman login, arahkan ke home.
-      if (isAuthenticated && isLoggingIn) return '/';
+      if (!isAuthenticated && !isLoggingIn) {
+        return '/login';
+      }
 
-      // Jika tidak ada kondisi di atas, jangan lakukan apa-apa.
+      if (isAuthenticated && isLoggingIn) {
+        return '/';
+      }
+
       return null;
     },
   );
-}
+});
