@@ -1,118 +1,21 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class UsageChartWidget extends StatefulWidget {
+import '../../../providers/usage_chart_provider.dart';
+
+class UsageChartWidget extends ConsumerWidget {
   final bool isTablet;
 
   const UsageChartWidget({required this.isTablet, super.key});
 
   @override
-  State<UsageChartWidget> createState() => _UsageChartWidgetState();
-}
-
-class _UsageChartWidgetState extends State<UsageChartWidget> {
-  // TODO: Replace with [Riverpod/Bloc] for production state management
-  int _selectedPeriodIndex = 0;
-  int _touchedIndex = -1;
-
-  final List<String> _periods = ['7 Hari', '30 Hari', '3 Bulan'];
-
-  // Mock usage data per period — MB per day
-  final List<List<FlSpot>> _periodData = [
-    // 7 Hari
-    [
-      const FlSpot(0, 42),
-      const FlSpot(1, 78),
-      const FlSpot(2, 55),
-      const FlSpot(3, 91),
-      const FlSpot(4, 67),
-      const FlSpot(5, 110),
-      const FlSpot(6, 85),
-    ],
-    // 30 Hari
-    [
-      const FlSpot(0, 30),
-      const FlSpot(1, 55),
-      const FlSpot(2, 48),
-      const FlSpot(3, 72),
-      const FlSpot(4, 61),
-      const FlSpot(5, 88),
-      const FlSpot(6, 45),
-      const FlSpot(7, 93),
-      const FlSpot(8, 77),
-      const FlSpot(9, 105),
-      const FlSpot(10, 82),
-      const FlSpot(11, 68),
-      const FlSpot(12, 114),
-      const FlSpot(13, 90),
-    ],
-    // 3 Bulan
-    [
-      const FlSpot(0, 620),
-      const FlSpot(1, 850),
-      const FlSpot(2, 740),
-      const FlSpot(3, 920),
-      const FlSpot(4, 680),
-      const FlSpot(5, 1050),
-      const FlSpot(6, 780),
-      const FlSpot(7, 930),
-      const FlSpot(8, 860),
-      const FlSpot(9, 1120),
-      const FlSpot(10, 990),
-      const FlSpot(11, 1240),
-    ],
-  ];
-
-  final List<List<String>> _xLabels = [
-    ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-    [
-      '1',
-      '3',
-      '5',
-      '7',
-      '9',
-      '11',
-      '13',
-      '15',
-      '17',
-      '19',
-      '21',
-      '23',
-      '25',
-      '27',
-    ],
-    [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'Mei',
-      'Jun',
-      'Jul',
-      'Agu',
-      'Sep',
-      'Okt',
-      'Nov',
-      'Des',
-    ],
-  ];
-
-  final List<String> _units = ['MB', 'MB', 'MB'];
-
-  List<FlSpot> get _currentData => _periodData[_selectedPeriodIndex];
-  List<String> get _currentLabels => _xLabels[_selectedPeriodIndex];
-  String get _currentUnit => _units[_selectedPeriodIndex];
-
-  double get _maxY {
-    final max = _currentData.map((s) => s.y).reduce((a, b) => a > b ? a : b);
-    return (max * 1.25).ceilToDouble();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final chartHeight = widget.isTablet ? 280.0 : 200.0;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final chartHeight = isTablet ? 280.0 : 200.0;
+    final chartState = ref.watch(usageChartProvider);
+    final chartDataAsync = chartState.data;
 
     return Container(
       width: double.infinity,
@@ -146,22 +49,16 @@ class _UsageChartWidgetState extends State<UsageChartWidget> {
               ),
               // Period tabs — pill style, active = underline/bold per image
               Row(
-                children: List.generate(_periods.length, (i) {
-                  final isActive = _selectedPeriodIndex == i;
+                children: List.generate(ChartPeriod.values.length, (i) {
+                  final period = ChartPeriod.values[i];
+                  final isActive = chartState.selectedPeriod == period;
                   return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _selectedPeriodIndex = i;
-                        _touchedIndex = -1;
-                      });
-                    },
+                    onTap: () => ref.read(usageChartProvider.notifier).setPeriod(period),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
                       margin: const EdgeInsets.only(left: 4),
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: isActive
                             ? AppColors.primary
@@ -169,7 +66,7 @@ class _UsageChartWidgetState extends State<UsageChartWidget> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        _periods[i],
+                        period.displayName,
                         style: GoogleFonts.dmSans(
                           fontSize: 12,
                           fontWeight: isActive
@@ -190,146 +87,162 @@ class _UsageChartWidgetState extends State<UsageChartWidget> {
           // Line chart with gradient fill — anatomy locked from image
           SizedBox(
             height: chartHeight,
-            child: LineChart(
-              LineChartData(
-                minX: 0,
-                maxX: (_currentData.length - 1).toDouble(),
-                minY: 0,
-                maxY: _maxY,
-                clipData: const FlClipData.all(),
-                gridData: FlGridData(
-                  show: true,
-                  drawVerticalLine: false,
-                  horizontalInterval: _maxY / 4,
-                  getDrawingHorizontalLine: (_) => FlLine(
-                    color: const Color(0xFFF0F0F0),
-                    strokeWidth: 1,
-                    dashArray: [4, 4],
-                  ),
-                ),
-                borderData: FlBorderData(show: false),
-                titlesData: FlTitlesData(
-                  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 40,
-                      interval: _maxY / 4,
-                      getTitlesWidget: (value, meta) {
-                        if (value == 0 || value == _maxY) {
-                          return const SizedBox.shrink();
-                        }
-                        return Text(
-                          value >= 1000
-                              ? '${(value / 1000).toStringAsFixed(1)}G'
-                              : value.toInt().toString(),
-                          style: GoogleFonts.dmSans(
-                            fontSize: 10,
-                            color: const Color(0xFF9E9E9E),
-                            fontFeatures: const [FontFeature.tabularFigures()],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      reservedSize: 24,
-                      interval: 1,
-                      getTitlesWidget: (value, meta) {
-                        final idx = value.toInt();
-                        if (idx < 0 || idx >= _currentLabels.length) {
-                          return const SizedBox.shrink();
-                        }
-                        // Show every other label to avoid crowding
-                        if (_currentData.length > 8 && idx % 2 != 0) {
-                          return const SizedBox.shrink();
-                        }
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            _currentLabels[idx],
-                            style: GoogleFonts.dmSans(
-                              fontSize: 10,
-                              color: const Color(0xFF9E9E9E),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                ),
-                lineTouchData: LineTouchData(
-                  touchCallback:
-                      (FlTouchEvent event, LineTouchResponse? response) {
-                        setState(() {
-                          if (response != null &&
-                              response.lineBarSpots != null &&
-                              response.lineBarSpots!.isNotEmpty) {
-                            _touchedIndex =
-                                response.lineBarSpots!.first.spotIndex;
-                          } else {
-                            _touchedIndex = -1;
-                          }
-                        });
-                      },
-                  touchTooltipData: LineTouchTooltipData(
-                    getTooltipColor: (touchedSpot) => const Color(0xFF1A1A1A),
-                    getTooltipItems: (spots) {
-                      return spots.map((spot) {
-                        return LineTooltipItem(
-                          '${spot.y.toStringAsFixed(0)} $_currentUnit',
-                          GoogleFonts.dmSans(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
-                          ),
-                        );
-                      }).toList();
-                    },
-                  ),
-                  handleBuiltInTouches: true,
-                ),
-                lineBarsData: [
-                  LineChartBarData(
-                    spots: _currentData,
-                    isCurved: true,
-                    curveSmoothness: 0.35,
-                    color: AppColors.primary,
-                    barWidth: 2.5,
-                    isStrokeCapRound: true,
-                    dotData: FlDotData(
+            child: chartDataAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text('Error: $err')),
+              data: (_) {
+                final currentData = ref.watch(currentChartDataProvider);
+                final maxY = ref.watch(currentChartMaxYProvider);
+                final touchedIndex = chartState.touchedIndex;
+
+                if (currentData == null) {
+                  return const Center(child: Text('Data tidak tersedia.'));
+                }
+
+                return LineChart(
+                  LineChartData(
+                    minX: 0,
+                    maxX: (currentData.spots.length - 1).toDouble(),
+                    minY: 0,
+                    maxY: maxY,
+                    clipData: const FlClipData.all(),
+                    gridData: FlGridData(
                       show: true,
-                      getDotPainter: (spot, percent, bar, index) {
-                        final isActive = index == _touchedIndex;
-                        return FlDotCirclePainter(
-                          radius: isActive ? 6 : 3,
-                          color: isActive ? Colors.white : AppColors.primary,
-                          strokeWidth: isActive ? 2.5 : 1.5,
-                          strokeColor: AppColors.primary,
-                        );
-                      },
-                    ),
-                    belowBarData: BarAreaData(
-                      show: true,
-                      gradient: LinearGradient(
-                        colors: [
-                          AppColors.primary.withAlpha(51),
-                          AppColors.primary.withAlpha(0),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+                      drawVerticalLine: false,
+                      horizontalInterval: maxY / 4,
+                      getDrawingHorizontalLine: (_) => FlLine(
+                        color: const Color(0xFFF0F0F0),
+                        strokeWidth: 1,
+                        dashArray: [4, 4],
                       ),
                     ),
+                    borderData: FlBorderData(show: false),
+                    titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 40,
+                          interval: maxY / 4,
+                          getTitlesWidget: (value, meta) {
+                            if (value == 0 || value == maxY) {
+                              return const SizedBox.shrink();
+                            }
+                            return Text(
+                              value >= 1000
+                                  ? '${(value / 1000).toStringAsFixed(1)}G'
+                                  : value.toStringAsFixed(
+                                      currentData.unit == 'GB' ? 1 : 0),
+                              style: GoogleFonts.dmSans(
+                                fontSize: 10,
+                                color: const Color(0xFF9E9E9E),
+                                fontFeatures: const [
+                                  FontFeature.tabularFigures()
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 24,
+                          interval: 1,
+                          getTitlesWidget: (value, meta) {
+                            final idx = value.toInt();
+                            if (idx < 0 || idx >= currentData.xLabels.length) {
+                              return const SizedBox.shrink();
+                            }
+                            // Show every other label to avoid crowding
+                            if (currentData.spots.length > 8 && idx % 2 != 0) {
+                              return const SizedBox.shrink();
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                currentData.xLabels[idx],
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 10,
+                                  color: const Color(0xFF9E9E9E),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      rightTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false)),
+                      topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false)),
+                    ),
+                    lineTouchData: LineTouchData(
+                      touchCallback:
+                          (FlTouchEvent event, LineTouchResponse? response) {
+                        int newIndex = -1;
+                        if (response != null &&
+                            response.lineBarSpots != null &&
+                            response.lineBarSpots!.isNotEmpty) {
+                          newIndex = response.lineBarSpots!.first.spotIndex;
+                        }
+                        ref
+                            .read(usageChartProvider.notifier)
+                            .setTouchedIndex(newIndex);
+                      },
+                      touchTooltipData: LineTouchTooltipData(
+                        getTooltipColor: (touchedSpot) =>
+                            const Color(0xFF1A1A1A),
+                        getTooltipItems: (spots) {
+                          return spots.map((spot) {
+                            return LineTooltipItem(
+                              '${spot.y.toStringAsFixed(currentData.unit == 'GB' ? 2 : 0)} ${currentData.unit}',
+                              GoogleFonts.dmSans(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
+                            );
+                          }).toList();
+                        },
+                      ),
+                      handleBuiltInTouches: true,
+                    ),
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: currentData.spots,
+                        isCurved: true,
+                        curveSmoothness: 0.35,
+                        color: AppColors.primary,
+                        barWidth: 2.5,
+                        isStrokeCapRound: true,
+                        dotData: FlDotData(
+                          show: true,
+                          getDotPainter: (spot, percent, bar, index) {
+                            final isActive = index == touchedIndex;
+                            return FlDotCirclePainter(
+                              radius: isActive ? 6 : 3,
+                              color:
+                                  isActive ? Colors.white : AppColors.primary,
+                              strokeWidth: isActive ? 2.5 : 1.5,
+                              strokeColor: AppColors.primary,
+                            );
+                          },
+                        ),
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.primary.withAlpha(51),
+                              AppColors.primary.withAlpha(0),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 16),

@@ -34,52 +34,54 @@ class _MemberTabWidgetState extends ConsumerState<MemberTabWidget> {
   Future<void> _login() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
 
-    try {
-      await ref.read(authProvider.notifier).login(
-            _usernameController.text,
-            _passwordController.text,
-          );
-
-      final ipSyncService = ref.read(ipSyncServiceProvider);
-      final mikrotikConfig = MikroTikRestApiConfig(
-        host: '192.168.88.1',
-        username: 'api-user',
-        password: 'api-password',
-      );
-      final response = await ipSyncService.syncIpAddress(
-        mikrotikId: 'mikrotik_A_id',
-        userId: 'user_123',
-        mikrotikRestApiConfig: mikrotikConfig,
-      );
-
-      if (!mounted) return;
-      final snackBar = SnackBar(
-        content: Text('Status Sinkronisasi: ${response.status.name}'),
-        backgroundColor:
-            (response.status == IpSyncStatus.syncFailed) ? Colors.red : Colors.green,
-      );
-      // PERBAIKAN: Menggunakan operator cascade '..' dengan benar
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
-
-      if (widget.isPopupMode) {
-        Navigator.of(context).pop(true);
-      } else {
-        context.go(AppRoutes.homeScreen);
-      }
-    } catch (e) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
-      );
-    }
+    ref.read(authNotifierProvider.notifier).login(
+          _usernameController.text,
+          _passwordController.text,
+        );
   }
 
   @override
   Widget build(BuildContext context) {
-    final authState = ref.watch(authProvider);
-    final isLoading = authState is AsyncLoading;
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState.loginProcessState is AuthLoading;
+
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) async {
+      final processState = next.loginProcessState;
+      if (processState is AuthSuccess) {
+        // Panggil service setelah login berhasil
+        final ipSyncService = ref.read(ipSyncServiceProvider);
+        final mikrotikConfig = MikroTikRestApiConfig(
+          host: '192.168.88.1',
+          username: 'api-user',
+          password: 'api-password',
+        );
+        final response = await ipSyncService.syncIpAddress(
+          mikrotikId: 'mikrotik_A_id',
+          userId: 'user_123', // Ganti dengan ID pengguna yang sebenarnya
+          mikrotikRestApiConfig: mikrotikConfig,
+        );
+
+        if (!context.mounted) return;
+        final snackBar = SnackBar(
+          content: Text('Status Sinkronisasi: ${response.status.name}'),
+          backgroundColor:
+              (response.status == IpSyncStatus.syncFailed) ? Colors.red : Colors.green,
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        if (widget.isPopupMode) {
+          Navigator.of(context).pop(true);
+        } else {
+          context.go(AppRoutes.homeScreen);
+        }
+      } else if (processState is AuthError) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(processState.message), backgroundColor: Colors.red),
+        );
+      }
+    });
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),

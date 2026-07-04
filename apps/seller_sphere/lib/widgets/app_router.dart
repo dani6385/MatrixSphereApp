@@ -1,17 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/presentation/home_screens/home_screen.dart';
-import 'package:seller_sphere/presentation/login_screens/login_screen.dart';
-import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
-import 'package:seller_sphere/presentation/order_screens/order_list_screen.dart';
-import 'package:seller_sphere/presentation/order_screens/providers/order_detail_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/add_product_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/product_list_screen.dart';
-import 'package:seller_sphere/presentation/profile_screens/edit_profile_screen.dart';
-import 'package:seller_sphere/presentation/profile_screens/profile_screen.dart';
-import 'package:seller_sphere/presentation/settings_screens/providers/store_location_screen.dart';
-import 'package:seller_sphere/presentation/settings_screens/setting_screen.dart';
-import 'package:seller_sphere/utils/go_router_refresh_stream.dart';
+import '../presentation/home_screens/home_screen.dart';
+import '../presentation/login_screens/login_screen.dart';
+import '../presentation/login_screens/providers/auth_provider.dart';
+import '../presentation/order_screens/order_list_screen.dart';
+import '../presentation/order_screens/providers/order_detail_screen.dart';
+import '../presentation/product_screens/models/add_product_screen.dart';
+import '../presentation/product_screens/models/product_detail_screen.dart';
+import '../presentation/product_screens/models/product_list_screen.dart';
+import '../presentation/profile_screens/edit_profile_screen.dart';
+import '../presentation/profile_screens/profile_screen.dart';
+import '../presentation/settings_screens/providers/store_location_screen.dart';
+import '../presentation/settings_screens/setting_screen.dart';
+import '../utils/go_router_refresh_stream.dart';
 
 // Provider tunggal untuk GoRouter
 final goRouterProvider = Provider<GoRouter>((ref) {
@@ -62,6 +63,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final productId = state.pathParameters['productId']!;
           return AddProductScreen(productId: productId);
+        },
+      ),
+      GoRoute(
+        path: '/product/:productId',
+        builder: (context, state) {
+          final productId = state.pathParameters['productId']!;
+          return ProductDetailScreen(productId: productId);
         },
       ),
       GoRoute(

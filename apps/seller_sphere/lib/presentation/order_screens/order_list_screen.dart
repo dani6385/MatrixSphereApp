@@ -11,62 +11,79 @@ class OrderListScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Gunakan ref.watch untuk mendapatkan state dari provider
-    final orderState = ref.watch(orderProvider);
-    final orders = orderState.orders;
+    final ordersAsync = ref.watch(filteredOrdersProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daftar Pesanan'),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: orders.length,
-        itemBuilder: (context, index) {
-          final order = orders[index];
-          return Card(
-            margin: const EdgeInsets.only(bottom: 16),
-            child: ListTile(
-              title: Text('Pesanan #${order.id} - ${order.customerName}'),
-              subtitle: Text(
-                '${order.items.length} item • Rp ${order.totalAmount.toStringAsFixed(0)}\n${DateFormat('dd MMM yyyy, HH:mm').format(order.orderDate)}',
-              ),
-              trailing: Chip(
-                label: Text(
-                  _getStatusText(order.status),
-                  style: const TextStyle(color: Colors.white),
+      body: ordersAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Terjadi kesalahan: $err')),
+        data: (orders) {
+          if (orders.isEmpty) {
+            return const Center(child: Text('Tidak ada pesanan.'));
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              final order = orders[index];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 16),
+                child: ListTile(
+                  title: Text('Pesanan #${order.id} - ${order.customerName}'),
+                  subtitle: Text(
+                    '${order.items.length} item • Rp ${order.totalAmount.toStringAsFixed(0)}\n${DateFormat('dd MMM yyyy, HH:mm').format(order.orderDate)}',
+                  ),
+                  trailing: Chip(
+                    label: Text(
+                      _getStatusText(order.status),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                    ),
+                    backgroundColor: _getStatusColor(order.status),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                  ),
+                  isThreeLine: true,
+                  onTap: () {
+                    context.push('/orders/${order.id}');
+                  },
                 ),
-                backgroundColor: _getStatusColor(order.status),
-              ),
-              isThreeLine: true,
-              onTap: () {
-                context.push('/orders/${order.id}');
-              },
-            ),
+              );
+            },
           );
         },
       ),
     );
   }
 
-  String _getStatusText(OrderStatus status) {
+  String _getStatusText(PickupStatus status) {
     switch (status) {
-      case OrderStatus.processing:
-        return 'Diproses';
-      case OrderStatus.readyForPickup:
+      case PickupStatus.newOrder:
+        return 'Baru';
+      case PickupStatus.preparing:
+        return 'Disiapkan';
+      case PickupStatus.readyForPickup:
         return 'Siap Diambil';
-      case OrderStatus.completed:
+      case PickupStatus.completed:
         return 'Selesai';
+      case PickupStatus.cancelled:
+        return 'Dibatalkan';
     }
   }
 
-  Color _getStatusColor(OrderStatus status) {
+  Color _getStatusColor(PickupStatus status) {
     switch (status) {
-      case OrderStatus.processing:
-        return Colors.orange.shade700;
-      case OrderStatus.readyForPickup:
+      case PickupStatus.newOrder:
         return Colors.blue.shade700;
-      case OrderStatus.completed:
+      case PickupStatus.preparing:
+        return Colors.orange.shade700;
+      case PickupStatus.readyForPickup:
+        return Colors.purple.shade700;
+      case PickupStatus.completed:
         return Colors.green.shade700;
+      case PickupStatus.cancelled:
+        return Colors.grey.shade700;
     }
   }
 }

@@ -21,12 +21,12 @@ class AppRoutes {
 }
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authState = ref.watch(authProvider);
-
   return GoRouter(
     initialLocation: AppRoutes.initial,
-    refreshListenable: GoRouterRefreshStream(ref.read(authProvider.notifier).stream),
+    refreshListenable: GoRouterRefreshStream(ref.read(authNotifierProvider.notifier).stream),
     redirect: (context, state) {
+      // Ambil state terbaru di dalam redirect untuk memastikan nilainya tidak basi.
+      final authState = ref.watch(authNotifierProvider);
       final isAuthenticated = authState.isAuthenticated;
       final isLoggingIn = state.matchedLocation == AppRoutes.initial || state.matchedLocation == AppRoutes.loginScreen;
 

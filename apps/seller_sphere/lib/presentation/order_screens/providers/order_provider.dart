@@ -1,14 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// 1. Definisikan provider di sini
-final orderProvider = ChangeNotifierProvider((ref) => OrderProvider());
-
 /// Enum untuk status pesanan.
-enum OrderStatus {
-  processing, // Diproses
-  readyForPickup, // Siap Diambil
-  completed, // Pesanan Selesai
+/// Dibuat konsisten dengan order_detail_screen
+enum PickupStatus {
+  newOrder,
+  preparing,
+  readyForPickup,
+  completed,
+  cancelled,
 }
 
 /// Model untuk satu item dalam sebuah pesanan.
@@ -33,7 +32,7 @@ class Order {
   final double totalAmount;
   final DateTime orderDate;
   final String paymentMethod;
-  OrderStatus status;
+  PickupStatus status;
   final String customerName;
 
   Order({
@@ -47,10 +46,9 @@ class Order {
   });
 }
 
-/// Provider untuk mengelola riwayat pesanan dari sisi penjual.
-class OrderProvider with ChangeNotifier {
-  // Data dummy untuk pesanan yang masuk
-  final List<Order> _orders = [
+/// Repository untuk mengelola data pesanan.
+class OrderRepository {
+  static final List<Order> _dummyOrders = [
     Order(
       id: 'order1',
       customerName: 'Budi Santoso',
@@ -61,7 +59,7 @@ class OrderProvider with ChangeNotifier {
       totalAmount: 2050000,
       orderDate: DateTime.now().subtract(const Duration(hours: 1)),
       paymentMethod: 'E-Wallet (GoPay, OVO)',
-      status: OrderStatus.processing,
+      status: PickupStatus.preparing,
     ),
     Order(
       id: 'order2',
@@ -72,19 +70,39 @@ class OrderProvider with ChangeNotifier {
       totalAmount: 1800000,
       orderDate: DateTime.now().subtract(const Duration(days: 1)),
       paymentMethod: 'Transfer Bank',
-      status: OrderStatus.readyForPickup,
+      status: PickupStatus.readyForPickup,
+    ),
+    Order(
+      id: 'order3',
+      customerName: 'Agus Wijaya',
+      items: [
+        OrderItem(id: 'p4', name: 'Topi Baseball', quantity: 2, price: 85000),
+      ],
+      totalAmount: 170000,
+      orderDate: DateTime.now().subtract(const Duration(days: 2)),
+      paymentMethod: 'COD',
+      status: PickupStatus.completed,
     ),
   ];
 
-  List<Order> get orders => [..._orders];
-
-  Order findById(String id) {
-    return _orders.firstWhere((order) => order.id == id);
-  }
-
-  void updateOrderStatus(String orderId, OrderStatus newStatus) {
-    final order = findById(orderId);
-    order.status = newStatus;
-    notifyListeners();
+  Future<List<Order>> fetchOrders() async {
+    await Future.delayed(const Duration(milliseconds: 800));
+    return List<Order>.from(_dummyOrders);
   }
 }
+
+// 1. Provider untuk instance OrderRepository.
+final orderRepositoryProvider = Provider<OrderRepository>((ref) => OrderRepository());
+
+// 2. Provider untuk menyimpan status filter yang dipilih. null berarti "Tampilkan Semua".
+final orderFilterProvider = StateProvider<PickupStatus?>((ref) => null);
+
+// 3. FutureProvider yang mengambil dan memfilter pesanan.
+final filteredOrdersProvider = FutureProvider<List<Order>>((ref) async {
+  final repository = ref.watch(orderRepositoryProvider);
+  final filter = ref.watch(orderFilterProvider);
+  final allOrders = await repository.fetchOrders();
+
+  if (filter == null) return allOrders;
+  return allOrders.where((order) => order.status == filter).toList();
+});

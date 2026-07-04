@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../routes/app_routes.dart';
 
-class VoucherTabWidget extends StatefulWidget {
+class VoucherTabWidget extends ConsumerStatefulWidget {
   /// If true, the widget is displayed inside a dialog.
   /// It will pop the dialog on success instead of navigating.
   final bool isPopupMode;
@@ -41,15 +43,12 @@ class VoucherTabWidget extends StatefulWidget {
   }
 
   @override
-  State<VoucherTabWidget> createState() => _VoucherTabWidgetState();
+  ConsumerState<VoucherTabWidget> createState() => _VoucherTabWidgetState();
 }
 
-class _VoucherTabWidgetState extends State<VoucherTabWidget> {
+class _VoucherTabWidgetState extends ConsumerState<VoucherTabWidget> {
   final _formKey = GlobalKey<FormState>();
   final _voucherController = TextEditingController();
-  bool _isLoading = false;
-
-  // TODO: Replace with [Riverpod/Bloc] for production auth state
 
   @override
   void dispose() {
@@ -59,24 +58,36 @@ class _VoucherTabWidgetState extends State<VoucherTabWidget> {
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _isLoading = true);
-    await Future.delayed(const Duration(milliseconds: 1200));
-    if (mounted) {
-      if (widget.isPopupMode) {
-        // In popup mode, close the dialog and pass a success flag.
-        Navigator.of(context).pop(true);
-      } else {
-        // Original behavior: navigate to home screen.
-        context.go(AppRoutes.homeScreen);
-      }
-    }
+    ref
+        .read(authNotifierProvider.notifier)
+        .loginWithVoucher(_voucherController.text);
   }
 
   @override
   Widget build(BuildContext context) {
+    // Watch the auth state for changes
+    final authState = ref.watch(authNotifierProvider);
+    final authProcessState = authState.loginProcessState;
+    final isLoading = authProcessState is AuthLoading;
+
+    // Listen to state changes for side-effects like navigation or showing snackbars
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      final processState = next.loginProcessState;
+      if (processState is AuthSuccess) {
+        if (widget.isPopupMode) {
+          Navigator.of(context).pop(true);
+        } else {
+          context.go(AppRoutes.homeScreen);
+        }
+      } else if (processState is AuthError) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(processState.message)));
+      }
+    });
+
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
-      // The content remains the same
       child: Form(
         key: _formKey,
         child: Column(
@@ -144,14 +155,14 @@ class _VoucherTabWidgetState extends State<VoucherTabWidget> {
               width: double.infinity,
               height: 50,
               child: FilledButton(
-                onPressed: _isLoading ? null : _login,
+                onPressed: isLoading ? null : _login,
                 style: FilledButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: _isLoading
+                child: isLoading
                     ? const SizedBox(
                         width: 22,
                         height: 22,

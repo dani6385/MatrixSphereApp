@@ -6,13 +6,14 @@ import 'presentation/home_screens/home_screen.dart';
 import 'presentation/cart_screens/cart_screen.dart';
 import 'presentation/profile_screens/profile_screen.dart';
 import 'presentation/order_screens/order_history_screen.dart';
-import 'presentation/product_screens/product_detail_screen.dart';
+import 'presentation/product_screens/models/product_detail_screen.dart';
 import 'presentation/checkout_screens/checkout_screen.dart';
 import 'presentation/auth_screens/login_screen.dart';
 import 'providers/device_provider.dart';
 import 'providers/session_provider.dart';
-import 'providers/cart_provider.dart';
-import 'providers/order_provider.dart';
+import 'presentation/cart_screens/providers/cart_provider.dart';
+import 'presentation/order_screens/providers/order_provider.dart';
+import 'presentation/product_screens/provider/review_provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -87,6 +88,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SessionProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
+        ChangeNotifierProvider(create: (_) => ReviewProvider()),
       ],
       child: MaterialApp.router(
         title: 'MatrixSphere App',

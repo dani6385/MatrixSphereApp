@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:shop_sphere/providers/cart_provider.dart'; // Untuk menggunakan CartItem
+import 'package:shop_sphere/presentation/cart_screens/providers/cart_provider.dart'; // Untuk menggunakan CartItem
 
 
 /// Enum untuk status pesanan.

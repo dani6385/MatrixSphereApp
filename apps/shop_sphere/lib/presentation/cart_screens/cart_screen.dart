@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_sphere/providers/cart_provider.dart';
+import 'package:shop_sphere/presentation/cart_screens/providers/cart_provider.dart';
 import 'package:shop_sphere/providers/session_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 

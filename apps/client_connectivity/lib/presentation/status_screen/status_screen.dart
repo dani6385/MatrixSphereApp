@@ -1,95 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import 'package:shared_ui/shared_ui.dart';
+import '../../providers/status_provider.dart';
 import './widgets/device_info_widget.dart';
 import './widgets/usage_chart_widget.dart';
 import './widgets/usage_hero_widget.dart';
 import './widgets/wifi_signal_widget.dart';
 
-class StatusScreen extends StatefulWidget {
+class StatusScreen extends ConsumerWidget {
   const StatusScreen({super.key});
 
   @override
-  State<StatusScreen> createState() => _StatusScreenState();
-}
-
-class _StatusScreenState extends State<StatusScreen> {
-  // TODO: Replace with [Riverpod/Bloc] for production state management
-  final _deviceData = _DeviceData(
-    packageName: 'Paket Harian 1GB',
-    ipAddress: '192.168.10.45',
-    macAddress: 'A4:C3:F0:8B:2D:1E',
-    gateway: '192.168.10.1',
-    dns: '8.8.8.8',
-    ssid: 'HotspotKafe-01',
-    signalStrength: -52,
-    signalBars: 4,
-    totalUsageKwh: 248.2,
-    downloadTotal: 625.4,
-    uploadTotal: 142.7,
-    sessionStart: '27 Jun 2026, 06:24',
-    connectionType: 'WiFi 802.11n',
-    channelBand: '2.4 GHz, Ch 6',
-  );
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statusAsync = ref.watch(statusProvider);
     final isTablet = MediaQuery.of(context).size.width >= 600;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLight,
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: _buildAppBar(context)),
-            SliverPadding(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 0,
-                bottom: bottomPadding + 80,
+      body: statusAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, stack) => Center(child: Text('Error: $err')),
+        data: (data) => SafeArea(
+          bottom: false,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: _buildAppBar(context, ref, data.lastUpdated)),
+              SliverPadding(
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 0,
+                  bottom: bottomPadding + 80,
+                ),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    const SizedBox(height: 8),
+                    UsageHeroWidget(
+                      totalUsageKwh: data.totalUsage,
+                      downloadTotal: data.downloadTotal,
+                      uploadTotal: data.uploadTotal,
+                    ),
+                    const SizedBox(height: 16),
+                    WiFiSignalWidget(
+                      ssid: data.ssid,
+                      signalStrength: data.signalStrength,
+                      signalBars: data.signalBars,
+                      connectionType: data.connectionType,
+                      channelBand: data.channelBand,
+                    ),
+                    const SizedBox(height: 16),
+                    DeviceInfoWidget(
+                      packageName: data.packageName,
+                      ipAddress: data.ipAddress,
+                      macAddress: data.macAddress,
+                      gateway: data.gateway,
+                      dns: data.dns,
+                      sessionStart: DateFormat('d MMM yyyy, HH:mm').format(data.sessionStart),
+                      isTablet: isTablet,
+                    ),
+                    const SizedBox(height: 16),
+                    UsageChartWidget(isTablet: isTablet),
+                  ]),
+                ),
               ),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const SizedBox(height: 8),
-                  UsageHeroWidget(
-                    totalUsageKwh: _deviceData.totalUsageKwh,
-                    downloadTotal: _deviceData.downloadTotal,
-                    uploadTotal: _deviceData.uploadTotal,
-                  ),
-                  const SizedBox(height: 16),
-                  WiFiSignalWidget(
-                    ssid: _deviceData.ssid,
-                    signalStrength: _deviceData.signalStrength,
-                    signalBars: _deviceData.signalBars,
-                    connectionType: _deviceData.connectionType,
-                    channelBand: _deviceData.channelBand,
-                  ),
-                  const SizedBox(height: 16),
-                  DeviceInfoWidget(
-                    packageName: _deviceData.packageName,
-                    ipAddress: _deviceData.ipAddress,
-                    macAddress: _deviceData.macAddress,
-                    gateway: _deviceData.gateway,
-                    dns: _deviceData.dns,
-                    sessionStart: _deviceData.sessionStart,
-                    isTablet: isTablet,
-                  ),
-                  const SizedBox(height: 16),
-                  UsageChartWidget(isTablet: isTablet),
-                ]),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, WidgetRef ref, DateTime lastUpdated) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
       child: Row(
@@ -106,7 +91,7 @@ class _StatusScreenState extends State<StatusScreen> {
                 ),
               ),
               Text(
-                'Diperbarui: ${_formatTime(DateTime.now())}',
+                'Diperbarui: ${_formatTime(lastUpdated)}',
                 style: GoogleFonts.dmSans(
                   fontSize: 11,
                   color: const Color(0xFF9E9E9E),
@@ -129,9 +114,7 @@ class _StatusScreenState extends State<StatusScreen> {
             ),
             child: IconButton(
               icon: const Icon(Icons.refresh_rounded, color: AppColors.primary),
-              onPressed: () {
-                // TODO: Trigger data refresh
-              },
+              onPressed: () => ref.read(statusProvider.notifier).fetchStatus(),
             ),
           ),
         ],
@@ -145,38 +128,4 @@ class _StatusScreenState extends State<StatusScreen> {
     final s = dt.second.toString().padLeft(2, '0');
     return '$h:$m:$s';
   }
-}
-
-class _DeviceData {
-  final String packageName;
-  final String ipAddress;
-  final String macAddress;
-  final String gateway;
-  final String dns;
-  final String ssid;
-  final int signalStrength;
-  final int signalBars;
-  final double totalUsageKwh;
-  final double downloadTotal;
-  final double uploadTotal;
-  final String sessionStart;
-  final String connectionType;
-  final String channelBand;
-
-  const _DeviceData({
-    required this.packageName,
-    required this.ipAddress,
-    required this.macAddress,
-    required this.gateway,
-    required this.dns,
-    required this.ssid,
-    required this.signalStrength,
-    required this.signalBars,
-    required this.totalUsageKwh,
-    required this.downloadTotal,
-    required this.uploadTotal,
-    required this.sessionStart,
-    required this.connectionType,
-    required this.channelBand,
-  });
 }

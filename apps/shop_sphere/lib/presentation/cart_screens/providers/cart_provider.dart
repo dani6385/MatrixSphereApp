@@ -54,6 +54,36 @@ class CartProvider with ChangeNotifier {
     return _items.values.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
   }
 
+  /// Menambahkan item ke keranjang.
+  /// Jika item sudah ada, maka kuantitasnya akan ditambah.
+  void addItem({
+    required String productId,
+    required String name,
+    required double price,
+    required String imageUrl,
+    int quantity = 1, // Tambahkan parameter opsional
+  }) {
+    if (_items.containsKey(productId)) {
+      // Jika item sudah ada, tambahkan kuantitasnya
+      _items.update(
+        productId,
+        (existingCartItem) => CartItem(
+          id: existingCartItem.id,
+          name: existingCartItem.name,
+          quantity: existingCartItem.quantity + quantity, // Gunakan parameter quantity
+          price: existingCartItem.price,
+          imageUrl: existingCartItem.imageUrl,
+        ),
+      );
+    } else {
+      // Jika item baru, tambahkan ke keranjang
+      _items.putIfAbsent(
+        productId, () => CartItem(id: productId, name: name, imageUrl: imageUrl, price: price, quantity: quantity),
+      );
+    }
+    notifyListeners();
+  }
+
   void increaseQuantity(String productId) {
     if (_items.containsKey(productId)) {
       _items[productId]!.quantity++;

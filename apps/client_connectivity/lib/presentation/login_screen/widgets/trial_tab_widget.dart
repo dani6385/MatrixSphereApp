@@ -1,12 +1,14 @@
 // File: apps/client_connectivity/lib/presentation/login_screen/widgets/trial_tab_widget.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../providers/auth_provider.dart';
 import '../../../routes/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class TrialTabWidget extends StatefulWidget {
+class TrialTabWidget extends ConsumerWidget {
   /// Jika true, widget ditampilkan di dalam dialog.
   /// Ini akan menutup dialog saat berhasil, bukan menavigasi.
   final bool isPopupMode;
@@ -41,32 +43,29 @@ class TrialTabWidget extends StatefulWidget {
     }
   }
 
+
   @override
-  State<TrialTabWidget> createState() => _TrialTabWidgetState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authNotifierProvider);
+    final isLoading = authState.loginProcessState is AuthLoading;
 
-class _TrialTabWidgetState extends State<TrialTabWidget> {
-  bool _isLoading = false;
-
-  Future<void> _startTrial() async {
-    setState(() => _isLoading = true);
-
-    // Simulasi aktivasi trial
-    await Future.delayed(const Duration(milliseconds: 1000));
-
-    if (mounted) {
-      if (widget.isPopupMode) {
-        // Dalam mode popup, tutup dialog dan berikan flag sukses.
-        Navigator.of(context).pop(true);
-      } else {
-        // Perilaku asli: navigasi ke layar beranda.
-        context.go(AppRoutes.homeScreen);
+    ref.listen<AuthState>(authNotifierProvider, (previous, next) {
+      final processState = next.loginProcessState;
+      if (processState is AuthSuccess) {
+        if (isPopupMode) {
+          // Dalam mode popup, tutup dialog dan berikan flag sukses.
+          Navigator.of(context).pop(true);
+        } else {
+          // Perilaku asli: navigasi ke layar beranda.
+          context.go(AppRoutes.homeScreen);
+        }
+      } else if (processState is AuthError) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(processState.message)));
       }
-    }
-  }
+    });
 
-  @override
-  Widget build(BuildContext context) {
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
       child: Column(
@@ -99,12 +98,14 @@ class _TrialTabWidgetState extends State<TrialTabWidget> {
             width: double.infinity,
             height: 50,
             child: FilledButton.icon(
-              onPressed: _isLoading ? null : _startTrial,
-              icon: _isLoading
+              onPressed: isLoading
+                  ? null
+                  : () => ref.read(authNotifierProvider.notifier).startTrial(),
+              icon: isLoading
                   ? const SizedBox.shrink()
                   : const Icon(Icons.play_circle_outline_rounded),
               label: Text(
-                _isLoading ? 'Mengaktifkan...' : 'Mulai Coba Gratis',
+                isLoading ? 'Mengaktifkan...' : 'Mulai Coba Gratis',
                 style: GoogleFonts.dmSans(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
