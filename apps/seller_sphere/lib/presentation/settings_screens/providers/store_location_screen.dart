@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart'; // This import is already present.
 import 'package:provider/provider.dart'; // This import is already present.
-import 'package:seller_sphere/providers/seller_profile_provider.dart';
+import 'package:seller_sphere/presentation/profile_screens/providers/seller_profile_provider.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:logger/logger.dart';
 import 'package:shared_ui/shared_ui.dart';
@@ -167,7 +167,7 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
     try {
       // Gunakan alamat yang sudah ada di state
       final addressToSave = _currentAddress;
-
+      
       if (!mounted) return;
       Provider.of<SellerProfileProvider>(context, listen: false).setStoreLocation(_pickedLocation!, addressToSave);
 

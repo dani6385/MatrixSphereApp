@@ -3,8 +3,8 @@ import 'package:seller_sphere/presentation/login_screens/login_screen.dart';
 import 'package:seller_sphere/presentation/product_screens/product_list_screen.dart';
 import 'package:seller_sphere/presentation/settings_screens/setting_screen.dart';
 import 'package:seller_sphere/presentation/profile_screens/profile_screen.dart'; // Pastikan path ini benar
-import 'package:seller_sphere/presentation/profile_screens/edit_profile_screen.dart';
-import 'package:seller_sphere/providers/auth_provider.dart';
+import 'package:seller_sphere/presentation/profile_screens/providers/edit_profile_screen.dart';
+import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
 
 class AppRouter {
   final AuthProvider authProvider;

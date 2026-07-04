@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:seller_sphere/providers/product_provider.dart';
+import 'package:seller_sphere/presentation/product_screens/providers/product_provider.dart';
 
 class AddProductScreen extends StatefulWidget {
   final String? productId; // Make productId optional

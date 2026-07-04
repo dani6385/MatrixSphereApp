@@ -2,7 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/providers/seller_profile_provider.dart';
+import 'package:seller_sphere/presentation/profile_screens/providers/seller_profile_provider.dart';
+//import 'package:seller_sphere/widgets/image_picker_options.dart';
+import 'package:seller_sphere/utils/ui_helpers.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -81,17 +83,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       }
     } catch (e) {
       // Handle error
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Gagal mengambil gambar: $e')),
       );
     }
-  }
-
-  void _showImagePickerOptions() {
-    showModalBottomSheet(
-      context: context,
-      builder: (ctx) => ImagePickerOptions(onPick: _pickImage),
-    );
   }
 
   @override
@@ -117,8 +113,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 60,
-                    backgroundImage: _buildImageProvider(),
                     backgroundColor: Colors.grey.shade200,
+                    // Menggunakan child agar bisa memakai errorBuilder dari Image.network
+                    child: ClipOval(
+                      child: _buildImageWidget(),
+                    ),
                   ),
                   Positioned(
                     bottom: 0,
@@ -128,7 +127,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       backgroundColor: Theme.of(context).primaryColor,
                       child: IconButton(
                         icon: const Icon(Icons.edit, color: Colors.white, size: 20),
-                        onPressed: _showImagePickerOptions,
+                        onPressed: () => showImagePickerOptions(context, onPick: _pickImage),
                       ),
                     ),
                   ),
@@ -148,65 +147,70 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               validator: (value) => (value == null || value.isEmpty) ? 'Nama toko tidak boleh kosong' : null,
             ),
             const SizedBox(height: 16),
-            TextFormField(controller: _emailController, decoration: const InputDecoration(labelText: 'Email'), keyboardType: TextInputType.emailAddress),
+            TextFormField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Email tidak boleh kosong';
+                }
+                // Validasi format email menggunakan RegEx
+                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  return 'Masukkan format email yang valid';
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 16),
-            TextFormField(controller: _phoneController, decoration: const InputDecoration(labelText: 'Nomor Telepon'), keyboardType: TextInputType.phone),
+            TextFormField(
+              controller: _phoneController,
+              decoration: const InputDecoration(labelText: 'Nomor Telepon'),
+              keyboardType: TextInputType.phone,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nomor telepon tidak boleh kosong';
+                }
+                // Anda bisa menambahkan validasi format nomor telepon yang lebih kompleks di sini
+                return null;
+              },
+            ),
           ],
         ),
       ),
     );
   }
 
-  ImageProvider _buildImageProvider() {
+  /// Membangun widget gambar untuk avatar dengan penanganan error.
+  Widget _buildImageWidget() {
+    const double imageSize = 120; // 2 * radius
+
     if (_imageFile != null) {
-      return FileImage(_imageFile!);
+      return Image.file(
+        _imageFile!,
+        fit: BoxFit.cover,
+        width: imageSize,
+        height: imageSize,
+      );
     }
+
     final profileUrl = Provider.of<SellerProfileProvider>(context, listen: false).profile.profilePictureUrl;
+
     if (profileUrl.startsWith('http')) {
-      return NetworkImage(profileUrl);
-    } else if (profileUrl.isNotEmpty) {
-      return FileImage(File(profileUrl));
+      return Image.network(
+        profileUrl,
+        fit: BoxFit.cover,
+        width: imageSize,
+        height: imageSize,
+        errorBuilder: (context, error, stackTrace) {
+          // Jika gagal memuat gambar dari network, tampilkan gambar default.
+          return Image.asset('assets/images/default_avatar.png', fit: BoxFit.cover);
+        },
+      );
     }
-    // Fallback ke gambar default jika tidak ada
-    return const AssetImage('assets/images/default_avatar.png'); // Pastikan Anda punya aset ini
-  }
-}
 
-/// Widget helper untuk menampilkan opsi pilihan gambar
-class ImagePickerOptions extends StatelessWidget {
-  final Function(ImageSource) onPick;
-  const ImagePickerOptions({super.key, required this.onPick});
-
-  @override
-  Widget build(BuildContext context) {
-    return SafeArea(
-      child: Wrap(
-        children: <Widget>[
-          ListTile(
-            leading: const Icon(Icons.camera_alt),
-            title: const Text('Ambil Foto'),
-            onTap: () {
-              Navigator.of(context).pop();
-              onPick(ImageSource.camera);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.photo_library),
-            title: const Text('Pilih dari Galeri'),
-            onTap: () {
-              Navigator.of(context).pop();
-              onPick(ImageSource.gallery);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.close),
-            title: const Text('Batal'),
-            onTap: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-    );
+    // Fallback ke gambar default jika tidak ada URL atau path lokal.
+    return Image.asset('assets/images/default_avatar.png',
+        fit: BoxFit.cover, width: imageSize, height: imageSize);
   }
 }

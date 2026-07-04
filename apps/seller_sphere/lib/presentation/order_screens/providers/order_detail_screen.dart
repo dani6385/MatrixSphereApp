@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/providers/order_provider.dart';
+import 'package:seller_sphere/presentation/order_screens/providers/order_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class OrderDetailScreen extends StatelessWidget {

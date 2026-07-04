@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/providers/order_provider.dart';
+import 'package:seller_sphere/presentation/order_screens/providers/order_provider.dart';
 
 
 class OrderListScreen extends StatelessWidget {

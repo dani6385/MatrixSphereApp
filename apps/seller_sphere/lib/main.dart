@@ -5,12 +5,12 @@ import 'package:shared_ui/shared_ui.dart';
 import 'presentation/home_screens/home_screen.dart';
 import 'presentation/product_screens/add_product_screen.dart';
 import 'presentation/order_screens/order_list_screen.dart';
-import 'presentation/settings_screens/store_location_screen.dart';
+import 'presentation/settings_screens/providers/store_location_screen.dart';
 import 'presentation/product_screens/product_list_screen.dart';
-import 'presentation/order_screens/order_detail_screen.dart';
-import 'providers/product_provider.dart';
-import 'providers/order_provider.dart';
-import 'providers/seller_profile_provider.dart';
+import 'presentation/order_screens/providers/order_detail_screen.dart';
+import 'presentation/product_screens/providers/product_provider.dart';
+import 'presentation/order_screens/providers/order_provider.dart';
+import 'presentation/profile_screens/providers/seller_profile_provider.dart';
 
 void main() {
   runApp(const SellerApp());

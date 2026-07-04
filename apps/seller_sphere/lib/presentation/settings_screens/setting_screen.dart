@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/providers/auth_provider.dart'; // Pastikan path ini benar
+import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart'; // Pastikan path ini benar
 import 'package:seller_sphere/providers/theme_provider.dart'; // Pastikan path ini benar
+import 'package:seller_sphere/presentation/settings_screens/providers/notification_provider.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -10,7 +11,7 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    bool enableNotifications = true; // State lokal sementara untuk notifikasi
+    final notificationProvider = Provider.of<NotificationProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,9 +39,9 @@ class SettingScreen extends StatelessWidget {
           SwitchListTile(
             title: const Text('Notifikasi'),
             subtitle: const Text('Izinkan aplikasi mengirim notifikasi'),
-            value: enableNotifications,
+            value: notificationProvider.areNotificationsEnabled,
             onChanged: (bool value) {
-              // TODO: Tambahkan logika untuk mengaktifkan/menonaktifkan notifikasi
+              notificationProvider.toggleNotifications(value);
             },
           ),
           ListTile(
