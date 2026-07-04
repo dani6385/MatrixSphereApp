@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationProvider with ChangeNotifier {
-  static const NOTIFICATION_STATUS = "NOTIFICATION_STATUS";
+  static const notificationStatus = "NOTIFICATION_STATUS";
   // Secara default, notifikasi dianggap aktif.
   bool _areNotificationsEnabled = true;
 
@@ -16,7 +16,7 @@ class NotificationProvider with ChangeNotifier {
   void toggleNotifications(bool isEnabled) async {
     _areNotificationsEnabled = isEnabled;
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(NOTIFICATION_STATUS, isEnabled);
+    await prefs.setBool(notificationStatus, isEnabled);
     notifyListeners();
 
     // Di sini Anda bisa menambahkan logika untuk mendaftar/berhenti
@@ -29,7 +29,7 @@ class NotificationProvider with ChangeNotifier {
   /// Memuat status notifikasi yang tersimpan saat aplikasi dimulai.
   Future<void> _loadNotificationStatus() async {
     final prefs = await SharedPreferences.getInstance();
-    _areNotificationsEnabled = prefs.getBool(NOTIFICATION_STATUS) ?? true;
+    _areNotificationsEnabled = prefs.getBool(notificationStatus) ?? true;
     notifyListeners();
   }
 }

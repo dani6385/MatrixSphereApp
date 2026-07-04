@@ -227,7 +227,7 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
                   builder: (context, _) {
                     return GoogleMap(
                       onMapCreated: _onMapCreated,
-                      initialCameraPosition: CameraPosition(target: _pickedLocation ?? initialLocation, zoom: 16.0),
+                      initialCameraPosition: CameraPosition(target: _pickedLocation ?? initialLocation ?? const LatLng(0, 0), zoom: 16.0),
                       onTap: _selectLocation,
                       markers: _buildMarkers(),
                       circles: _pickedLocation == null ? {} : {

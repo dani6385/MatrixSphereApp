@@ -1,3 +1,4 @@
+import 'package:client_connectivity/presentation/payment_screen/payment_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
@@ -64,7 +65,6 @@ class TopupButtonWidget extends StatelessWidget {
           const SizedBox(width: 8),
           ElevatedButton(
             onPressed: () {
-              // TODO: Navigate to top-up flow / payment screen
               _showTopupSheet(context);
             },
             style: ElevatedButton.styleFrom(
@@ -114,6 +114,26 @@ class _TopupSheet extends StatelessWidget {
     {'name': '1 Bulan', 'quota': '30 GB', 'price': 'Rp 150.000'},
   ];
 
+  void _navigateToPayment(BuildContext context, Map<String, String> package) async {
+    Navigator.pop(context);
+    final paymentResult = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (context) => PaymentScreen(package: package),
+      ),
+    );
+
+    if (paymentResult == true && context.mounted) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text('Pembayaran untuk ${package['name']} berhasil!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -162,7 +182,7 @@ class _TopupSheet extends StatelessWidget {
             itemBuilder: (context, i) {
               final pkg = _packages[i];
               return InkWell(
-                onTap: () => Navigator.pop(context),
+                onTap: () => _navigateToPayment(context, pkg),
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   padding: const EdgeInsets.all(10),
