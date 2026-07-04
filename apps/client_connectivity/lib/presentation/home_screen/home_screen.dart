@@ -37,10 +37,10 @@ class HomeScreen extends ConsumerWidget {
         child: state.when(
           initial: () => Center(
             child: ElevatedButton(
-              onPressed: () => notifier.syncIpAddress(
-                'mikrotik123',
-                'user123',
-                mikrotikConfig,
+              onPressed: () => notifier.syncIp(
+                mikrotikId: 'mikrotik123',
+                userId: 'user123',
+                mikrotikRestApiConfig: mikrotikConfig,
               ),
               child: const Text('Sync IP Address'),
             ),
@@ -74,8 +74,6 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 16),
                     SessionInfoWidget(
-                      uptime: sessionData['uptime'] as String? ?? '',
-                      sessionTime: sessionData['sessionTime'] as String? ?? '',
                       isTablet: isTablet,
                     ),
                     const SizedBox(height: 16),
