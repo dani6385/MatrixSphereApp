@@ -56,7 +56,7 @@ class OrderProvider with ChangeNotifier {
       id: DateTime.now().toIso8601String(),
       items: cartItems
           .map((cartItem) => OrderItem(
-                id: cartItem.id,
+                id: cartItem.productId,
                 name: cartItem.name,
                 quantity: cartItem.quantity,
                 price: cartItem.price,

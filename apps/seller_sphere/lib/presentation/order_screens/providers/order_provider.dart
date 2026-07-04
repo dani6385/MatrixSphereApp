@@ -89,6 +89,17 @@ class OrderRepository {
     await Future.delayed(const Duration(milliseconds: 800));
     return List<Order>.from(_dummyOrders);
   }
+
+  /// Mensimulasikan pengambilan data satu pesanan berdasarkan ID.
+  Future<Order> fetchOrderById(String orderId) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    try {
+      // Di aplikasi nyata, ini akan menjadi panggilan API ke /api/orders/{orderId}
+      return _dummyOrders.firstWhere((order) => order.id == orderId);
+    } catch (e) {
+      throw Exception('Pesanan dengan ID $orderId tidak ditemukan.');
+    }
+  }
 }
 
 // 1. Provider untuk instance OrderRepository.

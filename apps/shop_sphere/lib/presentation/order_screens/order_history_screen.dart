@@ -118,7 +118,7 @@ class OrderCard extends StatelessWidget {
           final cart = Provider.of<CartProvider>(context, listen: false);
           for (var item in order.items) {
             cart.addItem(
-              productId: item.id,
+              productId: item.id, // Pastikan OrderItem.id sesuai dengan Product.id
               name: item.name,
               price: item.price,
               imageUrl: item.imageUrl,

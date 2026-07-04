@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_sphere/presentation/product_screens/models/product_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:seller_sphere/presentation/product_screens/providers/product_provider.dart';
 import 'package:seller_sphere/utils/ui_helpers.dart';
 
@@ -70,7 +71,7 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
       }
 
       // Invalidate provider daftar produk agar data dimuat ulang di halaman sebelumnya
-      ref.invalidate(productListProvider);
+      ref.read(productListNotifierProvider.notifier).fetchProducts();
 
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -235,7 +236,12 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: image is String
-                ? Image.network(image, fit: BoxFit.cover)
+                ? CachedNetworkImage(
+                    imageUrl: image,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                  )
                 : Image.file(image as File, fit: BoxFit.cover),
           ),
         );

@@ -105,10 +105,12 @@ final productRepositoryProvider = Provider<ProductRepository>((ref) {
   return ProductRepository();
 });
 
-// 2. StateProvider untuk menyimpan query pencarian.
-final productSearchQueryProvider = StateProvider<String>((ref) => '');
+// --- State Notifier untuk Daftar Produk ---
 
-// 3. Enum dan Provider untuk tipe pengurutan
+// 2. Enum untuk status state
+enum ProductListStatus { initial, loading, success, error }
+
+// 3. Enum untuk tipe pengurutan
 enum ProductSortType {
   uploadDateNewest,
   uploadDateOldest,
@@ -118,81 +120,151 @@ enum ProductSortType {
   priceDesc,
 }
 
-final productSortTypeProvider = StateProvider<ProductSortType>((ref) => ProductSortType.uploadDateNewest);
+// 4. Class untuk menampung state
+class ProductListState {
+  final ProductListStatus status;
+  final List<Product> allProducts;
+  final List<String> filteredProductIds;
+  final String? errorMessage;
+  final String searchQuery;
+  final ProductSortType sortType;
+  final bool hideOutOfStock;
 
-// 4. Notifier dan Provider untuk filter stok habis dengan persistensi
-class HideOutOfStockNotifier extends StateNotifier<bool> {
-  static const _key = 'HIDE_OUT_OF_STOCK';
+  const ProductListState({
+    this.status = ProductListStatus.initial,
+    this.allProducts = const [],
+    this.filteredProductIds = const [],
+    this.errorMessage,
+    this.searchQuery = '',
+    this.sortType = ProductSortType.uploadDateNewest,
+    this.hideOutOfStock = false,
+  });
 
-  HideOutOfStockNotifier() : super(false) {
-    _loadState();
-  }
-
-  Future<void> _loadState() async {
-    final prefs = await SharedPreferences.getInstance();
-    state = prefs.getBool(_key) ?? false;
-  }
-
-  Future<void> setFilter(bool isHidden) async {
-    state = isHidden;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_key, isHidden);
+  ProductListState copyWith({
+    ProductListStatus? status,
+    List<Product>? allProducts,
+    List<String>? filteredProductIds,
+    String? errorMessage,
+    String? searchQuery,
+    ProductSortType? sortType,
+    bool? hideOutOfStock,
+  }) {
+    return ProductListState(
+      status: status ?? this.status,
+      allProducts: allProducts ?? this.allProducts,
+      filteredProductIds: filteredProductIds ?? this.filteredProductIds,
+      errorMessage: errorMessage ?? this.errorMessage,
+      searchQuery: searchQuery ?? this.searchQuery,
+      sortType: sortType ?? this.sortType,
+      hideOutOfStock: hideOutOfStock ?? this.hideOutOfStock,
+    );
   }
 }
 
-final hideOutOfStockProvider = StateNotifierProvider<HideOutOfStockNotifier, bool>((ref) => HideOutOfStockNotifier());
+// 5. StateNotifier yang mengelola semua logika
+class ProductListNotifier extends StateNotifier<ProductListState> {
+  final ProductRepository _repository;
+  static const _hideStockKey = 'HIDE_OUT_OF_STOCK';
 
-// 5. FutureProvider utama yang akan mengambil, memfilter, dan mengurutkan produk.
-final productListProvider = FutureProvider<List<Product>>((ref) async {
-  // Ambil repository dan semua state filter/sort.
-  final repository = ref.watch(productRepositoryProvider);
-  final searchQuery = ref.watch(productSearchQueryProvider);
-  final sortType = ref.watch(productSortTypeProvider);
-  final hideOutOfStock = ref.watch(hideOutOfStockProvider);
-
-  // Ambil semua produk dari "API".
-  final allProducts = await repository.fetchProducts();
-
-  // Terapkan filter
-  List<Product> filteredProducts = allProducts
-      .where((product) =>
-          product.name.toLowerCase().contains(searchQuery.toLowerCase()) &&
-          (!hideOutOfStock || product.stock > 0))
-      .toList();
-
-  // Terapkan logika pengurutan
-  switch (sortType) {
-    case ProductSortType.uploadDateNewest:
-      filteredProducts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-      break;
-    case ProductSortType.uploadDateOldest:
-      filteredProducts.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-      break;
-    case ProductSortType.nameAsc:
-      filteredProducts.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
-      break;
-    case ProductSortType.nameDesc:
-      filteredProducts.sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
-      break;
-    case ProductSortType.priceAsc:
-      filteredProducts.sort((a, b) => a.price.compareTo(b.price));
-      break;
-    case ProductSortType.priceDesc:
-      filteredProducts.sort((a, b) => b.price.compareTo(a.price));
-      break;
+  ProductListNotifier(this._repository) : super(const ProductListState()) {
+    _loadInitialFilters();
+    fetchProducts();
   }
 
-  return filteredProducts;
+  Future<void> _loadInitialFilters() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hide = prefs.getBool(_hideStockKey) ?? false;
+    state = state.copyWith(hideOutOfStock: hide);
+  }
+
+  Future<void> fetchProducts() async {
+    state = state.copyWith(status: ProductListStatus.loading);
+    try {
+      final products = await _repository.fetchProducts();
+      state = state.copyWith(allProducts: products, status: ProductListStatus.success);
+      _applyFiltersAndSort();
+    } catch (e) {
+      state = state.copyWith(status: ProductListStatus.error, errorMessage: e.toString());
+    }
+  }
+
+  void updateSearchQuery(String query) {
+    state = state.copyWith(searchQuery: query);
+    _applyFiltersAndSort();
+  }
+
+  void updateSortType(ProductSortType sortType) {
+    state = state.copyWith(sortType: sortType);
+    _applyFiltersAndSort();
+  }
+
+  Future<void> updateHideOutOfStock(bool hide) async {
+    state = state.copyWith(hideOutOfStock: hide);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_hideStockKey, hide);
+    _applyFiltersAndSort();
+  }
+
+  void _applyFiltersAndSort() {
+    if (state.status != ProductListStatus.success) return;
+
+    // Terapkan filter
+    List<Product> filteredProducts = state.allProducts.where((product) {
+      final searchMatch = product.name.toLowerCase().contains(state.searchQuery.toLowerCase());
+      final stockMatch = !state.hideOutOfStock || product.stock > 0;
+      return searchMatch && stockMatch;
+    }).toList();
+
+    // Terapkan logika pengurutan
+    switch (state.sortType) {
+      case ProductSortType.uploadDateNewest:
+        filteredProducts.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        break;
+      case ProductSortType.uploadDateOldest:
+        filteredProducts.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+        break;
+      case ProductSortType.nameAsc:
+        filteredProducts.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        break;
+      case ProductSortType.nameDesc:
+        filteredProducts.sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
+        break;
+      case ProductSortType.priceAsc:
+        filteredProducts.sort((a, b) => a.price.compareTo(b.price));
+        break;
+      case ProductSortType.priceDesc:
+        filteredProducts.sort((a, b) => b.price.compareTo(a.price));
+        break;
+    }
+
+    state = state.copyWith(filteredProductIds: filteredProducts.map((p) => p.id).toList());
+  }
+}
+
+// 6. Provider utama yang akan digunakan di UI
+final productListNotifierProvider = StateNotifierProvider<ProductListNotifier, ProductListState>((ref) {
+  return ProductListNotifier(ref.watch(productRepositoryProvider));
 });
 
-// 6. FutureProvider.family untuk mengambil detail satu produk berdasarkan ID.
-final productDetailProvider =
-    FutureProvider.family<Product, String>((ref, productId) async {
-  final repository = ref.watch(productRepositoryProvider);
+// 7. FutureProvider.family untuk mengambil detail satu produk berdasarkan ID.
+// Provider ini tetap berguna karena ia menangani caching per-ID secara otomatis.
+final productDetailProvider = FutureProvider.family<Product, String>((ref, productId) async {
+  // Optimasi: Cek apakah produk sudah ada di state notifier
+  final productListState = ref.watch(productListNotifierProvider);
+  if (productListState.status == ProductListStatus.success) {
+    try {
+      final product = productListState.allProducts.firstWhere((p) => p.id == productId);
+      return product;
+    } catch (_) {
+      // Jika tidak ditemukan, fallback ke fetch dari repository
+    }
+  }
+  
+  final repository = ref.read(productRepositoryProvider);
   return await repository.fetchProductById(productId);
 });
 
-// 7. Provider untuk menangani state saat proses simpan/update.
+// 8. Provider untuk menangani state saat proses simpan/update.
 final productMutationProvider = StateProvider<bool>((ref) {
   // false = tidak sedang loading, true = sedang loading
   return false;

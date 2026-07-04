@@ -22,21 +22,21 @@ class AppNavigation extends StatelessWidget {
             branchIndex: 0,
           ),
           AppTabItem(
-            label: 'Produk',
-            icon: Icons.inventory_2_outlined,
+            label: 'Produk', // Diubah dari 'Status'
+            icon: Icons.inventory_2_outlined, // Diubah dari 'wifi'
             activeIcon: Icons.inventory_2,
             branchIndex: 1,
           ),
           AppTabItem(
-            label: 'Transaksi',
+            label: 'Pesanan', // Diubah dari 'Transaksi'
             icon: Icons.receipt_long_outlined,
-            activeIcon: Icons.receipt_long,
+            activeIcon: Icons.receipt_long_rounded,
             branchIndex: 2,
           ),
           AppTabItem(
             label: 'Akun',
             icon: Icons.person_outline_rounded,
-            activeIcon: Icons.person,
+            activeIcon: Icons.person_rounded,
             branchIndex: 3,
           ),
         ],

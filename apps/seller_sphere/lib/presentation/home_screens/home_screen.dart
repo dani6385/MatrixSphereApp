@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
+//import 'package:shared_ui/shared_ui.dart';
 import 'package:go_router/go_router.dart';
 
 class SellerHomeScreen extends StatelessWidget {
@@ -40,13 +40,13 @@ class SellerHomeScreen extends StatelessWidget {
           title: 'Pendapatan (Hari Ini)',
           value: 'Rp 1.250.000',
           icon: Icons.monetization_on,
-          color: AppColors.primary,
+          color: Colors.blue,
         ),
         _buildSummaryCard(
           title: 'Pesanan Baru',
           value: '5',
           icon: Icons.shopping_cart,
-          color: AppColors.error,
+          color: Colors.redAccent,
         ),
       ],
     );

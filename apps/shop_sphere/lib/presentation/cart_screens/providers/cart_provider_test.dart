@@ -15,7 +15,7 @@ void main() {
     });
 
     test('initial state should be empty after clearing', () {
-      expect(cartProvider.itemCount, 0);
+      expect(cartProvider.totalItems, 0);
       expect(cartProvider.totalPrice, 0.0);
     });
 
@@ -30,8 +30,8 @@ void main() {
         );
 
         // Verifikasi: Jumlah item bertambah dan item tersebut ada di keranjang
-        expect(cartProvider.itemCount, 1);
-        expect(cartProvider.items.first.id, 'prod1');
+        expect(cartProvider.totalItems, 1);
+        expect(cartProvider.items.first.productId, 'prod1');
         expect(cartProvider.items.first.quantity, 1);
       });
 
@@ -53,7 +53,7 @@ void main() {
         );
 
         // Verifikasi: Jumlah item tidak berubah, tetapi kuantitas item tersebut bertambah
-        expect(cartProvider.itemCount, 1);
+        expect(cartProvider.totalItems, 1);
         expect(cartProvider.items.first.quantity, 2);
       });
     });
@@ -63,10 +63,12 @@ void main() {
         // Aksi: Menambahkan beberapa item dengan kuantitas berbeda
         cartProvider.addItem(
           productId: 'prod1', name: 'Product A', price: 100.0, imageUrl: 'url1'); // 1 x 100 = 100
-        cartProvider.addItem(
-          productId: 'prod2', name: 'Product B', price: 50.0, imageUrl: 'url2', quantity: 3); // 3 x 50 = 150
+        cartProvider.addItem( // Item 2, kuantitas 1
+          productId: 'prod2', name: 'Product B', price: 50.0, imageUrl: 'url2');
+        cartProvider.increaseQuantity('prod2'); // Kuantitas jadi 2
+        cartProvider.increaseQuantity('prod2'); // Kuantitas jadi 3
 
-        // Verifikasi: Total harga harus sesuai dengan (1 * 100) + (3 * 50) = 250
+        // Verifikasi: Total harga harus sesuai dengan (1 * 100) + (3 * 50) = 250.0
         expect(cartProvider.totalPrice, 250.0);
       });
 
@@ -99,13 +101,13 @@ void main() {
 
       test('should do nothing if product ID does not exist', () {
         // Persiapan: Keranjang kosong
-        expect(cartProvider.itemCount, 0);
+        expect(cartProvider.totalItems, 0);
 
         // Aksi: Mencoba menaikkan kuantitas item yang tidak ada
         cartProvider.increaseQuantity('non_existent_id');
 
         // Verifikasi: Tidak ada yang berubah
-        expect(cartProvider.itemCount, 0);
+        expect(cartProvider.totalItems, 0);
         expect(cartProvider.totalPrice, 0.0);
       });
     });
@@ -113,7 +115,8 @@ void main() {
     group('decreaseQuantity', () {
       test('should decrease the quantity of an existing item if quantity > 1', () {
         // Persiapan: Menambahkan item dengan kuantitas 2
-        cartProvider.addItem(productId: 'prod1', name: 'Product A', price: 100.0, imageUrl: 'url1', quantity: 2);
+        cartProvider.addItem(productId: 'prod1', name: 'Product A', price: 100.0, imageUrl: 'url1');
+        cartProvider.increaseQuantity('prod1'); // Kuantitas jadi 2
         expect(cartProvider.items.first.quantity, 2);
         expect(cartProvider.totalPrice, 200.0);
 
@@ -128,13 +131,13 @@ void main() {
       test('should remove the item if quantity is 1', () {
         // Persiapan: Menambahkan item dengan kuantitas 1
         cartProvider.addItem(productId: 'prod1', name: 'Product A', price: 100.0, imageUrl: 'url1');
-        expect(cartProvider.itemCount, 1);
+        expect(cartProvider.totalItems, 1);
 
         // Aksi: Menurunkan kuantitas
         cartProvider.decreaseQuantity('prod1');
 
         // Verifikasi: Item dihapus dari keranjang
-        expect(cartProvider.itemCount, 0);
+        expect(cartProvider.totalItems, 0);
         expect(cartProvider.totalPrice, 0.0);
       });
     });
@@ -144,28 +147,28 @@ void main() {
         // Persiapan: Menambahkan dua item
         cartProvider.addItem(productId: 'prod1', name: 'Product A', price: 100.0, imageUrl: 'url1');
         cartProvider.addItem(productId: 'prod2', name: 'Product B', price: 50.0, imageUrl: 'url2');
-        expect(cartProvider.itemCount, 2);
+        expect(cartProvider.totalItems, 2);
         expect(cartProvider.totalPrice, 150.0);
 
         // Aksi: Menghapus item pertama
         cartProvider.removeItem('prod1');
 
         // Verifikasi: Item berkurang, total harga diperbarui, dan item yang tersisa benar
-        expect(cartProvider.itemCount, 1);
+        expect(cartProvider.totalItems, 1);
         expect(cartProvider.totalPrice, 50.0);
-        expect(cartProvider.items.first.id, 'prod2');
+        expect(cartProvider.items.first.productId, 'prod2');
       });
 
       test('should do nothing if product ID does not exist', () {
         // Persiapan: Menambahkan satu item
         cartProvider.addItem(productId: 'prod1', name: 'Product A', price: 100.0, imageUrl: 'url1');
-        expect(cartProvider.itemCount, 1);
+        expect(cartProvider.totalItems, 1);
 
         // Aksi: Mencoba menghapus item yang tidak ada
         cartProvider.removeItem('non_existent_id');
 
         // Verifikasi: Tidak ada yang berubah
-        expect(cartProvider.itemCount, 1);
+        expect(cartProvider.totalItems, 1);
         expect(cartProvider.totalPrice, 100.0);
       });
     });
@@ -175,13 +178,13 @@ void main() {
         // Persiapan: Menambahkan beberapa item
         cartProvider.addItem(productId: 'prod1', name: 'Product A', price: 100.0, imageUrl: 'url1');
         cartProvider.addItem(productId: 'prod2', name: 'Product B', price: 50.0, imageUrl: 'url2');
-        expect(cartProvider.itemCount, 2);
+        expect(cartProvider.totalItems, 2);
 
         // Aksi: Membersihkan keranjang
         cartProvider.clearCart();
 
         // Verifikasi: Keranjang menjadi kosong
-        expect(cartProvider.itemCount, 0);
+        expect(cartProvider.totalItems, 0);
         expect(cartProvider.totalPrice, 0.0);
       });
     });

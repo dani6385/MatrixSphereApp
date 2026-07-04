@@ -1,113 +1,96 @@
-import 'package:flutter/material.dart';
-import 'dart:collection';
+import 'package:flutter/foundation.dart';
+import 'package:collection/collection.dart';
 
-// Model untuk item di keranjang. Sebaiknya berada di file sendiri.
+/// Model untuk merepresentasikan satu item di dalam keranjang.
 class CartItem {
-  final String id;
+  final String productId;
   final String name;
-  final String imageUrl;
   final double price;
+  final String imageUrl;
   int quantity;
 
   CartItem({
-    required this.id,
+    required this.productId,
     required this.name,
-    required this.imageUrl,
     required this.price,
+    required this.imageUrl,
     this.quantity = 1,
   });
 }
 
+/// Notifier untuk mengelola logika keranjang belanja.
 class CartProvider with ChangeNotifier {
-  // Menggunakan Map untuk kemudahan mengelola item berdasarkan ID produk.
-  final Map<String, CartItem> _items = {
-    // Data dummy dipindahkan ke sini dari CartScreen.
-    'p1': CartItem(
-      id: 'p1',
-      name: 'Wireless Headphone Alpha',
-      imageUrl: 'assets/images/product1.jpg',
-      price: 1500000,
-      quantity: 1,
-    ),
-    'p2': CartItem(
-      id: 'p2',
-      name: 'Smart Watch Series 5',
-      imageUrl: 'assets/images/product2.jpg',
-      price: 2200000,
-      quantity: 2,
-    ),
-    'p4': CartItem(
-      id: 'p4',
-      name: 'Mechanical Keyboard Z',
-      imageUrl: 'assets/images/product4.jpg',
-      price: 1800000,
-      quantity: 1,
-    ),
-  };
+  List<CartItem> _items = [];
 
-  // Getter untuk mendapatkan daftar item tanpa bisa memodifikasinya secara langsung.
-  UnmodifiableListView<CartItem> get items => UnmodifiableListView(_items.values.toList());
+  List<CartItem> get items => _items;
 
-  int get itemCount => _items.length;
+  // Getter untuk menghitung total item unik di keranjang
+  int get totalItems => _items.length;
 
-  double get totalPrice {
-    return _items.values.fold(0.0, (sum, item) => sum + (item.price * item.quantity));
+  // Getter untuk menghitung total kuantitas semua item
+  int get totalQuantity {
+    return _items.fold(0, (total, current) => total + current.quantity);
   }
 
-  /// Menambahkan item ke keranjang.
-  /// Jika item sudah ada, maka kuantitasnya akan ditambah.
+  // Getter untuk menghitung total harga
+  double get totalPrice {
+    return _items.fold(0.0, (total, current) => total + (current.price * current.quantity));
+  }
+
   void addItem({
     required String productId,
     required String name,
     required double price,
     required String imageUrl,
-    int quantity = 1, // Tambahkan parameter opsional
+    int quantity = 1, // Tambahkan parameter kuantitas opsional
   }) {
-    if (_items.containsKey(productId)) {
-      // Jika item sudah ada, tambahkan kuantitasnya
-      _items.update(
-        productId,
-        (existingCartItem) => CartItem(
-          id: existingCartItem.id,
-          name: existingCartItem.name,
-          quantity: existingCartItem.quantity + quantity, // Gunakan parameter quantity
-          price: existingCartItem.price,
-          imageUrl: existingCartItem.imageUrl,
-        ),
-      );
+    final existingItem = _items.firstWhereOrNull((item) => item.productId == productId);
+
+    if (existingItem != null) {
+      // Jika item sudah ada, tambah kuantitasnya sesuai input
+      existingItem.quantity += quantity;
     } else {
-      // Jika item baru, tambahkan ke keranjang
-      _items.putIfAbsent(
-        productId, () => CartItem(id: productId, name: name, imageUrl: imageUrl, price: price, quantity: quantity),
+      // Jika item baru, tambahkan ke list
+      final newItem = CartItem(
+        productId: productId,
+        name: name,
+        price: price,
+        imageUrl: imageUrl,
+        quantity: quantity, // Atur kuantitas awal
       );
+      _items.add(newItem);
     }
     notifyListeners();
   }
 
   void increaseQuantity(String productId) {
-    if (_items.containsKey(productId)) {
-      _items[productId]!.quantity++;
+    final item = _items.firstWhereOrNull((item) => item.productId == productId);
+    if (item != null) {
+      item.quantity++;
       notifyListeners();
     }
   }
 
   void decreaseQuantity(String productId) {
-    if (_items.containsKey(productId) && _items[productId]!.quantity > 1) {
-      _items[productId]!.quantity--;
-      notifyListeners();
-    } else if (_items.containsKey(productId) && _items[productId]!.quantity == 1) {
-      // Jika kuantitas 1 dan dikurangi, hapus item dari keranjang.
-      removeItem(productId);
+    final item = _items.firstWhereOrNull((item) => item.productId == productId);
+    if (item != null) {
+      if (item.quantity > 1) {
+        item.quantity--;
+        notifyListeners();
+      } else {
+        // Jika kuantitas 1, hapus item
+        removeItem(productId);
+      }
     }
   }
 
   void removeItem(String productId) {
-    _items.remove(productId);
+    _items.removeWhere((item) => item.productId == productId);
     notifyListeners();
   }
 
   void clearCart() {
-    _items.clear();
+    _items = [];
     notifyListeners();
   }
 }

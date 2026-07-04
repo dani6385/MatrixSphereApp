@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:seller_sphere/presentation/product_screens/models/product_model.dart';
 import 'package:seller_sphere/presentation/product_screens/providers/product_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
@@ -49,10 +50,22 @@ class ProductDetailScreen extends ConsumerWidget {
                     if (index == 0) {
                       return Hero(
                         tag: 'product_image_${product.id}',
-                        child: Image.network(imageUrl, fit: BoxFit.cover, width: double.infinity),
+                        child: CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        ),
                       );
                     }
-                    return Image.network(imageUrl, fit: BoxFit.cover, width: double.infinity);
+                    return CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                    );
                   },
                 ),
               ),
@@ -114,7 +127,7 @@ Harga: ${currencyFormatter.format(product.price)}
 Cek sekarang!''';
 
     // PERBAIKAN: Mencoba hanya dengan argumen teks utama
-    SharePlus.share(shareText as ShareParams);
+    Share.share(shareText);
   }
 
   Widget _buildDetailRow(BuildContext context, IconData icon, String label, String value) {

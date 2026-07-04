@@ -98,7 +98,7 @@ class AccountScreen extends StatelessWidget {
         style: GoogleFonts.dmSans(
           fontSize: 18,
           fontWeight: FontWeight.w700,
-          color: const Color(0xFF1A1A1A),
+          color: AppColors.textPrimary,
         ),
       ),
       centerTitle: false,
@@ -173,7 +173,9 @@ class _ProfileAvatarCard extends StatelessWidget {
           colors: [
             AppColors.primary,
             AppColors.primary.withAlpha(204),
-            const Color(0xFF00695C),
+            // 'primaryDarker' may not be defined in AppColors; use a slightly
+            // darker variant by reducing opacity instead.
+            AppColors.primary.withAlpha(85),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
@@ -196,16 +198,16 @@ class _ProfileAvatarCard extends StatelessWidget {
                 height: 88,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withAlpha(38),
+                  color: AppColors.surface.withAlpha(38),
                   border: Border.all(
-                    color: Colors.white.withAlpha(128),
+                    color: AppColors.surface.withAlpha(128),
                     width: 3,
                   ),
                 ),
                 child: const Icon(
                   Icons.person_rounded,
                   size: 52,
-                  color: Colors.white,
+                  color: AppColors.surface,
                 ),
               ),
               Container(
@@ -213,7 +215,7 @@ class _ProfileAvatarCard extends StatelessWidget {
                 height: 26,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  shape: BoxShape.circle,
+                  shape: BoxShape.circle, // Warna putih untuk background ikon kamera
                   border: Border.all(color: AppColors.primary, width: 2),
                 ),
                 child: Icon(
@@ -230,7 +232,7 @@ class _ProfileAvatarCard extends StatelessWidget {
             style: GoogleFonts.dmSans(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: Colors.white,
+              color: AppColors.surface,
             ),
           ),
           const SizedBox(height: 4),
@@ -239,16 +241,16 @@ class _ProfileAvatarCard extends StatelessWidget {
             style: GoogleFonts.dmSans(
               fontSize: 13,
               fontWeight: FontWeight.w400,
-              color: Colors.white.withAlpha(204),
+              color: AppColors.surface.withAlpha(204),
             ),
           ),
           const SizedBox(height: 14),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withAlpha(38),
+              color: AppColors.surface.withAlpha(38),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withAlpha(77)),
+              border: Border.all(color: AppColors.surface.withAlpha(77)),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -256,7 +258,7 @@ class _ProfileAvatarCard extends StatelessWidget {
                 Icon(
                   _loginMethodIcon(userData.loginMethod),
                   size: 14,
-                  color: Colors.white,
+                  color: AppColors.surface,
                 ),
                 const SizedBox(width: 6),
                 Text(
@@ -264,7 +266,7 @@ class _ProfileAvatarCard extends StatelessWidget {
                   style: GoogleFonts.dmSans(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: AppColors.surface,
                   ),
                 ),
               ],
@@ -322,7 +324,7 @@ class _SectionLabel extends StatelessWidget {
         style: GoogleFonts.dmSans(
           fontSize: 13,
           fontWeight: FontWeight.w700,
-          color: const Color(0xFF5C5C5C),
+          color: AppColors.textSecondary,
           letterSpacing: 0.6,
         ),
       ),
@@ -356,13 +358,13 @@ class _InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: BoxDecoration( // Menggunakan warna dari AppColors
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFEEEEEE)),
+        border: Border.all(color: AppColors.surface.withAlpha(70)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(10),
+            color: AppColors.primary.withAlpha(10),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -400,7 +402,7 @@ class _InfoCard extends StatelessWidget {
                             style: GoogleFonts.dmSans(
                               fontSize: 11,
                               fontWeight: FontWeight.w500,
-                              color: const Color(0xFF9E9E9E),
+                              color: AppColors.textDark,
                               letterSpacing: 0.3,
                             ),
                           ),
@@ -412,7 +414,7 @@ class _InfoCard extends StatelessWidget {
                               fontWeight: item.valueBold
                                   ? FontWeight.w700
                                   : FontWeight.w500,
-                              color: item.valueColor ?? const Color(0xFF1A1A1A),
+                              color: item.valueColor ?? AppColors.textPrimary,
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -424,12 +426,12 @@ class _InfoCard extends StatelessWidget {
                 ),
               ),
               if (!isLast)
-                const Divider(
+                Divider(
                   height: 1,
                   thickness: 1,
                   indent: 68,
-                  endIndent: 0,
-                  color: Color(0xFFF0F0F0),
+                  endIndent: 0, // Menggunakan warna dari AppColors
+                  color: AppColors.surface.withAlpha(70),
                 ),
             ],
           );
@@ -503,32 +505,32 @@ class _LoginMethodBadge extends StatelessWidget {
     switch (method) {
       case LoginMethod.voucher:
         return (
-          const Color(0xFF0277BD),
-          const Color(0xFFE3F2FD),
+          Colors.orange.shade800,
+          Colors.orange.shade50,
           'Akses menggunakan kode voucher hotspot',
         );
       case LoginMethod.member:
         return (
           AppColors.primary,
-          const Color(0xFFE0F2F1),
+          AppColors.primary.withAlpha(28),
           'Akses penuh sebagai anggota terdaftar',
         );
       case LoginMethod.scanQr:
         return (
-          const Color(0xFF6A1B9A),
-          const Color(0xFFF3E5F5),
+          Colors.purple.shade700,
+          Colors.purple.shade50,
           'Login dengan memindai kode QR',
         );
       case LoginMethod.bayarQr:
         return (
-          const Color(0xFFE65100),
-          const Color(0xFFFFF3E0),
+          Colors.teal.shade700,
+          Colors.teal.shade50,
           'Login melalui pembayaran QR',
         );
       case LoginMethod.trial:
         return (
-          const Color(0xFF558B2F),
-          const Color(0xFFF1F8E9),
+          Colors.green.shade700,
+          Colors.green.shade50,
           'Akses percobaan gratis berdasarkan MAC address',
         );
     }

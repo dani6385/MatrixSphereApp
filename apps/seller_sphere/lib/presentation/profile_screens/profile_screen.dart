@@ -76,7 +76,7 @@ class ProfileScreen extends ConsumerWidget { // 1. Ubah menjadi ConsumerWidget
         Text(
           profile.name,
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey.shade600),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).textTheme.bodySmall?.color),
         ),
       ],
     );
