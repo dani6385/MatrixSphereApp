@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_ui/theme/app_collor.dart';
 
-import '../theme/app_theme.dart'; // Sesuaikan path theme Anda
+// Menggunakan AppColors untuk warna
 
 class AppTabItem {
   final String label;
@@ -54,11 +55,11 @@ class _AppBottomNavState extends State<AppBottomNav> {
       child: Container(
         height: 64,
         decoration: BoxDecoration(
-          color: AppTheme.primary,
+          color: AppColors.primary,
           borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.primary.withAlpha(89),
+              color: AppColors.primary.withAlpha(89),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),

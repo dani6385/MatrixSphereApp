@@ -164,7 +164,7 @@ class _UsageChartWidgetState extends State<UsageChartWidget> {
                       ),
                       decoration: BoxDecoration(
                         color: isActive
-                            ? AppTheme.primary
+                            ? AppColors.primary
                             : const Color(0xFFF5F5F5),
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -301,7 +301,7 @@ class _UsageChartWidgetState extends State<UsageChartWidget> {
                     spots: _currentData,
                     isCurved: true,
                     curveSmoothness: 0.35,
-                    color: AppTheme.primary,
+                    color: AppColors.primary,
                     barWidth: 2.5,
                     isStrokeCapRound: true,
                     dotData: FlDotData(
@@ -310,9 +310,9 @@ class _UsageChartWidgetState extends State<UsageChartWidget> {
                         final isActive = index == _touchedIndex;
                         return FlDotCirclePainter(
                           radius: isActive ? 6 : 3,
-                          color: isActive ? Colors.white : AppTheme.primary,
+                          color: isActive ? Colors.white : AppColors.primary,
                           strokeWidth: isActive ? 2.5 : 1.5,
-                          strokeColor: AppTheme.primary,
+                          strokeColor: AppColors.primary,
                         );
                       },
                     ),
@@ -320,8 +320,8 @@ class _UsageChartWidgetState extends State<UsageChartWidget> {
                       show: true,
                       gradient: LinearGradient(
                         colors: [
-                          AppTheme.primary.withAlpha(51),
-                          AppTheme.primary.withAlpha(0),
+                          AppColors.primary.withAlpha(51),
+                          AppColors.primary.withAlpha(0),
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -461,10 +461,10 @@ class _SummaryCard extends StatelessWidget {
                 width: 28,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: AppTheme.secondary.withAlpha(26),
+                  color: AppColors.secondary.withAlpha(26),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: AppTheme.secondary, size: 14),
+                child: Icon(icon, color: AppColors.secondary, size: 14),
               ),
             ],
           ),

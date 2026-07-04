@@ -24,9 +24,14 @@ class AppTheme {
       iconTheme: IconThemeData(color: AppColors.iconPrimary),
       titleTextStyle: TextStyle(color: AppColors.textPrimary, fontSize: 20, fontWeight: FontWeight.bold),
     ),
-    cardTheme: const CardTheme(
+    cardTheme: const CardThemeData(
       color: AppColors.surface,
       elevation: 1,
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(AppColors.primary),
+      ),
     ),
   );
 
@@ -46,8 +51,14 @@ class AppTheme {
       onBackground: AppColors.textDark,
       onError: Colors.white,
     ),
-    cardTheme: const CardTheme(
+    cardTheme: const CardThemeData(
       color: AppColors.darkSurface,
+      elevation: 1,
+    ),
+    filledButtonTheme: FilledButtonThemeData(
+      style: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(AppColors.primary),
+      ),
     ),
   );
 }

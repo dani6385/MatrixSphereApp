@@ -29,12 +29,12 @@ class TopupButtonWidget extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppTheme.secondary.withAlpha(26),
+              color: AppColors.secondary.withAlpha(26),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
               Icons.add_card_rounded,
-              color: AppTheme.secondary,
+              color: AppColors.secondary,
               size: 22,
             ),
           ),
@@ -68,7 +68,7 @@ class TopupButtonWidget extends StatelessWidget {
               _showTopupSheet(context);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.secondary,
+              backgroundColor: AppColors.secondary,
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -189,7 +189,7 @@ class _TopupSheet extends StatelessWidget {
                         pkg['quota']!,
                         style: GoogleFonts.dmSans(
                           fontSize: 11,
-                          color: AppTheme.primary,
+                          color: AppColors.primary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -198,7 +198,7 @@ class _TopupSheet extends StatelessWidget {
                         style: GoogleFonts.dmSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.secondary,
+                          color: AppColors.secondary,
                         ),
                       ),
                     ],

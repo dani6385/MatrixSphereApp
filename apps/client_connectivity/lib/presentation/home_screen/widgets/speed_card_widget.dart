@@ -48,14 +48,14 @@ class _SpeedCardWidgetState extends State<SpeedCardWidget>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppTheme.primary, const Color(0xFF00695C)],
+          colors: [AppColors.primary, const Color(0xFF00695C)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withAlpha(77),
+            color: AppColors.primary.withAlpha(77),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),

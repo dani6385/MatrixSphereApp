@@ -185,10 +185,10 @@ class _DeviceInfoRow extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: BoxDecoration(
-              color: AppTheme.primary.withAlpha(20),
+              color: AppColors.primary.withAlpha(20),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(item.icon, color: AppTheme.primary, size: 18),
+            child: Icon(item.icon, color: AppColors.primary, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(

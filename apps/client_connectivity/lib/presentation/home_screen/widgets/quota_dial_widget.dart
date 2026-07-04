@@ -49,9 +49,9 @@ class _QuotaDialWidgetState extends State<QuotaDialWidget>
   }
 
   Color get _dialColor {
-    if (widget.usedPercent >= 90) return AppTheme.error;
-    if (widget.usedPercent >= 75) return AppTheme.warning;
-    return AppTheme.primary;
+    if (widget.usedPercent >= 90) return AppColors.error;
+    if (widget.usedPercent >= 75) return AppColors.warning;
+    return AppColors.primary;
   }
 
   @override

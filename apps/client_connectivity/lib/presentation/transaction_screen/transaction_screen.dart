@@ -148,7 +148,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: AppTheme.primary,
+              primary: AppColors.primary,
               onPrimary: Colors.white,
             ),
           ),
@@ -201,7 +201,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: AppColors.backgroundLight,
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -277,10 +277,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: hasRange ? AppTheme.primary : Colors.white,
+          color: hasRange ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: hasRange ? AppTheme.primary : const Color(0xFFDDDDDD),
+            color: hasRange ? AppColors.primary : const Color(0xFFDDDDDD),
           ),
           boxShadow: [
             BoxShadow(
@@ -296,7 +296,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             Icon(
               Icons.date_range_rounded,
               size: 16,
-              color: hasRange ? Colors.white : AppTheme.primary,
+              color: hasRange ? Colors.white : AppColors.primary,
             ),
             const SizedBox(width: 6),
             Text(
@@ -304,7 +304,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               style: GoogleFonts.dmSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: hasRange ? Colors.white : AppTheme.primary,
+                color: hasRange ? Colors.white : AppColors.primary,
               ),
             ),
             if (hasRange) ...[
@@ -369,11 +369,11 @@ class _TransactionScreenState extends State<TransactionScreen> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? AppTheme.primary : Colors.white,
+                color: isSelected ? AppColors.primary : Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
                   color: isSelected
-                      ? AppTheme.primary
+                      ? AppColors.primary
                       : const Color(0xFFDDDDDD),
                 ),
               ),
@@ -401,13 +401,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: AppTheme.primary,
+              color: AppColors.primary,
               borderRadius: BorderRadius.circular(36),
             ),
             child: const Icon(
               Icons.receipt_long_outlined,
               size: 36,
-              color: AppTheme.primary,
+              color: AppColors.primary,
             ),
           ),
           const SizedBox(height: 16),
@@ -447,13 +447,13 @@ class _TransactionCard extends StatelessWidget {
   Color get _statusColor {
     switch (transaction.status) {
       case TransactionStatus.success:
-        return AppTheme.success;
+        return AppColors.success;
       case TransactionStatus.pending:
-        return AppTheme.warning;
+        return AppColors.warning;
       case TransactionStatus.failed:
-        return AppTheme.error;
+        return AppColors.error;
       case TransactionStatus.all:
-        return AppTheme.primary;
+        return AppColors.primary;
     }
   }
 
@@ -466,7 +466,7 @@ class _TransactionCard extends StatelessWidget {
       case TransactionStatus.failed:
         return const Color(0xFFFFEBEE);
       case TransactionStatus.all:
-        return AppTheme.primary;
+        return AppColors.primary;
     }
   }
 
@@ -521,12 +521,12 @@ class _TransactionCard extends StatelessWidget {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppTheme.primary,
+                    color: AppColors.primary,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
                     Icons.confirmation_number_rounded,
-                    color: AppTheme.primary,
+                    color: AppColors.primary,
                     size: 22,
                   ),
                 ),
@@ -600,7 +600,7 @@ class _TransactionCard extends StatelessWidget {
                   icon: Icons.payments_rounded,
                   label: 'Jumlah',
                   value: formatCurrency(transaction.amount),
-                  valueColor: AppTheme.primary,
+                  valueColor: AppColors.primary,
                   valueBold: true,
                 ),
               ],

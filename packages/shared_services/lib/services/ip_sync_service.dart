@@ -77,35 +77,42 @@ class IpSyncService {
       // 3. Bandingkan IP
       if (localIp == rtdbIp) {
         logger.i('IP sudah sinkron. Tidak ada tindakan diperlukan.');
-        // Kembalikan data sesi karena mungkin dibutuhkan oleh UI.
         return IpSyncResponse(status: IpSyncStatus.alreadyInSync, sessionData: userSession);
       }
 
       logger.w('IP tidak sinkron! Memulai pembaruan ke MikroTik...');
 
-      // 4. Bentuk dan eksekusi perintah cURL untuk update MikroTik
-      // Perintah ini akan mengupdate field 'address' pada entri address-list
-      // yang memiliki ID spesifik.
-      final command = 'curl --request PATCH '
-          '--user "${mikrotikRestApiConfig.username}:${mikrotikRestApiConfig.password}" '
-          '--header "Content-Type: application/json" '
-          '--data \'{"address": "$localIp"}\' '
-          '--insecure ' // Gunakan --insecure untuk koneksi HTTPS tanpa verifikasi sertifikat
-          'https://${mikrotikRestApiConfig.host}/rest/ip/firewall/address-list/$addressListId';
+      // 4. Bentuk perintah cURL untuk update MikroTik.
+      // Setiap bagian dari perintah dijadikan elemen terpisah dalam list.
+      final command = <String>[
+        'curl',
+        '--request',
+        'PATCH',
+        '--user',
+        '${mikrotikRestApiConfig.username}:${mikrotikRestApiConfig.password}',
+        '--header',
+        'Content-Type: application/json',
+        '--data',
+        '{"address": "$localIp"}',
+        '--insecure', // Gunakan --insecure untuk koneksi HTTPS tanpa verifikasi sertifikat
+        'https://${mikrotikRestApiConfig.host}/rest/ip/firewall/address-list/$addressListId',
+      ];
 
-      logger.d('Menjalankan perintah: $command');
+      logger.d('Menjalankan perintah: curl ${command.sublist(1).join(' ')}');
 
-      // Jalankan perintah di shell. Ini lebih cocok untuk desktop/server.
-      // Untuk mobile, pendekatan ini mungkin terbatas.
-      final result = await run(command, verbose: true);
+      // Jalankan perintah dengan `runExecutableArguments` untuk keamanan dan keandalan.
+      // Ini memisahkan perintah dari argumennya, menghindari masalah shell injection.
+      final executable = command.first;
+      final arguments = command.sublist(1);
+      final result = await runExecutableArguments(executable, arguments, verbose: true);
 
-      if (result.first.exitCode == 0) {
+      if (result.exitCode == 0) {
         logger.i('Berhasil memperbarui IP di MikroTik ke $localIp.');
         // Opsional: Update juga IP di RTDB setelah konfirmasi dari MikroTik
-        // await _rtdbService.updateUserSession(mikrotikId, userId, {'ip-address': localIp});
+        // await rtdbService.updateUserSession(mikrotikId, userId, {'ip-address': localIp});
         return IpSyncResponse(status: IpSyncStatus.syncSuccess, sessionData: userSession);
       } else {
-        logger.e('Gagal menjalankan perintah curl. Exit code: ${result.first.exitCode}\nStderr: ${result.first.stderr}');
+        logger.e('Gagal menjalankan perintah curl. Exit code: ${result.exitCode}\nStderr: ${result.stderr}');
         return IpSyncResponse(status: IpSyncStatus.syncFailed, sessionData: userSession);
       }
     } catch (e, stackTrace) {

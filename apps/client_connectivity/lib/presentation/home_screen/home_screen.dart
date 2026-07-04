@@ -1,93 +1,93 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:shared_services/services/ip_sync_service.dart';
 import 'package:shared_ui/shared_ui.dart';
+
+import 'state/home_screen_notifier.dart';
+import 'state/home_screen_state.dart';
 import './widgets/offer_board_widget.dart';
 import './widgets/quota_dial_widget.dart';
 import './widgets/session_info_widget.dart';
 import './widgets/speed_card_widget.dart';
 import './widgets/topup_button_widget.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(homeScreenNotifierProvider);
+    final notifier = ref.read(homeScreenNotifierProvider.notifier);
 
-class _HomeScreenState extends State<HomeScreen> {
-  // TODO: Replace with [Riverpod/Bloc] for production state management
-  final _sessionData = _SessionData(
-    username: 'budi.santoso',
-    packageName: 'Paket Harian 1GB',
-    quotaUsedPercent: 62.5,
-    quotaUsedMB: 625,
-    quotaTotalMB: 1000,
-    uptime: '02:34:17',
-    sessionTime: '03:10:00',
-    downloadSpeed: 8.4,
-    uploadSpeed: 2.1,
-    ipAddress: '192.168.10.45',
-    macAddress: 'A4:C3:F0:8B:2D:1E',
-    ssid: 'HotspotKafe-01',
-    expiresAt: '27 Jun 2026, 23:59',
-  );
-
-  @override
-  Widget build(BuildContext context) {
     final isTablet = MediaQuery.of(context).size.width >= 600;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
+    // Dummy data for config - replace with your actual data retrieval
+    final mikrotikConfig = MikroTikRestApiConfig(
+        host: '192.168.88.1', username: 'admin', password: 'your_password');
+
     return Scaffold(
-      backgroundColor: AppTheme.lightBackground,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: _buildAppBar(context)),
-            SliverPadding(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 0,
-                bottom: bottomPadding + 80,
-              ),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const SizedBox(height: 8),
-                  QuotaDialWidget(
-                    usedPercent: _sessionData.quotaUsedPercent,
-                    usedMB: _sessionData.quotaUsedMB,
-                    totalMB: _sessionData.quotaTotalMB,
-                    packageName: _sessionData.packageName,
-                    expiresAt: _sessionData.expiresAt,
-                  ),
-                  const SizedBox(height: 16),
-                  SessionInfoWidget(
-                    uptime: _sessionData.uptime,
-                    sessionTime: _sessionData.sessionTime,
-                    isTablet: isTablet,
-                  ),
-                  const SizedBox(height: 16),
-                  SpeedCardWidget(
-                    downloadSpeed: _sessionData.downloadSpeed,
-                    uploadSpeed: _sessionData.uploadSpeed,
-                    isTablet: isTablet,
-                  ),
-                  const SizedBox(height: 16),
-                  TopupButtonWidget(username: _sessionData.username),
-                  const SizedBox(height: 20),
-                  OfferBoardWidget(),
-                ]),
-              ),
+        child: state.when(
+          initial: () => Center(
+            child: ElevatedButton(
+              onPressed: () => notifier.syncIpAddress(
+                  'mikrotik123', 'user123', mikrotikConfig),
+              child: const Text('Sync IP Address'),
             ),
-          ],
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (message) => Center(child: Text(message)),
+          success: (sessionData) => CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(child: _buildAppBar(context, sessionData)),
+              SliverPadding(
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: 0,
+                  bottom: bottomPadding + 80,
+                ),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    const SizedBox(height: 8),
+                    QuotaDialWidget(
+                      usedPercent: (sessionData['quotaUsedPercent'] as num?)?.toDouble() ?? 0.0,
+                      usedMB: (sessionData['quotaUsedMB'] as num?)?.toInt() ?? 0,
+                      totalMB: (sessionData['quotaTotalMB'] as num?)?.toInt() ?? 0,
+                      packageName: sessionData['packageName'] as String? ?? '',
+                      expiresAt: sessionData['expiresAt'] as String? ?? '',
+                    ),
+                    const SizedBox(height: 16),
+                    SessionInfoWidget(
+                      uptime: sessionData['uptime'] as String? ?? '',
+                      sessionTime: sessionData['sessionTime'] as String? ?? '',
+                      isTablet: isTablet,
+                    ),
+                    const SizedBox(height: 16),
+                    SpeedCardWidget(
+                      downloadSpeed: (sessionData['downloadSpeed'] as num?)?.toDouble() ?? 0.0,
+                      uploadSpeed: (sessionData['uploadSpeed'] as num?)?.toDouble() ?? 0.0,
+                      isTablet: isTablet,
+                    ),
+                    const SizedBox(height: 16),
+                    TopupButtonWidget(username: sessionData['username'] as String? ?? ''),
+                    const SizedBox(height: 20),
+                    OfferBoardWidget(),
+                  ]),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, Map<String, dynamic> sessionData) {
     final now = DateTime.now();
     final hour = now.hour;
     String greeting;
@@ -117,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                _sessionData.username,
+                sessionData['username'] as String? ?? '',
                 style: GoogleFonts.dmSans(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -155,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 8,
                     height: 8,
                     decoration: const BoxDecoration(
-                      color: AppTheme.primary,
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -168,12 +168,12 @@ class _HomeScreenState extends State<HomeScreen> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppTheme.primary,
+              color: AppColors.primary,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
               child: Text(
-                'BS',
+                (sessionData['username'] as String? ?? 'U').substring(0, 2).toUpperCase(),
                 style: GoogleFonts.dmSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -186,36 +186,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
-
-class _SessionData {
-  final String username;
-  final String packageName;
-  final double quotaUsedPercent;
-  final int quotaUsedMB;
-  final int quotaTotalMB;
-  final String uptime;
-  final String sessionTime;
-  final double downloadSpeed;
-  final double uploadSpeed;
-  final String ipAddress;
-  final String macAddress;
-  final String ssid;
-  final String expiresAt;
-
-  const _SessionData({
-    required this.username,
-    required this.packageName,
-    required this.quotaUsedPercent,
-    required this.quotaUsedMB,
-    required this.quotaTotalMB,
-    required this.uptime,
-    required this.sessionTime,
-    required this.downloadSpeed,
-    required this.uploadSpeed,
-    required this.ipAddress,
-    required this.macAddress,
-    required this.ssid,
-    required this.expiresAt,
-  });
 }

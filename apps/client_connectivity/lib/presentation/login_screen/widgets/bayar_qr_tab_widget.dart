@@ -101,12 +101,12 @@ class _BayarQrTabWidgetState extends State<BayarQrTabWidget> {
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? AppTheme.primary
+                        ? AppColors.primary
                         : const Color(0xFFF5F5F5),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isSelected
-                          ? AppTheme.primary
+                          ? AppColors.primary
                           : const Color(0xFFDDDDDD),
                       width: 1.5,
                     ),
@@ -174,7 +174,7 @@ class _BayarQrTabWidgetState extends State<BayarQrTabWidget> {
                         style: GoogleFonts.dmSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: AppTheme.primary,
+                          color: AppColors.primary,
                         ),
                       ),
                     ],
@@ -207,7 +207,7 @@ class _BayarQrTabWidgetState extends State<BayarQrTabWidget> {
             child: FilledButton.icon(
               onPressed: _isWaiting ? null : _checkPayment,
               style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.primary,
+                backgroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

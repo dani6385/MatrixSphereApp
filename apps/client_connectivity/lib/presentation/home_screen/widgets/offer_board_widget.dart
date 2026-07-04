@@ -11,7 +11,7 @@ class OfferBoardWidget extends StatelessWidget {
       'title': 'Paket Weekend Special',
       'subtitle': 'Nikmati internet 3 hari + bonus 2 hari gratis',
       'tag': 'PROMO',
-      'tagColor': AppTheme.primary,
+      'tagColor': AppColors.primary,
       'imageUrl':
           'https://images.unsplash.com/photo-1707757840354-7598d2224d3b',
       'semanticLabel':
@@ -22,7 +22,7 @@ class OfferBoardWidget extends StatelessWidget {
       'title': 'Member Bulanan',
       'subtitle': 'Akses tanpa batas 30 hari, kecepatan hingga 20 Mbps',
       'tag': 'TERLARIS',
-      'tagColor': AppTheme.primary,
+      'tagColor': AppColors.primary,
       'imageUrl':
           'https://img.rocket.new/generatedImages/rocket_gen_img_1bfc1f750-1782544013481.png',
       'semanticLabel':
@@ -77,7 +77,7 @@ class OfferBoardWidget extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: _offers.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
+            separatorBuilder: (_, _) => const SizedBox(width: 12),
             itemBuilder: (context, i) {
               final offer = _offers[i];
               return _OfferCard(offer: offer);

@@ -1,6 +1,5 @@
 // File: apps/client_connectivity/lib/presentation/login_screen/login_screen.dart
 
-
 import './widgets/scan_qr_tab_widget.dart';
 import './widgets/member_tab_widget.dart';
 import './widgets/bayar_qr_tab_widget.dart';
@@ -28,7 +27,7 @@ class LoginScreen extends StatelessWidget {
                 Icon(
                   Icons.wifi_tethering_rounded,
                   size: 80,
-                  color: AppTheme.primary,
+                  color: AppColors.primary,
                 ),
                 const SizedBox(height: 24),
                 Text(

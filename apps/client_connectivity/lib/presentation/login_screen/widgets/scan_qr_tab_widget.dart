@@ -111,7 +111,7 @@ class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
               color: const Color(0xFFF5F5F5),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: _isScanning ? AppTheme.primary : const Color(0xFFDDDDDD),
+                color: _isScanning ? AppColors.primary : const Color(0xFFDDDDDD),
                 width: 2,
               ),
             ),
@@ -133,7 +133,7 @@ class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
                             gradient: LinearGradient(
                               colors: [
                                 Colors.transparent,
-                                AppTheme.primary,
+                                AppColors.primary,
                                 Colors.transparent,
                               ],
                             ),
@@ -157,7 +157,7 @@ class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
                               'Memindai...',
                               style: GoogleFonts.dmSans(
                                 fontSize: 13,
-                                color: AppTheme.primary,
+                                color: AppColors.primary,
                               ),
                             ),
                           ],
@@ -192,7 +192,7 @@ class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
             child: FilledButton.icon(
               onPressed: (_isScanning || _isLoading) ? null : _simulateScan,
               style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.primary,
+                backgroundColor: AppColors.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -239,7 +239,7 @@ class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
   }
 
   List<Widget> _buildCorners() {
-    const color = AppTheme.primary;
+    const color = AppColors.primary;
     const size = 20.0;
     const thickness = 3.0;
     return [

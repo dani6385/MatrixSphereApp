@@ -38,7 +38,7 @@ class FlashSaleSection extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.surface,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: [BoxShadow(color: AppColors.textdark.withAlpha(20), blurRadius: 4)],
+                  boxShadow: [BoxShadow(color: AppColors.textDark.withAlpha(20), blurRadius: 4)],
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -37,7 +37,7 @@ class _SessionInfoWidgetState extends State<SessionInfoWidget> {
         Expanded(
           child: _SessionCard(
             icon: Icons.timer_outlined,
-            iconColor: AppTheme.primary,
+            iconColor: AppColors.primary,
             label: 'Uptime',
             value: _uptime,
             subtitle: 'Waktu aktif koneksi',

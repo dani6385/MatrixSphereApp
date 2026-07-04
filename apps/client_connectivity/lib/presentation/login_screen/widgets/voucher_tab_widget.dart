@@ -146,7 +146,7 @@ class _VoucherTabWidgetState extends State<VoucherTabWidget> {
               child: FilledButton(
                 onPressed: _isLoading ? null : _login,
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.primary,
+                  backgroundColor: AppColors.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -248,7 +248,7 @@ class _DemoCredentialRow extends StatelessWidget {
             style: GoogleFonts.dmSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppTheme.primary,
+              color: AppColors.primary,
             ),
           ),
         ),

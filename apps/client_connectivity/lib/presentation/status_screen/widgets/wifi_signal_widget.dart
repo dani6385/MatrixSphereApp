@@ -56,10 +56,10 @@ class _WiFiSignalWidgetState extends State<WiFiSignalWidget>
   }
 
   Color get _signalColor {
-    if (widget.signalStrength >= -50) return AppTheme.success;
-    if (widget.signalStrength >= -60) return AppTheme.primary;
-    if (widget.signalStrength >= -70) return AppTheme.warning;
-    return AppTheme.error;
+    if (widget.signalStrength >= -50) return AppColors.success;
+    if (widget.signalStrength >= -60) return AppColors.primary;
+    if (widget.signalStrength >= -70) return AppColors.warning;
+    return AppColors.error;
   }
 
   @override

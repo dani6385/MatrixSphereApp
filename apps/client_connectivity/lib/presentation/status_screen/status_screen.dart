@@ -39,7 +39,7 @@ class _StatusScreenState extends State<StatusScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: AppColors.backgroundLight,
       body: SafeArea(
         bottom: false,
         child: CustomScrollView(
@@ -128,7 +128,7 @@ class _StatusScreenState extends State<StatusScreen> {
               ],
             ),
             child: IconButton(
-              icon: const Icon(Icons.refresh_rounded, color: AppTheme.primary),
+              icon: const Icon(Icons.refresh_rounded, color: AppColors.primary),
               onPressed: () {
                 // TODO: Trigger data refresh
               },

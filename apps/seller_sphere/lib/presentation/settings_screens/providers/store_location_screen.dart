@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart'; // This import is already present.
-import 'package:provider/provider.dart'; // This import is already present.
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:seller_sphere/presentation/profile_screens/providers/seller_profile_provider.dart';
-import 'package:geocoding/geocoding.dart' as geocoding;
+import 'package:geocoding/geocoding.dart' as geo;
 import 'package:logger/logger.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -61,10 +61,9 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
   Future<void> _initializeMap() async {
     final sellerProfile = Provider.of<SellerProfileProvider>(context, listen: false);
     setState(() {
-      _pickedLocation = sellerProfile.storeLocation;
+      _pickedLocation = sellerProfile.profile.location;
       _isLoading = false;
     });
-    // Setelah inisialisasi, langsung dapatkan alamat dari lokasi awal
     if (_pickedLocation != null) _updateAddressFromLatLng(_pickedLocation!);
   }
 
@@ -116,13 +115,13 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
     if (address.isEmpty) return;
 
     try {
-      List<geocoding.Location> locations = await geocoding.locationFromAddress(address);
+      List<geo.Location> locations = await geo.locationFromAddress(address);
       if (locations.isNotEmpty) {
         final location = locations.first;
         final newPosition = LatLng(location.latitude, location.longitude);
-        _selectLocation(newPosition); // Ini sudah memanggil _updateAddressFromLatLng
+        _selectLocation(newPosition);
         _mapController.animateCamera(CameraUpdate.newLatLngZoom(newPosition, 16));
-        _toggleSearch(); // Tutup search bar setelah lokasi ditemukan
+        _toggleSearch();
       }
     } catch (e) {
       logger.e('Gagal mencari alamat', error: e);
@@ -138,7 +137,7 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
       _isFetchingAddress = true;
     });
     try {
-      List<geocoding.Placemark> placemarks = await geocoding.placemarkFromCoordinates(
+      List<geo.Placemark> placemarks = await geo.placemarkFromCoordinates(
         position.latitude,
         position.longitude,
       );
@@ -165,7 +164,6 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
     });
 
     try {
-      // Gunakan alamat yang sudah ada di state
       final addressToSave = _currentAddress;
       
       if (!mounted) return;
@@ -187,7 +185,7 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    final initialLocation = Provider.of<SellerProfileProvider>(context, listen: false).storeLocation;
+    final initialLocation = Provider.of<SellerProfileProvider>(context, listen: false).profile.location;
 
     return Scaffold(
       appBar: AppBar(
@@ -215,7 +213,6 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
             ),
           IconButton(
             icon: const Icon(Icons.check),
-            // Nonaktifkan tombol saat menyimpan untuk mencegah klik ganda
             onPressed: (_pickedLocation == null || _isSaving) ? null : _saveLocation,
             tooltip: 'Simpan Lokasi',
           ),
@@ -246,7 +243,7 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
                   },
                   ),
                 Positioned(
-                  bottom: 90, // Disesuaikan agar tidak tertutup panel alamat
+                  bottom: 90,
                   right: 16,
                   child: FloatingActionButton(
                     onPressed: _getCurrentLocation,
@@ -280,7 +277,6 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
         position: _pickedLocation!,
         draggable: true,
         onDragEnd: (newPosition) {
-          // Panggil _selectLocation saat drag selesai
           _selectLocation(newPosition);
         },
       ),
@@ -288,7 +284,6 @@ class _StoreLocationScreenState extends State<StoreLocationScreen> with SingleTi
   }
 }
 
-/// Widget untuk menampilkan panel alamat di bagian bawah layar.
 class _AddressDisplayPanel extends StatelessWidget {
   const _AddressDisplayPanel({
     required this.isFetchingAddress,
@@ -308,7 +303,7 @@ class _AddressDisplayPanel extends StatelessWidget {
         elevation: 4.0,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          constraints: const BoxConstraints(minHeight: 70), // Memberi tinggi minimum
+          constraints: const BoxConstraints(minHeight: 70),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
