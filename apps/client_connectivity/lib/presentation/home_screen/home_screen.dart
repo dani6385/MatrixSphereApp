@@ -5,7 +5,7 @@ import 'package:shared_services/services/ip_sync_service.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 import 'state/home_screen_notifier.dart';
-import 'state/home_screen_state.dart';
+
 import './widgets/offer_board_widget.dart';
 import './widgets/quota_dial_widget.dart';
 import './widgets/session_info_widget.dart';
@@ -25,7 +25,10 @@ class HomeScreen extends ConsumerWidget {
 
     // Dummy data for config - replace with your actual data retrieval
     final mikrotikConfig = MikroTikRestApiConfig(
-        host: '192.168.88.1', username: 'admin', password: 'your_password');
+      host: '192.168.88.1',
+      username: 'admin',
+      password: 'your_password',
+    );
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -35,7 +38,10 @@ class HomeScreen extends ConsumerWidget {
           initial: () => Center(
             child: ElevatedButton(
               onPressed: () => notifier.syncIpAddress(
-                  'mikrotik123', 'user123', mikrotikConfig),
+                'mikrotik123',
+                'user123',
+                mikrotikConfig,
+              ),
               child: const Text('Sync IP Address'),
             ),
           ),
@@ -55,9 +61,14 @@ class HomeScreen extends ConsumerWidget {
                   delegate: SliverChildListDelegate([
                     const SizedBox(height: 8),
                     QuotaDialWidget(
-                      usedPercent: (sessionData['quotaUsedPercent'] as num?)?.toDouble() ?? 0.0,
-                      usedMB: (sessionData['quotaUsedMB'] as num?)?.toInt() ?? 0,
-                      totalMB: (sessionData['quotaTotalMB'] as num?)?.toInt() ?? 0,
+                      usedPercent:
+                          (sessionData['quotaUsedPercent'] as num?)
+                              ?.toDouble() ??
+                          0.0,
+                      usedMB:
+                          (sessionData['quotaUsedMB'] as num?)?.toInt() ?? 0,
+                      totalMB:
+                          (sessionData['quotaTotalMB'] as num?)?.toInt() ?? 0,
                       packageName: sessionData['packageName'] as String? ?? '',
                       expiresAt: sessionData['expiresAt'] as String? ?? '',
                     ),
@@ -69,12 +80,18 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 16),
                     SpeedCardWidget(
-                      downloadSpeed: (sessionData['downloadSpeed'] as num?)?.toDouble() ?? 0.0,
-                      uploadSpeed: (sessionData['uploadSpeed'] as num?)?.toDouble() ?? 0.0,
+                      downloadSpeed:
+                          (sessionData['downloadSpeed'] as num?)?.toDouble() ??
+                          0.0,
+                      uploadSpeed:
+                          (sessionData['uploadSpeed'] as num?)?.toDouble() ??
+                          0.0,
                       isTablet: isTablet,
                     ),
                     const SizedBox(height: 16),
-                    TopupButtonWidget(username: sessionData['username'] as String? ?? ''),
+                    TopupButtonWidget(
+                      username: sessionData['username'] as String? ?? '',
+                    ),
                     const SizedBox(height: 20),
                     OfferBoardWidget(),
                   ]),
@@ -173,7 +190,9 @@ class HomeScreen extends ConsumerWidget {
             ),
             child: Center(
               child: Text(
-                (sessionData['username'] as String? ?? 'U').substring(0, 2).toUpperCase(),
+                (sessionData['username'] as String? ?? 'U')
+                    .substring(0, 2)
+                    .toUpperCase(),
                 style: GoogleFonts.dmSans(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
