@@ -45,34 +45,6 @@ jobs:
         if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
         run: flutter build apk --release
         working-directory: ${{ matrix.path }}
-  # 1. BUILD ANDROID
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with: { java-version: '21', distribution: 'temurin', cache: 'gradle' }
-        # 1. Cache SDK & Dependensi (Pub & Gradle)
-      - name: Cache Pub & Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.pub-cache
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
-
-      # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
-      - name: Cache Flutter Build
-        uses: actions/cache@v4
-        with:
-          path: build
-          key: build-${{ runner.os }}-${{ github.run_id }}
-          restore-keys: |
-            build-${{ runner.os }}-
-      - uses: subosito/flutter-action@v2
-        with: { channel: 'stable', cache: true }
-      - name: Build APK
-        run: flutter build apk --release
-        # working-directory: apps/Matrix_Sphere
-
   # 2. BUILD WEB & DEPLOY
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -200,4 +172,31 @@ jobs:
         run: |
           flutter config --enable-macos-desktop
           flutter build macos --release
+        # working-directory: apps/Matrix_Sphere
+  # 1. BUILD ANDROID
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { java-version: '21', distribution: 'temurin', cache: 'gradle' }
+        # 1. Cache SDK & Dependensi (Pub & Gradle)
+      - name: Cache Pub & Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
+
+      # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
+      - name: Cache Flutter Build
+        uses: actions/cache@v4
+        with:
+          path: build
+          key: build-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            build-${{ runner.os }}-
+      - uses: subosito/flutter-action@v2
+        with: { channel: 'stable', cache: true }
+      - name: Build APK
+        run: flutter build apk --release
         # working-directory: apps/Matrix_Sphere

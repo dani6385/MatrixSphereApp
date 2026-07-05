@@ -64,7 +64,6 @@ class TopupButtonWidget extends StatelessWidget {
           const SizedBox(width: 8),
           ElevatedButton(
             onPressed: () {
-              // TODO: Navigate to top-up flow / payment screen
               _showTopupSheet(context);
             },
             style: ElevatedButton.styleFrom(
