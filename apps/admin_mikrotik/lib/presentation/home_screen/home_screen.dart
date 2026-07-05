@@ -1,85 +1,86 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:admin_mikrotik/application/providers/session_provider.dart';
 
-import 'package:shared_ui/shared_ui.dart';
-import './widgets/offer_board_widget.dart';
-import './widgets/quota_dial_widget.dart';
-import './widgets/session_info_widget.dart';
-import './widgets/speed_card_widget.dart';
-import './widgets/topup_button_widget.dart';
-
-class HomeScreen extends StatefulWidget {
+// Ubah dari StatelessWidget menjadi ConsumerWidget
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  // TODO: Replace with [Riverpod/Bloc] for production state management
-  final _sessionData = _SessionData(
-    username: 'budi.santoso',
-    packageName: 'Paket Harian 1GB',
-    quotaUsedPercent: 62.5,
-    quotaUsedMB: 625,
-    quotaTotalMB: 1000,
-    uptime: '02:34:17',
-    sessionTime: '03:10:00',
-    downloadSpeed: 8.4,
-    uploadSpeed: 2.1,
-    ipAddress: '192.168.10.45',
-    macAddress: 'A4:C3:F0:8B:2D:1E',
-    ssid: 'HotspotKafe-01',
-    expiresAt: '27 Jun 2026, 23:59',
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    final isTablet = MediaQuery.of(context).size.width >= 600;
-    final bottomPadding = MediaQuery.of(context).padding.bottom;
+  // Tambahkan parameter 'WidgetRef ref' pada method build
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Tonton (watch) perubahan pada provider
+    final sessionData = ref.watch(sessionDataProvider);
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(child: _buildAppBar(context)),
-            SliverPadding(
-              padding: EdgeInsets.only(
-                left: 16,
-                right: 16,
-                top: 0,
-                bottom: bottomPadding + 80,
-              ),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const SizedBox(height: 8),
-                  QuotaDialWidget(
-                    usedPercent: _sessionData.quotaUsedPercent,
-                    usedMB: _sessionData.quotaUsedMB,
-                    totalMB: _sessionData.quotaTotalMB,
-                    packageName: _sessionData.packageName,
-                    expiresAt: _sessionData.expiresAt,
-                  ),
-                  const SizedBox(height: 16),
-                  SessionInfoWidget(
-                    uptime: _sessionData.uptime,
-                    sessionTime: _sessionData.sessionTime,
-                    isTablet: isTablet,
-                  ),
-                  const SizedBox(height: 16),
-                  SpeedCardWidget(
-                    downloadSpeed: _sessionData.downloadSpeed,
-                    uploadSpeed: _sessionData.uploadSpeed,
-                    isTablet: isTablet,
-                  ),
-                  const SizedBox(height: 16),
-                  TopupButtonWidget(username: _sessionData.username),
-                  const SizedBox(height: 20),
-                  OfferBoardWidget(),
-                ]),
-              ),
+      appBar: AppBar(
+        title: const Text('Admin Dashboard'),
+        actions: [
+          IconButton(icon: const Icon(Icons.refresh), onPressed: () {
+            // TODO: Implement refresh logic, panggil method dari notifier
+          }),
+          IconButton(icon: const Icon(Icons.logout), onPressed: () {
+            // TODO: Implement logout logic
+          }),
+        ],
+      ),
+      // Handle kasus di mana data mungkin belum tersedia
+      body: sessionData == null
+          ? const Center(child: CircularProgressIndicator())
+          : _buildDashboard(context, sessionData), // Panggil UI utama jika data ada
+    );
+  }
+
+  Widget _buildDashboard(BuildContext context, sessionData) {
+    return ListView(
+      padding: const EdgeInsets.all(16.0),
+      children: [
+        _buildUserInfo(sessionData),
+        const SizedBox(height: 24),
+        _buildQuotaInfo(sessionData),
+        const SizedBox(height: 24),
+        _buildNetworkInfo(sessionData),
+      ],
+    );
+  }
+
+  Widget _buildUserInfo(dynamic sessionData) {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(sessionData.username, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Chip(label: Text(sessionData.packageName)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuotaInfo(dynamic sessionData) {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Usage & Quota', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            LinearProgressIndicator(value: sessionData.quotaUsedPercent, minHeight: 10),
+            const SizedBox(height: 8),
+            Text('${sessionData.quotaUsedMB}MB / ${sessionData.quotaTotalMB}MB used'),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Uptime: ${sessionData.uptime}'),
+                Text('Expires: ${sessionData.expiresAt}'),
+              ],
             ),
           ],
         ),
@@ -87,135 +88,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
-    final now = DateTime.now();
-    final hour = now.hour;
-    String greeting;
-    if (hour < 11) {
-      greeting = 'Selamat Pagi';
-    } else if (hour < 15) {
-      greeting = 'Selamat Siang';
-    } else if (hour < 18) {
-      greeting = 'Selamat Sore';
-    } else {
-      greeting = 'Selamat Malam';
-    }
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Row(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '$greeting,',
-                style: GoogleFonts.dmSans(
-                  fontSize: 13,
-                  color: const Color(0xFF757575),
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              Text(
-                _sessionData.username,
-                style: GoogleFonts.dmSans(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1A1A1A),
-                ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(15),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Stack(
+  Widget _buildNetworkInfo(dynamic sessionData) {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Network Details', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.notifications_outlined,
-                    color: Color(0xFF1A1A1A),
-                  ),
-                  onPressed: () {},
-                ),
-                Positioned(
-                  right: 10,
-                  top: 10,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: AppTheme.secondary,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
+                _buildSpeedIndicator(Icons.download, '${sessionData.downloadSpeed} Mbps', 'Download'),
+                _buildSpeedIndicator(Icons.upload, '${sessionData.uploadSpeed} Mbps', 'Upload'),
               ],
             ),
-          ),
-          const SizedBox(width: 8),
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: AppTheme.primary,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: Text(
-                'BS',
-                style: GoogleFonts.dmSans(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ),
-        ],
+            const SizedBox(height: 16),
+            const Divider(),
+            const SizedBox(height: 8),
+            _buildInfoRow('IP Address', sessionData.ipAddress),
+            _buildInfoRow('MAC Address', sessionData.macAddress),
+            _buildInfoRow('Connected to', sessionData.ssid),
+          ],
+        ),
       ),
     );
   }
-}
 
-class _SessionData {
-  final String username;
-  final String packageName;
-  final double quotaUsedPercent;
-  final int quotaUsedMB;
-  final int quotaTotalMB;
-  final String uptime;
-  final String sessionTime;
-  final double downloadSpeed;
-  final double uploadSpeed;
-  final String ipAddress;
-  final String macAddress;
-  final String ssid;
-  final String expiresAt;
+  Widget _buildSpeedIndicator(IconData icon, String speed, String label) {
+    return Column(
+      children: [ 
+        Icon(icon, size: 30), 
+        const SizedBox(height: 8),
+        Text(speed, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(label, style: const TextStyle(color: Colors.grey)),
+       ], 
+    );
+  }
 
-  const _SessionData({
-    required this.username,
-    required this.packageName,
-    required this.quotaUsedPercent,
-    required this.quotaUsedMB,
-    required this.quotaTotalMB,
-    required this.uptime,
-    required this.sessionTime,
-    required this.downloadSpeed,
-    required this.uploadSpeed,
-    required this.ipAddress,
-    required this.macAddress,
-    required this.ssid,
-    required this.expiresAt,
-  });
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [ 
+          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(value), 
+        ], 
+      ),
+    );
+  }
 }

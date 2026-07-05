@@ -32,3 +32,5 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^2.6.1
   collection: ^1.19.1
+  shared_services: ^1.0.0
+  firebase_core: ^4.11.0

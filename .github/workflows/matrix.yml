@@ -60,7 +60,6 @@ jobs:
         # working-directory: apps/Matrix_Sphere
 
   # 2. BUILD WEB & DEPLOY
-    steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with: { channel: 'stable', cache: true }
@@ -94,7 +93,6 @@ jobs:
           # PROJECT_PATH: apps/Matrix_Sphere
 
   # 3. BUILD WINDOWS (Optimasi Cache)
-    steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with: { channel: 'stable', cache: true }
@@ -128,7 +126,6 @@ jobs:
         # working-directory: apps/Matrix_Sphere
 
   # 4. BUILD LINUX (Optimasi Cache)
-    steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with: { channel: 'stable', cache: true }
@@ -164,7 +161,6 @@ jobs:
         # working-directory: apps/Matrix_Sphere
 
   # 5. BUILD APPLE (macOS)
-    steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with: { channel: 'stable', cache: true }
