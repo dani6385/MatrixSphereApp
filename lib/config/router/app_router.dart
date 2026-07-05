@@ -8,9 +8,8 @@ import 'package:matrix_sphere_app/widget/app_navigation.dart';
 
 import '../../presentation/aprops/register_seller_screen.dart';
 
-// Kunci navigator global untuk rute root dan shell
+// Kunci navigator global untuk rute root
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 /// Konfigurasi GoRouter untuk aplikasi.
 final GoRouter appRouter = GoRouter(
