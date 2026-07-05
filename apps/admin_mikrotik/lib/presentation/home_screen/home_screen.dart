@@ -2,46 +2,58 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:admin_mikrotik/application/providers/session_provider.dart';
 
-// Ubah dari StatelessWidget menjadi ConsumerWidget
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  // Tambahkan parameter 'WidgetRef ref' pada method build
   Widget build(BuildContext context, WidgetRef ref) {
-    // Tonton (watch) perubahan pada provider
     final sessionData = ref.watch(sessionDataProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
         actions: [
-          // Tambahkan pengecekan apakah data sedang di-refresh
-          sessionData == null
-              ? const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 20.0),
-                  child: SizedBox(width: 20, height: 2, child: CircularProgressIndicator(strokeWidth: 2)),
-                )
-              : IconButton(
-                  icon: const Icon(Icons.refresh),
-                  onPressed: () {
-                    // Panggil method refresh dari notifier menggunakan ref.read
-                    ref.read(sessionDataProvider.notifier).refreshSessionData();
-                  },
-                ),
-          IconButton(icon: const Icon(Icons.logout), onPressed: () {
-            // TODO: Implement logout logic
-          }),
+          if (sessionData != null)
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: () {
+                ref.read(sessionDataProvider.notifier).refreshSessionData();
+              },
+            ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              // Panggil method logout dari notifier
+              ref.read(sessionDataProvider.notifier).logout();
+              // Di aplikasi nyata, Anda mungkin ingin menavigasi ke layar login
+              // Navigator.of(context).pushReplacementNamed('/login');
+            },
+          ),
         ],
       ),
-      // Handle kasus di mana data mungkin belum tersedia (saat loading/refresh)
       body: sessionData == null
-          ? const Center(child: CircularProgressIndicator())
-          : _buildDashboard(context, sessionData), // Panggil UI utama jika data ada
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('No active session. Please log in.'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Panggil loadInitialData untuk simulasi login
+                      ref.read(sessionDataProvider.notifier).loadInitialData();
+                    },
+                    child: const Text('Login'),
+                  ),
+                ],
+              ),
+            )
+          : _buildDashboard(context, sessionData),
     );
   }
 
   Widget _buildDashboard(BuildContext context, sessionData) {
+    // ... (Sisa widget _buildDashboard dan yang lainnya tetap sama)
     return ListView(
       padding: const EdgeInsets.all(16.0),
       children: [

@@ -27,8 +27,25 @@ jobs:
           - app: Matrix Sphere
             path: .
             trigger: lib/**, pubspec.yaml
+
+      steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Penting agar bisa mendeteksi perubahan
+
+      # 1. Deteksi perubahan folder secara akurat
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            project: '${{ matrix.path }}/**'
+
+      # 2. Build HANYA jika filter mendeteksi perubahan
+      - name: Build
+        if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
+        run: flutter build apk --release
+        working-directory: ${{ matrix.path }}
   # 1. BUILD ANDROID
-    steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
         with: { java-version: '21', distribution: 'temurin', cache: 'gradle' }
