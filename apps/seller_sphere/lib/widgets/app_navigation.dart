@@ -39,6 +39,12 @@ class AppNavigation extends StatelessWidget {
             activeIcon: Icons.person_rounded,
             branchIndex: 3,
           ),
+          AppTabItem(
+            label: 'Settings',
+            icon: Icons.settings_outlined,
+            activeIcon: Icons.settings_rounded,
+            branchIndex: 4,
+          ),
         ],
       ),
     );
