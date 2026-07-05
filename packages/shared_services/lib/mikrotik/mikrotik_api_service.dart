@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'system_resource.dart';
+
 /// Kelas ini bertanggung jawab untuk berkomunikasi dengan API MikroTik.
 /// UNTUK SAAT INI, kelas ini hanya mensimulasikan respons API.
 class MikroTikApiService {
@@ -27,7 +29,7 @@ class MikroTikApiService {
   ///
   /// Di dunia nyata, ini akan menjadi panggilan HTTP GET ke endpoint
   /// seperti `/rest/system/resource`.
-  Future<Map<String, dynamic>> getSystemResource() async {
+  Future<SystemResource> getSystemResource() async {
     // Mensimulasikan latensi jaringan
     await Future.delayed(const Duration(milliseconds: 150));
 
@@ -38,7 +40,7 @@ class MikroTikApiService {
 
     // Ini adalah contoh respons JSON yang mungkin Anda dapatkan dari API MikroTik
     // (dengan beberapa data tambahan untuk UI kita).
-    return {
+    final jsonResponse = {
       "ip-address": _ipAddress,
       "mac-address": _macAddress,
       "uptime": _formatUptime(uptime),
@@ -57,6 +59,8 @@ class MikroTikApiService {
       "simulated-tx": tx, // Upload in Mbps
       "simulated-rx": rx, // Download in Mbps
     };
+
+    return SystemResource.fromJson(jsonResponse);
   }
 
   /// Mensimulasikan penggunaan voucher.

@@ -1,0 +1,1 @@
+export 'presentation/aprops/register_seller_screen.dart';

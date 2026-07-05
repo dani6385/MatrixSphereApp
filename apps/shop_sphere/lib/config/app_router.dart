@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:matrix_sphere_app/shared_aprop.dart';
 import 'package:shop_sphere/presentation/setting_screens/widgets/add_edit_address_screen.dart';
 import 'package:shop_sphere/presentation/setting_screens/settings_screen.dart';
 import 'package:shop_sphere/providers/session_provider.dart';
@@ -117,6 +118,14 @@ final GoRouter appRouter = GoRouter(
           child: AddEditAddressScreen(address: address),
         );
       },
+    ),
+    GoRoute(
+      path: '/register-seller',
+      pageBuilder: (context, state) => SlideTransitionPage(
+        key: state.pageKey,
+        direction: SlideDirection.bottom, // Muncul dari bawah seperti modal
+        child: const RegisterSellerScreen(),
+      ),
     ),
   ],
 );

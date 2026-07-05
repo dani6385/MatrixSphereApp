@@ -78,7 +78,10 @@ class SellerRegistrationDetailScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildDetailItem(context, 'Nama Partner', seller.partnerName),
-            _buildDetailItem(context, 'Email', seller.email),
+            _buildDetailItem(context, 'Nama Pemilik', seller.ownerName ?? 'Tidak tersedia'),
+            _buildDetailItem(context, 'No. Telepon', seller.phone ?? 'Tidak tersedia'),
+            _buildDetailItem(context, 'Alamat', seller.address ?? 'Tidak tersedia'),
+            _buildDetailItem(context, 'Email', seller.email ?? 'Tidak tersedia'),
             _buildDetailItem(context, 'Tanggal Daftar', DateFormat.yMMMMd('id_ID').add_jm().format(seller.registrationDate)),
             _buildDetailItem(context, 'Status', seller.status.name),
             if (seller.rejectionReason != null)

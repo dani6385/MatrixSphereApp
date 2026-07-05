@@ -1,5 +1,6 @@
 export 'theme/app_theme.dart';
-export 'theme/app_color.dart';
+export 'theme/app_colors.dart';
+export 'theme/app_spacing.dart';
 export 'ui/splash_screen.dart';
 
 export 'src/widgets/primary_button.dart';

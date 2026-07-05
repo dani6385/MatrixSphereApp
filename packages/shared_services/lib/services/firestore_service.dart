@@ -71,4 +71,63 @@ class FirestoreService {
       rethrow;
     }
   }
+
+  /// Menambahkan dokumen pendaftaran seller baru ke koleksi 'seller_registrations'.
+  ///
+  /// [data] adalah Map yang berisi data dari formulir pendaftaran.
+  /// Metode ini akan secara otomatis menambahkan status 'pending' dan tanggal registrasi.
+  Future<void> addSellerRegistration(Map<String, dynamic> data) async {
+    try {
+      final registrationData = {
+        ...data,
+        'status': 'pending', // Status awal pendaftaran
+        'registrationDate': FieldValue.serverTimestamp(), // Timestamp dari server
+      };
+      await _db.collection('seller_registrations').add(registrationData);
+      _logger.i('Seller registration data saved successfully.');
+    } catch (e, stackTrace) {
+      _logger.e(
+        'Error saving seller registration to Firestore',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  /// Mengambil semua dokumen dari koleksi 'seller_registrations'.
+  Future<List<QueryDocumentSnapshot>> getSellerRegistrations() async {
+    try {
+      final querySnapshot = await _db.collection('seller_registrations').get();
+      _logger.i(
+          'Successfully retrieved ${querySnapshot.docs.length} seller registrations.');
+      return querySnapshot.docs;
+    } catch (e, stackTrace) {
+      _logger.e(
+        'Error getting seller registrations from Firestore',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  /// Memperbarui status dokumen pendaftaran seller.
+  ///
+  /// [docId] adalah ID dokumen di koleksi 'seller_registrations'.
+  /// [data] adalah Map yang berisi field yang akan diperbarui (misal: 'status', 'rejectionReason').
+  Future<void> updateSellerRegistration(
+      String docId, Map<String, Object> data) async {
+    try {
+      await _db.collection('seller_registrations').doc(docId).update(data);
+      _logger.i('Seller registration $docId updated successfully.');
+    } catch (e, stackTrace) {
+      _logger.e(
+        'Error updating seller registration $docId',
+        error: e,
+        stackTrace: stackTrace,
+      );
+      rethrow;
+    }
+  }
 }

@@ -1,51 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: const Text('Matrix Sphere'),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          _buildFeatureCard(
-            context,
-            icon: Icons.person_add_alt_1_outlined,
-            title: 'Pendaftaran Seller',
-            subtitle: 'Lihat & setujui pendaftar baru untuk Seller Sphere.',
-            onTap: () {
-              context.go('/registration');
-            },
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ElevatedButton.icon(
+                icon: const Icon(Icons.person_add_alt_1),
+                label: const Text('Daftar Jadi Mitra'),
+                onPressed: () {
+                  // Navigasi ke halaman formulir pendaftaran mitra
+                  context.push('/register-seller');
+                },
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16)),
+              ),
+              const SizedBox(height: 20),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.list_alt),
+                label: const Text('Lihat Pendaftaran Mitra'),
+                onPressed: () {
+                  // Navigasi ke halaman daftar pendaftaran (untuk admin)
+                  context.push('/seller-registrations');
+                },
+                style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16)),
+              ),
+            ],
           ),
-          // Anda bisa menambahkan kartu fitur lain di sini
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFeatureCard(BuildContext context, {required IconData icon, required String title, required String subtitle, required VoidCallback onTap}) {
-    return Card(
-      elevation: 2,
-      child: ListTile(
-        leading: Icon(icon, size: 40, color: Theme.of(context).colorScheme.primary),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.chevron_right),
-        onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
       ),
     );
   }
