@@ -49,5 +49,5 @@ jobs:
       # 5. Build Project
       - name: Build Project
         if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
-        run: flutter build apk --release
+        run: flutter build apk --release --no-pub --dart-define=flutter.android.newDs1=false
         working-directory: ${{ matrix.path }}
