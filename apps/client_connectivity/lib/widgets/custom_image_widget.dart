@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../core/app_export.dart';
 
 extension ImageTypeExtension on String {
   ImageType get imageType {
@@ -21,7 +20,8 @@ enum ImageType { svg, png, network, file, unknown }
 
 // ignore_for_file: must_be_immutable
 class CustomImageWidget extends StatelessWidget {
-  const CustomImageWidget({super.key, 
+  const CustomImageWidget({
+    super.key,
     this.imageUrl,
     this.height,
     this.width,

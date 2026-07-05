@@ -7,9 +7,30 @@ on:
 
 # Definisi Template untuk reusable steps agar lebih bersih
 jobs:
-  # 1. BUILD ANDROID
-  build_android:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - app: SS Shop Sphere
+            path: apps/shop_sphere
+            trigger: apps/shop_sphere/**
+          - app: SS Seller Sphere
+            path: apps/seller_sphere
+            trigger: apps/seller_sphere/**
+          - app: CC Client Connectivity
+            path: apps/client_coonectivity
+            trigger: apps/client_coonectivity/**
+          - app: Admin Mikrotik
+            path: apps/admin_mikrotik
+            trigger: apps/admin_mikrotik/**
+          - app: Matrix Sphere
+            path: .
+            trigger: lib/**, pubspec.yaml
+    if: |
+      github.event_name == 'workflow_dispatch' || 
+      contains(github.event.head_commit.modified, matrix.path)
+  # 1. BUILD ANDROID
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -39,8 +60,6 @@ jobs:
         # working-directory: apps/Matrix_Sphere
 
   # 2. BUILD WEB & DEPLOY
-  build_web:
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -75,8 +94,6 @@ jobs:
           # PROJECT_PATH: apps/Matrix_Sphere
 
   # 3. BUILD WINDOWS (Optimasi Cache)
-  build_windows:
-    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -111,8 +128,6 @@ jobs:
         # working-directory: apps/Matrix_Sphere
 
   # 4. BUILD LINUX (Optimasi Cache)
-  build_linux:
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
@@ -149,8 +164,6 @@ jobs:
         # working-directory: apps/Matrix_Sphere
 
   # 5. BUILD APPLE (macOS)
-  build_apple:
-    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
