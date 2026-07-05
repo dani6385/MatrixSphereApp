@@ -1,9 +1,12 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_ui/shared_ui.dart';
+
 import 'providers/order_provider.dart';
 
 class OrderSuccessScreen extends StatelessWidget {
@@ -44,17 +47,17 @@ class OrderSuccessScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Tunjukkan kode berikut kepada penjual saat Anda menjemput pesanan.',
+                'Tunjukkan QR code atau kode verifikasi berikut kepada penjual saat Anda menjemput pesanan.',
                 style: TextStyle(fontSize: 16, color: Colors.black54),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
               const Text(
-                'KODE VERIFIKASI ANDA',
+                'QR CODE & KODE VERIFIKASI',
                 style: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
-              _buildVerificationCodeBox(context, order.verificationCode),
+              _buildVerificationCodeBox(context, order),
               const SizedBox(height: 32),
               const Divider(),
               const SizedBox(height: 16),
@@ -73,37 +76,57 @@ class OrderSuccessScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildVerificationCodeBox(BuildContext context, String code) {
-    return GestureDetector(
-      onTap: () {
-        Clipboard.setData(ClipboardData(text: code));
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Kode verifikasi disalin ke clipboard!')),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              code,
-              style: const TextStyle(
-                fontSize: 36,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 8,
-                color: AppColors.primary,
-              ),
+  Widget _buildVerificationCodeBox(BuildContext context, Order order) {
+    // Data yang akan di-encode ke dalam QR code
+    final qrData = jsonEncode({
+      'orderId': order.id,
+      'verificationCode': order.verificationCode,
+    });
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Column(
+        children: [
+          // Widget untuk menampilkan QR Code
+          QrImageView(
+            data: qrData,
+            version: QrVersions.auto,
+            size: 200.0,
+            backgroundColor: Colors.white,
+          ),
+          const SizedBox(height: 24),
+          const Text('Kode Verifikasi Manual', style: TextStyle(color: Colors.grey)),
+          const SizedBox(height: 8),
+          GestureDetector(
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: order.verificationCode));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Kode verifikasi disalin ke clipboard!')),
+              );
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  order.verificationCode,
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 8,
+                    color: AppColors.primary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                const Icon(Icons.copy, color: Colors.grey),
+              ],
             ),
-            const SizedBox(width: 16),
-            const Icon(Icons.copy, color: Colors.grey),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:seller_sphere/presentation/order_screens/providers/order_provider.dart';
 
@@ -293,7 +294,15 @@ class OrderDetailScreen extends ConsumerWidget {
           label: const Text('Tandai Selesai (Telah Diambil)'),
           onPressed: () async {
             // Tampilkan dialog verifikasi sebelum menyelesaikan pesanan
-            _showVerificationDialog(context, notifier, order.pickupCode);
+            // Ganti dialog manual dengan navigasi ke layar scanner
+            final String? scannedCode = await context.push<String>('/orders/$orderId/verify');
+            if (scannedCode == order.pickupCode) {
+              _handleSuccessfulVerification(context, notifier);
+            } else if (scannedCode != null && context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Kode QR tidak valid.'), backgroundColor: Colors.red),
+              );
+            }
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -308,62 +317,13 @@ class OrderDetailScreen extends ConsumerWidget {
     }
   }
 
-  // Widget baru untuk menampilkan dialog verifikasi kode
-  void _showVerificationDialog(BuildContext context, OrderDetailNotifier notifier, String correctCode) {
-    final codeController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Verifikasi Kode Penjemputan'),
-          content: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text('Masukkan kode yang diberikan oleh pembeli untuk menyelesaikan pesanan.'),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: codeController,
-                  autofocus: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Kode Penjemputan',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Kode tidak boleh kosong';
-                    }
-                    if (value.toUpperCase() != correctCode.toUpperCase()) {
-                      return 'Kode salah. Periksa kembali.';
-                    }
-                    return null;
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(child: const Text('Batal'), onPressed: () => Navigator.of(dialogContext).pop()),
-            ElevatedButton(
-              child: const Text('Konfirmasi & Selesaikan'),
-              onPressed: () async {
-                if (formKey.currentState!.validate()) {
-                  Navigator.of(dialogContext).pop(); // Tutup dialog
-                  await notifier.markAsCompleted(); // Selesaikan pesanan
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Verifikasi berhasil. Pesanan telah diselesaikan.'), backgroundColor: Colors.green),
-                    );
-                  }
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
+  // Metode untuk menangani setelah verifikasi berhasil
+  Future<void> _handleSuccessfulVerification(BuildContext context, OrderDetailNotifier notifier) async {
+    await notifier.markAsCompleted();
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Verifikasi berhasil. Pesanan telah diselesaikan.'), backgroundColor: Colors.green),
+      );
+    }
   }
 }

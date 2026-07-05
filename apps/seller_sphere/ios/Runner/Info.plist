@@ -27,6 +27,8 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Aplikasi ini membutuhkan akses ke galeri untuk memilih gambar produk.</string>
 	<key>NSCameraUsageDescription</key>
+	<string>Aplikasi ini membutuhkan akses ke kamera untuk memindai QR code verifikasi pesanan dan mengambil gambar produk.</string>
+	<key>NSCameraUsageDescription</key>
 	<string>Aplikasi ini membutuhkan akses ke kamera untuk mengambil gambar profil atau produk.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Aplikasi ini membutuhkan akses lokasi untuk membantu Anda mengatur lokasi toko.</string>

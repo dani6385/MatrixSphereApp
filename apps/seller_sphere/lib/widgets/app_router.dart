@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/presentation/home_screens/home_screen.dart';
-import 'package:seller_sphere/presentation/login_screens/login_screen.dart';
-import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
-import 'package:seller_sphere/presentation/order_screens/order_list_screen.dart';
-import 'package:seller_sphere/presentation/order_screens/providers/order_detail_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/models/add_product_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/models/product_detail_screen.dart';
-import 'package:seller_sphere/presentation/product_screens/product_screen.dart';
-import 'package:seller_sphere/presentation/profile_screens/edit_profile_screen.dart';
-import 'package:seller_sphere/presentation/profile_screens/profile_screen.dart';
-import 'package:seller_sphere/presentation/setting_screens/providers/store_location_screen.dart';
-import 'package:seller_sphere/presentation/setting_screens/setting_screen.dart';
-import 'package:seller_sphere/utils/go_router_refresh_stream.dart';
-import 'package:seller_sphere/widgets/app_navigation.dart';
+import '../presentation/home_screens/home_screen.dart';
+import '../presentation/login_screens/login_screen.dart';
+import '../presentation/login_screens/providers/auth_provider.dart';
+import '../presentation/order_screens/order_list_screen.dart';
+import '../presentation/order_screens/qr_scanner_screen.dart';
+import '../presentation/order_screens/providers/order_detail_screen.dart';
+import '../presentation/product_screens/models/add_product_screen.dart';
+import '../presentation/product_screens/models/product_detail_screen.dart';
+import '../presentation/product_screens/product_screen.dart';
+import '../presentation/profile_screens/edit_profile_screen.dart';
+import '../presentation/profile_screens/profile_screen.dart';
+import '../presentation/setting_screens/providers/store_location_screen.dart';
+import '../presentation/registration_screens/registration_screen.dart';
+import '../presentation/setting_screens/setting_screen.dart';
+import '../utils/go_router_refresh_stream.dart';
+import '../widgets/app_navigation.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -69,7 +71,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 routes: [
                   GoRoute(
                     path: ':orderId', // /orders/abc
-                    builder: (context, state) => OrderDetailScreen(orderId: state.pathParameters['orderId']!),
+                    builder: (context, state) =>
+                        OrderDetailScreen(orderId: state.pathParameters['orderId']!),
+                    routes: [
+                      GoRoute(
+                          path: 'verify', builder: (context, state) => const QrScannerScreen()),
+                    ],
                   ),
                 ]
               ),
@@ -99,6 +106,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: '/login',
         name: 'login',
         builder: (context, state) => const LoginScreen(),
+      ),
+       GoRoute(
+        path: '/register',
+        name: 'register',
+        builder: (context, state) => const RegistrationScreen(),
       ),
       GoRoute(
         path: '/add-product',

@@ -30,3 +30,5 @@ dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
+  flutter_riverpod: ^2.6.1
+  collection: ^1.19.1

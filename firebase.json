@@ -1,0 +1,32 @@
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "matrixsphere-c3de9",
+          "configurations": {
+            "android": "",
+            "ios": "",
+            "web": "1:359008687014:web:e7c98a976d64b61ba9f567"
+            
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "site": "ms-matrix-sphere",
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
