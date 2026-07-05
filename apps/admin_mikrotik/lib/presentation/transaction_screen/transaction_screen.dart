@@ -404,7 +404,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               color: AppTheme.primaryContainer,
               borderRadius: BorderRadius.circular(36),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.receipt_long_outlined,
               size: 36,
               color: AppTheme.primary,
@@ -438,7 +438,7 @@ class _TransactionCard extends StatelessWidget {
   final String Function(DateTime) formatDate;
   final String Function(double) formatCurrency;
 
-  const _TransactionCard({
+  _TransactionCard({
     required this.transaction,
     required this.formatDate,
     required this.formatCurrency,
@@ -524,7 +524,7 @@ class _TransactionCard extends StatelessWidget {
                     color: AppTheme.primaryContainer,
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.confirmation_number_rounded,
                     color: AppTheme.primary,
                     size: 22,

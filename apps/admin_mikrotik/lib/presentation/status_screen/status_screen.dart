@@ -128,7 +128,7 @@ class _StatusScreenState extends State<StatusScreen> {
               ],
             ),
             child: IconButton(
-              icon: const Icon(Icons.refresh_rounded, color: AppTheme.primary),
+              icon: Icon(Icons.refresh_rounded, color: AppTheme.primary),
               onPressed: () {
                 // TODO: Trigger data refresh
               },

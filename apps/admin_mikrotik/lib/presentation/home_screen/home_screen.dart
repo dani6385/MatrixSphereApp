@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Container(
                     width: 8,
                     height: 8,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppTheme.secondary,
                       shape: BoxShape.circle,
                     ),

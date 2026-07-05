@@ -239,7 +239,7 @@ class _ScanQrTabWidgetState extends State<ScanQrTabWidget>
   }
 
   List<Widget> _buildCorners() {
-    const color = AppTheme.primary;
+    final color = AppTheme.primary;
     const size = 20.0;
     const thickness = 3.0;
     return [

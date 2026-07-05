@@ -72,7 +72,7 @@ class _TrialTabWidgetState extends State<TrialTabWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
+          Icon(
             Icons.timer_outlined,
             size: 48,
             color: AppTheme.primary,

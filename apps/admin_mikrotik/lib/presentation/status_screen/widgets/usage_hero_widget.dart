@@ -82,7 +82,7 @@ class UsageHeroWidget extends StatelessWidget {
               color: AppTheme.primary.withAlpha(26),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.flash_on_rounded,
               color: AppTheme.primary,
               size: 24,

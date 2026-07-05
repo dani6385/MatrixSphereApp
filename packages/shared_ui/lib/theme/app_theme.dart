@@ -6,6 +6,14 @@ class AppTheme {
   // Tema tidak bisa diinstansiasi
   AppTheme._();
 
+  static Color get backgroundLight => AppColors.backgroundLight;
+  static Color get primary => AppColors.primary;
+  static Color get cardLight => AppColors.surface;
+  static Color get secondary => AppColors.secondary;
+  static Color get error => AppColors.error;
+  static Color get warning => AppColors.warning;
+  static Color get success => AppColors.success;
+
   // Nama font family yang dideklarasikan di pubspec.yaml
   static const String _fontFamily = 'Poppins';
 
@@ -43,6 +51,9 @@ class AppTheme {
     error: const Color(0xFFD32F2F), // Merah yang lebih pekat
     onError: Colors.white, // Warna teks di atas background error
   );
+
+  static Color get primaryContainer => _lightColorScheme.primaryContainer;
+  static Color get onPrimaryContainer => _lightColorScheme.onPrimaryContainer;
 
   /// ThemeData untuk mode terang.
   static final ThemeData lightTheme = ThemeData(

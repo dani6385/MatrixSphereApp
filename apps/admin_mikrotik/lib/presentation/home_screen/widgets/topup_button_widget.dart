@@ -32,7 +32,7 @@ class TopupButtonWidget extends StatelessWidget {
               color: AppTheme.secondary.withAlpha(26),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.add_card_rounded,
               color: AppTheme.secondary,
               size: 22,
