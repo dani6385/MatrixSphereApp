@@ -16,15 +16,25 @@ class HomeScreen extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: () {
-            // TODO: Implement refresh logic, panggil method dari notifier
-          }),
+          // Tambahkan pengecekan apakah data sedang di-refresh
+          sessionData == null
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 18.0, horizontal: 20.0),
+                  child: SizedBox(width: 20, height: 2, child: CircularProgressIndicator(strokeWidth: 2)),
+                )
+              : IconButton(
+                  icon: const Icon(Icons.refresh),
+                  onPressed: () {
+                    // Panggil method refresh dari notifier menggunakan ref.read
+                    ref.read(sessionDataProvider.notifier).refreshSessionData();
+                  },
+                ),
           IconButton(icon: const Icon(Icons.logout), onPressed: () {
             // TODO: Implement logout logic
           }),
         ],
       ),
-      // Handle kasus di mana data mungkin belum tersedia
+      // Handle kasus di mana data mungkin belum tersedia (saat loading/refresh)
       body: sessionData == null
           ? const Center(child: CircularProgressIndicator())
           : _buildDashboard(context, sessionData), // Panggil UI utama jika data ada

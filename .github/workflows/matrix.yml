@@ -27,9 +27,6 @@ jobs:
           - app: Matrix Sphere
             path: .
             trigger: lib/**, pubspec.yaml
-    if: |
-      github.event_name == 'workflow_dispatch' || 
-      contains(github.event.head_commit.modified, matrix.path)
   # 1. BUILD ANDROID
     steps:
       - uses: actions/checkout@v4
