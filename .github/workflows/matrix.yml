@@ -29,6 +29,8 @@ jobs:
             trigger: lib/**, pubspec.yaml
 
     steps:
+      - name: Fix Permissions
+        run: sudo chown -R $USER:$USER ${{ github.workspace }}
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Penting agar bisa mendeteksi perubahan
