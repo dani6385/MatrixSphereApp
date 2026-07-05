@@ -1,108 +1,136 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'dart:math';
 import '../models/product_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logger/logger.dart';
+
+final logger = Logger();
 
 /// Repository untuk mengelola data produk.
-/// Di aplikasi nyata, ini akan berkomunikasi dengan API.
+/// Repository ini berkomunikasi langsung dengan Cloud Firestore.
 class ProductRepository {
-  // Data dummy yang akan kita gunakan untuk simulasi panggilan API.
-  static final List<Product> _dummyProducts = [
-    Product(
-        id: 'p1',
-        name: 'Sepatu Lari Keren',
-        imageUrls: ['https://via.placeholder.com/400x300/FF5733/FFFFFF', 'https://via.placeholder.com/400x300/33FF57/FFFFFF', 'https://via.placeholder.com/400x300/3357FF/FFFFFF'],
-        price: 750000,
-        stock: 15,
-        createdAt: DateTime.now().subtract(const Duration(days: 2))),
-    Product(
-        id: 'p2',
-        name: 'Kaos Polos Premium',
-        imageUrls: ['https://via.placeholder.com/400x300/F4D03F/FFFFFF'],
-        price: 120000,
-        stock: 50,
-        createdAt: DateTime.now().subtract(const Duration(days: 5))),
-    Product(
-        id: 'p3',
-        name: 'Jam Tangan Digital',
-        imageUrls: ['https://via.placeholder.com/400x300/8E44AD/FFFFFF', 'https://via.placeholder.com/400x300/AD448E/FFFFFF'],
-        price: 350000,
-        stock: 22,
-        createdAt: DateTime.now().subtract(const Duration(hours: 10))),
-    Product(
-        id: 'p4',
-        name: 'Topi Baseball',
-        imageUrls: ['https://via.placeholder.com/400x300/16A085/FFFFFF'],
-        price: 85000,
-        stock: 0,
-        createdAt: DateTime.now().subtract(const Duration(days: 1))),
-  ];
+  final FirebaseFirestore _firestore;
 
-  /// Mensimulasikan pengambilan data produk dari API.
-  Future<List<Product>> fetchProducts() async {
-    // Tambahkan delay untuk mensimulasikan latensi jaringan.
-    await Future.delayed(const Duration(seconds: 2));
-    // Di sini Anda akan menggantinya dengan panggilan http.get(...)
-    return List<Product>.from(_dummyProducts); // Kembalikan salinan agar tidak termutasi
-  }
+  ProductRepository(this._firestore);
 
-  /// Mensimulasikan pengambilan data satu produk berdasarkan ID.
-  Future<Product> fetchProductById(String id) async {
-    // Tambahkan delay untuk mensimulasikan latensi jaringan.
-    await Future.delayed(const Duration(milliseconds: 500));
-    // Di aplikasi nyata, ini akan menjadi panggilan API ke endpoint seperti /api/products/{id}
+  // Mendapatkan referensi ke koleksi 'products' di Firestore.
+  CollectionReference<Product> get _productsRef => _firestore
+      .collection('products')
+      .withConverter<Product>(
+        fromFirestore: (snapshot, _) =>
+            Product.fromMap(snapshot.data()!, snapshot.id),
+        toFirestore: (product, _) => product.toMap(),
+      );
+
+  /// Menyediakan stream data produk dari Firestore secara real-time.
+  /// Setiap kali ada perubahan di koleksi, stream ini akan mengirimkan daftar produk terbaru.
+  Stream<List<Product>> watchProducts() {
     try {
-      return _dummyProducts.firstWhere((product) => product.id == id);
+      return _productsRef
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map((snapshot) {
+            return snapshot.docs.map((doc) => doc.data()).toList();
+          });
     } catch (e) {
-      throw Exception('Produk dengan ID $id tidak ditemukan.');
+      logger.e('Error fetching products: $e');
+      return Stream.error(e);
     }
   }
 
-  /// Mensimulasikan penambahan produk baru ke API.
-  Future<Product> addProduct(Product product, {List<String>? imagePaths}) async {
-    await Future.delayed(const Duration(seconds: 1));
-    // Di aplikasi nyata, Anda akan mengunggah gambar dan mendapatkan URL.
-    final newProduct = Product(
-      id: 'p${Random().nextInt(1000)}', // Buat ID acak
-      name: product.name,
-      price: product.price,
-      stock: product.stock,
-      imageUrls: imagePaths?.isNotEmpty == true ? ['https://via.placeholder.com/150/new'] : ['https://via.placeholder.com/150/no-image'],
-      createdAt: DateTime.now(),
-    );
-    _dummyProducts.insert(0, newProduct);
-    return newProduct;
+  /// Mengambil data satu produk berdasarkan ID dari Firestore.
+  Future<Product> fetchProductById(String id) async {
+    try {
+      final doc = await _productsRef.doc(id).get();
+      if (!doc.exists) {
+        throw Exception('Produk dengan ID $id tidak ditemukan.');
+      }
+      return doc.data()!;
+    } catch (e) {
+      logger.e('Error fetching product by ID: $e');
+      rethrow;
+    }
   }
 
-  /// Mensimulasikan pembaruan produk yang ada di API.
-  Future<void> updateProduct(Product product, {List<String>? imagePaths}) async {
-    await Future.delayed(const Duration(seconds: 1));
-    final index = _dummyProducts.indexWhere((p) => p.id == product.id);
-    if (index != -1) {
-      // Di aplikasi nyata, Anda akan mengunggah gambar baru jika ada.
-      final updatedProduct = Product(
-        id: product.id,
+  /// Menambahkan produk baru ke Firestore.
+  Future<Product> addProduct(
+    Product product, {
+    List<String>? imagePaths,
+  }) async {
+    try {
+      // Di aplikasi nyata, Anda akan mengunggah gambar ke Firebase Storage
+      // dan mendapatkan URL-nya sebelum menyimpan ke Firestore.
+      // Untuk saat ini, kita gunakan placeholder.
+      final imageUrls = imagePaths?.isNotEmpty == true
+          ? ['https://via.placeholder.com/150/new']
+          : ['https://via.placeholder.com/150/no-image'];
+
+      // Buat dokumen baru di Firestore. Firestore akan meng-generate ID unik.
+      final docRef = _productsRef.doc();
+
+      final newProduct = Product(
+        id: docRef.id, // Gunakan ID dari Firestore
         name: product.name,
         price: product.price,
         stock: product.stock,
-        imageUrls: imagePaths?.isNotEmpty == true ? ['https://via.placeholder.com/150/updated'] : product.imageUrls,
-        createdAt: product.createdAt, // Pertahankan tanggal pembuatan asli
+        imageUrls: imageUrls,
+        createdAt: DateTime.now(), // Timestamp sisi klien
       );
-      _dummyProducts[index] = updatedProduct;
+
+      // Kirim data ke Firestore
+      await docRef.set(newProduct);
+
+      return newProduct;
+    } catch (e) {
+      logger.e('Error adding product: $e');
+      rethrow;
     }
   }
 
-  /// Mensimulasikan penghapusan produk dari API.
+  /// Memperbarui produk yang ada di Firestore.
+  Future<void> updateProduct(
+    Product product, {
+    List<String>? imagePaths,
+  }) async {
+    try {
+      // Siapkan data yang akan di-update.
+      // Menggunakan Map lebih efisien untuk update parsial.
+      final updateData = {
+        'name': product.name,
+        'price': product.price,
+        'stock': product.stock,
+        // Tambahkan logika upload gambar dan update URL jika ada
+        // 'imageUrls': newImageUrls,
+      };
+
+      await _productsRef.doc(product.id).update(updateData);
+    } catch (e) {
+      logger.e('Error updating product: $e');
+      rethrow;
+    }
+  }
+
+  /// Menghapus produk dari Firestore.
   Future<void> deleteProduct(String id) async {
-    await Future.delayed(const Duration(milliseconds: 800));
-    _dummyProducts.removeWhere((product) => product.id == id);
-    // Di aplikasi nyata, Anda akan membuat permintaan HTTP DELETE.
+    try {
+      await _productsRef.doc(id).delete();
+    } catch (e) {
+      logger.e('Error deleting product: $e');
+      rethrow;
+    }
   }
 }
 
 // 1. Provider untuk instance ProductRepository.
+// Kita juga perlu menyediakan instance Firestore.
+final firestoreProvider = Provider<FirebaseFirestore>(
+  (ref) => FirebaseFirestore.instance,
+);
+
 final productRepositoryProvider = Provider<ProductRepository>((ref) {
-  return ProductRepository();
+  // Inject Firestore instance ke dalam repository.
+  return ProductRepository(ref.watch(firestoreProvider));
 });
 
 // --- State Notifier untuk Daftar Produk ---
@@ -164,11 +192,12 @@ class ProductListState {
 // 5. StateNotifier yang mengelola semua logika
 class ProductListNotifier extends StateNotifier<ProductListState> {
   final ProductRepository _repository;
+  StreamSubscription<List<Product>>? _productsSubscription;
   static const _hideStockKey = 'HIDE_OUT_OF_STOCK';
 
   ProductListNotifier(this._repository) : super(const ProductListState()) {
     _loadInitialFilters();
-    fetchProducts();
+    _listenToProducts();
   }
 
   Future<void> _loadInitialFilters() async {
@@ -177,20 +206,31 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
     state = state.copyWith(hideOutOfStock: hide);
   }
 
-  Future<void> fetchProducts() async {
+  void _listenToProducts() {
     state = state.copyWith(status: ProductListStatus.loading);
-    try {
-      final products = await _repository.fetchProducts();
-      state = state.copyWith(allProducts: products, status: ProductListStatus.success);
-      _applyFiltersAndSort();
-    } catch (e) {
-      state = state.copyWith(status: ProductListStatus.error, errorMessage: e.toString());
-    }
+    _productsSubscription?.cancel(); // Batalkan listener sebelumnya jika ada
+    _productsSubscription = _repository.watchProducts().listen(
+      (products) {
+        state = state.copyWith(
+          allProducts: products,
+          status: ProductListStatus.success,
+        );
+        _applyFiltersAndSort();
+      },
+      onError: (e) {
+        state = state.copyWith(
+          status: ProductListStatus.error,
+          errorMessage: e.toString(),
+        );
+      },
+    );
   }
 
-  void updateSearchQuery(String query) {
-    state = state.copyWith(searchQuery: query);
-    _applyFiltersAndSort();
+  @override
+  void dispose() {
+    // Pastikan untuk membatalkan subscription saat notifier tidak lagi digunakan
+    _productsSubscription?.cancel();
+    super.dispose();
   }
 
   void updateSortType(ProductSortType sortType) {
@@ -210,7 +250,9 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
 
     // Terapkan filter
     List<Product> filteredProducts = state.allProducts.where((product) {
-      final searchMatch = product.name.toLowerCase().contains(state.searchQuery.toLowerCase());
+      final searchMatch = product.name.toLowerCase().contains(
+        state.searchQuery.toLowerCase(),
+      );
       final stockMatch = !state.hideOutOfStock || product.stock > 0;
       return searchMatch && stockMatch;
     }).toList();
@@ -224,10 +266,14 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
         filteredProducts.sort((a, b) => a.createdAt.compareTo(b.createdAt));
         break;
       case ProductSortType.nameAsc:
-        filteredProducts.sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+        filteredProducts.sort(
+          (a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()),
+        );
         break;
       case ProductSortType.nameDesc:
-        filteredProducts.sort((a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()));
+        filteredProducts.sort(
+          (a, b) => b.name.toLowerCase().compareTo(a.name.toLowerCase()),
+        );
         break;
       case ProductSortType.priceAsc:
         filteredProducts.sort((a, b) => a.price.compareTo(b.price));
@@ -237,29 +283,42 @@ class ProductListNotifier extends StateNotifier<ProductListState> {
         break;
     }
 
-    state = state.copyWith(filteredProductIds: filteredProducts.map((p) => p.id).toList());
+    state = state.copyWith(
+      filteredProductIds: filteredProducts.map((p) => p.id).toList(),
+    );
+  }
+
+  void updateSearchQuery(String query) {
+    state = state.copyWith(searchQuery: query);
+    _applyFiltersAndSort();
   }
 }
 
 // 6. Provider utama yang akan digunakan di UI
-final productListNotifierProvider = StateNotifierProvider<ProductListNotifier, ProductListState>((ref) {
-  return ProductListNotifier(ref.watch(productRepositoryProvider));
-});
+final productListNotifierProvider =
+    StateNotifierProvider<ProductListNotifier, ProductListState>((ref) {
+      return ProductListNotifier(ref.watch(productRepositoryProvider));
+    });
 
 // 7. FutureProvider.family untuk mengambil detail satu produk berdasarkan ID.
 // Provider ini tetap berguna karena ia menangani caching per-ID secara otomatis.
-final productDetailProvider = FutureProvider.family<Product, String>((ref, productId) async {
+final productDetailProvider = FutureProvider.family<Product, String>((
+  ref,
+  productId,
+) async {
   // Optimasi: Cek apakah produk sudah ada di state notifier
   final productListState = ref.watch(productListNotifierProvider);
   if (productListState.status == ProductListStatus.success) {
     try {
-      final product = productListState.allProducts.firstWhere((p) => p.id == productId);
+      final product = productListState.allProducts.firstWhere(
+        (p) => p.id == productId,
+      );
       return product;
     } catch (_) {
       // Jika tidak ditemukan, fallback ke fetch dari repository
     }
   }
-  
+
   final repository = ref.read(productRepositoryProvider);
   return await repository.fetchProductById(productId);
 });

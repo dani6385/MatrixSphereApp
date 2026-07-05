@@ -33,6 +33,7 @@ class Order {
   final DateTime orderDate;
   final String paymentMethod;
   PickupStatus status;
+  final String customerId; // ID unik untuk setiap pelanggan
   final String customerName;
 
   Order({
@@ -42,6 +43,7 @@ class Order {
     required this.orderDate,
     required this.paymentMethod,
     required this.status,
+    required this.customerId,
     required this.customerName,
   });
 }
@@ -51,6 +53,7 @@ class OrderRepository {
   static final List<Order> _dummyOrders = [
     Order(
       id: 'order1',
+      customerId: 'cust101',
       customerName: 'Budi Santoso',
       items: [
         OrderItem(id: '1', name: 'Wireless Headphone Alpha', quantity: 1, price: 1500000),
@@ -63,6 +66,7 @@ class OrderRepository {
     ),
     Order(
       id: 'order2',
+      customerId: 'cust102',
       customerName: 'Citra Lestari',
       items: [
         OrderItem(id: '4', name: 'Mechanical Keyboard Z', quantity: 1, price: 1800000),
@@ -74,6 +78,7 @@ class OrderRepository {
     ),
     Order(
       id: 'order3',
+      customerId: 'cust103',
       customerName: 'Agus Wijaya',
       items: [
         OrderItem(id: 'p4', name: 'Topi Baseball', quantity: 2, price: 85000),
@@ -82,6 +87,18 @@ class OrderRepository {
       orderDate: DateTime.now().subtract(const Duration(days: 2)),
       paymentMethod: 'COD',
       status: PickupStatus.completed,
+    ),
+    Order(
+      id: 'order4',
+      customerId: 'cust104',
+      customerName: 'Dewi Anggraini',
+      items: [
+        OrderItem(id: 'p5', name: 'Smartwatch Pro', quantity: 1, price: 2500000),
+      ],
+      totalAmount: 2500000,
+      orderDate: DateTime.now().subtract(const Duration(minutes: 15)),
+      paymentMethod: 'E-Wallet (GoPay, OVO)',
+      status: PickupStatus.newOrder, // Status pesanan baru
     ),
   ];
 

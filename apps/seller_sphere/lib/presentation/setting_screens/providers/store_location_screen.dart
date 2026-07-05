@@ -261,7 +261,7 @@ class _StoreLocationScreenState extends ConsumerState<StoreLocationScreen> with 
                 ),
                 if (_isSaving)
                   Container(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withAlpha(5),
                     child: const Center(
                       child: CircularProgressIndicator(),
                     ),
@@ -311,7 +311,7 @@ class _AddressDisplayPanel extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(Icons.location_on, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+              Icon(Icons.location_on, color: Theme.of(context).colorScheme.onSurface.withAlpha(6)),
               const SizedBox(width: 12),
               Expanded(
                 child: isFetchingAddress

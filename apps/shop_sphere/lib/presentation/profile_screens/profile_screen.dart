@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shop_sphere/providers/session_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -123,7 +124,8 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.location_on_outlined,
           title: 'Alamat Pengiriman',
           onTap: () {
-            // Navigasi ke layar Alamat Pengiriman
+            // Gunakan go_router untuk navigasi dengan parameter
+            context.push('/settings/Alamat Pengiriman');
           },
         ),
         _buildMenuItem(
@@ -131,7 +133,7 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.payment_rounded,
           title: 'Metode Pembayaran',
           onTap: () {
-            // Navigasi ke layar Metode Pembayaran
+            context.push('/settings/Metode Pembayaran');
           },
         ),
         _buildMenuItem(
@@ -139,7 +141,7 @@ class ProfileScreen extends StatelessWidget {
           icon: Icons.help_outline_rounded,
           title: 'Pusat Bantuan',
           onTap: () {
-            // Navigasi ke Pusat Bantuan
+            context.push('/settings/Pusat Bantuan');
           },
         ),
       ],

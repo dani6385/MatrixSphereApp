@@ -11,6 +11,7 @@ class FakeOrderRepository implements order_provider.OrderRepository {
     // Mensimulasikan pengambilan data yang berhasil
     return order_provider.Order(
       id: orderId,
+      customerId: 'test-cust-id', // Menambahkan argumen yang hilang
       customerName: 'Test Customer',
       items: [
         order_provider.OrderItem(id: 'item1', name: 'Test Item', quantity: 1, price: 100)
@@ -74,7 +75,7 @@ void main() {
       expect(notifier.state.hasValue, isTrue);
       expect(notifier.state.value, isA<OrderDetail>());
       // Pastikan status awal adalah 'readyForPickup' sesuai data dummy
-      expect(notifier.state.value?.status, PickupStatus.readyForPickup);
+      expect(notifier.state.value?.status, order_provider.PickupStatus.readyForPickup);
       expect(notifier.state.value?.orderId, orderId);
     });
 
@@ -92,7 +93,7 @@ void main() {
       await initCompleter.future;
 
       // Pastikan state awal sudah benar
-      expect(notifier.state.value?.status, PickupStatus.readyForPickup);
+      expect(notifier.state.value?.status, order_provider.PickupStatus.readyForPickup);
 
       // 2. Aksi
       // Panggil metode untuk mengubah status
@@ -100,7 +101,7 @@ void main() {
 
       // 3. Verifikasi
       // State harus diperbarui dengan status 'completed'
-      expect(notifier.state.value?.status, PickupStatus.completed);
+      expect(notifier.state.value?.status, order_provider.PickupStatus.completed);
     });
   });
 }

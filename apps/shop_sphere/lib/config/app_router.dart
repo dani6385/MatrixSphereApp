@@ -1,12 +1,17 @@
 import 'package:go_router/go_router.dart';
+import 'package:shop_sphere/presentation/setting_screens/widgets/add_edit_address_screen.dart';
+import 'package:shop_sphere/presentation/setting_screens/settings_screen.dart';
+import 'package:shop_sphere/providers/session_provider.dart';
 import '../../presentation/auth_screens/login_screen.dart';
 import '../../presentation/cart_screens/cart_screen.dart';
 import '../../presentation/checkout_screens/checkout_screen.dart';
 import '../../presentation/home_screens/home_screen.dart';
 import '../../presentation/order_screens/order_history_screen.dart';
+import '../../presentation/order_screens/order_success_screen.dart';
 import '../../presentation/product_screens/models/product_detail_screen.dart';
 import '../../presentation/profile_screens/profile_screen.dart';
 import '../../widgets/app_navigation.dart';
+import 'custom_page_transitions.dart';
 
 /// Konfigurasi GoRouter untuk aplikasi.
 ///
@@ -68,7 +73,50 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/orders',
-      builder: (context, state) => const OrderHistoryScreen(),
+      pageBuilder: (context, state) => SlideTransitionPage(
+        key: state.pageKey,
+        direction: SlideDirection.bottom, // Muncul dari bawah
+        child: const OrderHistoryScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/order-success/:orderId',
+      builder: (context, state) {
+        final orderId = state.pathParameters['orderId']!;
+        // Asumsi Anda sudah memiliki OrderSuccessScreen dari respons sebelumnya
+        return OrderSuccessScreen(orderId: orderId);
+      },
+    ),
+    GoRoute(
+      path: '/settings/:title',
+      pageBuilder: (context, state) {
+        final title = state.pathParameters['title'] ?? 'Pengaturan';
+        return SlideTransitionPage(
+          // Tidak perlu menentukan arah, akan menggunakan default (kanan)
+          key: state.pageKey,
+          child: SettingsScreen(title: title),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/add-address',
+      pageBuilder: (context, state) => SlideTransitionPage(
+        key: state.pageKey,
+        direction: SlideDirection.bottom, // Muncul dari bawah seperti modal
+        child: const AddEditAddressScreen(),
+      ),
+    ),
+    GoRoute(
+      path: '/edit-address',
+      pageBuilder: (context, state) {
+        // Ambil objek AddressModel dari parameter 'extra'
+        final address = state.extra as AddressModel?;
+        return SlideTransitionPage(
+          key: state.pageKey,
+          direction: SlideDirection.bottom,
+          child: AddEditAddressScreen(address: address),
+        );
+      },
     ),
   ],
 );

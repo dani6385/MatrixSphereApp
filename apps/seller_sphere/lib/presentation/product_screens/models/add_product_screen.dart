@@ -70,9 +70,6 @@ class _AddProductScreenState extends ConsumerState<AddProductScreen> {
         await repository.addProduct(newProduct, imagePaths: _imageFiles.map((f) => f.path).toList());
       }
 
-      // Invalidate provider daftar produk agar data dimuat ulang di halaman sebelumnya
-      ref.read(productListNotifierProvider.notifier).fetchProducts();
-
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Produk berhasil ${_isEditMode ? 'diperbarui' : 'disimpan'}!')),

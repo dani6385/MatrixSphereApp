@@ -171,11 +171,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       // 4. Jika lokasi valid, proses pesanan
       final paymentMethodName = availablePaymentMethods.firstWhere((m) => m.value == _selectedPaymentMethod).name;
 
-      orderProvider.addOrder(cart.items, cart.totalPrice, paymentMethodName);
-      cart.clearCart();
+      final newOrder = orderProvider.addOrder(cart.items, cart.totalPrice, paymentMethodName);
       
       if (mounted) {
-        goRouter.go('/home');
+        cart.clearCart(); // Kosongkan keranjang setelah pesanan berhasil dibuat
+        goRouter.go('/order-success/${newOrder.id}');
         scaffoldMessenger.showSnackBar(const SnackBar(content: Text('Pesanan berhasil dibuat! Silakan jemput pesanan Anda.')));
       }
     } catch (e) {

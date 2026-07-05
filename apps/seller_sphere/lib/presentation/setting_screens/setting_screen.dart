@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/presentation/login_screens/providers/auth_provider.dart';
+import 'package:seller_sphere/presentation/product_screens/providers/product_provider.dart';
 import 'package:seller_sphere/providers/theme_provider.dart'; // Impor provider Riverpod
-import 'package:seller_sphere/presentation/settings_screens/providers/notification_provider.dart'; // Impor provider Riverpod
+import 'package:seller_sphere/presentation/setting_screens/providers/notification_provider.dart'; // Impor provider Riverpod
 
 // Pastikan ini adalah ConsumerWidget
 class SettingScreen extends ConsumerWidget {
@@ -14,6 +15,8 @@ class SettingScreen extends ConsumerWidget {
     // Gunakan ref.watch untuk mendapatkan state dari provider Riverpod
     final isDarkMode = ref.watch(themeProvider);
     final areNotificationsEnabled = ref.watch(notificationProvider);
+    final productListState = ref.watch(productListNotifierProvider);
+    final productListNotifier = ref.read(productListNotifierProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -21,14 +24,7 @@ class SettingScreen extends ConsumerWidget {
       ),
       body: ListView(
         children: [
-          ListTile(
-            leading: const Icon(Icons.person_outline),
-            title: const Text('Profil Saya'),
-            subtitle: const Text('Lihat dan kelola profil Anda'),
-            onTap: () {
-              context.push('/profile');
-            },
-          ),
+          _buildSectionHeader(context, 'Umum'),
           SwitchListTile(
             title: const Text('Mode Gelap'),
             subtitle: const Text('Aktifkan untuk tema gelap'),
@@ -38,6 +34,18 @@ class SettingScreen extends ConsumerWidget {
               ref.read(themeProvider.notifier).toggleTheme(value);
             },
           ),
+          const Divider(),
+          _buildSectionHeader(context, 'Akun'),
+          ListTile(
+            leading: const Icon(Icons.person_outline),
+            title: const Text('Profil Saya'),
+            subtitle: const Text('Lihat dan kelola profil Anda'),
+            onTap: () {
+              context.push('/profile');
+            },
+          ),
+          const Divider(),
+          _buildSectionHeader(context, 'Notifikasi & Tampilan'),
           SwitchListTile(
             title: const Text('Notifikasi'),
             subtitle: const Text('Izinkan aplikasi mengirim notifikasi'),
@@ -47,6 +55,17 @@ class SettingScreen extends ConsumerWidget {
               ref.read(notificationProvider.notifier).toggleNotifications(value);
             },
           ),
+          SwitchListTile(
+            title: const Text('Sembunyikan Produk Habis'),
+            subtitle: const Text('Produk dengan stok 0 tidak akan ditampilkan.'),
+            value: productListState.hideOutOfStock,
+            onChanged: (bool value) {
+              // Panggil metode untuk memperbarui state dan persistensi
+              productListNotifier.updateHideOutOfStock(value);
+            },
+          ),
+          const Divider(),
+          _buildSectionHeader(context, 'Lainnya'),
           ListTile(
             title: const Text('Tentang Aplikasi'),
             leading: const Icon(Icons.info_outline),
@@ -87,6 +106,19 @@ class SettingScreen extends ConsumerWidget {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: Theme.of(context).colorScheme.secondary,
+              fontWeight: FontWeight.bold,
+            ),
       ),
     );
   }

@@ -8,12 +8,11 @@ import 'package:seller_sphere/presentation/order_screens/order_list_screen.dart'
 import 'package:seller_sphere/presentation/order_screens/providers/order_detail_screen.dart';
 import 'package:seller_sphere/presentation/product_screens/models/add_product_screen.dart';
 import 'package:seller_sphere/presentation/product_screens/models/product_detail_screen.dart';
-// PERBAIKAN: Path impor diperbaiki untuk menyertakan /models/
-import 'package:seller_sphere/presentation/product_screens/models/product_list_screen.dart';
+import 'package:seller_sphere/presentation/product_screens/product_screen.dart';
 import 'package:seller_sphere/presentation/profile_screens/edit_profile_screen.dart';
 import 'package:seller_sphere/presentation/profile_screens/profile_screen.dart';
-import 'package:seller_sphere/presentation/settings_screens/providers/store_location_screen.dart';
-import 'package:seller_sphere/presentation/settings_screens/setting_screen.dart';
+import 'package:seller_sphere/presentation/setting_screens/providers/store_location_screen.dart';
+import 'package:seller_sphere/presentation/setting_screens/setting_screen.dart';
 import 'package:seller_sphere/utils/go_router_refresh_stream.dart';
 import 'package:seller_sphere/widgets/app_navigation.dart';
 
@@ -50,7 +49,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/products',
-                builder: (context, state) => const ProductListScreen(),
+                builder: (context, state) => const ProductScreen(),
                 routes: [
                   GoRoute(
                     path: 'detail/:productId', //  /products/detail/123

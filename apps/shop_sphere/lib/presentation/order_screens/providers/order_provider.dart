@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:shop_sphere/presentation/cart_screens/providers/cart_provider.dart'; // Untuk menggunakan CartItem
 
@@ -33,6 +34,7 @@ class Order {
   final double totalAmount;
   final DateTime orderDate;
   final String paymentMethod;
+  final String verificationCode;
   final OrderStatus status;
 
   Order({
@@ -41,6 +43,7 @@ class Order {
     required this.totalAmount,
     required this.orderDate,
     required this.paymentMethod,
+    required this.verificationCode,
     this.status = OrderStatus.processing, // Status default
   });
 }
@@ -51,7 +54,10 @@ class OrderProvider with ChangeNotifier {
 
   List<Order> get orders => [..._orders];
 
-  void addOrder(List<CartItem> cartItems, double total, String paymentMethod) {
+  Order addOrder(List<CartItem> cartItems, double total, String paymentMethod) {
+    // Menghasilkan kode verifikasi 6 digit acak.
+    final verificationCode = (100000 + Random().nextInt(900000)).toString();
+
     final newOrder = Order(
       id: DateTime.now().toIso8601String(),
       items: cartItems
@@ -66,9 +72,23 @@ class OrderProvider with ChangeNotifier {
       totalAmount: total,
       orderDate: DateTime.now(),
       paymentMethod: paymentMethod,
+      verificationCode: verificationCode,
       status: OrderStatus.processing, // Setiap pesanan baru akan berstatus "Diproses"
     );
     _orders.insert(0, newOrder); // Tambahkan ke awal daftar
     notifyListeners();
+    return newOrder;
+  }
+
+  /// Mencari pesanan berdasarkan ID.
+  /// Mengembalikan [Order] jika ditemukan, atau `null` jika tidak ada.
+  Order? findById(String orderId) {
+    // Menggunakan firstWhereOrNull dari package:collection akan lebih efisien,
+    // namun untuk menghindari penambahan dependensi, kita bisa menggunakan try-catch.
+    try {
+      return _orders.firstWhere((order) => order.id == orderId);
+    } catch (e) {
+      return null; // Tidak ditemukan
+    }
   }
 }
