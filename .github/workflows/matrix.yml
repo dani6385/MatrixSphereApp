@@ -3,9 +3,6 @@ name: Build, Release MatrixSphere to Repo Home & deploy
 on:
   push:
     branches: [ main ]
-    paths:
-      - '**'
-      - 'pubspec.yaml'
   workflow_dispatch:
 
 # Definisi Template untuk reusable steps agar lebih bersih
