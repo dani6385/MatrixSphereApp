@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2 # Penting agar bisa mendeteksi perubahan
+          fetch-depth: 0 # Penting agar bisa mendeteksi perubahan
 
       # 1. Deteksi perubahan folder secara akurat
       - uses: dorny/paths-filter@v3
@@ -41,10 +41,17 @@ jobs:
             project: '${{ matrix.path }}/**'
 
       # 2. Build HANYA jika filter mendeteksi perubahan
-      - name: Build
+      - uses: subosito/flutter-action@v2
+        if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
+        with: 
+          channel: 'stable'
+          cache: true
+
+      - name: Build APK
         if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
         run: flutter build apk --release
         working-directory: ${{ matrix.path }}
+
   # 2. BUILD WEB & DEPLOY
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
