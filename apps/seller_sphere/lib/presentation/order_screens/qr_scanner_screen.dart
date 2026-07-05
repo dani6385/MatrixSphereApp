@@ -66,11 +66,12 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
             child: Center(
               child: IconButton(
                 color: Colors.white,
-                icon: StreamBuilder<TorchState>(
-                  stream: _scannerController.torchState,
-                  builder: (context, snapshot) {
-                    final torchState = snapshot.data ?? TorchState.off;
-                    switch (torchState) {
+                // PERBAIKAN: Dengarkan _scannerController secara langsung
+                icon: ValueListenableBuilder<MobileScannerState>(
+                  valueListenable: _scannerController,
+                  builder: (context, state, child) {
+                    // Akses torchState dari objek 'state'
+                    switch (state.torchState) {
                       case TorchState.on:
                         return const Icon(Icons.flash_on, color: Colors.yellow);
                       case TorchState.off:
@@ -79,7 +80,7 @@ class _QrScannerScreenState extends State<QrScannerScreen> {
                     }
                   },
                 ),
-                iconSize: 32.0, // Menggunakan iconSize yang sudah ada
+                iconSize: 32.0,
                 onPressed: () => _scannerController.toggleTorch(),
               ),
             ),
