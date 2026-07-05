@@ -11,7 +11,6 @@ class AppNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: navigationShell,
-      // Panggil komponen dari shared_ui di sini
       bottomNavigationBar: AppBottomNav(
         navigationShell: navigationShell,
         tabs: const [
@@ -43,7 +42,7 @@ class AppNavigation extends StatelessWidget {
             label: 'Settings',
             icon: Icons.settings_outlined,
             activeIcon: Icons.settings_rounded,
-            branchIndex: null,
+            branchIndex: null, // Ini tidak akan menjadi tab navigasi aktif
           ),
         ],
       ),
