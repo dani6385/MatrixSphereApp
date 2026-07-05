@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'package:admin_mikrotik/application/providers/session_provider.dart';
 
-class SessionInfoWidget extends StatefulWidget {
-  final String uptime;
-  final String sessionTime;
+// 1. Ubah menjadi ConsumerWidget
+class SessionInfoWidget extends ConsumerWidget {
   final bool isTablet;
 
+  // Hapus parameter uptime dan sessionTime dari konstruktor
   const SessionInfoWidget({
-    required this.uptime,
-    required this.sessionTime,
     required this.isTablet,
     super.key,
   });
 
   @override
-  State<SessionInfoWidget> createState() => _SessionInfoWidgetState();
-}
+  // 2. Tambahkan WidgetRef ref ke method build
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 3. Tonton (watch) sessionDataProvider
+    final sessionData = ref.watch(sessionDataProvider);
 
-class _SessionInfoWidgetState extends State<SessionInfoWidget> {
-  // Live uptime tick — TODO: Replace with [Riverpod/Bloc] stream for production
-  late String _uptime;
-  late String _sessionTime;
+    // 4. Handle state loading/null
+    if (sessionData == null) {
+      // Tampilkan placeholder atau shimmer effect saat data tidak tersedia
+      return const Row(
+        children: [
+          Expanded(child: _SessionCardPlaceholder()),
+          SizedBox(width: 12),
+          Expanded(child: _SessionCardPlaceholder()),
+        ],
+      );
+    }
 
-  @override
-  void initState() {
-    super.initState();
-    _uptime = widget.uptime;
-    _sessionTime = widget.sessionTime;
-  }
-
-  @override
-  Widget build(BuildContext context) {
+    // 5. Gunakan data dari provider untuk membangun UI
     return Row(
       children: [
         Expanded(
@@ -39,7 +40,7 @@ class _SessionInfoWidgetState extends State<SessionInfoWidget> {
             icon: Icons.timer_outlined,
             iconColor: AppTheme.primary,
             label: 'Uptime',
-            value: _uptime,
+            value: sessionData.uptime, // Gunakan data dari provider
             subtitle: 'Waktu aktif koneksi',
           ),
         ),
@@ -49,7 +50,7 @@ class _SessionInfoWidgetState extends State<SessionInfoWidget> {
             icon: Icons.access_time_rounded,
             iconColor: const Color(0xFF0277BD),
             label: 'Sesi',
-            value: _sessionTime,
+            value: sessionData.sessionTime, // Gunakan data dari provider
             subtitle: 'Durasi sesi ini',
           ),
         ),
@@ -122,6 +123,52 @@ class _SessionCard extends StatelessWidget {
                     fontFeatures: const [FontFeature.tabularFigures()],
                   ),
                 ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Widget placeholder sederhana
+class _SessionCardPlaceholder extends StatelessWidget {
+  const _SessionCardPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withAlpha(13),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(height: 12, width: 50, color: Colors.grey.shade200),
+                const SizedBox(height: 4),
+                Container(height: 16, width: 80, color: Colors.grey.shade200),
               ],
             ),
           ),

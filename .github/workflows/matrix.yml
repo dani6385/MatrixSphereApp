@@ -28,7 +28,7 @@ jobs:
             path: .
             trigger: lib/**, pubspec.yaml
 
-      steps:
+    steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 2 # Penting agar bisa mendeteksi perubahan
