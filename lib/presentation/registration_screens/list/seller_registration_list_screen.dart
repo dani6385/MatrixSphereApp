@@ -154,11 +154,11 @@ class _RegistrationList extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       TextButton(
-                        child: const Text('Tolak'),
                         onPressed: () =>
                             _showRejectDialog(context, ref, seller.id),
                         style: TextButton.styleFrom(
                             foregroundColor: Theme.of(context).colorScheme.error),
+                        child: const Text('Tolak'),
                       ),
                       const SizedBox(width: 8),
                       ElevatedButton(
@@ -207,7 +207,6 @@ class _RegistrationList extends ConsumerWidget {
               onPressed: () => Navigator.of(dialogContext).pop(),
             ),
             ElevatedButton(
-              child: const Text('Kirim Penolakan'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Theme.of(context).colorScheme.error,
                 foregroundColor: Theme.of(context).colorScheme.onError,
@@ -218,6 +217,7 @@ class _RegistrationList extends ConsumerWidget {
                     .rejectSeller(sellerId, reasonController.text);
                 Navigator.of(dialogContext).pop();
               },
+              child: const Text('Kirim Penolakan'),
             ),
           ],
         );

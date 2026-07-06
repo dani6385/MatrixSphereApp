@@ -8,9 +8,16 @@ class AppColors {
 
   // --- Warna Utama (Branding) ---
   /// Warna dasar utama yang digunakan untuk menghasilkan skema warna.
-  static const Color primary = Color(0xFF00668B);
-  static const Color primaryDarker = Color(0xFF00695C); // Warna ini digunakan untuk gradien
-  static const Color primarySeedColor = Color(0xFF00668B);
+  static const Color primary = Color(0xFF00897B); // Diubah ke Teal
+  static const Color primaryDarker = Color(0xFF00695C); // Teal yang lebih gelap
+  static const Color primarySeedColor = Color(0xFF00897B); // Diubah ke Teal
+
+  /// Warna sekunder, bisa digunakan untuk aksen atau CTA (Call to Action).
+  static const Color secondary = Color(0xFFF9A825); // Contoh: Kuning untuk kontras
+
+  /// Warna untuk teks atau background "Flash Sale".
+  static const Color flashSaleCountdownBg = Color(0xFFE0F2F1); // Teal sangat muda
+  static const Color flashSaleCountdownText = Color(0xFF00897B);
 
   // --- Warna Latar Belakang & Permukaan ---
   /// Warna latar belakang utama untuk Scaffold di mode terang.
@@ -18,60 +25,11 @@ class AppColors {
   /// Warna dasar untuk komponen seperti Card di mode terang.
   static const Color surface = Colors.white;
 
-  // --- Warna Teks & Ikon ---
-  static const Color textPrimary = Color(0xFF1A1A1A);
-  static const Color textSecondary = Color(0xFF5C5C5C);
-  static const Color textTertiary = Color(0xFF9E9E9E);
-
-  // --- Warna Lainnya ---
+  // --- Warna Tambahan ---
+  /// Warna untuk border atau divider yang subtle.
   static const Color border = Color(0xFFEEEEEE);
-  static const Color divider = Color(0xFFF0F0F0);
-
-  // --- Warna Status & Kategori ---
-  // Member (menggunakan primary)
-  static const Color statusMemberBg = Color(0xFFE0F2F1);
-  // Voucher
-  static const Color statusVoucher = Color(0xFF0277BD);
-  static const Color statusVoucherBg = Color(0xFFE3F2FD);
-  // Scan QR
-  static const Color statusScanQr = Color(0xFF6A1B9A);
-  static const Color statusScanQrBg = Color(0xFFF3E5F5);
-  // Bayar QR
-  static const Color statusPayQr = Color(0xFFE65100);
-  static const Color statusPayQrBg = Color(0xFFFFF3E0);
-  // Trial
-  static const Color statusTrial = Color(0xFF558B2F);
-  static const Color statusTrialBg = Color(0xFFF1F8E9);
-
-  
-/// Kelas statis untuk menyimpan semua palet warna aplikasi.
-/// Ini memudahkan perubahan tema secara global.
-
-  // Warna Utama (Primary)
-  
-  static const Color secondary = Color(0xFF00C896); // Warna aksen (notifikasi/status)
-  
-  // Warna Latar Belakang
-  static const Color background = Color(0xFFF8F9FA); // Background halaman
-  
-  
-  
-  // Warna Teks
-  
-  // Warna Status/Feedback
-  static const Color success = Color(0xFF28A745);
-  static const Color error = Color(0xFFDC3545);
-  static const Color warning = Color(0xFFFFC107);
-  
-  // Warna Ikon (Utilitas)
-  static const Color iconPrimary = Color(0xFF1A1A1A);
-  static const Color iconBackground = Color(0xFFF1F3F5);
-
-  // Warna khusus untuk mode gelap (opsional)
-  static const Color darkBackground = Color(0xFF121212); // Latar belakang umum mode gelap
-  static const Color darkSurface = Color(0xFF1E1E1E); // Latar belakang kartu/widget mode gelap
-  static const Color textDark = Color(0xFFE0E0E0); // Teks utama mode gelap
-  static const Color textSecondaryDark = Color(0xFFB0B0B0); // Teks sekunder mode gelap
-  static const Color beginend = Color(0x0D00C896); // Warna untuk animasi, dibuat transparan dari 'secondary'
-  static const Color black = Colors.black;
+  /// Warna teks utama (hitam pekat).
+  static const Color textPrimary = Color(0xFF212121);
+  /// Warna teks sekunder (abu-abu).
+  static const Color textSecondary = Color(0xFF757575);
 }

@@ -221,7 +221,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                         bottomPadding + 88,
                       ),
                       itemCount: filtered.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      separatorBuilder: (_, _) => const SizedBox(height: 10),
                       itemBuilder: (context, index) => _TransactionCard(
                         transaction: filtered[index],
                         formatDate: _formatDate,
@@ -359,7 +359,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: statuses.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
           final (status, label) = statuses[index];
           final isSelected = _selectedStatus == status;
@@ -438,7 +438,7 @@ class _TransactionCard extends StatelessWidget {
   final String Function(DateTime) formatDate;
   final String Function(double) formatCurrency;
 
-  _TransactionCard({
+  const _TransactionCard({
     required this.transaction,
     required this.formatDate,
     required this.formatCurrency,
