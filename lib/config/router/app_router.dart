@@ -28,6 +28,5 @@ final GoRouter appRouter = GoRouter(
       path: '/',
       builder: (context, state) => const PlaceholderHomeScreen(),
     ),
-    // Tambahkan rute lain di sini sesuai kebutuhan.
   ],
 );
