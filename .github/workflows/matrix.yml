@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build_android:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,34 +23,37 @@ jobs:
             path: .
 
     steps:
-      # 1. Perbaikan Izin Akses (Fix error EACCES)
       - name: Fix Directory Permissions
         run: sudo chown -R $USER:$USER ${{ github.workspace }}
 
-      # 2. Checkout
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      # 3. Filter Perubahan Folder
       - uses: dorny/paths-filter@v3
         id: filter
         with:
           filters: |
             project: '${{ matrix.path }}/**'
 
-      # 4. Setup Flutter (Hanya jalan jika ada perubahan)
       - uses: subosito/flutter-action@v2
         if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
         with:
           channel: 'stable'
           cache: true
 
-      # 5. Build Project
-      - name: Build Project
+      # PENTING: Jalankan pub get di folder yang tepat SEBELUM build
+      - name: Get Dependencies
         if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
-        run: flutter build apk --release --no-pub --dart-define=flutter.android.newDs1=false
+        run: flutter pub get
         working-directory: ${{ matrix.path }}
+
+      # Build APK dengan working-directory yang benar
+      - name: Build APK
+        if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
+        run: flutter build apk --release
+        working-directory: ${{ matrix.path }}
+
   deploy_web:
     runs-on: ubuntu-latest
     needs: build # Job ini akan berjalan setelah job 'build' selesai
