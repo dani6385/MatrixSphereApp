@@ -26,8 +26,8 @@ class SellerApp extends ConsumerWidget {
     return MaterialApp.router(
       routerConfig: router,
       title: 'Seller Sphere',
-      theme: AppTheme.lightTheme,       // Tema terang default
-      darkTheme: AppTheme.darkTheme,     // Tema gelap default
+      theme: SharedTheme.lightTheme,       // Tema terang default
+      darkTheme: SharedTheme.darkTheme,     // Tema gelap default
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light, // Terapkan tema berdasarkan state
     );
   }

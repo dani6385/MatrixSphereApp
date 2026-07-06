@@ -7,7 +7,6 @@ import './widgets/bayar_qr_tab_widget.dart';
 import './widgets/voucher_tab_widget.dart';
 import './widgets/trial_tab_widget.dart';
 
-import 'package:shared_ui/shared_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,7 +27,7 @@ class LoginScreen extends StatelessWidget {
                 Icon(
                   Icons.wifi_tethering_rounded,
                   size: 80,
-                  color: AppTheme.primary,
+                  color: Theme.of(context).primaryColor,
                 ),
                 const SizedBox(height: 24),
                 Text(

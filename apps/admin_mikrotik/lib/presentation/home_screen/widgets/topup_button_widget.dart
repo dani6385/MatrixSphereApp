@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 class TopupButtonWidget extends StatelessWidget {
   final String username;
@@ -29,12 +28,12 @@ class TopupButtonWidget extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppTheme.secondary.withAlpha(26),
+              color: Theme.of(context).colorScheme.secondary.withAlpha(26),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
               Icons.add_card_rounded,
-              color: AppTheme.secondary,
+              color: Theme.of(context).colorScheme.secondary,
               size: 22,
             ),
           ),
@@ -67,7 +66,7 @@ class TopupButtonWidget extends StatelessWidget {
               _showTopupSheet(context);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.secondary,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -188,7 +187,7 @@ class _TopupSheet extends StatelessWidget {
                         pkg['quota']!,
                         style: GoogleFonts.dmSans(
                           fontSize: 11,
-                          color: AppTheme.primary,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -197,7 +196,7 @@ class _TopupSheet extends StatelessWidget {
                         style: GoogleFonts.dmSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color: AppTheme.secondary,
+                          color: Theme.of(context).colorScheme.secondary,
                         ),
                       ),
                     ],

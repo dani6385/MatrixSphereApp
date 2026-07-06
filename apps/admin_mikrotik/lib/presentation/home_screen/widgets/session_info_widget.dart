@@ -38,7 +38,7 @@ class SessionInfoWidget extends ConsumerWidget {
         Expanded(
           child: _SessionCard(
             icon: Icons.timer_outlined,
-            iconColor: AppTheme.primary,
+            iconColor: Theme.of(context).colorScheme.primary,
             label: 'Uptime',
             value: sessionData.uptime, // Gunakan data dari provider
             subtitle: 'Waktu aktif koneksi',

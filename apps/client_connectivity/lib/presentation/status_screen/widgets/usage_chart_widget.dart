@@ -61,7 +61,7 @@ class UsageChartWidget extends ConsumerWidget {
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
                         color: isActive
-                            ? AppColors.primary
+                            ? Theme.of(context).colorScheme.primary
                             : const Color(0xFFF5F5F5),
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -211,7 +211,7 @@ class UsageChartWidget extends ConsumerWidget {
                         spots: currentData.spots,
                         isCurved: true,
                         curveSmoothness: 0.35,
-                        color: AppColors.primary,
+                        color: Theme.of(context).colorScheme.primary,
                         barWidth: 2.5,
                         isStrokeCapRound: true,
                         dotData: FlDotData(
@@ -219,11 +219,10 @@ class UsageChartWidget extends ConsumerWidget {
                           getDotPainter: (spot, percent, bar, index) {
                             final isActive = index == touchedIndex;
                             return FlDotCirclePainter(
-                              radius: isActive ? 6 : 3,
-                              color:
-                                  isActive ? Colors.white : AppColors.primary,
-                              strokeWidth: isActive ? 2.5 : 1.5,
-                              strokeColor: AppColors.primary,
+                              radius: isActive ? 6 : 3, 
+                              color: isActive ? Colors.white : Theme.of(context).colorScheme.primary,
+                              strokeWidth: isActive ? 2.5 : 1.5, 
+                              strokeColor: Theme.of(context).colorScheme.primary,
                             );
                           },
                         ),
@@ -231,8 +230,8 @@ class UsageChartWidget extends ConsumerWidget {
                           show: true,
                           gradient: LinearGradient(
                             colors: [
-                              AppColors.primary.withAlpha(51),
-                              AppColors.primary.withAlpha(0),
+                              Theme.of(context).colorScheme.primary.withAlpha(51),
+                              Theme.of(context).colorScheme.primary.withAlpha(0),
                             ],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
@@ -374,10 +373,10 @@ class _SummaryCard extends StatelessWidget {
                 width: 28,
                 height: 28,
                 decoration: BoxDecoration(
-                  color: AppColors.secondary.withAlpha(26),
+                  color: Theme.of(context).colorScheme.secondary.withAlpha(26),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(icon, color: AppColors.secondary, size: 14),
+                child: Icon(icon, color: Theme.of(context).colorScheme.secondary, size: 14),
               ),
             ],
           ),

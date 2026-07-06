@@ -214,7 +214,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Konfirmasi Checkout'),
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),

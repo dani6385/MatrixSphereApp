@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 class SpeedCardWidget extends StatefulWidget {
   final double downloadSpeed;
@@ -48,14 +47,14 @@ class _SpeedCardWidgetState extends State<SpeedCardWidget>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppTheme.primary, const Color(0xFF00695C)],
+          colors: [Theme.of(context).colorScheme.primary, const Color(0xFF00695C)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withAlpha(77),
+            color: Theme.of(context).colorScheme.primary.withAlpha(77),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),

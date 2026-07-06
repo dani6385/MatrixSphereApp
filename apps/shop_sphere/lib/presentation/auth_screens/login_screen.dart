@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_sphere/providers/session_provider.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -94,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (_errorMessage != null) ...[
                 Text(
                   _errorMessage!,
-                  style: const TextStyle(color: AppColors.secondary),
+                  style: const TextStyle(color: Colors.red),
                 ),
                 const SizedBox(height: 16),
               ],

@@ -59,14 +59,14 @@ class UsageHeroWidget extends StatelessWidget {
                   children: [
                     _MiniStat(
                       icon: Icons.arrow_downward_rounded,
-                      color: AppColors.primary,
+                      color: Theme.of(context).colorScheme.primary,
                       value: '${downloadTotal.toStringAsFixed(1)} MB',
                       label: 'Unduh',
                     ),
                     const SizedBox(width: 20),
                     _MiniStat(
                       icon: Icons.arrow_upward_rounded,
-                      color: AppColors.secondary,
+                      color: Theme.of(context).colorScheme.secondary,
                       value: '${uploadTotal.toStringAsFixed(1)} MB',
                       label: 'Unggah',
                     ),
@@ -79,12 +79,12 @@ class UsageHeroWidget extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppColors.primary.withAlpha(26),
+              color: Theme.of(context).colorScheme.primary.withAlpha(26),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(
               Icons.flash_on_rounded,
-              color: AppColors.primary,
+              color: Color(0xFF006FFD),
               size: 24,
             ),
           ),

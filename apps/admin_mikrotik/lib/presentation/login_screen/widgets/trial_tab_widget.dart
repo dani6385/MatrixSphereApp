@@ -75,7 +75,7 @@ class _TrialTabWidgetState extends State<TrialTabWidget> {
           Icon(
             Icons.timer_outlined,
             size: 48,
-            color: AppTheme.primary,
+            color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(height: 16),
           Text(
@@ -111,7 +111,7 @@ class _TrialTabWidgetState extends State<TrialTabWidget> {
                 ),
               ),
               style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

@@ -45,6 +45,12 @@ dependencies:
   logger: ^2.5.0
   flutter_test:
     sdk: flutter
+  flutter_layout_grid: ^2.0.8
+  rxdart: ^0.28.0
+  floor: ^1.5.0
+  freezed_annotation: ^2.4.4
+  drift: ^2.34.1
+  sqflite: ^2.4.3
 
 flutter_test:
   sdk: flutter

@@ -1,1 +1,1 @@
-export 'presentation/approval/approval_screen.dart';
+export 'ui/screens/approval_screen.dart';

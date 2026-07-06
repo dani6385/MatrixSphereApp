@@ -66,7 +66,7 @@ class ProductCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.primary,
+                          color: Color(0xFF2196F3),
                         ),
                       ),
                       // Tombol Tambah ke Keranjang
@@ -74,7 +74,7 @@ class ProductCard extends StatelessWidget {
                         IconButton(
                           icon: const Icon(Icons.add_shopping_cart),
                           onPressed: onAddToCart,
-                          color: AppColors.primary,
+                          color: Color(0xFF2196F3),
                           iconSize: 20,
                           padding: EdgeInsets.zero,
                           constraints: const BoxConstraints(),

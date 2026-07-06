@@ -1,56 +1,30 @@
 import 'package:flutter/material.dart';
 
-/// Kumpulan warna kustom yang digunakan di seluruh aplikasi.
-/// Ini memungkinkan konsistensi tema dan kemudahan dalam melakukan perubahan.
-class AppColors {
-  // Private constructor agar kelas ini tidak bisa diinstansiasi.
-  AppColors._();
+// Sophisticated Dark Brand Colors
+const Color sophisticatedPrimary = Color(0xFF6366F1);    // Premium Indigo (indigo-500)
+const Color sophisticatedSecondary = Color(0xFF3B82F6);  // Tech Blue (blue-500)
+const Color sophisticatedTertiary = Color(0xFF14B8A6);   // Secure Teal (teal-500)
 
-  // --- Warna Utama (Branding) ---
-  /// Warna dasar utama yang digunakan untuk menghasilkan skema warna.
-  static const Color primary = Color(0xFF00897B); // Diubah ke Teal
-  static const Color primaryDarker = Color(0xFF00695C); // Teal yang lebih gelap
-  static const Color primarySeedColor = Color(0xFF00897B); // Diubah ke Teal
-  static const Color textDark = Color(0xFF9E9E9E);
-  // Warna transparan untuk kebutuhan overlay atau background.
-  static const Color transparentlight = Colors.transparent;
-  static const Color transparentDark = Colors.transparent;
+// Sophisticated Dark Theme Palette
+const Color sophisticatedBackground = Color(0xFF0B0E14);  // Deep slate black
+const Color sophisticatedSurface = Color(0xFF111622);     // Slate-900 semi-transparent card equivalent
+const Color sophisticatedBorder = Color(0xFF1E293B);      // Slate-800 divider / border
+const Color sophisticatedTextPrimary = Color(0xFFFFFFFF);  // Crisp white
+const Color sophisticatedTextSecondary = Color(0xFF94A3B8); // Muted slate (slate-400)
 
-  /// Warna sekunder, bisa digunakan untuk aksen atau CTA (Call to Action).
-  static const Color secondary = Color(
-    0xFFF9A825,
-  ); // Contoh: Kuning untuk kontras
+// Maintain old color names to prevent unresolved references in legacy layouts
+const Color cyanPrimary = sophisticatedPrimary;
+const Color blueSecondary = sophisticatedSecondary;
+const Color tealTertiary = sophisticatedTertiary;
+const Color slateBackgroundDark = sophisticatedBackground;
+const Color slateSurfaceDark = sophisticatedSurface;
+const Color slateBorderDark = sophisticatedBorder;
+const Color textOnDarkPrimary = sophisticatedTextPrimary;
+const Color textOnDarkSecondary = sophisticatedTextSecondary;
 
-  /// Warna untuk teks atau background "Flash Sale".
-  static const Color flashSaleCountdownBg = Color(
-    0xFFE0F2F1,
-  ); // Teal sangat muda
-  static const Color flashSaleCountdownText = Color(0xFF00897B);
-
-  // --- Warna Latar Belakang & Permukaan ---
-  /// Warna latar belakang utama untuk Scaffold di mode terang.
-  static const Color background = Color(0xFF9E9E9E);
-  static const Color backgroundLight = Color(0xFFF7F8FA);
-
-  /// Warna dasar untuk komponen seperti Card di mode terang.
-  static const Color surface = Colors.white;
-
-  /// Warna latar belakang untuk kontainer ikon atau input field.
-  static const Color iconBackground = Color(0xFFF0F0F0); // Abu-abu muda
-
-  // --- Warna Tambahan ---
-  /// Warna untuk border atau divider yang subtle.
-  static const Color border = Color(0xFFEEEEEE);
-
-  /// Warna utama untuk ikon.
-  static const Color iconPrimary = Color(0xFF212121);
-
-  /// Warna teks utama (hitam pekat).
-  static const Color textPrimary = Color(0xFF212121);
-
-  /// Warna teks sekunder (abu-abu).
-  static const Color textSecondary = Color(0xFF757575);
-
-  /// Warna untuk animasi ripple (semi-transparan).
-  static Color get beginend => const Color(0xFF00897B).withAlpha(3);
-}
+// Light Theme Palette (Bright Slate)
+const Color slateBackgroundLight = Color(0xFFF8FAFC); // Ice white
+const Color slateSurfaceLight = Color(0xFFFFFFFF);    // Pure white cards
+const Color slateBorderLight = Color(0xFFE2E8F0);     // Muted borders
+const Color textOnLightPrimary = Color(0xFF0F172A);   // Dark slate text
+const Color textOnLightSecondary = Color(0xFF475569); // Charcoal slate

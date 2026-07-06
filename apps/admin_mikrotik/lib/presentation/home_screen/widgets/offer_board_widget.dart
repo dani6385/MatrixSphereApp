@@ -10,7 +10,7 @@ class OfferBoardWidget extends StatelessWidget {
       'title': 'Paket Weekend Special',
       'subtitle': 'Nikmati internet 3 hari + bonus 2 hari gratis',
       'tag': 'PROMO',
-      'tagColor': AppTheme.secondary,
+      'tagColor': const Color(0xFFF57C00),
       'imageUrl':
           'https://images.unsplash.com/photo-1707757840354-7598d2224d3b',
       'semanticLabel':
@@ -20,8 +20,8 @@ class OfferBoardWidget extends StatelessWidget {
     {
       'title': 'Member Bulanan',
       'subtitle': 'Akses tanpa batas 30 hari, kecepatan hingga 20 Mbps',
-      'tag': 'TERLARIS',
-      'tagColor': AppTheme.primary,
+      'tag': 'BEST SELLER',
+      'tagColor': const Color(0xFF1976D2),
       'imageUrl':
           'https://img.rocket.new/generatedImages/rocket_gen_img_1bfc1f750-1782544013481.png',
       'semanticLabel':
@@ -63,8 +63,8 @@ class OfferBoardWidget extends StatelessWidget {
                 'Lihat Semua',
                 style: GoogleFonts.dmSans(
                   fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.primary,
+                  fontWeight: FontWeight.w700,
+                  color: const Color(0xFF1976D2),
                 ),
               ),
             ),

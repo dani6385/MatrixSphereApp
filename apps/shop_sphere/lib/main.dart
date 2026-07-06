@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_ui/shared_ui.dart';
 import 'config/app_router.dart'; // Mengimpor konfigurasi router
 import 'providers/device_provider.dart';
 import 'providers/session_provider.dart';
@@ -29,7 +28,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'MatrixSphere App',
         routerConfig: appRouter,
-        theme: AppTheme.darkTheme,
+        theme: ThemeData.dark(),
       ),
     );
   }

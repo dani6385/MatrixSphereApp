@@ -22,7 +22,7 @@ class AccountScreen extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundLight,
+      backgroundColor: colorScheme.primary,
       body: CustomScrollView(
         slivers: [
           _buildAppBar(context, colorScheme),
@@ -65,7 +65,7 @@ class AccountScreen extends StatelessWidget {
                         icon: _loginMethodIcon(_userData.loginMethod),
                         label: 'Metode Login',
                         value: _loginMethodLabel(_userData.loginMethod),
-                        valueColor: AppTheme.primary,
+                        valueColor: colorScheme.primary,
                         valueBold: true,
                       ),
                       _InfoItem(
@@ -88,8 +88,8 @@ class AccountScreen extends StatelessWidget {
 
   SliverAppBar _buildAppBar(BuildContext context, ColorScheme colorScheme) {
     return SliverAppBar(
-      pinned: true,
-      backgroundColor: AppTheme.backgroundLight,
+      pinned: false,
+      backgroundColor: colorScheme.primary,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       expandedHeight: 0,
@@ -170,16 +170,16 @@ class _ProfileAvatarCard extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            AppTheme.primary,
-            AppTheme.primary.withAlpha(204),
+          colors: <Color>[
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.primary.withAlpha(204),
             const Color(0xFF00695C),
           ],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withAlpha(77),
+            color: Theme.of(context).colorScheme.primary.withAlpha(77),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -212,14 +212,14 @@ class _ProfileAvatarCard extends StatelessWidget {
                 width: 26,
                 height: 26,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimary,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppTheme.primary, width: 2),
+                  border: Border.all(color: Theme.of(context).colorScheme.primary, width: 2),
                 ),
                 child: Icon(
                   Icons.camera_alt_rounded,
                   size: 13,
-                  color: AppTheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
               ),
             ],
@@ -356,8 +356,8 @@ class _InfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: AppTheme.backgroundLight,
+      decoration: BoxDecoration( // TODO: Use colorScheme.surface
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFEEEEEE)),
         boxShadow: [
@@ -384,11 +384,11 @@ class _InfoCard extends StatelessWidget {
                     Container(
                       width: 38,
                       height: 38,
-                      decoration: BoxDecoration(
-                        color: AppTheme.primary.withAlpha(20),
+                      decoration: BoxDecoration( // TODO: Use colorScheme.primary
+                        color: Theme.of(context).colorScheme.primary.withAlpha(20),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Icon(item.icon, size: 18, color: AppTheme.primary),
+                      child: Icon(item.icon, size: 18, color: Theme.of(context).colorScheme.primary),
                     ),
                     const SizedBox(width: 14),
                     Expanded(
@@ -508,8 +508,8 @@ class _LoginMethodBadge extends StatelessWidget {
           'Akses menggunakan kode voucher hotspot',
         );
       case LoginMethod.member:
-        return (
-          AppTheme.primary,
+        return ( // TODO: Use colorScheme.primary
+          const Color(0xFF00695C),
           const Color(0xFFE0F2F1),
           'Akses penuh sebagai anggota terdaftar',
         );

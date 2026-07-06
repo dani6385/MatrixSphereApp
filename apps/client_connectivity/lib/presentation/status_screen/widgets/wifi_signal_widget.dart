@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 class WiFiSignalWidget extends StatefulWidget {
   final String ssid;
@@ -56,10 +55,10 @@ class _WiFiSignalWidgetState extends State<WiFiSignalWidget>
   }
 
   Color get _signalColor {
-    if (widget.signalStrength >= -50) return AppTheme.success;
-    if (widget.signalStrength >= -60) return AppTheme.primary;
-    if (widget.signalStrength >= -70) return AppTheme.warning;
-    return AppTheme.error;
+    if (widget.signalStrength >= -50) return Colors.green;
+    if (widget.signalStrength >= -60) return Colors.blue;
+    if (widget.signalStrength >= -70) return Colors.orange;
+    return Colors.red;
   }
 
   @override

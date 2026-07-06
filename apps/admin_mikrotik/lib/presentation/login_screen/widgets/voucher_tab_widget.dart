@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_ui/shared_ui.dart';
 import '../../../routes/app_routes.dart';
 
 class VoucherTabWidget extends StatefulWidget {
@@ -146,7 +145,7 @@ class _VoucherTabWidgetState extends State<VoucherTabWidget> {
               child: FilledButton(
                 onPressed: _isLoading ? null : _login,
                 style: FilledButton.styleFrom(
-                  backgroundColor: AppTheme.primary,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -248,7 +247,7 @@ class _DemoCredentialRow extends StatelessWidget {
             style: GoogleFonts.dmSans(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: AppTheme.primary,
+              color: Theme.of(context).colorScheme.primary,
             ),
           ),
         ),

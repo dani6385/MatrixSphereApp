@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_ui/shared_ui.dart';
 import '../../../routes/app_routes.dart';
 
 class BayarQrTabWidget extends StatefulWidget {
@@ -101,13 +100,13 @@ class _BayarQrTabWidgetState extends State<BayarQrTabWidget> {
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? AppTheme.primary
+                        ? Theme.of(context).primaryColor
                         : const Color(0xFFF5F5F5),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isSelected
-                          ? AppTheme.primary
-                          : const Color(0xFFDDDDDD),
+                          ? Theme.of(context).primaryColor
+                          : Theme.of(context).dividerColor,
                       width: 1.5,
                     ),
                   ),
@@ -174,7 +173,7 @@ class _BayarQrTabWidgetState extends State<BayarQrTabWidget> {
                         style: GoogleFonts.dmSans(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
-                          color: AppTheme.primary,
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
                     ],
@@ -207,7 +206,7 @@ class _BayarQrTabWidgetState extends State<BayarQrTabWidget> {
             child: FilledButton.icon(
               onPressed: _isWaiting ? null : _checkPayment,
               style: FilledButton.styleFrom(
-                backgroundColor: AppTheme.primary,
+                backgroundColor: Theme.of(context).primaryColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

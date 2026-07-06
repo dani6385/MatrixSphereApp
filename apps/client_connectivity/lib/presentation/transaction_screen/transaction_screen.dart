@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:shared_ui/shared_ui.dart';
 
 enum TransactionStatus { all, success, pending, failed }
 
@@ -148,7 +147,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: AppColors.primary,
+              primary: Theme.of(context).primaryColor,
               onPrimary: Colors.white,
             ),
           ),
@@ -201,7 +200,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLight,
+      backgroundColor: const Color(0xFFF7F7F7),
       body: SafeArea(
         bottom: false,
         child: Column(
@@ -277,10 +276,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: hasRange ? AppColors.primary : Colors.white,
+          color: hasRange ? Theme.of(context).primaryColor : Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: hasRange ? AppColors.primary : const Color(0xFFDDDDDD),
+            color: hasRange ? Theme.of(context).primaryColor : const Color(0xFFDDDDDD),
           ),
           boxShadow: [
             BoxShadow(
@@ -296,7 +295,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
             Icon(
               Icons.date_range_rounded,
               size: 16,
-              color: hasRange ? Colors.white : AppColors.primary,
+              color: hasRange ? Colors.white : Theme.of(context).primaryColor,
             ),
             const SizedBox(width: 6),
             Text(
@@ -304,7 +303,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
               style: GoogleFonts.dmSans(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: hasRange ? Colors.white : AppColors.primary,
+                color: hasRange ? Colors.white : Theme.of(context).primaryColor,
               ),
             ),
             if (hasRange) ...[
@@ -369,11 +368,10 @@ class _TransactionScreenState extends State<TransactionScreen> {
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : Colors.white,
+                color: isSelected ? Theme.of(context).primaryColor : Colors.white,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: isSelected
-                      ? AppColors.primary
+                  color: isSelected ? Theme.of(context).primaryColor
                       : const Color(0xFFDDDDDD),
                 ),
               ),
@@ -401,13 +399,13 @@ class _TransactionScreenState extends State<TransactionScreen> {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: AppColors.primary,
+              color: Theme.of(context).primaryColor,
               borderRadius: BorderRadius.circular(36),
             ),
             child: const Icon(
               Icons.receipt_long_outlined,
               size: 36,
-              color: AppColors.primary,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 16),
@@ -438,8 +436,7 @@ class _TransactionCard extends StatelessWidget {
   final String Function(DateTime) formatDate;
   final String Function(double) formatCurrency;
 
-  const _TransactionCard({
-    required this.transaction,
+  const _TransactionCard({required this.transaction,
     required this.formatDate,
     required this.formatCurrency,
   });
@@ -447,15 +444,15 @@ class _TransactionCard extends StatelessWidget {
   Color get _statusColor {
     switch (transaction.status) {
       case TransactionStatus.success:
-        return AppTheme.success;
+        return Colors.green; // Placeholder, replace with actual theme color
       case TransactionStatus.pending:
-        return AppTheme.warning;
+        return Colors.orange; // Placeholder, replace with actual theme color
       case TransactionStatus.failed:
-        return AppTheme.error;
+        return Colors.red; // Placeholder, replace with actual theme color
       case TransactionStatus.all:
-        return AppTheme.primary;
+        return Colors.blue; // Placeholder, replace with actual theme color
     }
-  }
+  } 
 
   Color get _statusBg {
     switch (transaction.status) {
@@ -466,7 +463,7 @@ class _TransactionCard extends StatelessWidget {
       case TransactionStatus.failed:
         return const Color(0xFFFFEBEE);
       case TransactionStatus.all:
-        return AppTheme.primaryContainer;
+        return Colors.blue.withOpacity(0.1); // Placeholder, replace with actual theme color
     }
   }
 
@@ -521,12 +518,12 @@ class _TransactionCard extends StatelessWidget {
                   width: 42,
                   height: 42,
                   decoration: BoxDecoration(
-                    color: AppColors.primary,
+                    color: Colors.blue, // Placeholder, replace with actual theme color
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: const Icon(
                     Icons.confirmation_number_rounded,
-                    color: AppColors.primary,
+                    color: Colors.white,
                     size: 22,
                   ),
                 ),
@@ -600,7 +597,7 @@ class _TransactionCard extends StatelessWidget {
                   icon: Icons.payments_rounded,
                   label: 'Jumlah',
                   value: formatCurrency(transaction.amount),
-                  valueColor: AppColors.primary,
+                  valueColor: Colors.blue, // Placeholder, replace with actual theme color
                   valueBold: true,
                 ),
               ],

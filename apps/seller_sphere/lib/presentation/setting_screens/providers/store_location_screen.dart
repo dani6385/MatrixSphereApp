@@ -5,7 +5,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:seller_sphere/presentation/profile_screens/providers/seller_profile_provider.dart';
 import 'package:geocoding/geocoding.dart' as geo;
 import 'package:logger/logger.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 final logger = Logger();
 
@@ -44,8 +43,8 @@ class _StoreLocationScreenState extends ConsumerState<StoreLocationScreen> with 
     );
 
     _colorAnimation = ColorTween(
-      begin: AppColors.beginend,
-      end: AppColors.beginend,
+      begin: Theme.of(context).colorScheme.primary.withAlpha(2),
+      end: Theme.of(context).colorScheme.primary.withAlpha(2),
     ).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.ease),
     );
