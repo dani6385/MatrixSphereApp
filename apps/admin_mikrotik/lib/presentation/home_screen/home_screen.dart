@@ -1,164 +1,108 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:admin_mikrotik/application/providers/session_provider.dart';
 
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+import 'package:flutter/material.dart';
+
+// Model sederhana untuk data penjual yang bermasalah
+class TroubledSeller {
+  final String name;
+  final String reason;
+  final double rating;
+  final int negativeReviews;
+
+  TroubledSeller({
+    required this.name,
+    required this.reason,
+    required this.rating,
+    required this.negativeReviews,
+  });
+}
+
+class HomeScreen extends StatelessWidget {
+  HomeScreen({Key? key}) : super(key: key);
+
+  // Data dummy untuk penjual yang bermasalah
+  final List<TroubledSeller> troubledSellers = [
+    TroubledSeller(
+        name: 'Toko Elektronik Jaya',
+        reason: 'Rating Turun Drastis',
+        rating: 3.2,
+        negativeReviews: 15),
+    TroubledSeller(
+        name: 'Fashion Wanita Murah',
+        reason: 'Banyak Ulasan Negatif',
+        rating: 3.8,
+        negativeReviews: 25),
+    TroubledSeller(
+        name: 'Gadget Store',
+        reason: 'Rating di Bawah Standar',
+        rating: 3.4,
+        negativeReviews: 8),
+    TroubledSeller(
+        name: 'Perabotan Rumah Tangga',
+        reason: 'Ulasan Buruk Meningkat',
+        rating: 4.1,
+        negativeReviews: 12),
+  ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final sessionData = ref.watch(sessionDataProvider);
-
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Admin Dashboard'),
-        actions: [
-          if (sessionData != null)
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {
-                ref.read(sessionDataProvider.notifier).refreshSessionData();
-              },
-            ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () {
-              // Panggil method logout dari notifier
-              ref.read(sessionDataProvider.notifier).logout();
-              // Di aplikasi nyata, Anda mungkin ingin menavigasi ke layar login
-              // Navigator.of(context).pushReplacementNamed('/login');
-            },
-          ),
-        ],
+        title: const Text('Monitoring Penjual Bermasalah'),
       ),
-      body: sessionData == null
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: ListView.builder(
+        itemCount: troubledSellers.length,
+        itemBuilder: (context, index) {
+          final seller = troubledSellers[index];
+          return Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            elevation: 4,
+            child: ListTile(
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              title: Text(
+                seller.name,
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('No active session. Please log in.'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Panggil loadInitialData untuk simulasi login
-                      ref.read(sessionDataProvider.notifier).loadInitialData();
-                    },
-                    child: const Text('Login'),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Alasan: ${seller.reason}',
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 18),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Rating: ${seller.rating}',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                      const SizedBox(width: 16),
+                      const Icon(Icons.comment,
+                          color: Colors.grey, size: 18),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Ulasan Negatif: ${seller.negativeReviews}',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            )
-          : _buildDashboard(context, sessionData),
-    );
-  }
-
-  Widget _buildDashboard(BuildContext context, sessionData) {
-    // ... (Sisa widget _buildDashboard dan yang lainnya tetap sama)
-    return ListView(
-      padding: const EdgeInsets.all(16.0),
-      children: [
-        _buildUserInfo(sessionData),
-        const SizedBox(height: 24),
-        _buildQuotaInfo(sessionData),
-        const SizedBox(height: 24),
-        _buildNetworkInfo(sessionData),
-      ],
-    );
-  }
-
-  Widget _buildUserInfo(dynamic sessionData) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(sessionData.username, style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Chip(label: Text(sessionData.packageName)),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuotaInfo(dynamic sessionData) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Usage & Quota', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            LinearProgressIndicator(value: sessionData.quotaUsedPercent, minHeight: 10),
-            const SizedBox(height: 8),
-            Text('${sessionData.quotaUsedMB}MB / ${sessionData.quotaTotalMB}MB used'),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('Uptime: ${sessionData.uptime}'),
-                Text('Expires: ${sessionData.expiresAt}'),
-              ],
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                // Navigasi ke halaman detail penjual untuk investigasi lebih lanjut
+                // Navigator.push(context, MaterialPageRoute(builder: (context) => SellerDetailScreen(seller: seller)));
+              },
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNetworkInfo(dynamic sessionData) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Network Details', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildSpeedIndicator(Icons.download, '${sessionData.downloadSpeed} Mbps', 'Download'),
-                _buildSpeedIndicator(Icons.upload, '${sessionData.uploadSpeed} Mbps', 'Upload'),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 8),
-            _buildInfoRow('IP Address', sessionData.ipAddress),
-            _buildInfoRow('MAC Address', sessionData.macAddress),
-            _buildInfoRow('Connected to', sessionData.ssid),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSpeedIndicator(IconData icon, String speed, String label) {
-    return Column(
-      children: [ 
-        Icon(icon, size: 30), 
-        const SizedBox(height: 8),
-        Text(speed, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        Text(label, style: const TextStyle(color: Colors.grey)),
-       ], 
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [ 
-          Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(value), 
-        ], 
+          );
+        },
       ),
     );
   }

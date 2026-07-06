@@ -39,6 +39,9 @@ dependencies:
   flutter_riverpod: ^2.6.1
   collection: ^1.19.1
   firebase_core: ^4.11.0
+  cloud_firestore: ^6.6.0 # Diperbarui
+  firebase_database: ^12.4.4 # Versi disesuaikan
+  logger: ^2.5.0
 
 flutter_test:
   sdk: flutter

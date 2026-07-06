@@ -21,22 +21,16 @@ class AppNavigation extends StatelessWidget {
             branchIndex: 0,
           ),
           AppTabItem(
-            label: 'Aprop',
-            icon: Icons.shopping_cart_outlined,
-            activeIcon: Icons.shopping_bag_outlined,
-            branchIndex: 1,
-          ),
-          AppTabItem(
-            label: 'Mitra',
-            icon: Icons.storefront_outlined,
-            activeIcon: Icons.storefront,
-            branchIndex: 2,
+            label: 'Persetujuan', // Diubah dari 'Mitra'
+            icon: Icons.how_to_reg_outlined, // Ikon baru
+            activeIcon: Icons.how_to_reg, // Ikon aktif baru
+            branchIndex: 1, // Indeks disesuaikan
           ),
           AppTabItem(
             label: 'Akun',
             icon: Icons.person_outline_rounded,
             activeIcon: Icons.person_rounded,
-            branchIndex: 3,
+            branchIndex: 2, // Indeks disesuaikan
           ),
           AppTabItem(
             label: 'Settings',

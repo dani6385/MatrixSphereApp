@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:matrix_sphere_app/presentation/registration_screens/providers/registration_provider.dart';
+import '../models/registration_models.dart'; // Impor ditambahkan
 
 /// Halaman untuk menampilkan dan mengelola daftar pendaftaran mitra.
 class SellerRegistrationListScreen extends ConsumerWidget {

@@ -3,80 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_services/services/firestore_service.dart';
 import 'package:logger/logger.dart';
 
-// 1. Definisikan Model dan Enum di sini agar bisa diakses secara global
-enum SortType {
-  dateNewest,
-  dateOldest,
-  nameAsc,
-  nameDesc,
-}
+// Impor model dari file terpusat, bukan mendefinisikannya di sini
+import '../models/registration_models.dart';
 
-enum RegistrationStatus { pending, approved, rejected }
-
-class SellerRegistration {
-  final String id;
-  final String partnerName;
-  final String? ownerName;
-  final String? phone;
-  final String? address;
-  final String? email; // Email bisa jadi tidak ada
-  final DateTime registrationDate;
-  final RegistrationStatus status;
-  final String? rejectionReason;
-
-  const SellerRegistration({
-    required this.id,
-    required this.partnerName,
-    this.ownerName,
-    this.phone,
-    this.address,
-    this.email,
-    required this.registrationDate,
-    required this.status,
-    this.rejectionReason,
-  });
-
-  SellerRegistration copyWith({
-    RegistrationStatus? status,
-    String? rejectionReason,
-  }) {
-    return SellerRegistration(
-      id: id,
-      partnerName: partnerName,
-      ownerName: ownerName,
-      phone: phone,
-      address: address,
-      email: email,
-      registrationDate: registrationDate,
-      status: status ?? this.status,
-      rejectionReason: rejectionReason ?? this.rejectionReason,
-    );
-  }
-
-  factory SellerRegistration.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    final statusString = data['status'] as String? ?? 'pending';
-
-    RegistrationStatus status;
-    switch (statusString) {
-      case 'approved': status = RegistrationStatus.approved; break;
-      case 'rejected': status = RegistrationStatus.rejected; break;
-      default: status = RegistrationStatus.pending; break;
-    }
-
-    return SellerRegistration(
-      id: doc.id,
-      partnerName: data['partnerName'] ?? 'Nama Tidak Ada',
-      ownerName: data['ownerName'],
-      phone: data['phone'],
-      address: data['address'],
-      email: data['email'],
-      registrationDate: (data['registrationDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      status: status,
-      rejectionReason: data['rejectionReason'],
-    );
-  }
-}
+// Enum juga dipindahkan ke file model
+// enum SortType { ... }
+// enum RegistrationStatus { ... }
+// class SellerRegistration { ... }
 
 // 2. Definisikan State untuk Notifier
 class RegistrationState {
@@ -123,7 +56,6 @@ class RegistrationState {
 class RegistrationNotifier extends StateNotifier<RegistrationState> {
   final FirestoreService _firestoreService;
   final Logger _logger = Logger();
-  // Master list of all registrations, managed internally.
   List<SellerRegistration> _allRegistrations = [];
 
   RegistrationNotifier(this._firestoreService) : super(const RegistrationState()) {
@@ -134,6 +66,7 @@ class RegistrationNotifier extends StateNotifier<RegistrationState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final snapshot = await _firestoreService.getSellerRegistrations();
+      // Gunakan factory constructor dari model yang diimpor
       _allRegistrations = snapshot.map((doc) => SellerRegistration.fromFirestore(doc)).toList();
       _filterAndSort();
     } catch (e, stackTrace) {
@@ -145,7 +78,6 @@ class RegistrationNotifier extends StateNotifier<RegistrationState> {
   void _filterAndSort() {
     List<SellerRegistration> filteredList = _allRegistrations;
 
-    // Apply search
     if (state.searchQuery.isNotEmpty) {
       final query = state.searchQuery.toLowerCase();
       filteredList = filteredList.where((seller) {
@@ -153,7 +85,6 @@ class RegistrationNotifier extends StateNotifier<RegistrationState> {
       }).toList();
     }
 
-    // Apply sort
     switch (state.sortType) {
       case SortType.dateNewest:
         filteredList.sort((a, b) => b.registrationDate.compareTo(a.registrationDate));
@@ -169,12 +100,11 @@ class RegistrationNotifier extends StateNotifier<RegistrationState> {
         break;
     }
 
-    // Update state with filtered and sorted lists
     state = state.copyWith(
       pendingSellers: filteredList.where((s) => s.status == RegistrationStatus.pending).toList(),
       approvedSellers: filteredList.where((s) => s.status == RegistrationStatus.approved).toList(),
       rejectedSellers: filteredList.where((s) => s.status == RegistrationStatus.rejected).toList(),
-      isLoading: false, // Data loaded and sorted
+      isLoading: false,
     );
   }
 
@@ -198,7 +128,6 @@ class RegistrationNotifier extends StateNotifier<RegistrationState> {
       }
     } catch (e) {
       _logger.e("Failed to approve seller $sellerId", error: e);
-      // Optionally, show an error to the user
     }
   }
 
@@ -222,8 +151,6 @@ class RegistrationNotifier extends StateNotifier<RegistrationState> {
   }
 }
 
-// 4. Definisikan Provider global
-// Provider untuk FirestoreService, bisa dipindah ke file terpusat
 final firestoreServiceProvider = Provider((ref) => FirestoreService());
 
 final registrationProvider = StateNotifierProvider<RegistrationNotifier, RegistrationState>((ref) {

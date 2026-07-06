@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../providers/registration_provider.dart';
-
+import '../models/registration_models.dart'; // Impor ditambahkan
 
 class SellerRegistrationDetailScreen extends ConsumerWidget {
   final SellerRegistration seller;

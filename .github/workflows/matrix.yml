@@ -51,12 +51,16 @@ jobs:
       - name: Cache Flutter Build
         uses: actions/cache@v4
         with:
-          path: apps/client_connectivity/build
+          path: build
           key: build-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             build-${{ runner.os }}-
       - uses: subosito/flutter-action@v2
         with: { channel: 'stable', cache: true }
+      - name: build web
+        run: flutter build web --release
+        working-directory: .
+
   # 2. BUILD WEB & DEPLOY
   build_web:
     runs-on: ubuntu-latest
@@ -91,7 +95,7 @@ jobs:
           args: deploy --only hosting --project matrixsphere-c3de9
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_PATH: apps/client_connectivity
+          PROJECT_PATH: .
 
   # 3. BUILD WINDOWS (Optimasi Cache)
   build_windows:
@@ -114,7 +118,7 @@ jobs:
       - name: Cache Flutter Build
         uses: actions/cache@v4
         with:
-          path: apps/client_connectivity/build
+          path: build
           key: build-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             build-${{ runner.os }}-
@@ -127,7 +131,7 @@ jobs:
         run: |
           $env:CL = "/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS"
           flutter build windows --release
-        working-directory: apps/client_connectivity
+        working-directory: .
 
   # 4. BUILD LINUX (Optimasi Cache)
   build_linux:
@@ -150,7 +154,7 @@ jobs:
       - name: Cache Flutter Build
         uses: actions/cache@v4
         with:
-          path: apps/client_connectivity/build
+          path: build
           key: build-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             build-${{ runner.os }}-
@@ -188,7 +192,7 @@ jobs:
       - name: Cache Flutter Build
         uses: actions/cache@v4
         with:
-          path: apps/client_connectivity/build
+          path: build
           key: build-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             build-${{ runner.os }}-
