@@ -56,7 +56,6 @@ jobs:
 
   deploy_web:
     runs-on: ubuntu-latest
-    needs: build # Job ini akan berjalan setelah job 'build' selesai
     steps:
       - uses: actions/checkout@v4
       
