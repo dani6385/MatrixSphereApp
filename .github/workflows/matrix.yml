@@ -100,6 +100,7 @@ jobs:
 
   # 3. BUILD WINDOWS (Optimasi Cache)
   build_windows:
+    needs: build_web
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -136,6 +137,7 @@ jobs:
 
   # 4. BUILD LINUX (Optimasi Cache)
   build_linux:
+    needs: build_web
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -174,6 +176,7 @@ jobs:
 
   # 5. BUILD APPLE (macOS)
   build_apple:
+    needs: build_web
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
