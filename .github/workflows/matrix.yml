@@ -51,3 +51,25 @@ jobs:
         if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
         run: flutter build apk --release --no-pub --dart-define=flutter.android.newDs1=false
         working-directory: ${{ matrix.path }}
+  deploy_web:
+    runs-on: ubuntu-latest
+    needs: build # Job ini akan berjalan setelah job 'build' selesai
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: subosito/flutter-action@v2
+        with: 
+          channel: 'stable'
+          cache: true
+
+      - name: Build Web
+        run: flutter build web --release
+        # Jika file web ada di subfolder, uncomment baris di bawah:
+        # working-directory: apps/Matrix_Sphere 
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting --project matrixsphere-c3de9
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
