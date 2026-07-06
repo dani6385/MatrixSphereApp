@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:intl/intl.dart';
-import '../home_screen/home_screen.dart'; // Mengimpor model Seller
+import '../seller/repositories/seller_repository.dart'; // Mengimpor TroubledSeller
 
 // Model untuk data ulasan (bisa dipindahkan ke file terpisah)
 class Review {
@@ -31,12 +31,12 @@ class Review {
 }
 
 class SellerDetailScreen extends StatefulWidget {
-  final Seller seller;
+  final TroubledSeller troubledSeller;
 
-  const SellerDetailScreen({Key? key, required this.seller}) : super(key: key);
+  const SellerDetailScreen({super.key, required this.troubledSeller});
 
   @override
-  _SellerDetailScreenState createState() => _SellerDetailScreenState();
+  State<SellerDetailScreen> createState() => _SellerDetailScreenState();
 }
 
 class _SellerDetailScreenState extends State<SellerDetailScreen> {
@@ -47,7 +47,7 @@ class _SellerDetailScreenState extends State<SellerDetailScreen> {
   @override
   void initState() {
     super.initState();
-    _reviewsRef = FirebaseDatabase.instance.ref('reviews/${widget.seller.id}');
+    _reviewsRef = FirebaseDatabase.instance.ref('reviews/${widget.troubledSeller.seller.id}');
     _listenToNegativeReviews();
   }
 
@@ -79,12 +79,12 @@ class _SellerDetailScreenState extends State<SellerDetailScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Konfirmasi Tindakan'),
-        content: Text('Anda yakin ingin menonaktifkan mitra "${widget.seller.name}"? Tindakan ini akan menyembunyikan mereka dari daftar pantauan.'),
+        content: Text('Anda yakin ingin menonaktifkan mitra "${widget.troubledSeller.seller.name}"? Tindakan ini akan menyembunyikan mereka dari daftar pantauan.'),
         actions: [
           TextButton(onPressed: () => Navigator.of(ctx).pop(), child: const Text('Batal')),
           ElevatedButton(
             onPressed: () {
-              final sellerRef = FirebaseDatabase.instance.ref('sellers/${widget.seller.id}');
+              final sellerRef = FirebaseDatabase.instance.ref('sellers/${widget.troubledSeller.seller.id}');
               sellerRef.update({'status': 'inactive'}).then((_) {
                 Navigator.of(ctx).pop(); // Tutup dialog
                 Navigator.of(context).pop(); // Kembali ke HomeScreen
@@ -116,7 +116,7 @@ class _SellerDetailScreenState extends State<SellerDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.seller.name)),
+      appBar: AppBar(title: Text(widget.troubledSeller.seller.name)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -170,11 +170,11 @@ class _SellerDetailScreenState extends State<SellerDetailScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Ringkasan Masalah', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)), const Divider(height: 20),
-            _buildInfoRow(context, icon: Icons.error_outline, label: 'Alasan', value: widget.seller.reason, valueColor: Theme.of(context).colorScheme.error),
+            _buildInfoRow(context, icon: Icons.error_outline, label: 'Alasan', value: widget.troubledSeller.reason, valueColor: Theme.of(context).colorScheme.error),
             const SizedBox(height: 12),
-            _buildInfoRow(context, icon: Icons.star_border, label: 'Rating Saat Ini', value: widget.seller.rating.toString()),
+            _buildInfoRow(context, icon: Icons.star_border, label: 'Rating Saat Ini', value: widget.troubledSeller.seller.rating.toString()),
             const SizedBox(height: 12),
-            _buildInfoRow(context, icon: Icons.comment_bank_outlined, label: 'Ulasan Negatif', value: widget.seller.negativeReviews.toString()),
+            _buildInfoRow(context, icon: Icons.comment_bank_outlined, label: 'Ulasan Negatif', value: widget.troubledSeller.seller.negativeReviews.toString()),
           ],),),);
   }
 
