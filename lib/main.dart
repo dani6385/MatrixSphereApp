@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:matrix_sphere_app/config/router/app_router.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart'; // 1. Impor shared_ui
 
 void main() async {
   // Pastikan binding Flutter sudah siap
@@ -24,10 +25,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Matrix Sphere',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      // 2. Terapkan AppTheme.lightTheme
+      theme: AppTheme.lightTheme, 
       // Gunakan konfigurasi router dari app_router.dart
       routerConfig: appRouter,
       debugShowCheckedModeBanner: false,
