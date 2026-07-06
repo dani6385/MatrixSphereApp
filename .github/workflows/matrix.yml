@@ -7,8 +7,8 @@ on:
 
 # Definisi Template untuk reusable steps agar lebih bersih
 jobs:
-  # 1. BUILD ANDROID
-  build_android:
+  # 1. BUILD WEB & DEPLOY
+  build_web:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -61,8 +61,8 @@ jobs:
         run: flutter build web --release
         working-directory: .
 
-  # 2. BUILD WEB & DEPLOY
-  build_web:
+  # 2. BUILD ANDROID
+  build_android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -82,12 +82,12 @@ jobs:
       - name: Cache Flutter Build
         uses: actions/cache@v4
         with:
-          path: apps/client_connectivity/build
+          path: build
           key: build-${{ runner.os }}-${{ github.run_id }}
           restore-keys: |
             build-${{ runner.os }}-
-      - name: Build Web
-        run: flutter build web --release
+      - name: Build Apk
+        run: flutter build apk --release
         working-directory: apps/client_connectivity
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
@@ -125,7 +125,7 @@ jobs:
       - name: Cache Build
         uses: actions/cache@v4
         with:
-          path: apps/client_connectivity/build/windows
+          path: build/windows
           key: win-${{ hashFiles('**/pubspec.lock') }}
       - name: Build Windows
         run: |
@@ -163,13 +163,13 @@ jobs:
       - name: Cache Build
         uses: actions/cache@v4
         with:
-          path: apps/client_connectivity/build/linux
+          path: build/linux
           key: lin-${{ hashFiles('**/pubspec.lock') }}
       - name: Build Linux
         run: |
           flutter config --enable-linux-desktop
           flutter build linux --release
-        working-directory: apps/client_connectivity
+        working-directory: .
 
   # 5. BUILD APPLE (macOS)
   build_apple:
@@ -200,4 +200,4 @@ jobs:
         run: |
           flutter config --enable-macos-desktop
           flutter build macos --release
-        working-directory: apps/client_connectivity
+        working-directory: .
