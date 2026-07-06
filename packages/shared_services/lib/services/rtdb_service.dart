@@ -34,4 +34,19 @@ class RtdbService {
       rethrow;
     }
   }
+
+  Stream<DatabaseEvent> getApprovalsStream() {
+    final ref = _db.ref('approvals');
+    return ref.onValue;
+  }
+
+  Future<void> updateApprovalStatus(String id, String status) {
+    final ref = _db.ref('approvals/$id');
+    return ref.update({'status': status});
+  }
+
+  Stream<DatabaseEvent> getAchievementsStream() {
+    final ref = _db.ref('achievements');
+    return ref.onValue;
+  }
 }

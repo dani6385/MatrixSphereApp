@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:matrix_sphere_app/presentation/home_screen/home_screen.dart';
-import 'package:matrix_sphere_app/presentation/registration_screens/list/seller_registration_list_screen.dart';
+import 'package:matrix_sphere_app/screens/approval/approval_screen.dart';
+import 'package:matrix_sphere_app/presentation/achievement/achievement_screen.dart';
 import 'package:matrix_sphere_app/presentation/registration_screens/detail/seller_registration_detail_screen.dart';
 // Impor model untuk casting data
 import 'package:matrix_sphere_app/presentation/registration_screens/models/registration_models.dart'; 
@@ -40,7 +41,16 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: '/persetujuan',
               builder: (BuildContext context, GoRouterState state) =>
-                  const SellerRegistrationListScreen(),
+                  const ApprovalScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: <RouteBase>[
+            GoRoute(
+              path: '/prestasi',
+              builder: (BuildContext context, GoRouterState state) =>
+                  const AchievementScreen(),
             ),
           ],
         ),
