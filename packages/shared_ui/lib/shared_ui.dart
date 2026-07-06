@@ -9,6 +9,8 @@ export 'src/widgets/product_card.dart';
 export 'widgets/app_scaffold.dart';
 export 'widgets/custom_error_widget.dart';
 export 'widgets/app_navigation.dart';
+
+export 'widgets/custom_button.dart';
 export 'widgets/custom_icon_widget.dart';
 export 'widgets/custom_image_widget.dart';
 export 'widgets/empty_state_widget.dart';

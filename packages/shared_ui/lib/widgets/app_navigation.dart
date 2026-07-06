@@ -1,65 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shared_ui/theme/app_colors.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-// Menggunakan AppColors untuk warna
-
-class AppTabItem {
+/// Model untuk merepresentasikan satu item di dalam navigasi.
+class MSBottomNavItem {
   final String label;
   final IconData icon;
   final IconData activeIcon;
-  final int? branchIndex;
 
-  const AppTabItem({
+  const MSBottomNavItem({
     required this.label,
     required this.icon,
     required this.activeIcon,
-    this.branchIndex,
   });
 }
 
-class AppBottomNav extends StatefulWidget {
-  final StatefulNavigationShell navigationShell;
-  final List<AppTabItem> tabs;
+/// Widget navigasi bawah kustom yang dapat digunakan kembali.
+///
+/// Widget ini menampilkan bar navigasi dengan animasi yang menarik
+/// dan dapat dikonfigurasi melalui daftar [items].
+class MSBottomNav extends StatelessWidget {
+  /// Daftar item yang akan ditampilkan di navigasi.
+  final List<MSBottomNavItem> items;
 
-  const AppBottomNav({
-    required this.navigationShell,
-    required this.tabs,
+  /// Indeks item yang sedang aktif.
+  final int currentIndex;
+
+  /// Callback yang dipanggil ketika sebuah item ditekan.
+  final ValueChanged<int> onTap;
+
+  const MSBottomNav({
     super.key,
+    required this.items,
+    required this.currentIndex,
+    required this.onTap,
   });
-
-  @override
-  State<AppBottomNav> createState() => _AppBottomNavState();
-}
-
-class _AppBottomNavState extends State<AppBottomNav> {
-  int _selectedVisualIndex = 0;
-
-  void _onTabTap(int index) {
-    final branch = widget.tabs[index].branchIndex;
-    if (branch == null) return;
-
-    setState(() => _selectedVisualIndex = index);
-    widget.navigationShell.goBranch(
-      branch,
-      initialLocation: branch == widget.navigationShell.currentIndex,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     return Padding(
+      // Padding untuk memberikan ruang di sekitar navigasi
       padding: EdgeInsets.only(left: 20, right: 20, bottom: bottomPadding + 12),
       child: Container(
         height: 64,
         decoration: BoxDecoration(
-          color: AppColors.primary,
+          color: theme.colorScheme.primary,
           borderRadius: BorderRadius.circular(32),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withAlpha(89),
+              color: theme.colorScheme.primary.withAlpha(89),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -67,41 +58,51 @@ class _AppBottomNavState extends State<AppBottomNav> {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(widget.tabs.length, (i) {
-            final tab = widget.tabs[i];
-            final isActive = _selectedVisualIndex == i;
-            final isStub = tab.branchIndex == null;
+          children: List.generate(items.length, (index) {
+            final item = items[index];
+            final isActive = currentIndex == index;
 
             return Expanded(
-              child: Opacity(
-                opacity: isStub ? 0.4 : 1.0,
-                child: GestureDetector(
-                  onTap: () => _onTabTap(i),
-                  behavior: HitTestBehavior.opaque,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 220),
-                        curve: Curves.easeOutCubic,
-                        width: isActive ? 44 : 0,
-                        height: isActive ? 36 : 0,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withAlpha(51),
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: isActive
-                            ? Icon(
-                                tab.activeIcon,
-                                color: Colors.white,
-                                size: 22,
-                              )
-                            : null,
+              child: GestureDetector(
+                onTap: () => onTap(index),
+                behavior: HitTestBehavior.opaque,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Animasi untuk item yang aktif
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 220),
+                      curve: Curves.easeOutCubic,
+                      width: isActive ? 44 : 0,
+                      height: isActive ? 36 : 0,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(51),
+                        borderRadius: BorderRadius.circular(18),
                       ),
-                      if (!isActive)
-                        Icon(tab.icon, color: Colors.white, size: 22),
+                      child: isActive
+                          ? Icon(
+                              item.activeIcon,
+                              color: Colors.white,
+                              size: 22,
+                            )
+                          : null,
+                    ),
+                    // Tampilkan ikon dan label jika tidak aktif
+                    if (!isActive) ...[
+                      Icon(item.icon, color: Colors.white, size: 22),
+                      const SizedBox(height: 2),
+                      Text(
+                        item.label,
+                        style: GoogleFonts.dmSans(
+                          fontSize: 9,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ],
-                  ),
+                  ],
                 ),
               ),
             );

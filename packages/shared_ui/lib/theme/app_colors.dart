@@ -12,6 +12,9 @@ class AppColors {
   static const Color primaryDarker = Color(0xFF00695C); // Teal yang lebih gelap
   static const Color primarySeedColor = Color(0xFF00897B); // Diubah ke Teal
   static const Color textDark = Color(0xFF9E9E9E);
+  // Warna transparan untuk kebutuhan overlay atau background.
+  static const Color transparentlight = Colors.transparent;
+  static const Color transparentDark = Colors.transparent;
 
   /// Warna sekunder, bisa digunakan untuk aksen atau CTA (Call to Action).
   static const Color secondary = Color(
