@@ -1,77 +1,203 @@
-name: Build and Deploy MatrixSphere
+name: Build, Release Matrix Sphere to Repo Home & deploy
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
+# Definisi Template untuk reusable steps agar lebih bersih
 jobs:
+  # 1. BUILD ANDROID
   build_android:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
           - app: SS Shop Sphere
-            path: apps/shop_sphere
+            path:
+              - 'apps/client_connectivity/**'
+              - 'apps/client_connectivity/pubspec.yaml'
           - app: SS Seller Sphere
-            path: apps/seller_sphere
+            paths:
+              - 'apps/seller_sphere/**'
+              - 'apps/seller_sphere/pubspec.yaml'
           - app: CC Client Connectivity
-            path: apps/client_coonectivity
+            paths:
+              - 'apps/seller_sphere/**'
+              - 'apps/seller_sphere/pubspec.yaml'
           - app: Admin Mikrotik
-            path: apps/admin_mikrotik
+            paths:
+              - 'apps/shop_sphere/**'
+              - 'apps/shop_sphere/pubspec.yaml'
           - app: Matrix Sphere
-            path: .
-
+            paths:
+              - '**'
+              - 'pubspec.yaml'
     steps:
-      - name: Fix Directory Permissions
-        run: sudo chown -R $USER:$USER ${{ github.workspace }}
-
       - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { java-version: '21', distribution: 'temurin', cache: 'gradle' }
+        # 1. Cache SDK & Dependensi (Pub & Gradle)
+      - name: Cache Pub & Gradle
+        uses: actions/cache@v4
         with:
-          fetch-depth: 0
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
 
-      - uses: dorny/paths-filter@v3
-        id: filter
+      # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
+      - name: Cache Flutter Build
+        uses: actions/cache@v4
         with:
-          filters: |
-            project: '${{ matrix.path }}/**'
-
+          path: apps/client_connectivity/build
+          key: build-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            build-${{ runner.os }}-
       - uses: subosito/flutter-action@v2
-        if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
-        with:
-          channel: 'stable'
-          cache: true
-
-      # PENTING: Jalankan pub get di folder yang tepat SEBELUM build
-      - name: Get Dependencies
-        if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
-        run: flutter pub get
-        working-directory: ${{ matrix.path }}
-
-      # Build APK dengan working-directory yang benar
+        with: { channel: 'stable', cache: true }
       - name: Build APK
-        if: steps.filter.outputs.project == 'true' || github.event_name == 'workflow_dispatch'
         run: flutter build apk --release
-        working-directory: ${{ matrix.path }}
+        working-directory: apps/client_connectivity
 
-  deploy_web:
+  # 2. BUILD WEB & DEPLOY
+  build_web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
       - uses: subosito/flutter-action@v2
-        with: 
-          channel: 'stable'
-          cache: true
+        with: { channel: 'stable', cache: true }
+        # 1. Cache SDK & Dependensi (Pub & Gradle)
+      - name: Cache Pub & Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
 
+      # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
+      - name: Cache Flutter Build
+        uses: actions/cache@v4
+        with:
+          path: apps/client_connectivity/build
+          key: build-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            build-${{ runner.os }}-
       - name: Build Web
         run: flutter build web --release
-        # Jika file web ada di subfolder, uncomment baris di bawah:
-        # working-directory: apps/Matrix_Sphere 
-
+        working-directory: apps/client_connectivity
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting --project matrixsphere-c3de9
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_PATH: apps/client_connectivity
+
+  # 3. BUILD WINDOWS (Optimasi Cache)
+  build_windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: 'stable', cache: true }
+        # 1. Cache SDK & Dependensi (Pub & Gradle)
+      - name: Cache Pub & Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
+
+      # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
+      - name: Cache Flutter Build
+        uses: actions/cache@v4
+        with:
+          path: apps/client_connectivity/build
+          key: build-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            build-${{ runner.os }}-
+      - name: Cache Build
+        uses: actions/cache@v4
+        with:
+          path: apps/client_connectivity/build/windows
+          key: win-${{ hashFiles('**/pubspec.lock') }}
+      - name: Build Windows
+        run: |
+          $env:CL = "/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECATION_WARNINGS"
+          flutter build windows --release
+        working-directory: apps/client_connectivity
+
+  # 4. BUILD LINUX (Optimasi Cache)
+  build_linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: 'stable', cache: true }
+        # 1. Cache SDK & Dependensi (Pub & Gradle)
+      - name: Cache Pub & Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
+
+      # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
+      - name: Cache Flutter Build
+        uses: actions/cache@v4
+        with:
+          path: apps/client_connectivity/build
+          key: build-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            build-${{ runner.os }}-
+      - name: Install Deps
+        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build libgtk-3-dev
+      - name: Cache Build
+        uses: actions/cache@v4
+        with:
+          path: apps/client_connectivity/build/linux
+          key: lin-${{ hashFiles('**/pubspec.lock') }}
+      - name: Build Linux
+        run: |
+          flutter config --enable-linux-desktop
+          flutter build linux --release
+        working-directory: apps/client_connectivity
+
+  # 5. BUILD APPLE (macOS)
+  build_apple:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with: { channel: 'stable', cache: true }
+        # 1. Cache SDK & Dependensi (Pub & Gradle)
+      - name: Cache Pub & Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
+
+      # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
+      - name: Cache Flutter Build
+        uses: actions/cache@v4
+        with:
+          path: apps/client_connectivity/build
+          key: build-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            build-${{ runner.os }}-
+      - name: Build macOS
+        run: |
+          flutter config --enable-macos-desktop
+          flutter build macos --release
+        working-directory: apps/client_connectivity
