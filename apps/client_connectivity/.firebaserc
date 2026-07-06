@@ -1,0 +1,22 @@
+{
+  "projects": {
+    "default": "matrixsphere-c3de9"
+  },
+  "targets": {
+    "matrixsphere-organisation": {
+      "hosting": {
+        "client-sph-connect": [
+          "client-sph-connect"
+        ]
+      }
+    },
+    "matrixsphere-c3de9": {
+      "hosting": {
+        "client-sph-connect": [
+          "client-sph-connect"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

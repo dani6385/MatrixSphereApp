@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:matrix_sphere_app/config/router/app_router.dart';
+
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart'; // 1. Impor shared_ui
+import 'package:matrix_sphere_app/config/router/app_router.dart';
 
 void main() async {
   // Pastikan binding Flutter sudah siap

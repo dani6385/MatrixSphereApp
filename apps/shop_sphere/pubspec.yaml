@@ -1,0 +1,45 @@
+name: shop_sphere
+description: "A new Flutter project."
+publish_to: 'none'
+resolution: workspace
+version: 1.0.0+1
+environment:
+  sdk: '>=3.12.1 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.4.9
+  shared_ui:
+    path: ../../packages/shared_ui
+  shared_services:
+    path: ../../packages/shared_services
+  connectivity_plus: ^7.2.0
+  google_fonts: ^8.1.0
+  go_router: ^14.1.1
+  sizer: ^3.1.3
+  firebase_core: ^4.11.0
+  fluttertoast: ^9.1.0
+  fl_chart: ^1.2.0
+  flutter_svg: ^2.0.9
+  permission_handler: ^12.0.3
+  carousel_slider: ^5.0.0-alpha.1
+  intl: ^0.20.3
+  geolocator: ^12.0.0
+  provider: ^6.1.5+1
+  logger: ^2.0.2+1
+  flutter_test:
+    sdk: flutter
+  collection: ^1.19.1
+  seller_sphere: ^1.0.0+1
+  cloud_firestore: ^6.6.0
+  uuid: ^4.5.3
+  implicitly_animated_reorderable_list: ^0.4.2
+  qr_flutter: ^4.1.0
+  matrix_sphere_app: ^0.0.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

@@ -1,0 +1,1 @@
+export 'presentation/product_screens/models/product_model.dart';

@@ -1,0 +1,32 @@
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "matrixsphere-c3de9",
+          "configurations": {
+            "android": "1:359008687014:android:2ed951eb393fd3a2a9f567",
+            "ios": "1:359008687014:ios:7e09fb42203a545ea9f567",
+            "web": "1:359008687014:web:dce35f42a42035b7a9f567"
+            
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "site": "ss-shop-sph",
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
