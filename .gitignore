@@ -28,3 +28,8 @@ pubspec.lock
 
 # Melos
 .melos_cache/
+
+# Conversion leftovers
+.conver/
+**/*.kt
+!android/**/*.kt
