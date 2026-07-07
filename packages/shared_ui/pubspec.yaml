@@ -23,6 +23,7 @@ dependencies:
   flutter_riverpod: ^2.4.9
   flutter_svg: ^2.0.9
   intl: ^0.20.3
+  google_nav_bar: ^5.0.7
 
 flutter:
   uses-material-design: true

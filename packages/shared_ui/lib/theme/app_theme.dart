@@ -1,58 +1,70 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
+import 'package:shared_ui/theme/app_colors.dart';
+import 'package:shared_ui/theme/app_typography.dart'; // Impor tipografi
 
-// Definisi skema warna untuk tema gelap
-final ColorScheme _darkColorScheme = ColorScheme.dark(
-  primary: primary,
-  secondary: secondary,
-  tertiary: tertiary,
-  background: background,
-  surface: surface, // Ini adalah warna untuk Card, Dialog, dll.
-  onPrimary: textPrimary,
-  onSecondary: textPrimary,
-  onTertiary: textPrimary,
-  onBackground: textPrimary,
-  onSurface: textPrimary, // Warna teks di atas surface
-  surfaceVariant: border,
-  onSurfaceVariant: textSecondary,
-  error: error,
-  onError: textPrimary,
-);
+// Definisikan tema aplikasi, terinspirasi oleh implementasi Material 3 di Compose.
+// Ini menyediakan ThemeData terpusat untuk mode terang dan gelap.
 
-// Definisi skema warna untuk tema terang
-final ColorScheme _lightColorScheme = ColorScheme.light(
-  primary: secondary,
-  secondary: primary,
-  tertiary: tertiary,
-  background: lightBackground,
-  surface: lightSurface,
-  onPrimary: lightTextPrimary,
-  onSecondary: lightTextPrimary,
-  onTertiary: lightTextPrimary,
-  onBackground: lightTextPrimary,
-  onSurface: lightTextPrimary,
-  surfaceVariant: lightBorder,
-  onSurfaceVariant: lightTextSecondary,
-  error: error,
-  onError: lightTextPrimary,
-);
+class AppTheme {
+  AppTheme._();
 
-/// Fungsi untuk mendapatkan ThemeData berdasarkan mode gelap/terang
-ThemeData getAppTheme(bool isDarkMode) {
-  final colorScheme = isDarkMode ? _darkColorScheme : _lightColorScheme;
-  return ThemeData(
-    colorScheme: colorScheme,
-    useMaterial3: true,
-    // Secara eksplisit mengatur beberapa warna tema untuk konsistensi
-    scaffoldBackgroundColor: colorScheme.background,
-    cardColor: colorScheme.surface,
-    dialogBackgroundColor: colorScheme.surface,
-    appBarTheme: AppBarTheme(
-      backgroundColor: colorScheme.background,
-      elevation: 0,
+  static final ThemeData light = ThemeData(
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: kLightBackground,
+    primaryColor: kBrandSecondary,
+    colorScheme: const ColorScheme.light(
+      primary: kBrandSecondary,
+      secondary: kBrandPrimary,
+      tertiary: kBrandTertiary,
+      surface: kLightSurface,
+      onPrimary: kLightSurface,
+      onSecondary: kLightSurface,
+      onTertiary: kLightSurface,
+      onSurface: kLightTextPrimary,
+      outline: kLightBorder,
+      onSurfaceVariant: kLightTextSecondary,
     ),
+    textTheme: kTextTheme.apply( // Terapkan TextTheme
+      bodyColor: kLightTextPrimary, // Warna default untuk body
+      displayColor: kLightTextPrimary, // Warna default untuk headline/display
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: kLightSurface,
+      elevation: 0,
+      iconTheme: const IconThemeData(color: kLightTextPrimary),
+      // Gunakan gaya dari TextTheme untuk konsistensi
+      titleTextStyle: kTextTheme.titleLarge?.copyWith(color: kLightTextPrimary),
+    ),
+    dividerColor: kLightBorder,
+  );
+
+  static final ThemeData dark = ThemeData(
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: kDarkBackground,
+    primaryColor: kBrandPrimary,
+    colorScheme: const ColorScheme.dark(
+      primary: kBrandPrimary,
+      secondary: kBrandSecondary,
+      tertiary: kBrandTertiary,
+      surface: kDarkSurface,
+      onPrimary: kDarkTextPrimary,
+      onSecondary: kDarkTextPrimary,
+      onTertiary: kDarkTextPrimary,
+      onSurface: kDarkTextPrimary,
+      outline: kDarkBorder,
+      onSurfaceVariant: kDarkTextSecondary,
+    ),
+    textTheme: kTextTheme.apply( // Terapkan TextTheme
+      bodyColor: kDarkTextPrimary, // Warna default untuk body
+      displayColor: kDarkTextPrimary, // Warna default untuk headline/display
+    ),
+    appBarTheme: AppBarTheme(
+      backgroundColor: kDarkSurface,
+      elevation: 0,
+      iconTheme: const IconThemeData(color: kDarkTextPrimary),
+      // Gunakan gaya dari TextTheme untuk konsistensi
+      titleTextStyle: kTextTheme.titleLarge?.copyWith(color: kDarkTextPrimary),
+    ),
+    dividerColor: kDarkBorder,
   );
 }
-
-/// Widget MyApplicationTheme yang lama telah dihapus karena menyebabkan
-/// masalah nested MaterialApp. Gunakan getAppTheme() di MaterialApp utama.

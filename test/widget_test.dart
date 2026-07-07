@@ -1,26 +1,32 @@
+// This is a basic Flutter widget test.
+//
+// To perform an interaction with a widget in your test, use the WidgetTester
+// utility in the flutter_test package. For example, you can send tap and scroll
+// gestures. You can also use WidgetTester to find child widgets in the widget
+// tree, read text, and verify that the values of widget properties are correct.
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
+import 'package:shared_services/shared_services.dart';
+
+import 'package:myapp/main.dart';
 
 void main() {
-  testWidgets('should return package name from method channel', (WidgetTester tester) async {
-    // Bind the framework to the test engine.
-    TestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    final services = ServicesProvider.instance;
+    await tester.pumpWidget(MyApp(services: services));
 
-    // Mock the MethodChannel.
-    const MethodChannel channel = MethodChannel('getPackageName');
-    
-    // Set a mock method call handler.
-    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      if (methodCall.method == 'getPackageName') {
-        return 'com.example'; // Return a mock package name.
-      }
-      return null;
-    });
+    // Verify that our counter starts at 0.
+    expect(find.text('0'), findsOneWidget);
+    expect(find.text('1'), findsNothing);
 
-    // The code that uses the method channel.
-    final String? packageName = await channel.invokeMethod<String>('getPackageName');
+    // Tap the '+' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
 
-    // Verify that the method channel was called and returned the expected value.
-    expect(packageName, 'com.example');
+    // Verify that our counter has incremented.
+    expect(find.text('0'), findsNothing);
+    expect(find.text('1'), findsOneWidget);
   });
 }

@@ -22,7 +22,7 @@ class AppNavigation extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             blurRadius: 20,
-            color: Colors.black.withOpacity(.1),
+            color: Colors.black.withAlpha(1),
           )
         ],
       ),
@@ -30,15 +30,15 @@ class AppNavigation extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         child: GNav(
-          rippleColor: theme.colorScheme.primary.withOpacity(0.1),
-          hoverColor: theme.colorScheme.primary.withOpacity(0.05),
+          rippleColor: theme.colorScheme.primary.withAlpha(1),
+          hoverColor: theme.colorScheme.primary.withAlpha(5),
           gap: 8,
           activeColor: theme.colorScheme.onSurface,
           iconSize: 24,
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           duration: const Duration(milliseconds: 400),
-          tabBackgroundColor: theme.colorScheme.primary.withOpacity(0.2),
-          color: theme.colorScheme.onSurface.withOpacity(0.6),
+          tabBackgroundColor: theme.colorScheme.primary.withAlpha(2),
+          color: theme.colorScheme.onSurface.withAlpha(6),
           tabs: const [
             GButton(icon: Icons.home, text: 'Home'),
             GButton(icon: Icons.store, text: 'Seller'),

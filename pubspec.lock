@@ -25,6 +25,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.7.1"
+  animations:
+    dependency: "direct main"
+    description:
+      name: animations
+      sha256: "9cb469212ea51be27097f23b519d594c01171721347b55df9334fff653659e7f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   args:
     dependency: transitive
     description:
@@ -170,7 +178,7 @@ packages:
     source: hosted
     version: "1.1.2"
   cloud_firestore:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: cloud_firestore
       sha256: f0dba6cedc1e1c84bb811c32ce1343cde4f1aa796dc4b5d00344e16a5342aed0
@@ -809,7 +817,7 @@ packages:
     source: hosted
     version: "0.4.2"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: "1ca20c894b1717686a2319b8548763d812bc0aabdac580420a44c5178c57a867"
@@ -889,7 +897,7 @@ packages:
     source: hosted
     version: "6.1.0"
   logger:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: logger
       sha256: "25aee487596a6257655a1e091ec2ae66bc30e7af663592cc3a27e6591e05035c"

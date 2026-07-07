@@ -1,43 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/theme/app_theme.dart';
-import 'config/router/app_router.dart';
+import 'viewmodels/app_view_model.dart';
+import 'screens/login_screen.dart';
+import 'screens/main_scaffold.dart';
 
 void main() {
-  runApp(const MyApp());
+  // Inisialisasi service provider
+  final services = ServicesProvider.instance;
+
+  runApp(MyApp(services: services));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  final ServicesProvider services;
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  // State untuk mengontrol mode gelap/terang
-  bool _isDarkMode = true;
-
-  // Di masa mendatang, Anda dapat menambahkan fungsi di sini untuk mengubah _isDarkMode
-  // dan mengganti tema aplikasi secara dinamis.
+  const MyApp({super.key, required this.services});
 
   @override
   Widget build(BuildContext context) {
-    // Menggunakan satu MaterialApp.router sebagai akar aplikasi
-    return MaterialApp.router(
-      // Menggunakan router aplikasi Anda
-      routerConfig: router,
-
-      // Mengatur tema terang
-      theme: getAppTheme(false),
-
-      // Mengatur tema gelap
-      darkTheme: getAppTheme(true),
-
-      // Menentukan mode tema yang akan digunakan berdasarkan state _isDarkMode
-      themeMode: _isDarkMode ? ThemeMode.dark : ThemeMode.light,
-
-      // Menghilangkan banner debug
-      debugShowCheckedModeBanner: false,
+    return ChangeNotifierProvider(
+      // Buat AppViewModel dengan menyuntikkan FirestoreService
+      create: (context) => AppViewModel(services.firestoreService),
+      child: MaterialApp(
+        title: 'Flutter Admin Panel',
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: ThemeMode.light,
+        home: Consumer<AppViewModel>(
+          builder: (context, viewModel, child) {
+            return viewModel.isLoggedIn
+                ? const MainAppScaffold()
+                : const LoginScreen();
+          },
+        ),
+      ),
     );
   }
 }

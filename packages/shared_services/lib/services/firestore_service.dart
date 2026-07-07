@@ -1,133 +1,74 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:logger/logger.dart';
-
 
 class FirestoreService {
-  // Mendapatkan instance dari Cloud Firestore
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
-  final Logger _logger = Logger(); // Buat satu instance untuk kelas ini
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Menambahkan atau memperbarui data pengguna di koleksi 'users'.
-  ///
-  /// [userId] adalah ID unik untuk pengguna (misalnya, dari Firebase Auth).
-  /// [data] adalah Map yang berisi data pengguna (misalnya, nama, email).
-  Future<void> setUserData(String userId, Map<String, dynamic> data) async {
-    try {
-      // Menggunakan .doc(userId) untuk menunjuk ke dokumen spesifik.
-      // Menggunakan .set(data) untuk menulis data. Jika dokumen sudah ada, ia akan diperbarui.
-      // Jika belum ada, dokumen baru akan dibuat.
-      await _db.collection('users').doc(userId).set(data, SetOptions(merge: true));
-      _logger.i('User data saved successfully for $userId');
-    } catch (e, stackTrace) {
-      _logger.e(
-        'Error saving user data to Firestore',
-        error: e,
-        stackTrace: stackTrace,
-      );
-      // Lemparkan kembali error agar UI bisa menanganinya jika perlu
-      rethrow;
-    }
+  // --- App Access ---
+  Stream<QuerySnapshot> getAppAccessList() {
+    return _firestore.collection('app_access').snapshots();
   }
 
-  /// Mengambil data pengguna dari Firestore.
-  ///
-  /// [userId] adalah ID pengguna yang datanya ingin diambil.
-  /// Mengembalikan `DocumentSnapshot` yang berisi data pengguna jika ada.
-  Future<DocumentSnapshot?> getUserData(String userId) async {
-    try {
-      final doc = await _db.collection('users').doc(userId).get();
-      if (doc.exists) {
-        _logger.i('User data successfully retrieved for $userId');
-        return doc;
-      } else {
-        _logger.w('User document not found for $userId');
-        return null;
-      }
-    } catch (e, stackTrace) {
-      _logger.e(
-        'Error getting user data from Firestore',
-        error: e,
-        stackTrace: stackTrace,
-      );
-      return null;
-    }
+  Future<void> updateAppAccessBlockStatus(String packageName, bool isBlocked) {
+    return _firestore.collection('app_access').doc(packageName).update({'isBlocked': isBlocked});
   }
 
-  /// Mengambil semua dokumen dari koleksi 'offers'.
-  ///
-  /// Mengembalikan `List<QueryDocumentSnapshot>` yang berisi semua penawaran.
-  Future<List<QueryDocumentSnapshot>> getOffers() async {
-    try {
-      final querySnapshot = await _db.collection('offers').orderBy('order', descending: false).get();
-      _logger.i('Successfully retrieved ${querySnapshot.docs.length} offers.');
-      return querySnapshot.docs;
-    } catch (e, stackTrace) {
-      _logger.e(
-        'Error getting offers from Firestore',
-        error: e,
-        stackTrace: stackTrace,
-      );
-      // Lemparkan kembali error agar provider bisa menanganinya
-      rethrow;
-    }
+  // --- Sellers ---
+  Stream<QuerySnapshot> getSellers() {
+    // Mengurutkan berdasarkan nama untuk konsistensi
+    return _firestore.collection('sellers').orderBy('name').snapshots();
   }
 
-  /// Menambahkan dokumen pendaftaran seller baru ke koleksi 'seller_registrations'.
-  ///
-  /// [data] adalah Map yang berisi data dari formulir pendaftaran.
-  /// Metode ini akan secara otomatis menambahkan status 'pending' dan tanggal registrasi.
-  Future<void> addSellerRegistration(Map<String, dynamic> data) async {
-    try {
-      final registrationData = {
-        ...data,
-        'status': 'pending', // Status awal pendaftaran
-        'registrationDate': FieldValue.serverTimestamp(), // Timestamp dari server
-      };
-      await _db.collection('seller_registrations').add(registrationData);
-      _logger.i('Seller registration data saved successfully.');
-    } catch (e, stackTrace) {
-      _logger.e(
-        'Error saving seller registration to Firestore',
-        error: e,
-        stackTrace: stackTrace,
-      );
-      rethrow;
-    }
+  Future<void> updateSellerBanStatus(String id, bool isBanned, String? banReason) {
+    return _firestore.collection('sellers').doc(id).update({
+      'isBanned': isBanned,
+      'banReason': banReason, // Firestore akan menghapus field jika nilainya null
+      'status': isBanned ? 'Tidak Aktif' : 'Aktif',
+    });
   }
 
-  /// Mengambil semua dokumen dari koleksi 'seller_registrations'.
-  Future<List<QueryDocumentSnapshot>> getSellerRegistrations() async {
-    try {
-      final querySnapshot = await _db.collection('seller_registrations').get();
-      _logger.i(
-          'Successfully retrieved ${querySnapshot.docs.length} seller registrations.');
-      return querySnapshot.docs;
-    } catch (e, stackTrace) {
-      _logger.e(
-        'Error getting seller registrations from Firestore',
-        error: e,
-        stackTrace: stackTrace,
-      );
-      rethrow;
-    }
+  // --- Approval Requests ---
+  Stream<QuerySnapshot> getApprovalRequests() {
+    // Mengurutkan berdasarkan timestamp, yang terbaru di atas
+    return _firestore.collection('approval_requests').orderBy('timestamp', descending: true).snapshots();
   }
 
-  /// Memperbarui status dokumen pendaftaran seller.
-  ///
-  /// [docId] adalah ID dokumen di koleksi 'seller_registrations'.
-  /// [data] adalah Map yang berisi field yang akan diperbarui (misal: 'status', 'rejectionReason').
-  Future<void> updateSellerRegistration(
-      String docId, Map<String, Object> data) async {
-    try {
-      await _db.collection('seller_registrations').doc(docId).update(data);
-      _logger.i('Seller registration $docId updated successfully.');
-    } catch (e, stackTrace) {
-      _logger.e(
-        'Error updating seller registration $docId',
-        error: e,
-        stackTrace: stackTrace,
-      );
-      rethrow;
+  Future<void> updateApprovalStatus(String id, String status) {
+    return _firestore.collection('approval_requests').doc(id).update({'status': status});
+  }
+
+  // --- Notifications ---
+  Stream<QuerySnapshot> getNotifications() {
+    // Mengurutkan berdasarkan timestamp, yang terbaru di atas
+    return _firestore.collection('notifications').orderBy('timestamp', descending: true).snapshots();
+  }
+
+  Future<void> insertNotification(Map<String, dynamic> notificationData) {
+     // Menambahkan timestamp server saat data ditulis
+    notificationData['timestamp'] = FieldValue.serverTimestamp();
+    notificationData['isRead'] = false;
+    return _firestore.collection('notifications').add(notificationData);
+  }
+
+  Future<void> markNotificationAsRead(String id) {
+    return _firestore.collection('notifications').doc(id).update({'isRead': true});
+  }
+
+  Future<void> markAllNotificationsAsRead() async {
+    final WriteBatch batch = _firestore.batch();
+    final querySnapshot = await _firestore.collection('notifications').where('isRead', isEqualTo: false).get();
+
+    for (final doc in querySnapshot.docs) {
+      batch.update(doc.reference, {'isRead': true});
     }
+    return batch.commit();
+  }
+
+  // --- User Profile ---
+  Stream<DocumentSnapshot> getUserProfile(String username) {
+    return _firestore.collection('user_profiles').doc(username).snapshots();
+  }
+
+  Future<void> updateUserProfile(String username, Map<String, dynamic> data) {
+      return _firestore.collection('user_profiles').doc(username).update(data);
   }
 }
