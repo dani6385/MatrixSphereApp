@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../home_screens/home_screen.dart';
-import '../seller_screens/seller_screen.dart';
-import '../approval_screens/approval_screen.dart';
-import '../system_screens/system_screen.dart';
-import '../setting_screens/settings_screen.dart';
+import '../../presentation/approval_screens/approval_screen.dart';
+import '../../presentation/home_screens/home_screen.dart';
+import '../../presentation/seller_screens/seller_screen.dart';
+import '../../presentation/setting_screens/settings_screen.dart';
+import '../../presentation/system_screens/system_screen.dart';
 import '../../widgets/app_navigation.dart';
 
 class MainScreen extends StatefulWidget {
@@ -33,10 +33,23 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: AppNavigation(
-        currentIndex: _currentIndex,
-        onTapped: _onTapped,
+      // Menggunakan Stack untuk menempatkan bilah navigasi di atas konten
+      body: Stack(
+        children: [
+          // Konten utama (layar yang sedang aktif)
+          _screens[_currentIndex],
+
+          // Posisi bilah navigasi mengambang di bagian bawah
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AppNavigation(
+              currentIndex: _currentIndex,
+              onTapped: _onTapped,
+            ),
+          ),
+        ],
       ),
     );
   }
