@@ -16,12 +16,13 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
+  // Menambahkan SettingsScreen ke dalam daftar layar
   final List<Widget> _screens = [
     const HomeScreen(),
     const SellerScreen(),
     const ApprovalScreen(),
     const SystemScreen(),
-    const SettingsScreen(),
+    const SettingsScreen(), // Layar baru ditambahkan di sini
   ];
 
   void _onTapped(int index) {
@@ -37,7 +38,11 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(
         children: [
           // Konten utama (layar yang sedang aktif)
-          _screens[_currentIndex],
+          // IndexedStack mempertahankan state dari setiap layar saat berganti tab
+          IndexedStack(
+            index: _currentIndex,
+            children: _screens,
+          ),
 
           // Posisi bilah navigasi mengambang di bagian bawah
           Positioned(
