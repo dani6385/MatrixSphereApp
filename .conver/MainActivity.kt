@@ -1,9 +1,13 @@
 package com.example
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.*
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
@@ -77,6 +81,10 @@ fun MainAppScaffold(viewModel: AppViewModel) {
     // State to track the active real-time slide-down notification
     var activeNotification by remember { mutableStateOf<Notification?>(null) }
 
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { _ -> }
+
     // Observe notifications to display real-time sliding alerts
     LaunchedEffect(notifications) {
         val latestUnread = notifications.firstOrNull { !it.isRead }
@@ -85,6 +93,12 @@ fun MainAppScaffold(viewModel: AppViewModel) {
             // Dismiss automatically after 4 seconds
             delay(4000)
             activeNotification = null
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
