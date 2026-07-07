@@ -32,11 +32,29 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Menggunakan Scaffold sebagai dasar tata letak
     return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: AppNavigation(
-        currentIndex: _currentIndex,
-        onTapped: _onTapped,
+      // Menggunakan Stack untuk menumpuk konten dan bilah navigasi
+      body: Stack(
+        children: <Widget>[
+          // Konten layar utama yang akan berganti-ganti
+          // IndexedStack mempertahankan state dari setiap layar saat berganti tab
+          IndexedStack(
+            index: _currentIndex,
+            children: _screens,
+          ),
+
+          // Menempatkan bilah navigasi mengambang di bagian bawah
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: AppNavigation(
+              currentIndex: _currentIndex,
+              onTapped: _onTapped,
+            ),
+          ),
+        ],
       ),
     );
   }
