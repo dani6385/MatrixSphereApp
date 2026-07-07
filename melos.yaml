@@ -1,6 +1,5 @@
-name: MatrixSphereApp
+name: matrix_sphere
 
 packages:
   - apps/*
   - packages/*
-  - .

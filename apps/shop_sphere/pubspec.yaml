@@ -28,17 +28,16 @@ dependencies:
   geolocator: ^12.0.0
   provider: ^6.1.5+1
   logger: ^2.0.2+1
-  flutter_test:
-    sdk: flutter
   collection: ^1.19.1
   seller_sphere: ^1.0.0+1
   cloud_firestore: ^6.6.0
   uuid: ^4.5.3
   implicitly_animated_reorderable_list: ^0.4.2
   qr_flutter: ^4.1.0
-  matrix_sphere_app: ^0.0.0
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   flutter_lints: ^6.0.0
 
 flutter:
