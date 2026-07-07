@@ -1,53 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:sizer/sizer.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_ui/theme/app_theme.dart';
+import '/config/router/app_router.dart';
 
-import 'core/app_export.dart';
-import 'core/firebase_options.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  // ... (Error handling tetap sama)
-
-  Future.wait([
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]),
-  ]).then((_) {
-    GoRouter.optionURLReflectsImperativeAPIs = true;
-    runApp(const ProviderScope(child: MyApp()));
-  });
+void main() {
+  runApp(const MyApp());
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(appRouterProvider);
+  State<MyApp> createState() => _MyAppState();
+}
 
-    return Sizer(
-      builder: (context, orientation, screenType) {
-        return MaterialApp.router(
-          title: 'CC Client Connectivity',
-          theme: ThemeData.light(),
-          darkTheme: ThemeData.dark(),
-          themeMode: ThemeMode.light,
-          builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(1.0)),
-              child: child!,
-            );
-          },
-          debugShowCheckedModeBanner: false,
-          routerConfig: router,
-        );
-      },
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return MyApplicationTheme(
+      darkTheme: _isDarkMode,
+      content: (context) => MaterialApp.router(routerConfig: router),
     );
   }
 }

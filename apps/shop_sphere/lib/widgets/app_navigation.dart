@@ -1,39 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 class AppNavigation extends StatelessWidget {
-  final StatefulNavigationShell navigationShell;
-  const AppNavigation({super.key, required this.navigationShell});
+  final int currentIndex;
+  final Function(int) onTapped;
 
-  // Definisikan item-item navigasi di sini
-  static const List<MSBottomNavItem> _navItems = [
-    MSBottomNavItem(
-      label: 'Home',
-      icon: Icons.home_outlined,
-      activeIcon: Icons.home_rounded,
-    ),
-    MSBottomNavItem(
-      label: 'Schedule',
-      icon: Icons.calendar_month_outlined,
-      activeIcon: Icons.calendar_month_rounded,
-    ),
-    MSBottomNavItem(
-      label: 'Profile',
-      icon: Icons.person_outline,
-      activeIcon: Icons.person,
-    ),
-  ];
+  const AppNavigation({
+    super.key,
+    required this.currentIndex,
+    required this.onTapped,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: MSBottomNav(
-        items: _navItems,
-        currentIndex: navigationShell.currentIndex,
-        onTap: (index) => navigationShell.goBranch(index),
-      ),
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
+      onTap: onTapped,
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.store),
+          label: 'Seller',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.approval),
+          label: 'Approval',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'System',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Settings',
+        ),
+      ],
     );
   }
 }

@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:seller_sphere/providers/theme_provider.dart';
-import 'package:seller_sphere/widgets/app_router.dart'; // Impor app_router.dart
-import 'package:shared_ui/shared_ui.dart';
-
-// Provider yang mungkin masih relevan untuk didefinisikan di sini
-// jika mereka adalah ChangeNotifier lama yang belum dimigrasi.
-// Untuk sekarang kita biarkan kosong karena sebagian besar sudah dimigrasi.
+import 'package:shared_ui/theme/app_theme.dart';
+import '/config/router/app_router.dart';
 
 void main() {
-  runApp(const ProviderScope(child: SellerApp()));
+  runApp(const MyApp());
 }
 
-class SellerApp extends ConsumerWidget {
-  const SellerApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // 1. Dapatkan instance GoRouter dari goRouterProvider
-    final router = ref.watch(goRouterProvider);
-    // 2. Dapatkan state tema dari themeProvider (yang sudah Riverpod)
-    final isDarkMode = ref.watch(themeProvider);
+  State<MyApp> createState() => _MyAppState();
+}
 
-    // 3. Gunakan MaterialApp.router dengan konfigurasi yang bersih
-    return MaterialApp.router(
-      routerConfig: router,
-      title: 'Seller Sphere',
-      theme: SharedTheme.lightTheme,       // Tema terang default
-      darkTheme: SharedTheme.darkTheme,     // Tema gelap default
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light, // Terapkan tema berdasarkan state
+class _MyAppState extends State<MyApp> {
+  bool _isDarkMode = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return MyApplicationTheme(
+      darkTheme: _isDarkMode,
+      content: (context) => MaterialApp.router(routerConfig: router),
     );
   }
 }
