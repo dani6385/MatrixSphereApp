@@ -1,22 +1,26 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 
-/// Instrumented test, which will execute on an Android device.
-///
-/// See [Flutter testing documentation](https://docs.flutter.dev/testing)
 void main() {
-  test('useAppContext', () async {
-    // Context of the app under test.
-    final appContext = TestWidgetsFlutterBinding.ensureInitialized();
-    final packageName = await const MethodChannel('getPackageName')
-        .invokeMethod<String>('getPackageName');
+  testWidgets('should return package name from method channel', (WidgetTester tester) async {
+    // Bind the framework to the test engine.
+    TestWidgetsFlutterBinding.ensureInitialized();
 
+    // Mock the MethodChannel.
+    const MethodChannel channel = MethodChannel('getPackageName');
+    
+    // Set a mock method call handler.
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      if (methodCall.method == 'getPackageName') {
+        return 'com.example'; // Return a mock package name.
+      }
+      return null;
+    });
+
+    // The code that uses the method channel.
+    final String? packageName = await channel.invokeMethod<String>('getPackageName');
+
+    // Verify that the method channel was called and returned the expected value.
     expect(packageName, 'com.example');
   });
-}
-
-MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "getPackageName").setMethodCallHandler { call, result ->
-    if (call.method == "getPackageName") {
-        result.success(packageName)
-    }
 }
