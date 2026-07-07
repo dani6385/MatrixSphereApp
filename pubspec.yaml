@@ -1,60 +1,25 @@
-name: matrix_sphere_app
-description: A monorepo for MatrixSphereApp.
+name: myapp
+description: "A new Flutter project."
 publish_to: 'none'
+version: 1.0.0+1
 
 environment:
-  sdk: '>=3.12.1 <4.0.0'
-
-dev_dependencies:
-  melos: ^7.8.2
-
-workspace:
-  - apps/client_connectivity
-  - apps/admin_mikrotik
-  - apps/shop_sphere
-  - apps/seller_sphere
-  - packages/shared_ui
-  - packages/shared_services
+  sdk: '>=3.2.3 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
+  go_router: ^14.0.2
+  provider: ^6.1.2
+  shared_ui: 
+    path: ../packages/shared_ui
 
-  # --- Local Packages ---
-  shared_ui:
-    path: packages/shared_ui
-  shared_services:
-    path: packages/shared_services
-
-  # --- Remote Packages ---
-  go_router: ^14.1.1
-  google_generative_ai: ^0.4.7
-  image_picker: ^1.2.2
-  internet_connection_checker_plus: ^3.1.0
-  internet_speed_test: ^1.5.0
-  network_info_plus: any
-  intl: ^0.20.3
-  permission_handler: ^12.0.3
-  provider: ^6.1.5+1
-  flutter_riverpod: ^2.6.1
-  collection: ^1.19.1
-  firebase_core: ^4.11.0
-  cloud_firestore: ^6.6.0
-  firebase_storage: ^13.0.0
-  firebase_database: ^12.4.4
-  logger: ^2.5.0
+dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_layout_grid: ^2.0.8
-  rxdart: ^0.28.0
-  floor: ^1.5.0
-  freezed_annotation: ^2.4.4
-  drift: ^2.34.1
-  sqflite: ^2.4.3
+  flutter_lints: ^2.0.0
 
-flutter_test:
-  sdk: flutter
-
-# Ditambahkan untuk memastikan ikon Material dimuat
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
