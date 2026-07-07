@@ -15,30 +15,17 @@ class AppNavigation extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTapped,
-      backgroundColor: Colors.blue,
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.white70,
+      backgroundColor: ColorScheme.dark().primary,
+      selectedItemColor: ColorScheme.dark().onPrimary,
+      unselectedItemColor: ColorScheme.dark().onPrimaryContainer,
+      showUnselectedLabels: true,
+      showSelectedLabels: true,
       items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.store),
-          label: 'Seller',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.approval),
-          label: 'Approval',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'System',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Settings',
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+        BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Seller'),
+        BottomNavigationBarItem(icon: Icon(Icons.approval), label: 'Approval'),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'System'),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
       ],
     );
   }
