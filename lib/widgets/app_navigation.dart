@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/theme/app_colors.dart';
 
 class AppNavigation extends StatelessWidget {
   final int currentIndex;
@@ -15,17 +16,17 @@ class AppNavigation extends StatelessWidget {
     return BottomNavigationBar(
       currentIndex: currentIndex,
       onTap: onTapped,
-      backgroundColor: ColorScheme.dark().primary,
-      selectedItemColor: ColorScheme.dark().onPrimary,
-      unselectedItemColor: ColorScheme.dark().onPrimaryContainer,
+      backgroundColor: background,
+      selectedItemColor: primary,
+      unselectedItemColor: textSecondary,
       showUnselectedLabels: true,
       showSelectedLabels: true,
+      type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.store), label: 'Seller'),
         BottomNavigationBarItem(icon: Icon(Icons.approval), label: 'Approval'),
         BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'System'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
       ],
     );
   }
