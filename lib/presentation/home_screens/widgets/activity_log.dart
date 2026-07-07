@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_ui/theme/app_colors.dart';
 import '../providers/home_provider.dart';
 import 'activity_item.dart';
 
@@ -14,9 +15,9 @@ class ActivityLog extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: surface,
         borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: Theme.of(context).dividerColor, width: 0.5),
+        border: Border.all(color: background, width: 0.5),
       ),
       child: Column(
         children: activities
