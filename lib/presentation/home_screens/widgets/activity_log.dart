@@ -12,17 +12,16 @@ class ActivityLog extends StatelessWidget {
     final homeProvider = Provider.of<HomeProvider>(context);
     final activities = homeProvider.activities;
 
-    return Container(
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: surface,
-        borderRadius: BorderRadius.circular(12.0),
-        border: Border.all(color: background, width: 0.5),
-      ),
-      child: Column(
-        children: activities
-            .map((activity) => ActivityItem(activity: activity))
-            .toList(),
+    return Material(
+      color: surface,
+      borderRadius: BorderRadius.circular(12.0),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: activities
+              .map((activity) => ActivityItem(activity: activity))
+              .toList(),
+        ),
       ),
     );
   }

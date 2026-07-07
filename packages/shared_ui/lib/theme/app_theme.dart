@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:shared_ui/theme/app_colors.dart';
+import 'app_colors.dart';
 
-final ColorScheme darkColorScheme = ColorScheme.dark(
+// Definisi skema warna untuk tema gelap
+final ColorScheme _darkColorScheme = ColorScheme.dark(
   primary: primary,
   secondary: secondary,
   tertiary: tertiary,
   background: background,
-  surface: surface,
+  surface: surface, // Ini adalah warna untuk Card, Dialog, dll.
   onPrimary: textPrimary,
   onSecondary: textPrimary,
   onTertiary: textPrimary,
   onBackground: textPrimary,
-  onSurface: textPrimary,
+  onSurface: textPrimary, // Warna teks di atas surface
   surfaceVariant: border,
   onSurfaceVariant: textSecondary,
+  error: error,
+  onError: textPrimary,
 );
 
-final ColorScheme lightColorScheme = ColorScheme.light(
+// Definisi skema warna untuk tema terang
+final ColorScheme _lightColorScheme = ColorScheme.light(
   primary: secondary,
   secondary: primary,
   tertiary: tertiary,
@@ -29,30 +33,26 @@ final ColorScheme lightColorScheme = ColorScheme.light(
   onSurface: lightTextPrimary,
   surfaceVariant: lightBorder,
   onSurfaceVariant: lightTextSecondary,
+  error: error,
+  onError: lightTextPrimary,
 );
 
-class MyApplicationTheme extends StatelessWidget {
-  final bool darkTheme;
-  final WidgetBuilder content;
-
-  const MyApplicationTheme({
-    super.key,
-    this.darkTheme = true,
-    required this.content,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = darkTheme ? darkColorScheme : lightColorScheme;
-
-    return MaterialApp(
-      theme: ThemeData(
-        colorScheme: colorScheme,
-        useMaterial3: true,
-      ),
-      home: Builder(
-        builder: (context) => content(context),
-      ),
-    );
-  }
+/// Fungsi untuk mendapatkan ThemeData berdasarkan mode gelap/terang
+ThemeData getAppTheme(bool isDarkMode) {
+  final colorScheme = isDarkMode ? _darkColorScheme : _lightColorScheme;
+  return ThemeData(
+    colorScheme: colorScheme,
+    useMaterial3: true,
+    // Secara eksplisit mengatur beberapa warna tema untuk konsistensi
+    scaffoldBackgroundColor: colorScheme.background,
+    cardColor: colorScheme.surface,
+    dialogBackgroundColor: colorScheme.surface,
+    appBarTheme: AppBarTheme(
+      backgroundColor: colorScheme.background,
+      elevation: 0,
+    ),
+  );
 }
+
+/// Widget MyApplicationTheme yang lama telah dihapus karena menyebabkan
+/// masalah nested MaterialApp. Gunakan getAppTheme() di MaterialApp utama.

@@ -14,3 +14,4 @@ const Color lightSurface = Color(0xFFFFFFFF);
 const Color lightBorder = Color(0xFFE2E8F0);
 const Color lightTextPrimary = Color(0xFF0F172A);
 const Color lightTextSecondary = Color(0xFF475569);
+const Color error = Color(0xffff0000);
