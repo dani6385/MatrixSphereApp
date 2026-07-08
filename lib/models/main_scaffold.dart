@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../viewmodels/app_view_model.dart';
-import 'home_screen.dart';
+import '../screens/home_screen.dart';
 
 enum MainTab { home, seller, approval, system, settings }
 
@@ -59,12 +57,12 @@ class _MainScaffoldState extends State<MainScaffold> {
               child: Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: isSelected ? Colors.white.withOpacity(0.2) : Colors.transparent,
+                  color: isSelected ? Colors.white.withAlpha(2) : Colors.transparent,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   _getIconForTab(tab),
-                  color: Colors.white.withOpacity(isSelected ? 1.0 : 0.6),
+                  color: Colors.white.withAlpha(isSelected ? 1 : 6),
                 ),
               ),
             );
