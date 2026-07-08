@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_ui/theme/app_theme.dart';
 import 'viewmodels/app_view_model.dart';
 import 'screens/login_screen.dart';
-import 'package:shared_services/shared_service.dart'; // Assuming this path
+import 'package:shared_services/shared_services.dart'; // Assuming this path
 
 void main() {
   final firestoreService = FirestoreService(); // Instantiate FirestoreService
