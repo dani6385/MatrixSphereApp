@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -50,10 +49,13 @@ class AppViewModel extends ChangeNotifier {
   List<Product> get lowStockProducts => _lowStockProducts;
 
   final _notificationController = StreamController<AppNotification>.broadcast();
-  Stream<AppNotification> get notificationFlow => _notificationController.stream;
+  Stream<AppNotification> get notificationFlow =>
+      _notificationController.stream;
 
   void triggerNotification(String title, String message) {
-    _notificationController.add(AppNotification(title: title, message: message));
+    _notificationController.add(
+      AppNotification(title: title, message: message),
+    );
   }
 
   // Fungsi untuk simulasi perubahan stok
@@ -171,7 +173,7 @@ class _MainShellState extends ConsumerState<MainShell> {
       }
     });
   }
-  
+
   @override
   void dispose() {
     _toastTimer?.cancel();
@@ -185,11 +187,32 @@ class _MainShellState extends ConsumerState<MainShell> {
     final currentRoute = GoRouter.of(context).location;
 
     final navItems = [
-      const CustomNavigationItem(route: '/dasbor', label: 'Dasbor', icon: Icons.home),
-      const CustomNavigationItem(route: '/barang', label: 'Stok', icon: Icons.category),
-      const CustomNavigationItem(route: '/kasir', label: 'Kasir', icon: Icons.shopping_cart, isCentral: true),
-      const CustomNavigationItem(route: '/label', label: 'Label', icon: Icons.qr_code),
-      const CustomNavigationItem(route: '/laporan', label: 'Laporan', icon: Icons.local_shipping),
+      const CustomNavigationItem(
+        route: '/dasbor',
+        label: 'Dasbor',
+        icon: Icons.home,
+      ),
+      const CustomNavigationItem(
+        route: '/barang',
+        label: 'Stok',
+        icon: Icons.category,
+      ),
+      const CustomNavigationItem(
+        route: '/kasir',
+        label: 'Kasir',
+        icon: Icons.shopping_cart,
+        isCentral: true,
+      ),
+      const CustomNavigationItem(
+        route: '/label',
+        label: 'Label',
+        icon: Icons.qr_code,
+      ),
+      const CustomNavigationItem(
+        route: '/laporan',
+        label: 'Laporan',
+        icon: Icons.local_shipping,
+      ),
     ];
 
     return Scaffold(
@@ -203,12 +226,16 @@ class _MainShellState extends ConsumerState<MainShell> {
               height: 32,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: neonCyan.withOpacity(0.2),
+                color: neonCyan.withAlpha(2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: const Text(
                 'SS',
-                style: TextStyle(color: neonCyan, fontWeight: FontWeight.w900, fontSize: 14),
+                style: TextStyle(
+                  color: neonCyan,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 14,
+                ),
               ),
             ),
             const SizedBox(width: 12),
@@ -239,7 +266,9 @@ class _MainShellState extends ConsumerState<MainShell> {
                 backgroundColor: warmOrange,
                 child: Icon(
                   Icons.notifications,
-                  color: lowStockList.isNotEmpty ? warmOrange : slateTextSecondary,
+                  color: lowStockList.isNotEmpty
+                      ? warmOrange
+                      : slateTextSecondary,
                 ),
               ),
             ),
@@ -266,7 +295,7 @@ class _MainShellState extends ConsumerState<MainShell> {
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: slateBorder)
+                  border: Border.all(color: slateBorder),
                 ),
                 child: Row(
                   children: [
@@ -275,10 +304,14 @@ class _MainShellState extends ConsumerState<MainShell> {
                       height: 32,
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                        color: neonCyan.withOpacity(0.2),
+                        color: neonCyan.withAlpha(2),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.notifications, color: neonCyan, size: 18),
+                      child: const Icon(
+                        Icons.notifications,
+                        color: neonCyan,
+                        size: 18,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -287,11 +320,18 @@ class _MainShellState extends ConsumerState<MainShell> {
                         children: [
                           Text(
                             _toastTitle,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: neonCyan),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13,
+                              color: neonCyan,
+                            ),
                           ),
                           Text(
                             _toastMessage,
-                            style: TextStyle(fontSize: 11, color: Colors.white.withOpacity(0.9)),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.white.withAlpha(9),
+                            ),
                           ),
                         ],
                       ),
@@ -325,7 +365,7 @@ class _MainShellState extends ConsumerState<MainShell> {
                       height: 56,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isSelected ? neonCyan : neonCyan.withOpacity(0.12),
+                        color: isSelected ? neonCyan : neonCyan.withAlpha(12),
                       ),
                       child: Icon(
                         item.icon,
@@ -338,22 +378,32 @@ class _MainShellState extends ConsumerState<MainShell> {
                   return GestureDetector(
                     onTap: () => context.go(item.route),
                     child: Container(
-                      color: Colors.transparent, // Membuat area klik lebih besar
-                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                      color:
+                          Colors.transparent, // Membuat area klik lebih besar
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 4,
+                        horizontal: 8,
+                      ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             item.icon,
-                            color: isSelected ? neonCyan : slateTextSecondary.withOpacity(0.7),
+                            color: isSelected
+                                ? neonCyan
+                                : slateTextSecondary.withAlpha(7),
                             size: 22,
                           ),
                           const SizedBox(height: 3),
                           Text(
                             item.label,
                             style: TextStyle(
-                              color: isSelected ? neonCyan : slateTextSecondary.withOpacity(0.7),
-                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                              color: isSelected
+                                  ? neonCyan
+                                  : slateTextSecondary.withAlpha(7),
+                              fontWeight: isSelected
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                               fontSize: 11,
                             ),
                           ),
@@ -377,10 +427,13 @@ class LaporanSyncCombinedTabScreen extends StatefulWidget {
   const LaporanSyncCombinedTabScreen({super.key});
 
   @override
-  State<LaporanSyncCombinedTabScreen> createState() => _LaporanSyncCombinedTabScreenState();
+  State<LaporanSyncCombinedTabScreen> createState() =>
+      _LaporanSyncCombinedTabScreenState();
 }
 
-class _LaporanSyncCombinedTabScreenState extends State<LaporanSyncCombinedTabScreen> with SingleTickerProviderStateMixin {
+class _LaporanSyncCombinedTabScreenState
+    extends State<LaporanSyncCombinedTabScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -388,7 +441,7 @@ class _LaporanSyncCombinedTabScreenState extends State<LaporanSyncCombinedTabScr
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
-  
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -403,8 +456,11 @@ class _LaporanSyncCombinedTabScreenState extends State<LaporanSyncCombinedTabScr
           controller: _tabController,
           indicatorColor: neonCyan,
           labelColor: neonCyan,
-          unselectedLabelColor: slateTextSecondary.withOpacity(0.6),
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+          unselectedLabelColor: slateTextSecondary.withAlpha(6),
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 13,
+          ),
           tabs: const [
             Tab(text: "Rekap Keuangan"),
             Tab(text: "Sinkronisasi Awan"),
@@ -413,10 +469,7 @@ class _LaporanSyncCombinedTabScreenState extends State<LaporanSyncCombinedTabScr
         Expanded(
           child: TabBarView(
             controller: _tabController,
-            children: const [
-              ReportScreen(),
-              SyncSettingsScreen(),
-            ],
+            children: const [ReportScreen(), SyncSettingsScreen()],
           ),
         ),
       ],
@@ -424,39 +477,53 @@ class _LaporanSyncCombinedTabScreenState extends State<LaporanSyncCombinedTabScr
   }
 }
 
-
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("Halaman Dasbor", style: TextStyle(color: Colors.white)));
+  Widget build(BuildContext context) => const Center(
+    child: Text("Halaman Dasbor", style: TextStyle(color: Colors.white)),
+  );
 }
 
 class InventoryScreen extends StatelessWidget {
   const InventoryScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("Halaman Stok Barang", style: TextStyle(color: Colors.white)));
+  Widget build(BuildContext context) => const Center(
+    child: Text("Halaman Stok Barang", style: TextStyle(color: Colors.white)),
+  );
 }
 
 class TransactionScreen extends StatelessWidget {
   const TransactionScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("Halaman Kasir", style: TextStyle(color: Colors.white)));
+  Widget build(BuildContext context) => const Center(
+    child: Text("Halaman Kasir", style: TextStyle(color: Colors.white)),
+  );
 }
 
 class LabelPrinterScreen extends StatelessWidget {
   const LabelPrinterScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("Halaman Cetak Label", style: TextStyle(color: Colors.white)));
+  Widget build(BuildContext context) => const Center(
+    child: Text("Halaman Cetak Label", style: TextStyle(color: Colors.white)),
+  );
 }
 
 class ReportScreen extends StatelessWidget {
   const ReportScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("Halaman Laporan Keuangan", style: TextStyle(color: Colors.white)));
+  Widget build(BuildContext context) => const Center(
+    child: Text(
+      "Halaman Laporan Keuangan",
+      style: TextStyle(color: Colors.white),
+    ),
+  );
 }
 
 class SyncSettingsScreen extends StatelessWidget {
   const SyncSettingsScreen({super.key});
   @override
-  Widget build(BuildContext context) => const Center(child: Text("Halaman Sinkronisasi", style: TextStyle(color: Colors.white)));
+  Widget build(BuildContext context) => const Center(
+    child: Text("Halaman Sinkronisasi", style: TextStyle(color: Colors.white)),
+  );
 }

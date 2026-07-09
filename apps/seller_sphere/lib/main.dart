@@ -17,11 +17,26 @@ final GoRouter _router = GoRouter(
         return MainShell(child: child);
       },
       routes: [
-        GoRoute(path: '/dasbor', builder: (context, state) => const DashboardScreen()),
-        GoRoute(path: '/barang', builder: (context, state) => const InventoryScreen()),
-        GoRoute(path: '/kasir', builder: (context, state) => const TransactionScreen()),
-        GoRoute(path: '/label', builder: (context, state) => const LabelPrinterScreen()),
-        GoRoute(path: '/laporan', builder: (context, state) => const LaporanSyncCombinedTabScreen()),
+        GoRoute(
+          path: '/dasbor',
+          builder: (context, state) => const DashboardScreen(),
+        ),
+        GoRoute(
+          path: '/barang',
+          builder: (context, state) => const InventoryScreen(),
+        ),
+        GoRoute(
+          path: '/kasir',
+          builder: (context, state) => const TransactionScreen(),
+        ),
+        GoRoute(
+          path: '/label',
+          builder: (context, state) => const LabelPrinterScreen(),
+        ),
+        GoRoute(
+          path: '/laporan',
+          builder: (context, state) => const LaporanSyncCombinedTabScreen(),
+        ),
       ],
     ),
   ],
@@ -38,7 +53,6 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: slateDarkBackground,
         colorScheme: const ColorScheme.dark(
-          background: slateDarkBackground,
           surface: slateDarkCard,
           onSurface: Colors.white,
           primary: neonCyan,
