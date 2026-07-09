@@ -175,7 +175,7 @@ class DashboardScreen extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.notifications_active, color: kWarningColor, size: 20),
+                    const Icon(Icons.notifications_active, color: kWarmOrange, size: 20),
                     const SizedBox(width: 8),
                     Text("Target Penjualan Harian", style: theme.textTheme.titleMedium),
                   ],
@@ -211,8 +211,8 @@ class DashboardScreen extends ConsumerWidget {
                   "$targetPercentage%",
                   style: theme.textTheme.labelLarge!.copyWith(
                       color: targetPercentage >= 100
-                          ? kSuccessColor
-                          : kWarningColor),
+                          ? kSoftTeal
+                          : kWarmOrange),
                 ),
               ],
             ),
@@ -249,15 +249,15 @@ class DashboardScreen extends ConsumerWidget {
                     children: [
                       CircleAvatar(
                         radius: 16,
-                        backgroundColor: kWarningColor.withAlpha(15),
-                        child: const Icon(Icons.local_shipping, size: 18, color: kWarningColor),
+                        backgroundColor: kWarmOrange.withAlpha(15),
+                        child: const Icon(Icons.local_shipping, size: 18, color: kWarmOrange),
                       ),
                       const SizedBox(width: 8),
                       Text("Menunggu Pickup", style: theme.textTheme.bodySmall),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text("$awaitingPickupCount Paket", style: theme.textTheme.titleLarge!.copyWith(color: kWarningColor)),
+                  Text("$awaitingPickupCount Paket", style: theme.textTheme.titleLarge!.copyWith(color: kWarmOrange)),
                 ],
               ),
             ),
@@ -277,15 +277,15 @@ class DashboardScreen extends ConsumerWidget {
                     children: [
                        CircleAvatar(
                         radius: 16,
-                        backgroundColor: kSuccessColor.withAlpha(15),
-                        child: const Icon(Icons.check_circle, size: 18, color: kSuccessColor),
+                        backgroundColor: kSoftTeal.withAlpha(15),
+                        child: const Icon(Icons.check_circle, size: 18, color: kSoftTeal),
                       ),
                       const SizedBox(width: 8),
                       Text("Selesai Pickup", style: theme.textTheme.bodySmall),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text("$pickedUpCount Paket", style: theme.textTheme.titleLarge!.copyWith(color: kSuccessColor)),
+                  Text("$pickedUpCount Paket", style: theme.textTheme.titleLarge!.copyWith(color: kSoftTeal)),
                 ],
               ),
             ),
@@ -462,9 +462,9 @@ class _ShopsphereWeeklyOrderChartState extends ConsumerState<ShopsphereWeeklyOrd
           children: [
             Row(
               children: [
-                _buildLegendItem(context, kSuccessColor, "Selesai Dijemput"),
+                _buildLegendItem(context, kSoftTeal, "Selesai Dijemput"),
                 const SizedBox(width: 12),
-                _buildLegendItem(context, kWarningColor, "Menunggu Pickup"),
+                _buildLegendItem(context, kWarmOrange, "Menunggu Pickup"),
               ],
             ),
             Text(
@@ -645,7 +645,7 @@ class OrderPickupItem extends StatelessWidget {
                                 label: Text("Konfirmasi Pickup", style: theme.textTheme.bodySmall!.copyWith(color: Colors.black, fontWeight: FontWeight.bold)),
                                 onPressed: ()=> viewModel.confirmOrderPickup(order.id),
                                 style: ElevatedButton.styleFrom(
-                                    backgroundColor: kSuccessColor,
+                                    backgroundColor: kSoftTeal,
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                     padding: EdgeInsets.zero,
                                     minimumSize: const Size(0, 36)
@@ -695,11 +695,11 @@ class _StatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final Map<String, Color> statusColors = {
-      "Selesai Dijemput": kSuccessColor,
+      "Selesai Dijemput": kSoftTeal,
       "Kurir Menuju Lokasi": kInfoColor,
-      "Menunggu Kurir": kWarningColor,
+      "Menunggu Kurir": kWarmOrange,
     };
-    final color = statusColors[status] ?? kWarningColor;
+    final color = statusColors[status] ?? kWarmOrange;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -756,12 +756,12 @@ class _ChartPainter extends CustomPainter {
 
         final compTopY = size.height - bottomPadding - compHeight;
         final compRect = Rect.fromLTWH(x - barWidth / 2, compTopY, barWidth, compHeight);
-        final compPaint = Paint()..color = isSelected ? kSuccessColor : kSuccessColor.withAlpha(7);
+        final compPaint = Paint()..color = isSelected ? kSoftTeal : kSoftTeal.withAlpha(7);
         canvas.drawRect(compRect, compPaint);
 
         final awatTopY = compTopY - awatHeight;
         final awatRect = Rect.fromLTWH(x - barWidth / 2, awatTopY, barWidth, awatHeight);
-        final awatPaint = Paint()..color = isSelected ? kWarningColor : kWarningColor.withAlpha(7);
+        final awatPaint = Paint()..color = isSelected ? kWarmOrange : kWarmOrange.withAlpha(7);
         canvas.drawRect(awatRect, awatPaint);
       }
 

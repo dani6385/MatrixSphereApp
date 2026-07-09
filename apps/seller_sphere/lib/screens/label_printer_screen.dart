@@ -305,7 +305,7 @@ class _BluetoothPrintingCard extends ConsumerWidget {
                     Icon(
                       isConnected ? Icons.bluetooth_connected : Icons.bluetooth,
                       color: isConnected
-                          ? kSuccessColor
+                          ? kSoftTeal
                           : theme.colorScheme.primary,
                       size: 18,
                     ),
@@ -338,7 +338,7 @@ class _BluetoothPrintingCard extends ConsumerWidget {
                   "Status: $printerState",
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: isConnected
-                        ? kSuccessColor
+                        ? kSoftTeal
                         : theme.colorScheme.onSurfaceVariant.withAlpha(8),
                     fontWeight: isConnected
                         ? FontWeight.bold

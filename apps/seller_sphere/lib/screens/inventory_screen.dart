@@ -4,64 +4,118 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:seller_sphere/data/local/app_database.dart';
 import 'package:seller_sphere/viewmodel/app_view_model.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'package:seller_sphere/main_shell.dart';
+import 'dart:math';
+import 'package:qr_flutter/qr_flutter.dart';
 
-// Definisikan warna kustom yang digunakan di l
-
-class InventoryScreen extends ConsumerWidget {
+class InventoryScreen extends ConsumerStatefulWidget {
   final void Function(Product) onNavigateToLabelPrinter;
 
   const InventoryScreen({super.key, required this.onNavigateToLabelPrinter});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Expanded(
-              flex: 1,
-              child: _OperationsPanel(),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              flex: 2,
-              child: _ProductListPanel(
-                onNavigateToLabelPrinter: onNavigateToLabelPrinter,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  ConsumerState<InventoryScreen> createState() => _InventoryScreenState();
 }
 
-class _OperationsPanel extends ConsumerWidget {
-  const _OperationsPanel();
+class _InventoryScreenState extends ConsumerState<InventoryScreen> {
+  String _searchQuery = "";
+  String _selectedCategory = "Semua";
+  String _selectedSortKey = "Alphabetical";
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final products = ref.watch(productsProvider).asData?.value ?? [];
-    final lowStockProducts = products.where((p) => p.stock <= p.minStockThreshold).toList();
+    final viewModel = ref.watch(appViewModelProvider);
+    final productsAsyncValue = ref.watch(productsProvider);
+
+    return productsAsyncValue.when(
+      data: (products) {
+        final categories = ["Semua"] +
+            products.map((p) => p.category).toSet().toList();
+
+        final filteredProducts = products.where((p) {
+          final matchesSearch = p.name
+                  .toLowerCase()
+                  .contains(_searchQuery.toLowerCase()) ||
+              p.sku.toLowerCase().contains(_searchQuery.toLowerCase());
+          final matchesCategory =
+              _selectedCategory == "Semua" || p.category == _selectedCategory;
+          return matchesSearch && matchesCategory;
+        }).toList();
+
+        final sortedProducts = _sortProducts(filteredProducts, _selectedSortKey);
+
+        return Scaffold(
+          backgroundColor: theme.colorScheme.background,
+          body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: _buildLeftPanel(context, ref, products),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 2,
+                  child: _buildRightPanel(
+                      context, sortedProducts, categories, viewModel),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(child: Text('Error: $error')),
+    );
+  }
+
+  List<Product> _sortProducts(List<Product> products, String key) {
+    switch (key) {
+      case "Stock Level (Low to High)":
+        return products..sort((a, b) => a.stock.compareTo(b.stock));
+      case "Price":
+        return products..sort((a, b) => a.sellingPrice.compareTo(b.sellingPrice));
+      case "Alphabetical":
+        return products..sort((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase()));
+      default:
+        return products;
+    }
+  }
+
+  Widget _buildLeftPanel(
+      BuildContext context, WidgetRef ref, List<Product> products) {
+    final theme = Theme.of(context);
+    final viewModel = ref.watch(appViewModelProvider);
+    final totalStock = products.fold<int>(0, (sum, item) => sum + item.stock);
+    final lowStockCount = products.where((p) => p.isLowStock).length;
+    final totalRevenue = products.fold<double>(
+        0, (sum, p) => sum + (p.sellingPrice * p.stock));
+    final totalCost = products.fold<double>(
+        0, (sum, p) => sum + (p.purchasePrice * p.stock));
+    final potentialProfit = totalRevenue - totalCost;
 
     return Column(
       children: [
         Card(
-          color: theme.colorScheme.surfaceContainerHighest,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          color: theme.colorScheme.surfaceVariant,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Manajemen Inventaris", style: theme.textTheme.titleMedium),
+                Text("Manajemen Inventaris",
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
                 Text(
                   "Kelola data produk, stok, harga, serta cetak label harga dan promo barcode secara mandiri.",
-                  style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),
                 const Divider(height: 24),
                 SizedBox(
@@ -70,10 +124,6 @@ class _OperationsPanel extends ConsumerWidget {
                     onPressed: () => _showProductFormDialog(context, ref),
                     icon: const Icon(Icons.add, size: 18),
                     label: const Text("Tambah Barang"),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kNeonCyan,
-                      foregroundColor: Colors.black,
-                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -83,7 +133,6 @@ class _OperationsPanel extends ConsumerWidget {
                     onPressed: () => _showCsvDialog(context, ref),
                     icon: const Icon(Icons.import_export, size: 18),
                     label: const Text("Impor / Ekspor CSV"),
-                    style: OutlinedButton.styleFrom(foregroundColor: kNeonCyan),
                   ),
                 ),
               ],
@@ -91,165 +140,303 @@ class _OperationsPanel extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Expanded(
-          child: Card(
-            color: theme.colorScheme.surfaceContainerHighest,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Ringkasan Stok", style: theme.textTheme.titleMedium),
-                  const SizedBox(height: 12),
-                  _buildStatRow(context, "Total Jenis Produk", "${products.length} Item", kNeonCyan),
+        Card(
+          color: theme.colorScheme.surfaceVariant,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Ringkasan Stok",
+                    style: theme.textTheme.titleSmall
+                        ?.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(height: 12),
+                _buildStatRow(context, "Total Jenis Produk",
+                    "${products.length} Item", AppColors.neonCyan),
+                _buildStatRow(
+                    context, "Total Unit Tersedia", "$totalStock Unit", AppColors.softTeal),
+                _buildStatRow(
+                    context,
+                    "Barang Stok Menipis",
+                    "$lowStockCount Item",
+                    lowStockCount > 0 ? AppColors.warmOrange : AppColors.softTeal),
+                if (lowStockCount > 0) ...[
                   const SizedBox(height: 8),
-                  _buildStatRow(context, "Total Unit Tersedia", "${products.fold(0, (sum, p) => sum + p.stock)} Unit", kSoftTeal),
-                  const SizedBox(height: 8),
-                  _buildStatRow(context, "Barang Stok Menipis", "${lowStockProducts.length} Item",
-                      lowStockProducts.isNotEmpty ? kWarmOrange : kSoftTeal),
-                  if (lowStockProducts.isNotEmpty)
-                    Container(
-                      margin: const EdgeInsets.only(top: 12),
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: kWarmOrange.withAlpha(30),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Row(children: [
-                        Icon(Icons.warning, color: kWarmOrange, size: 16),
-                        SizedBox(width: 8),
-                        Expanded(
-                            child: Text("Ada produk perlu re-stock segera!",
-                                style: TextStyle(color: kWarmOrange, fontSize: 12))),
-                      ]),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColors.warmOrange.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                ],
-              ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.warning,
+                            color: AppColors.warmOrange, size: 16),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            "Ada $lowStockCount produk perlu re-stock segera!",
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                color: AppColors.warmOrange,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ]
+              ],
             ),
           ),
         ),
+        const SizedBox(height: 16),
+        Card(
+          color: theme.colorScheme.surfaceVariant,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                 Row(
+                   children: [
+                     Container(
+                       padding: const EdgeInsets.all(6),
+                       decoration: BoxDecoration(
+                         color: AppColors.softTeal.withOpacity(0.15),
+                         borderRadius: BorderRadius.circular(8)
+                       ),
+                       child: Icon(Icons.monetization_on, color: AppColors.softTeal, size: 18)),
+                     const SizedBox(width: 8),
+                     Text("Estimasi Nilai Inventaris", style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold)),
+                   ],
+                 ),
+                const SizedBox(height: 12),
+                Text("Total Estimasi Pendapatan", style: theme.textTheme.bodySmall),
+                Text(viewModel.formatRupiah(totalRevenue),
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                        color: AppColors.neonCyan, fontWeight: FontWeight.bold)),
+                const Divider(height: 24),
+                _buildStatRow(context, "Estimasi Modal (Cost)",
+                    viewModel.formatRupiah(totalCost), theme.colorScheme.onSurface),
+                _buildStatRow(
+                    context,
+                    "Potensi Keuntungan",
+                    viewModel.formatRupiah(potentialProfit),
+                    potentialProfit >= 0 ? AppColors.softTeal : AppColors.radiantRose),
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
 
-  Widget _buildStatRow(BuildContext context, String title, String value, Color valueColor) {
+  Widget _buildRightPanel(BuildContext context, List<Product> sortedProducts,
+      List<String> categories, AppViewModel viewModel) {
+    final theme = Theme.of(context);
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                onChanged: (value) => setState(() => _searchQuery = value),
+                decoration: InputDecoration(
+                  hintText: "Cari berdasarkan nama atau SKU...",
+                  prefixIcon: const Icon(Icons.search, size: 16),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            PopupMenuButton<String>(
+              onSelected: (String value) {
+                setState(() {
+                  _selectedSortKey = value;
+                });
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: 'Alphabetical',
+                  child: Text('Alphabetical'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Stock Level (Low to High)',
+                  child: Text('Stock Level (Low to High)'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Price',
+                  child: Text('Price'),
+                ),
+              ],
+              child: OutlinedButton.icon(
+                onPressed: null, // onPressed is handled by PopupMenuButton
+                icon: const Icon(Icons.sort),
+                label: Text(_selectedSortKey),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          height: 30,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: categories.length,
+            itemBuilder: (context, index) {
+              final category = categories[index];
+              final isSelected = _selectedCategory == category;
+              return ChoiceChip(
+                label: Text(category),
+                selected: isSelected,
+                onSelected: (selected) {
+                  if (selected) {
+                    setState(() {
+                      _selectedCategory = category;
+                    });
+                  }
+                },
+                selectedColor: theme.primaryColor.withOpacity(0.2),
+              );
+            },
+            separatorBuilder: (context, index) => const SizedBox(width: 6),
+          ),
+        ),
+        const SizedBox(height: 12),
+        Expanded(
+          child: sortedProducts.isEmpty
+              ? Center(
+                  child: Text(
+                  "Tidak ada produk di dalam inventaris",
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant
+                          .withOpacity(0.6)),
+                ))
+              : ListView.builder(
+                  itemCount: sortedProducts.length,
+                  itemBuilder: (context, index) {
+                    final product = sortedProducts[index];
+                    return _ProductItemCard(
+                      product: product,
+                      viewModel: viewModel,
+                      onEdit: () =>
+                          _showProductFormDialog(context, ref, product: product),
+                      onDelete: () =>
+                          _showDeleteConfirmationDialog(context, ref, product),
+                      onPrintLabel: () => widget.onNavigateToLabelPrinter(product),
+                      onShowQr: () => _showQrDialog(context, product, viewModel),
+                    );
+                  },
+                ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildStatRow(
+      BuildContext context, String title, String value, Color valueColor) {
     final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-        Text(value, style: theme.textTheme.labelMedium?.copyWith(color: valueColor)),
+        Text(title, style: theme.textTheme.bodySmall),
+        Text(value,
+            style: theme.textTheme.bodySmall
+                ?.copyWith(fontWeight: FontWeight.bold, color: valueColor)),
       ],
+    );
+  }
+
+  void _showProductFormDialog(BuildContext context, WidgetRef ref,
+      {Product? product}) {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          _ProductFormDialog(product: product, viewModel: ref.read(appViewModelProvider)),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(
+      BuildContext context, WidgetRef ref, Product product) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Hapus Produk?"),
+          content: Text(
+              "Apakah Anda yakin ingin menghapus '${product.name}'? Tindakan ini tidak dapat dibatalkan."),
+          actions: [
+            TextButton(
+              child: const Text("Batal"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: AppColors.radiantRose),
+              child: const Text("Hapus"),
+              onPressed: () {
+                ref.read(appViewModelProvider).deleteProduct(product);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showCsvDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (_) => _CsvImportExportDialog(viewModel: ref.read(appViewModelProvider)),
+    );
+  }
+
+  void _showQrDialog(
+      BuildContext context, Product product, AppViewModel viewModel) {
+    showDialog(
+      context: context,
+      builder: (_) => _ProductQrDialog(product: product, viewModel: viewModel),
     );
   }
 }
 
-class _ProductListPanel extends ConsumerStatefulWidget {
-  final void Function(Product) onNavigateToLabelPrinter;
-  const _ProductListPanel({required this.onNavigateToLabelPrinter});
+class _ProductItemCard extends StatelessWidget {
+  final Product product;
+  final AppViewModel viewModel;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final VoidCallback onPrintLabel;
+  final VoidCallback onShowQr;
 
-  @override
-  ConsumerState<_ProductListPanel> createState() => _ProductListPanelState();
-}
-
-class _ProductListPanelState extends ConsumerState<_ProductListPanel> {
-  String _searchQuery = '';
-  String _selectedCategory = 'Semua';
+  const _ProductItemCard({
+    required this.product,
+    required this.viewModel,
+    required this.onEdit,
+    required this.onDelete,
+    required this.onPrintLabel,
+    required this.onShowQr,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final products = ref.watch(productsProvider).asData?.value ?? [];
-    final categories = ['Semua', ...products.map((p) => p.category).toSet().toList()];
-
-    final filteredProducts = products.where((p) {
-      final matchesSearch = p.name.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          p.sku.toLowerCase().contains(_searchQuery.toLowerCase());
-      final matchesCategory = _selectedCategory == 'Semua' || p.category == _selectedCategory;
-      return matchesSearch && matchesCategory;
-    }).toList();
-
-    return Column(
-      children: [
-        TextField(
-          onChanged: (value) => setState(() => _searchQuery = value),
-          decoration: const InputDecoration(
-            hintText: "Cari berdasarkan nama atau SKU...",
-            prefixIcon: Icon(Icons.search, size: 18),
-            border: OutlineInputBorder(),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: categories.map((cat) {
-            final isSelected = _selectedCategory == cat;
-            return ChoiceChip(
-              label: Text(cat),
-              selected: isSelected,
-              onSelected: (selected) {
-                if (selected) setState(() => _selectedCategory = cat);
-              },
-              selectedColor: theme.colorScheme.primary.withAlpha(50),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-            );
-          }).toList(),
-        ),
-        const SizedBox(height: 12),
-        Expanded(
-          child: filteredProducts.isEmpty
-              ? Center(
-                  child: Text("Tidak ada produk ditemukan",
-                      style: TextStyle(color: theme.colorScheme.onSurfaceVariant.withAlpha(150))))
-              : ListView.builder(
-                  itemCount: filteredProducts.length,
-                  itemBuilder: (context, index) {
-                    final product = filteredProducts[index];
-                    return _ProductItemCard(
-                      product: product,
-                      onEdit: () => _showProductFormDialog(context, ref, product: product),
-                      onDelete: () => _showDeleteConfirmationDialog(context, ref, product),
-                      onPrintLabel: () {
-                        ref.read(appViewModelProvider).selectProductForLabel(product);
-                        widget.onNavigateToLabelPrinter(product);
-                      },
-                    );
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-}
-
-class _ProductItemCard extends ConsumerWidget {
-  final Product product;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
-  final VoidCallback onPrintLabel;
-
-  const _ProductItemCard({
-    required this.product,
-    required this.onEdit,
-    required this.onDelete,
-    required this.onPrintLabel,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final viewModel = ref.read(appViewModelProvider);
-    final isLowStock = product.stock <= product.minStockThreshold;
-    final profit = product.sellingPrice - product.purchasePrice;
-
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
-      color: const Color(0xFF131A2E),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: isLowStock ? kWarmOrange.withAlpha(128) : Colors.transparent, width: 1),
+        side: BorderSide(
+          color: product.isLowStock
+              ? AppColors.warmOrange.withOpacity(0.5)
+              : Colors.transparent,
+          width: 1,
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(14.0),
@@ -259,44 +446,109 @@ class _ProductItemCard extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(product.name, style: theme.textTheme.titleSmall?.copyWith(color: Colors.white)),
-                    const SizedBox(height: 4),
-                    Wrap(spacing: 8, children: [
-                      Chip(label: Text("SKU: ${product.sku}"), visualDensity: VisualDensity.compact),
-                      Chip(label: Text(product.category), visualDensity: VisualDensity.compact),
-                    ]),
-                  ]),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(product.name,
+                              style: theme.textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.bold)),
+                          if (product.isLowStock) ...[
+                            const SizedBox(width: 6),
+                            Icon(Icons.error,
+                                color: AppColors.radiantRose, size: 16),
+                          ]
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Chip(
+                            label: Text("SKU: ${product.sku}"),
+                            padding: EdgeInsets.zero,
+                          ),
+                          const SizedBox(width: 8),
+                          Chip(
+                            label: Text(product.category),
+                            padding: EdgeInsets.zero,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                Row(children: [
-                  IconButton(onPressed: onPrintLabel, icon: const Icon(Icons.print, color: kNeonCyan, size: 18)),
-                  IconButton(onPressed: onEdit, icon: const Icon(Icons.edit, color: kSoftTeal, size: 18)),
-                  IconButton(onPressed: onDelete, icon: const Icon(Icons.delete, color: kRadiantRose, size: 18)),
-                ]),
+                Row(
+                  children: [
+                    IconButton(
+                        icon: const Icon(Icons.qr_code),
+                        onPressed: onShowQr,
+                        tooltip: "QR Code"),
+                    IconButton(
+                        icon: const Icon(Icons.print),
+                        onPressed: onPrintLabel,
+                        tooltip: "Cetak Label"),
+                    IconButton(
+                        icon: const Icon(Icons.edit),
+                        onPressed: onEdit,
+                        tooltip: "Ubah"),
+                    IconButton(
+                        icon: const Icon(Icons.delete),
+                        color: AppColors.radiantRose,
+                        onPressed: onDelete,
+                        tooltip: "Hapus"),
+                  ],
+                ),
               ],
             ),
-            const Divider(height: 20),
+            const SizedBox(height: 12),
+            const Divider(),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Text(viewModel.formatRupiah(product.sellingPrice), style: theme.textTheme.titleSmall?.copyWith(color: Colors.white)),
-                  Text("Modal: ${viewModel.formatRupiah(product.purchasePrice)} • Untung: ${viewModel.formatRupiah(profit)}",
-                      style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant.withAlpha(200))),
-                ]),
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  Row(children: [
-                    Icon(Icons.circle, size: 8, color: isLowStock ? kWarmOrange : kSoftTeal),
-                    const SizedBox(width: 6),
-                    Text("${product.stock} Unit",
-                        style: theme.textTheme.labelMedium?.copyWith(color: isLowStock ? kWarmOrange : kSoftTeal)),
-                  ]),
-                  if (isLowStock)
-                    Text("Min: ${product.minStockThreshold} Unit",
-                        style: theme.textTheme.bodySmall?.copyWith(color: kWarmOrange, fontSize: 10)),
-                ]),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(viewModel.formatRupiah(product.sellingPrice),
+                        style: theme.textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold)),
+                    Text(
+                        "Modal: ${viewModel.formatRupiah(product.purchasePrice)} • Untung: ${viewModel.formatRupiah(product.profitPerUnit)}",
+                        style: theme.textTheme.bodySmall),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Row(
+                      children: [
+                        if (!product.isLowStock) ... [
+                           Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                                color: AppColors.softTeal,
+                                shape: BoxShape.circle),
+                          ),
+                           const SizedBox(width: 6),
+                        ],
+                        Text("${product.stock} Unit",
+                            style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: product.isLowStock
+                                    ? AppColors.warmOrange
+                                    : AppColors.softTeal)),
+                      ],
+                    ),
+                    if (product.isLowStock)
+                      Text("Min: ${product.minStockThreshold} Unit",
+                          style: theme.textTheme.bodySmall
+                              ?.copyWith(color: AppColors.warmOrange)),
+                  ],
+                )
               ],
-            ),
+            )
           ],
         ),
       ),
@@ -304,61 +556,55 @@ class _ProductItemCard extends ConsumerWidget {
   }
 }
 
-void _showProductFormDialog(BuildContext context, WidgetRef ref, {Product? product}) {
-  showDialog(
-    context: context,
-    builder: (_) => _ProductFormDialogContent(product: product),
-  );
-}
-
-class _ProductFormDialogContent extends ConsumerStatefulWidget {
+class _ProductFormDialog extends StatefulWidget {
   final Product? product;
-  const _ProductFormDialogContent({this.product});
+  final AppViewModel viewModel;
+
+  const _ProductFormDialog({this.product, required this.viewModel});
 
   @override
-  ConsumerState<_ProductFormDialogContent> createState() => _ProductFormDialogContentState();
+  __ProductFormDialogState createState() => __ProductFormDialogState();
 }
 
-class _ProductFormDialogContentState extends ConsumerState<_ProductFormDialogContent> {
+class __ProductFormDialogState extends State<_ProductFormDialog> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _name, _sku, _stock, _purchase, _sell, _category, _threshold;
+  late String _name;
+  late String _sku;
+  late int _stock;
+  late double _purchasePrice;
+  late double _sellingPrice;
+  late String _category;
+  late int _minStockThreshold;
 
   @override
   void initState() {
     super.initState();
-    final p = widget.product;
-    _name = TextEditingController(text: p?.name ?? '');
-    _sku = TextEditingController(text: p?.sku ?? '');
-    _stock = TextEditingController(text: p?.stock.toString() ?? '');
-    _purchase = TextEditingController(text: p?.purchasePrice.toString() ?? '');
-    _sell = TextEditingController(text: p?.sellingPrice.toString() ?? '');
-    _category = TextEditingController(text: p?.category ?? 'Umum');
-    _threshold = TextEditingController(text: p?.minStockThreshold.toString() ?? '5');
+    _name = widget.product?.name ?? "";
+    _sku = widget.product?.sku ?? "";
+    _stock = widget.product?.stock ?? 0;
+    _purchasePrice = widget.product?.purchasePrice ?? 0.0;
+    _sellingPrice = widget.product?.sellingPrice ?? 0.0;
+    _category = widget.product?.category ?? "Umum";
+    _minStockThreshold = widget.product?.minStockThreshold ?? 5;
   }
 
   void _onSave() {
     if (_formKey.currentState!.validate()) {
-      final viewModel = ref.read(appViewModelProvider);
+      _formKey.currentState!.save();
       if (widget.product == null) {
-        viewModel.addProduct(
-          name: _name.text,
-          sku: _sku.text,
-          stock: int.parse(_stock.text),
-          purchasePrice: double.parse(_purchase.text),
-          sellingPrice: double.parse(_sell.text),
-          category: _category.text,
-          threshold: int.parse(_threshold.text),
-        );
+        widget.viewModel.addProduct(
+            _name, _sku, _stock, _purchasePrice, _sellingPrice, _category, _minStockThreshold);
       } else {
-        viewModel.updateProduct(widget.product!.copyWith(
-          name: _name.text,
-          sku: _sku.text,
-          stock: int.parse(_stock.text),
-          purchasePrice: double.parse(_purchase.text),
-          sellingPrice: double.parse(_sell.text),
-          category: _category.text,
-          minStockThreshold: int.parse(_threshold.text),
-        ));
+        final updatedProduct = widget.product!.copyWith(
+          name: _name,
+          sku: _sku,
+          stock: _stock,
+          purchasePrice: _purchasePrice,
+          sellingPrice: _sellingPrice,
+          category: _category,
+          minStockThreshold: _minStockThreshold,
+        );
+        widget.viewModel.updateProduct(updatedProduct);
       }
       Navigator.of(context).pop();
     }
@@ -373,83 +619,235 @@ class _ProductFormDialogContentState extends ConsumerState<_ProductFormDialogCon
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(controller: _name, decoration: const InputDecoration(labelText: 'Nama Barang'), validator: (v) => v!.isEmpty ? 'Wajib diisi' : null),
-              TextFormField(controller: _sku, decoration: const InputDecoration(labelText: 'SKU / Barcode')),
-              Row(children: [
-                Expanded(child: TextFormField(controller: _stock, decoration: const InputDecoration(labelText: 'Stok'), keyboardType: TextInputType.number, validator: (v) => int.tryParse(v!) == null ? 'Angka tidak valid' : null)),
-                const SizedBox(width: 8),
-                Expanded(child: TextFormField(controller: _threshold, decoration: const InputDecoration(labelText: 'Min. Stok'), keyboardType: TextInputType.number, validator: (v) => int.tryParse(v!) == null ? 'Angka tidak valid' : null)),
-              ]),
-              Row(children: [
-                Expanded(child: TextFormField(controller: _purchase, decoration: const InputDecoration(labelText: 'Harga Beli'), keyboardType: TextInputType.number, validator: (v) => double.tryParse(v!) == null ? 'Angka tidak valid' : null)),
-                const SizedBox(width: 8),
-                Expanded(child: TextFormField(controller: _sell, decoration: const InputDecoration(labelText: 'Harga Jual'), keyboardType: TextInputType.number, validator: (v) => double.tryParse(v!) == null ? 'Angka tidak valid' : null)),
-              ]),
-              TextFormField(controller: _category, decoration: const InputDecoration(labelText: 'Kategori'), validator: (v) => v!.isEmpty ? 'Wajib diisi' : null),
+            children: <Widget>[
+              TextFormField(
+                initialValue: _name,
+                decoration: const InputDecoration(labelText: 'Nama Barang'),
+                onSaved: (value) => _name = value!,
+                validator: (value) =>
+                    value!.isEmpty ? 'Nama tidak boleh kosong' : null,
+              ),
+              TextFormField(
+                initialValue: _sku,
+                decoration: const InputDecoration(labelText: 'SKU / Barcode'),
+                onSaved: (value) => _sku = value!,
+              ),
+              TextFormField(
+                initialValue: _stock.toString(),
+                decoration: const InputDecoration(labelText: 'Stok'),
+                keyboardType: TextInputType.number,
+                onSaved: (value) => _stock = int.tryParse(value!) ?? 0,
+              ),
+              TextFormField(
+                initialValue: _purchasePrice.toString(),
+                decoration: const InputDecoration(labelText: 'Harga Beli'),
+                keyboardType: TextInputType.number,
+                onSaved: (value) =>
+                    _purchasePrice = double.tryParse(value!) ?? 0.0,
+              ),
+              TextFormField(
+                initialValue: _sellingPrice.toString(),
+                decoration: const InputDecoration(labelText: 'Harga Jual'),
+                keyboardType: TextInputType.number,
+                onSaved: (value) =>
+                    _sellingPrice = double.tryParse(value!) ?? 0.0,
+              ),
+              TextFormField(
+                initialValue: _category,
+                decoration: const InputDecoration(labelText: 'Kategori'),
+                onSaved: (value) => _category = value!,
+              ),
+              TextFormField(
+                initialValue: _minStockThreshold.toString(),
+                decoration: const InputDecoration(labelText: 'Min. Threshold'),
+                keyboardType: TextInputType.number,
+                onSaved: (value) =>
+                    _minStockThreshold = int.tryParse(value!) ?? 5,
+              ),
             ],
           ),
         ),
       ),
-      actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Batal")),
-        ElevatedButton(onPressed: _onSave, child: const Text("Simpan")),
+      actions: <Widget>[
+        TextButton(
+          child: const Text('Batal'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        ElevatedButton(
+          child: const Text('Simpan'),
+          onPressed: _onSave,
+        ),
       ],
     );
   }
 }
 
-void _showDeleteConfirmationDialog(BuildContext context, WidgetRef ref, Product product) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      icon: const Icon(Icons.delete, color: kRadiantRose),
-      title: const Text("Hapus Produk?"),
-      content: Text("Anda yakin ingin menghapus '${product.name}'? Tindakan ini tidak dapat dibatalkan."),
+class _CsvImportExportDialog extends StatefulWidget {
+  final AppViewModel viewModel;
+  const _CsvImportExportDialog({required this.viewModel});
+
+  @override
+  __CsvImportExportDialogState createState() => __CsvImportExportDialogState();
+}
+
+class __CsvImportExportDialogState extends State<_CsvImportExportDialog> {
+  final TextEditingController _csvController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Impor / Ekspor CSV Produk"),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Format: Nama,SKU,Stok,HargaBeli,HargaJual,Kategori,Threshold",
+                style: TextStyle(fontSize: 11)),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _csvController,
+              maxLines: 5,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Tempel data CSV di sini untuk impor...",
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      final csv = widget.viewModel.exportProductsToCsv();
+                      _csvController.text = csv;
+                    },
+                    icon: const Icon(Icons.content_copy, size: 14),
+                    label: const Text("Salin Ekspor", style: TextStyle(fontSize: 11)),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if (_csvController.text.isNotEmpty) {
+                        final success = widget.viewModel
+                            .importProductsFromCsv(_csvController.text);
+                        if (success) {
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.upload_file, size: 14),
+                    label: const Text("Impor CSV", style: TextStyle(fontSize: 11)),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Batal")),
-        ElevatedButton(
-          onPressed: () {
-            ref.read(appViewModelProvider).deleteProduct(product);
-            Navigator.of(context).pop();
-          },
-          style: ElevatedButton.styleFrom(backgroundColor: kRadiantRose, foregroundColor: Colors.white),
-          child: const Text("Hapus"),
+        TextButton(
+          child: const Text("Tutup"),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ],
-    ),
-  );
+    );
+  }
 }
 
-void _showCsvDialog(BuildContext context, WidgetRef ref) {
-  final csvController = TextEditingController();
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      title: const Text("Impor / Ekspor CSV"),
+class _ProductQrDialog extends StatelessWidget {
+  final Product product;
+  final AppViewModel viewModel;
+
+  const _ProductQrDialog({required this.product, required this.viewModel});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final qrText = product.sku.isEmpty ? "PROD-${product.id}" : product.sku;
+
+    return AlertDialog(
+      backgroundColor: const Color(0xFF0B0F19),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      title: Row(children: const [
+        Icon(Icons.qr_code, color: AppColors.neonCyan),
+        SizedBox(width: 8),
+        Text("Cetak Label & QR Code")
+      ]),
       content: SingleChildScrollView(
-          child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text("Format: Nama,SKU,Stok,HargaBeli,HargaJual,Kategori,Threshold", style: TextStyle(fontSize: 12)),
-        const SizedBox(height: 8),
-        TextField(controller: csvController, maxLines: 5, decoration: const InputDecoration(hintText: "Tempel CSV di sini...")),
-      ])),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text("Pratinjau Stiker Thermal (Siap Cetak)",
+                style: TextStyle(fontSize: 11)),
+            const SizedBox(height: 8),
+            Card(
+              color: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Column(
+                  children: [
+                    const Text("SS SELLER SPHERE",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1)),
+                    const SizedBox(height: 2),
+                    Container(height: 1, color: Colors.black),
+                    const SizedBox(height: 10),
+                    QrImageView(
+                      data: qrText,
+                      version: QrVersions.auto,
+                      size: 130.0,
+                      backgroundColor: Colors.white,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      product.name.toUpperCase(),
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 12),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                    ),
+                    Text("SKU: $qrText",
+                        style: const TextStyle(
+                            color: Colors.black87, fontSize: 10)),
+                    const SizedBox(height: 4),
+                    Text(viewModel.formatRupiah(product.sellingPrice),
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 14)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+             ElevatedButton.icon(
+                onPressed: () {
+                   viewModel.triggerNotification(
+                        "Cetak QR Selesai 🖨️",
+                        "Label QR Code untuk ${product.name} berhasil dicetak.");
+                },
+                icon: const Icon(Icons.print, size: 16),
+                label: const Text("Cetak QR Label"),
+                style: ElevatedButton.styleFrom(backgroundColor: AppColors.softTeal, foregroundColor: Colors.black),
+              )
+          ],
+        ),
+      ),
       actions: [
-        TextButton(onPressed: () async {
-          final csv = await ref.read(appViewModelProvider).exportProductsToCsv();
-          csvController.text = csv;
-        }, child: const Text("Ekspor ke Field")),
-        TextButton(onPressed: () {
-          if (csvController.text.isNotEmpty) {
-            ref.read(appViewModelProvider).importProductsFromCsv(csvController.text);
-            Navigator.of(context).pop();
-          }
-        }, child: const Text("Impor dari Field")),
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Tutup")),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text("Tutup"),
+        )
       ],
-    ),
-  );
+    );
+  }
 }
-
-final productsProvider = StreamProvider<List<Product>>((ref) {
-  return ref.watch(appViewModelProvider).products;
-});

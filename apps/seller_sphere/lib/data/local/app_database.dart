@@ -44,6 +44,28 @@ class Product {
     this.minStockThreshold = 5,
   });
 
+  Product copyWith({
+    int? id,
+    String? name,
+    String? sku,
+    int? stock,
+    double? purchasePrice,
+    double? sellingPrice,
+    String? category,
+    int? minStockThreshold,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      sku: sku ?? this.sku,
+      stock: stock ?? this.stock,
+      purchasePrice: purchasePrice ?? this.purchasePrice,
+      sellingPrice: sellingPrice ?? this.sellingPrice,
+      category: category ?? this.category,
+      minStockThreshold: minStockThreshold ?? this.minStockThreshold,
+    );
+  }
+
   @ignore
   bool get isLowStock => stock <= minStockThreshold;
 

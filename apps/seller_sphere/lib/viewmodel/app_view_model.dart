@@ -259,8 +259,8 @@ class AppViewModel extends ChangeNotifier {
 
   Future<void> _checkTargetMilestoneAchievement(double newSaleAmount) async {
       final target = _todayTarget?.targetAmount ?? 1000000.0;
-      final todayTotalSales = await getTodaySalesTotal() + newSaleAmount;
-      final previousSales = todayTotalSales - newSaleAmount;
+      final previousSales = await getTodaySalesTotal();
+      final todayTotalSales = previousSales + newSaleAmount;
       
       final prevPercentage = (previousSales / target) * 100;
       final newPercentage = (todayTotalSales / target) * 100;
