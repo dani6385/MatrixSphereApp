@@ -41,3 +41,6 @@ const Color kSlateSurfaceLight = kLightSurface;
 const Color kSlateBorderLight = kLightBorder;
 const Color kTextOnLightPrimary = kLightTextPrimary;
 const Color kTextOnLightSecondary = kLightTextSecondary;
+const Color kWarningColor = Color(0xFFF57C00); // WarmOrange
+const Color kSuccessColor = Color(0xFF388E3C); // SoftTeal
+const Color kInfoColor = Color(0xFF0288D1);    // NeonCyan
