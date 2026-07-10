@@ -1,5 +1,5 @@
 name: matrix_sphere_workspace
-description: Matrix Sphere adalah sistem pengendalian dan moderasi akun otomatis yang berfungsi memelihara kepatuhan aturan dalam platform belanja.
+description: Matrix Sphere sistem pengendalian dan moderasi akun otomatis yang berfungsi memelihara kepatuhan aturan dalam platform belanja.
 
 publish_to: 'none'
 
@@ -13,6 +13,12 @@ workspace:
   - packages/*
 dependencies:
   animations: ^2.2.0
+  cloud_firestore: ^6.6.0
   flutter:
     sdk: flutter
+  flutter_test:
+    sdk: flutter
+  intl: ^0.20.3
   provider: ^6.1.5+1
+  shared_services: ^1.0.0
+  shared_ui: ^1.0.0
