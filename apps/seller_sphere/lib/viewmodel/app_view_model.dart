@@ -814,9 +814,3 @@ class AppViewModel extends ChangeNotifier {
     super.dispose();
   }
 }
-
-extension on FutureOr<double> {
-  FutureOr<double> operator +(double other) {
-    return then((value) => value + other);
-  }
-}
