@@ -4,6 +4,55 @@ import 'dart:developer' as developer;
 class RtdbService {
   final FirebaseDatabase _db = FirebaseDatabase.instance;
 
+  /// Retrieves a stream of data from the specified path.
+  Stream<DatabaseEvent> getDataStream(String path) {
+    try {
+      final ref = _db.ref(path);
+      developer.log('Streaming data from $path', name: 'RtdbService');
+      return ref.onValue;
+    } catch (e, stackTrace) {
+      developer.log('Error getting data stream from $path', name: 'RtdbService', error: e, stackTrace: stackTrace, level: 1000);
+      rethrow;
+    }
+  }
+
+  /// Adds data to a list at the specified path, generating a unique ID.
+  Future<void> addData(String path, Map<String, dynamic> data) async {
+    try {
+      final ref = _db.ref(path).push();
+      await ref.set(data);
+      developer.log('Data added to $path with key ${ref.key}', name: 'RtdbService');
+    } catch (e, stackTrace) {
+      developer.log('Error adding data to $path', name: 'RtdbService', error: e, stackTrace: stackTrace, level: 1000);
+      rethrow;
+    }
+  }
+
+  /// Updates data at the specified path.
+  Future<void> updateData(String path, Map<String, dynamic> data) async {
+    try {
+      final ref = _db.ref(path);
+      await ref.update(data);
+      developer.log('Data updated at $path', name: 'RtdbService');
+    } catch (e, stackTrace) {
+      developer.log('Error updating data at $path', name: 'RtdbService', error: e, stackTrace: stackTrace, level: 1000);
+      rethrow;
+    }
+  }
+
+  /// Deletes data at the specified path.
+  Future<void> deleteData(String path) async {
+    try {
+      final ref = _db.ref(path);
+      await ref.remove();
+      developer.log('Data deleted from $path', name: 'RtdbService');
+    } catch (e, stackTrace) {
+      developer.log('Error deleting data from $path', name: 'RtdbService', error: e, stackTrace: stackTrace, level: 1000);
+      rethrow;
+    }
+  }
+
+
   /// Mengambil data sesi pengguna dari Firebase Realtime Database.
   ///
   /// [mikrotikId] adalah ID dari node mikrotik (misal: "mikrotik_A_id").
