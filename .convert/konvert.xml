@@ -1,10 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <path
-        android:fillColor="#0F172A"
-        android:pathData="M0,0h108v108h-108z" />
-</vector>
+/ip firewall mangle
+
+# Tandai koneksi dari LAN
+add chain=prerouting in-interface=bridge-LAN dst-address-type=!local per-connection-classifier=both-addresses:2/0 action=mark-connection new-connection-mark=ISP1_conn passthrough=yes comment="PCC ISP1"
+add chain=prerouting in-interface=bridge-LAN dst-address-type=!local per-connection-classifier=both-addresses:2/1 action=mark-connection new-connection-mark=ISP2_conn passthrough=yes comment="PCC ISP2"
+
+# Tandai routing berdasarkan koneksi yang telah ditandai
+add chain=prerouting in-interface=bridge-LAN connection-mark=ISP1_conn action=mark-routing new-routing-mark=to_ISP1 passthrough=no
+add chain=prerouting in-interface=bridge-LAN connection-mark=ISP2_conn action=mark-routing new-routing-mark=to_ISP2 passthrough=no
+/ip firewall nat
+
+add chain=srcnat out-interface=eth1_ISP1 action=masquerade comment="NAT for ISP1"
+add chain=srcnat out-interface=eth2_ISP2 action=masquerade comment="NAT for ISP2"
+/ip route
+
+add dst-address=0.0.0.0/0 gateway=192.168.10.1 routing-mark=to_ISP1 check-gateway=ping
+add dst-address=0.0.0.0/0 gateway=192.168.50.1 routing-mark=to_ISP2 check-gateway=ping
+
+# Routes untuk failover (jika salah satu ISP mati)
+add dst-address=0.0.0.0/0 gateway=192.168.10.1 distance=1 check-gateway=ping
+add dst-address=0.0.0.0/0 gateway=192.168.50.1 distance=2 check-gateway=ping
