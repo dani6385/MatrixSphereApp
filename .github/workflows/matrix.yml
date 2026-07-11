@@ -137,7 +137,6 @@ jobs:
           # Mengambil kredensial secara dinamis sesuai nama secret yang didefinisikan pada matrix
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: "matrixsphere-c3de9" # ID Proyek Firebase Anda
-          site: ${{ matrix.firebase_site }} # Menentukan situs tujuan secara dinamis
           channelId: live
           cwd: ${{ matrix.dir }}
 
