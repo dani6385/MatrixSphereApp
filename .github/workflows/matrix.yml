@@ -24,18 +24,18 @@ jobs:
           filters: |
             shop_sphere:
               - 'apps/shop_sphere/**'
-              - 'pubspec.yaml'
+              - 'apps/shop_sphere/pubspec.yaml'
             seller_sphere:
               - 'apps/seller_sphere/**'
-              - 'pubspec.yaml'
+              - 'apps/seller_sphere/pubspec.yaml'
             client_connectivity:
               - 'apps/client_connectivity/**'
-              - 'pubspec.yaml'
+              - 'apps/client_connectivity/pubspec.yaml'
             admin_mikrotik:
               - 'apps/admin_mikrotik/**'
-              - 'pubspec.yaml'
+              - 'apps/admin_mikrotik/pubspec.yaml'
             matrix_sphere:
-              - 'apps/matrix_sphere/**'
+              - '**'
               - 'pubspec.yaml'
 
   # JOB 2: Melakukan Build dan Deploy secara paralel menggunakan Matrix
@@ -121,13 +121,7 @@ jobs:
         if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: flutter build web --release
         working-directory: ${{ matrix.dir }} # Berpindah ke folder aplikasi yang sesuai sebelum build
-         # UNTUK MENYALIN HASIL BUILD KE FOLDER UTAMA
-      - name: Copy Build to Root
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
-        run: |
-          mkdir -p build/web
-          cp -r ${{ matrix.dir }}/build/web/* build/web/
-          cp ${{ matrix.dir }}/firebase.json ./firebase.json
+
       # Mengunggah hasil build aplikasi ke Firebase Hosting masing-masing
       - name: Deploy to Firebase Hosting
         if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
@@ -138,6 +132,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: "matrixsphere-c3de9" # ID Proyek Firebase Anda
           channelId: live
+          entryPoint: ${{ matrix.dir }}
 
   # 2. BUILD ANDROID
   build_android:
@@ -145,10 +140,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
       - uses: subosito/flutter-action@v2
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         with: { channel: 'stable', cache: true }
         # 1. Cache SDK & Dependensi (Pub & Gradle)
       - name: Cache Pub & Gradle
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: actions/cache@v4
         with:
           path: |
@@ -159,6 +157,7 @@ jobs:
 
       # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
       - name: Cache Flutter Build
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: actions/cache@v4
         with:
           path: build
@@ -166,9 +165,11 @@ jobs:
           restore-keys: |
             build-${{ runner.os }}-
       - name: Build Apk
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: flutter build apk --release
         working-directory: apps/client_connectivity
       - name: Deploy to Firebase
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: w9jds/firebase-action@master
         with:
           args: deploy --only hosting --project matrixsphere-c3de9
