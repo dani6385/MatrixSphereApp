@@ -1,0 +1,199 @@
+name: Dynamic Monorepo Multiplatform Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # JOB 1: Deteksi perubahan folder (Sama seperti sebelumnya)
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Paths Filter
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            seller_sphere:
+              - 'apps/seller_sphere/**'
+            client_connectivity:
+              - 'apps/client_connectivity/**'
+            admin_mikrotik:
+              - 'apps/admin_mikrotik/**'
+            matrix_sphere:
+              - 'lib/**'
+            shop_sphere:
+              - 'apps/shop_sphere/**'
+
+      - name: Generate Dynamic Matrix JSON
+        id: set-matrix
+        run: |
+          MATRIX="[]"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MATRIX='["seller_sphere", "client_connectivity", "admin_mikrotik", "matrix_sphere", "shop_sphere"]'
+          else
+            SELLER="${{ steps.filter.outputs.seller_sphere }}"
+            CLIENT="${{ steps.filter.outputs.client_connectivity }}"
+            ADMIN="${{ steps.filter.outputs.admin_mikrotik }}"
+            MATRIX_SPHERE="${{ steps.filter.outputs.matrix_sphere }}"
+            SHOP="${{ steps.filter.outputs.shop_sphere }}"
+
+            LIST=()
+            [ "$SELLER" = "true" ] && LIST+=('"seller_sphere"')
+            [ "$CLIENT" = "true" ] && LIST+=('"client_connectivity"')
+            [ "$ADMIN" = "true" ] && LIST+=('"admin_mikrotik"')
+            [ "$MATRIX_SPHERE" = "true" ] && LIST+=('"matrix_sphere"')
+            [ "$SHOP" = "true" ] && LIST+=('"shop_sphere"')
+
+            if [ ${#LIST[@]} -gt 0 ]; then
+              IFS=,
+              MATRIX="[${LIST[*]}]"
+            fi
+          fi
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+
+  # JOB 2: Build Multiplatform menggunakan 2D Matrix
+  build-multiplatform:
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
+    
+    # Menentukan OS Runner secara dinamis berdasarkan platform target
+    runs-on: ${{ matrix.os }}
+    
+    defaults:
+      run:
+        # Menggunakan Bash secara global (bahkan di Windows) agar sintaksis skrip tetap seragam
+        shell: bash
+
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+        platform: [web, android, windows, linux, macos]
+        # Memetakan target platform ke OS Runner yang sesuai
+        include:
+          - platform: linux
+            os: ubuntu-latest
+          - platform: android
+            os: ubuntu-latest
+          - platform: linux
+            os: ubuntu-latest
+          - platform: windows
+            os: windows-latest
+          - platform: macos
+            os: macos-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Mengatur variabel folder kerja dan kredensial Firebase
+      - name: Resolve Project Variables
+        id: vars
+        run: |
+          PROJECT="${{ matrix.project }}"
+          case "$PROJECT" in
+            "seller_sphere")
+              echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_SS_SELLER }}" >> $GITHUB_OUTPUT
+              echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
+              ;;
+            "client_connectivity")
+              echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_CC_CLIENT }}" >> $GITHUB_OUTPUT
+              echo "app_id=${{ secrets.FIREBASE_APP_ID_CLIENT }}" >> $GITHUB_OUTPUT
+              ;;
+            "admin_mikrotik")
+              echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_ADMIN }}" >> $GITHUB_OUTPUT
+              echo "app_id=${{ secrets.FIREBASE_APP_ID_ADMIN }}" >> $GITHUB_OUTPUT
+              ;;
+            "matrix_sphere")
+              echo "dir=apps/matrix_sphere" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_MATRIX }}" >> $GITHUB_OUTPUT
+              echo "app_id=${{ secrets.FIREBASE_APP_ID_MATRIX }}" >> $GITHUB_OUTPUT
+              ;;
+            "shop_sphere")
+              echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_SHOP }}" >> $GITHUB_OUTPUT
+              echo "app_id=${{ secrets.FIREBASE_APP_ID_SHOP }}" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      # Langkah khusus Linux: Memasang dependensi GTK/CMake yang dibutuhkan Flutter
+      - name: Install Linux Build Dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: Set up Java 17 (Hanya untuk Android)
+        if: matrix.platform == 'android'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Flutter Desktop Platforms
+        run: |
+          flutter config --enable-windows-desktop
+          flutter config --enable-linux-desktop
+          flutter config --enable-macos-desktop
+
+      # Proses kompilasi berdasarkan platform target masing-masing runner
+      - name: Build Application
+        run: |
+          cd ${{ steps.vars.outputs.dir }}
+          if [ "${{ matrix.platform }}" = "android" ]; then
+            flutter build apk --release
+          elif [ "${{ matrix.platform }}" = "windows" ]; then
+            flutter build windows --release
+          elif [ "${{ matrix.platform }}" = "linux" ]; then
+            flutter build linux --release
+          elif [ "${{ matrix.platform }}" = "macos" ]; then
+            flutter build macos --release
+          fi
+
+      # ALUR DISTRIBUSI 1: Jika Android -> Deploy ke Firebase App Distribution
+      - name: Deploy to Firebase App Distribution (Android Only)
+        if: matrix.platform == 'android'
+        uses: w9jds/firebase-action@v2.2.0
+        with:
+          args: appdistribution:distribute ${{ steps.vars.outputs.dir }}/build/app/outputs/flutter-apk/app-release.apk --app "${{ steps.vars.outputs.app_id }}" --groups "seller"
+        env:
+          GCP_SA_KEY: ${{ steps.vars.outputs.service_account }}
+
+      # ALUR DISTRIBUSI 2: Jika Desktop (Win/Linux/Mac) -> Unggah ke GitHub Artifacts
+      - name: Determine Desktop Artifact Path
+        if: matrix.platform != 'android'
+        id: artifact-path
+        run: |
+          DIR="${{ steps.vars.outputs.dir }}"
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            echo "path=$DIR/build/windows/x64/runner/Release" >> $GITHUB_OUTPUT
+          elif [ "${{ matrix.platform }}" = "linux" ]; then
+            echo "path=$DIR/build/linux/x64/release/bundle" >> $GITHUB_OUTPUT
+          elif [ "${{ matrix.platform }}" = "macos" ]; then
+            echo "path=$DIR/build/macos/Build/Products/Release" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload Desktop Artifacts (Windows, Linux, macOS)
+        if: matrix.platform != 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.project }}-${{ matrix.platform }}-build
+          path: ${{ steps.artifact-path.outputs.path }}

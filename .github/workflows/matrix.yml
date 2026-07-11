@@ -11,11 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       # Mengekspor hasil deteksi agar bisa dibaca oleh job berikutnya
-      shop_sphere: ${{ steps.filter.outputs.shop_sphere }}
-      seller_sphere: ${{ steps.filter.outputs.seller_sphere }}
-      client_connectivity: ${{ steps.filter.outputs.client_connectivity }}
-      admin_mikrotik: ${{ steps.filter.outputs.admin_mikrotik }}
-      matrix_sphere: ${{ steps.filter.outputs.matrix_sphere }}
+        matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
       - uses: dorny/paths-filter@v3
