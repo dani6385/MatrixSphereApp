@@ -1,16 +1,14 @@
-
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../viewmodels/app_view_model.dart' hide AppViewModel, Product;
-import 'package:shared_ui/shared_ui.dart'; // Assuming colors are here
-import 'dashboard_screen.dart'; // For OrderPickupItem, assuming it's defined here
+import 'package:seller_sphere/screens/dashboard_screen.dart';
+import '../viewmodels/app_view_model.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class TransactionScreen extends StatefulWidget {
   const TransactionScreen({super.key});
 
   @override
-  _TransactionScreenState createState() => _TransactionScreenState();
+  State<TransactionScreen> createState() => _TransactionScreenState();
 }
 
 class _TransactionScreenState extends State<TransactionScreen> {
@@ -32,7 +30,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Custom Segmented Pill Tab Selector
               Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -49,7 +46,7 @@ class _TransactionScreenState extends State<TransactionScreen> {
                           duration: const Duration(milliseconds: 200),
                           padding: const EdgeInsets.symmetric(vertical: 10),
                           decoration: BoxDecoration(
-                            color: isSelected ? neonCyan : Colors.transparent,
+                            color: isSelected ? kNeonCyan : Colors.transparent,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -80,8 +77,6 @@ class _TransactionScreenState extends State<TransactionScreen> {
     );
   }
 }
-
-// --- KASIR (POS) TAB WIDGETS ---
 
 class _PosTabContent extends StatefulWidget {
   const _PosTabContent();
@@ -130,7 +125,6 @@ class __PosTabContentState extends State<_PosTabContent> {
       children: [
         Column(
           children: [
-            // Search Bar
             TextField(
               onChanged: (value) => setState(() => _searchQuery = value),
               decoration: const InputDecoration(
@@ -141,10 +135,9 @@ class __PosTabContentState extends State<_PosTabContent> {
               ),
             ),
             const SizedBox(height: 12),
-            // Products Grid
             Expanded(
               child: GridView.builder(
-                padding: const EdgeInsets.only(bottom: 80), // Padding for floating bar
+                padding: const EdgeInsets.only(bottom: 80),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 8,
@@ -163,7 +156,6 @@ class __PosTabContentState extends State<_PosTabContent> {
             ),
           ],
         ),
-        // Floating Cart Bar
         if (cart.isNotEmpty)
           Positioned(
             bottom: 8,
@@ -193,7 +185,7 @@ class _PosProductCard extends StatelessWidget {
 
     return Card(
       color: isOutOfStock
-          ? Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5)
+          ? Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(128)
           : product.isLowStock
               ? const Color(0xFF281116)
               : Theme.of(context).colorScheme.surfaceContainerHighest,
@@ -225,7 +217,7 @@ class _PosProductCard extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
-                            color: isOutOfStock ? Colors.white.withValues(alpha: 0.5) : Colors.white,
+                            color: isOutOfStock ? Colors.white.withAlpha(128) : Colors.white,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -234,7 +226,7 @@ class _PosProductCard extends StatelessWidget {
                           "SKU: ${product.sku}",
                           style: TextStyle(
                             fontSize: 9,
-                            color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                            color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(153),
                           ),
                         ),
                       ],
@@ -243,7 +235,7 @@ class _PosProductCard extends StatelessWidget {
                   if (cartQty > 0)
                     CircleAvatar(
                       radius: 10,
-                      backgroundColor: neonCyan,
+                      backgroundColor: kNeonCyan,
                       child: Text(
                         cartQty.toString(),
                         style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.black),
@@ -253,11 +245,11 @@ class _PosProductCard extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                alignItems: Alignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     viewModel.formatRupiah(product.sellingPrice),
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: neonCyan),
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: kNeonCyan),
                   ),
                   Text(
                     isOutOfStock ? "Habis" : "Stok: ${product.stock}",
@@ -265,10 +257,10 @@ class _PosProductCard extends StatelessWidget {
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
                       color: isOutOfStock
-                          ? radiantRose
+                          ? kRadiantRose
                           : product.isLowStock
-                              ? warmOrange
-                              : softTeal,
+                              ? kWarmOrange
+                              : kSoftTeal,
                     ),
                   ),
                 ],
@@ -295,7 +287,7 @@ class _FloatingCartBar extends StatelessWidget {
       color: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: neonCyan.withValues(alpha: 0.5)),
+        side: BorderSide(color: kNeonCyan.withAlpha(128)),
       ),
       elevation: 8,
       child: InkWell(
@@ -312,7 +304,7 @@ class _FloatingCartBar extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 14,
-                      backgroundColor: neonCyan,
+                      backgroundColor: kNeonCyan,
                       child: Text(totalItems.toString(), style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
                     ),
                     const SizedBox(width: 10),
@@ -321,7 +313,7 @@ class _FloatingCartBar extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text("Keranjang Belanja", style: TextStyle(fontSize: 11, color: Colors.grey)),
-                        Text(viewModel.formatRupiah(cartTotal), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: neonCyan)),
+                        Text(viewModel.formatRupiah(cartTotal), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: kNeonCyan)),
                       ],
                     ),
                   ],
@@ -329,7 +321,7 @@ class _FloatingCartBar extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: softTeal,
+                    color: kSoftTeal,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Row(
@@ -388,7 +380,7 @@ class __CheckoutSheetState extends State<_CheckoutSheet> {
                   viewModel.clearCart();
                   Navigator.pop(context);
                 },
-                child: const Text("Hapus Semua", style: TextStyle(color: radiantRose)),
+                child: const Text("Hapus Semua", style: TextStyle(color: kRadiantRose)),
               )
             ],
           ),
@@ -414,7 +406,7 @@ class __CheckoutSheetState extends State<_CheckoutSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text("Total Bayar", style: TextStyle(fontSize: 16)),
-              Text(viewModel.formatRupiah(widget.cartTotal), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: neonCyan)),
+              Text(viewModel.formatRupiah(widget.cartTotal), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: kNeonCyan)),
             ],
           ),
           const SizedBox(height: 16),
@@ -428,7 +420,7 @@ class __CheckoutSheetState extends State<_CheckoutSheet> {
               },
               icon: const Icon(Icons.receipt),
               label: const Text("Bayar & Cetak Nota"),
-              style: ElevatedButton.styleFrom(backgroundColor: softTeal, foregroundColor: Colors.black),
+              style: ElevatedButton.styleFrom(backgroundColor: kSoftTeal, foregroundColor: Colors.black),
             ),
           ),
         ],
@@ -454,7 +446,7 @@ class _CartItemRow extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                         Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
-                        Text(viewModel.formatRupiah(product.sellingPrice * quantity), style: const TextStyle(color: neonCyan)),
+                        Text(viewModel.formatRupiah(product.sellingPrice * quantity), style: const TextStyle(color: kNeonCyan)),
                     ],
                   ),
                 ),
@@ -489,10 +481,10 @@ class _PaymentMethodSelector extends StatelessWidget {
               label: Text(method, style: const TextStyle(fontSize: 12)),
               selected: selectedMethod == method,
               onSelected: (_) => onChanged(method),
-              selectedColor: neonCyan.withValues(alpha: 0.2),
+              selectedColor: kNeonCyan.withAlpha(51),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(color: selectedMethod == method ? neonCyan : Colors.grey)
+                  side: BorderSide(color: selectedMethod == method ? kNeonCyan : Colors.grey)
               ),
             ),
           ),
@@ -501,8 +493,6 @@ class _PaymentMethodSelector extends StatelessWidget {
     );
   }
 }
-
-// --- ORDERAN MASUK TAB WIDGETS ---
 
 class _OrdersTabContent extends StatefulWidget {
   const _OrdersTabContent();
@@ -528,7 +518,6 @@ class __OrdersTabContentState extends State<_OrdersTabContent> {
 
     return Column(
       children: [
-         // Search
         TextField(
           onChanged: (value) => setState(() => _searchQuery = value),
           decoration: const InputDecoration(
@@ -538,7 +527,6 @@ class __OrdersTabContentState extends State<_OrdersTabContent> {
           ),
         ),
         const SizedBox(height: 12),
-        // Filter Chips
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
@@ -555,7 +543,6 @@ class __OrdersTabContentState extends State<_OrdersTabContent> {
             ),
         ),
         const SizedBox(height: 12),
-        // Orders List
         Expanded(
           child: filteredOrders.isEmpty
               ? const Center(child: Text("Tidak ada orderan ditemukan."))
@@ -563,7 +550,6 @@ class __OrdersTabContentState extends State<_OrdersTabContent> {
                   itemCount: filteredOrders.length,
                   itemBuilder: (context, index) {
                     final order = filteredOrders[index];
-                    // Using the previously defined OrderPickupItem from dashboard_screen
                     return OrderPickupItem(order: order, viewModel: viewModel);
                   },
                 ),

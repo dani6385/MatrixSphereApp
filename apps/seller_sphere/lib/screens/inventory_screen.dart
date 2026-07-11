@@ -9,13 +9,15 @@ class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key, required this.onNavigateToLabelPrinter});
 
   @override
-  _InventoryScreenState createState() => _InventoryScreenState();
+  State<InventoryScreen> createState() {
+    return _InventoryScreenState();
+  }
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
   String _searchQuery = "";
   String _selectedCategory = "Semua";
-  String _selectedSortKey = "Alphabetical";
+  final String _selectedSortKey = "Alphabetical";
 
   void _showAddProductDialog() {
     showDialog(
@@ -150,8 +152,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                     label: Text(category),
                     selected: isSelected,
                     onSelected: (selected) {
-                      if (selected)
+                      if (selected) {
                         setState(() => _selectedCategory = category);
+                      }
                     },
                   ),
                 );
@@ -322,7 +325,7 @@ class _ProductItemCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+        color: Theme.of(context).colorScheme.surface.withAlpha(128),
       ),
       child: firstImageUrl.isNotEmpty
           ? Image.network(
@@ -362,7 +365,9 @@ class ProductFormDialog extends StatefulWidget {
   });
 
   @override
-  _ProductFormDialogState createState() => _ProductFormDialogState();
+  State<ProductFormDialog> createState() {
+    return _ProductFormDialogState();
+  }
 }
 
 class _ProductFormDialogState extends State<ProductFormDialog> {

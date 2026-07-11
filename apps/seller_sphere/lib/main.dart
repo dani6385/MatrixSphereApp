@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/dashboard_screen.dart' hide AppViewModel;
+import 'screens/dashboard_screen.dart';
 import 'screens/inventory_screen.dart';
 import 'screens/transaction_screen.dart';
 import 'screens/label_printer_screen.dart';
@@ -10,6 +10,7 @@ import 'screens/report_screen.dart';
 import 'screens/sync_settings_screen.dart';
 import 'screens/notification_screen.dart';
 import 'screens/chat_screen.dart';
+import 'viewmodels/app_view_model.dart' as viewmodel;
 
 import 'package:shared_ui/shared_ui.dart';
 
@@ -28,8 +29,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AppViewModel(),
-      child: Consumer<AppViewModel>(
+      create: (_) => viewmodel.AppViewModel(),
+      child: Consumer<viewmodel.AppViewModel>(
         builder: (context, viewModel, child) {
           return MaterialApp(
             title: 'Seller Sphere',
@@ -49,8 +50,7 @@ class MainShell extends StatefulWidget {
   const MainShell({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _MainShellState createState() => _MainShellState();
+  State<MainShell> createState() => _MainShellState();
 }
 
 class _MainShellState extends State<MainShell> {
@@ -65,15 +65,13 @@ class _MainShellState extends State<MainShell> {
 
   // Settings overlay state
   bool _showSettingsSheet = false;
-  
-  Null get icon => null;
 
   @override
   void initState() {
     super.initState();
     // Listen to notifications from the ViewModel
-    final viewModel = Provider.of<AppViewModel>(context, listen: false);
-    viewModel.notificationStream.listen((notif) {
+    final viewModel = Provider.of<viewmodel.AppViewModel>(context, listen: false);
+    viewModel.notificationFlow.listen((notif) {
       _toastTimer?.cancel();
       setState(() {
         _toastTitle = notif.title;
@@ -143,7 +141,7 @@ class _MainShellState extends State<MainShell> {
   }
 
   AppBar? _buildAppBar(BuildContext context, GlobalKey<ScaffoldState> key) {
-    context.watch<AppViewModel>();
+    final viewModel = context.watch<viewmodel.AppViewModel>();
     if (_selectedIndex == 5 || _selectedIndex == 6) return null; // No AppBar on Notif/Chat screens
 
     return AppBar(
@@ -156,11 +154,11 @@ class _MainShellState extends State<MainShell> {
           ),
         ),
       ),
-      title: const Text("Seller Sphere", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+      title: Text(viewModel.customStoreName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
       actions: [
         IconButton(onPressed: () => _onItemTapped(5), icon: const Icon(Icons.notifications)),
         IconButton(onPressed: () => _onItemTapped(6), icon: const Icon(Icons.chat)),
-        IconButton(onPressed: () => setState(() => _showSettingsSheet = true), icon: null,), ?icon: const Icon(Icons.settings)),
+        IconButton(onPressed: () => setState(() => _showSettingsSheet = true), icon: const Icon(Icons.settings)),
         const SizedBox(width: 8),
       ],
     );
@@ -207,7 +205,7 @@ class _MainShellState extends State<MainShell> {
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.notifications, color: kNeonBlue),
+                  const Icon(Icons.notifications, color: kNeonCyan),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Column(
@@ -231,7 +229,7 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<AppViewModel>();
+    final viewModel = context.watch<viewmodel.AppViewModel>();
     final isDarkTheme = viewModel.isDarkTheme;
 
     return Drawer(
@@ -246,12 +244,12 @@ class AppDrawer extends StatelessWidget {
             onTap: () => Navigator.pop(context),
           ),
           ExpansionTile(
-            leading: const Icon(Icons.account_circle, color: kNeonBlue),
+            leading: const Icon(Icons.account_circle, color: kNeonCyan),
             title: const Text('Detail Profil Saya'),
             children: const [ _ProfileDetailRow('Peran', 'Owner & Administrator'), _ProfileDetailRow('Wilayah', 'Jakarta, Indonesia') ],
           ),
            ExpansionTile(
-            leading: const Icon(Icons.trending_up, color: kSoftTeal),
+            leading: const Icon(Icons.trending_up, color: kNeonCyan),
             title: const Text('Ringkasan Toko'),
             children: [ 
               _ProfileDetailRow('Total Produk', '${viewModel.products.length} item'), 
@@ -337,14 +335,14 @@ class __SettingsOverlayState extends State<_SettingsOverlay> {
   @override
   void initState() {
     super.initState();
-    final viewModel = context.read<AppViewModel>();
+    final viewModel = context.read<viewmodel.AppViewModel>();
     _storeNameController = TextEditingController(text: viewModel.customStoreName);
     _dbUrlController = TextEditingController(text: viewModel.rtdbUrl);
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<AppViewModel>();
+    final viewModel = context.watch<viewmodel.AppViewModel>();
 
     return Material(
       color: Colors.black.withValues(alpha: 0.5),
@@ -367,7 +365,7 @@ class __SettingsOverlayState extends State<_SettingsOverlay> {
                           TextField(controller: _storeNameController, decoration: const InputDecoration(labelText: 'Nama Toko')),
                           const SizedBox(height: 20),
                           const Text("METODE PEMBAYARAN UTAMA"),
-                          // TODO: Implement payment method selector
+                          // Implement payment method selector
                           const SizedBox(height: 20),
                           TextField(controller: _dbUrlController, decoration: const InputDecoration(labelText: 'URL Firebase RTDB')),
                           ElevatedButton(onPressed: (){
@@ -390,8 +388,7 @@ class LaporanSyncCombinedTabScreen extends StatefulWidget {
   const LaporanSyncCombinedTabScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _LaporanSyncCombinedTabScreenState createState() => _LaporanSyncCombinedTabScreenState();
+  State<LaporanSyncCombinedTabScreen> createState() => _LaporanSyncCombinedTabScreenState();
 }
 
 class _LaporanSyncCombinedTabScreenState extends State<LaporanSyncCombinedTabScreen> with SingleTickerProviderStateMixin {

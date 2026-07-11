@@ -60,6 +60,9 @@ class PdfReportUtil {
       ];
     }).toList();
 
+    // Combine headers and data for manual table creation
+    final List<List<String>> allRows = [headers, ...data];
+
     pdf.addPage(
       pw.Page(
         pageFormat: PdfPageFormat.a4,
@@ -119,25 +122,11 @@ class PdfReportUtil {
               pw.SizedBox(height: 25),
 
               // Table
-              pw.Table.fromTextArray(
-                headers: headers,
-                data: data,
+              pw.Table(
                 border: pw.TableBorder.all(
                   color: PdfColors.grey400,
                   width: 0.5,
                 ),
-                headerStyle: headerStyle,
-                headerDecoration: pw.BoxDecoration(
-                  color: PdfColor.fromHex("#F5F5F5"),
-                ),
-                cellStyle: bodyStyle,
-                cellAlignments: {
-                  0: pw.Alignment.centerLeft,
-                  1: pw.Alignment.centerLeft,
-                  2: pw.Alignment.centerLeft,
-                  3: pw.Alignment.center,
-                  4: pw.Alignment.center,
-                },
                 columnWidths: {
                   0: const pw.FlexColumnWidth(3),
                   1: const pw.FlexColumnWidth(2),
@@ -145,24 +134,44 @@ class PdfReportUtil {
                   3: const pw.FlexColumnWidth(1),
                   4: const pw.FlexColumnWidth(1.5),
                 },
-                // Zebra striping for rows
-                rowDecoration: (index) => index % 2 == 1
-                    ? pw.BoxDecoration(color: PdfColor.fromHex("#FAFCFE"))
-                    : const pw.BoxDecoration(),
-                // Custom cell renderer to color the last column red
-                cellBuilder:
-                    (pw.Context context, String text, int row, int col) {
-                      return pw.Padding(
-                        padding: const pw.EdgeInsets.all(4),
-                        child: pw.Text(
-                          text,
-                          style: col == 4 ? redBodyStyle : bodyStyle,
-                          textAlign: col > 2
-                              ? pw.TextAlign.center
-                              : pw.TextAlign.left,
-                        ),
-                      );
-                    },
+                children: List<pw.TableRow>.generate(
+                  allRows.length,
+                  (rowIndex) {
+                    final row = allRows[rowIndex];
+                    final isHeader = rowIndex == 0;
+                    final isOddRow = rowIndex % 2 != 0;
+
+                    return pw.TableRow(
+                      decoration: isHeader
+                          ? pw.BoxDecoration(color: PdfColor.fromHex("#F5F5F5"))
+                          : isOddRow
+                              ? pw.BoxDecoration(color: PdfColor.fromHex("#FAFCFE"))
+                              : null,
+                      children: List<pw.Widget>.generate(
+                        row.length,
+                        (colIndex) {
+                          final text = row[colIndex];
+                          final isLastCol = colIndex == row.length - 1;
+
+                          return pw.Padding(
+                            padding: const pw.EdgeInsets.all(4),
+                            child: pw.Text(
+                              text,
+                              style: isHeader
+                                  ? headerStyle
+                                  : isLastCol
+                                      ? redBodyStyle
+                                      : bodyStyle,
+                              textAlign: colIndex > 2
+                                  ? pw.TextAlign.center
+                                  : pw.TextAlign.left,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
 
               // Footer at the bottom

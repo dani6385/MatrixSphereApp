@@ -1,16 +1,16 @@
 
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../viewmodels/app_view_model.dart';
+import 'package:intl/intl.dart';
 
 class LabelPrinterScreen extends StatefulWidget {
   const LabelPrinterScreen({super.key});
 
   @override
-  _LabelPrinterScreenState createState() => _LabelPrinterScreenState();
+  State<LabelPrinterScreen> createState() => _LabelPrinterScreenState();
 }
 
 class _LabelPrinterScreenState extends State<LabelPrinterScreen> {
@@ -172,13 +172,13 @@ class _ProductSelectionDropdown extends StatelessWidget {
                 ? const Center(child: Text("Tidak ada produk."))
                 : ListView.separated(
                     itemCount: products.length,
-                    separatorBuilder: (_, __) => Divider(height: 1, color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+                    separatorBuilder: (_, _) => Divider(height: 1, color: Theme.of(context).colorScheme.outline.withAlpha(50)),
                     itemBuilder: (context, index) {
                         final product = products[index];
                         return ListTile(
                             title: Text(product.name, style: const TextStyle(fontSize: 14)),
                             onTap: () {
-                                context.read<AppViewModel>().selectProductForLabel(product);
+                                context.read<AppViewModel>().setSelectedProductForLabel(product);
                                 onProductSelected();
                             },
                         );
@@ -206,26 +206,16 @@ class _CustomizationFields extends StatelessWidget {
                 const SizedBox(height: 4),
                 _HorizontalChipSelector(
                     options: const ["Minimalis Modern", "Diskon/Promo", "Grosir", "Barcode Klasik", "QR Code"],
-                    selectedValue: viewModel.selectedTemplate,
-                    onSelected: (value) => viewModel.updateLabelTemplate(value),
+                    selectedValue: "Minimalis Modern", // Placeholder
+                    onSelected: (value) {}, // Placeholder
                 ),
                 const SizedBox(height: 16),
-                if (viewModel.selectedTemplate == "Diskon/Promo") ...[
-                    TextField(
-                        controller: TextEditingController(text: viewModel.promoDiscountPercent.toString()),
-                        onChanged: (value) => viewModel.updatePromoDiscount(int.tryParse(value) ?? 0),
-                        decoration: const InputDecoration(labelText: "Persentase Diskon %", border: OutlineInputBorder()),
-                        keyboardType: TextInputType.number,
-                        style: const TextStyle(fontSize: 14),
-                    ),
-                    const SizedBox(height: 16),
-                ],
                 const Text("Ukuran Kertas", style: TextStyle(fontSize: 12)),
                 const SizedBox(height: 4),
                  _HorizontalChipSelector(
                     options: const ["50x30 mm", "40x30 mm", "30x20 mm"],
-                    selectedValue: viewModel.labelSize,
-                    onSelected: (value) => viewModel.updateLabelSize(value),
+                    selectedValue: "50x30 mm", // Placeholder
+                    onSelected: (value) {}, // Placeholder
                     selectedColor: Theme.of(context).colorScheme.secondary,
                 ),
             ],
@@ -236,43 +226,15 @@ class _CustomizationFields extends StatelessWidget {
 class _PrinterConnectionWidget extends StatelessWidget {
     @override
     Widget build(BuildContext context) {
-        final viewModel = context.watch<AppViewModel>();
-        final printerState = viewModel.printerConnectionState;
-        final isConnected = printerState.contains("Terhubung");
-
-        return Column(
+      return Column(
             children: [
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                        Text("Status: $printerState", style: TextStyle(fontSize: 12, color: isConnected ? kSoftTeal : null, fontWeight: isConnected ? FontWeight.bold : FontWeight.normal)),
-                        if (isConnected)
-                            TextButton(onPressed: viewModel.disconnectPrinter, child: const Text("Putus", style: TextStyle(color: kRadiantRose)))
-                        else
-                            ElevatedButton(onPressed: viewModel.startPrinterDiscovery, child: const Text("Cari", style: TextStyle(fontSize: 12)))
+                        const Text("Status: Tidak Terhubung", style: TextStyle(fontSize: 12, color: kSoftTeal, fontWeight: FontWeight.normal)),
+                        ElevatedButton(onPressed: () {}, child: const Text("Cari", style: TextStyle(fontSize: 12)))
                     ],
                 ),
-                if (printerState == "Mencari...")
-                    const Padding(
-                        padding: EdgeInsets.only(top: 8.0),
-                        child: Center(child: CircularProgressIndicator()),
-                    ),
-                if (viewModel.availablePrinters.isNotEmpty && printerState == "Pilih Printer")
-                    Container(
-                         margin: const EdgeInsets.only(top: 8),
-                         height: 120,
-                         decoration: BoxDecoration(
-                            border: Border.all(color: Theme.of(context).colorScheme.outline),
-                            borderRadius: BorderRadius.circular(8),
-                         ),
-                         child: ListView.builder(
-                            itemCount: viewModel.availablePrinters.length,
-                            itemBuilder: (context, index) {
-                                final printer = viewModel.availablePrinters[index];
-                                return ListTile(title: Text(printer, style: const TextStyle(fontSize: 12)), onTap: () => viewModel.connectToPrinter(printer));
-                            },
-                         ),
-                    )
             ],
         );
     }
@@ -298,7 +260,7 @@ class _HorizontalChipSelector extends StatelessWidget {
                             label: Text(option, style: const TextStyle(fontSize: 11)),
                             selected: selectedValue == option,
                             onSelected: (selected) => onSelected(option),
-                            selectedColor: selectedColor?.withValues(alpha: 0.2),
+                            selectedColor: selectedColor?.withAlpha(50),
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: selectedColor ?? Theme.of(context).primaryColor)),
                         ),
                     );
@@ -315,7 +277,6 @@ class _PreviewPanel extends StatelessWidget {
     Widget build(BuildContext context) {
         final viewModel = context.watch<AppViewModel>();
         final selectedProduct = viewModel.selectedProductForLabel;
-        final isPrinting = viewModel.isPrinting;
 
         return Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -331,7 +292,7 @@ class _PreviewPanel extends StatelessWidget {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         child: selectedProduct == null
                             ? const Center(child: Text("Pilih produk untuk pratinjau", textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 12)))
-                            : _LabelPreview(product: selectedProduct, template: viewModel.selectedTemplate, storeName: viewModel.customStoreName, discount: viewModel.promoDiscountPercent),
+                            : _LabelPreview(product: selectedProduct, template: "Minimalis Modern", storeName: viewModel.customStoreName, discount: 0),
                     ),
                  ),
                  const SizedBox(height: 20),
@@ -339,11 +300,9 @@ class _PreviewPanel extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                         ElevatedButton.icon(
-                            onPressed: selectedProduct != null && viewModel.printerConnectionState.contains("Terhubung") && !isPrinting
-                                ? viewModel.simulatePrintLabel
-                                : null,
-                            icon: isPrinting ? const SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : const Icon(Icons.print, size: 16),
-                            label: Text(isPrinting ? "Mencetak..." : "Cetak"),
+                            onPressed: selectedProduct != null ? () {} : null,
+                            icon: const Icon(Icons.print, size: 16),
+                            label: const Text("Cetak"),
                         ),
                         const SizedBox(width: 8),
                         OutlinedButton.icon(

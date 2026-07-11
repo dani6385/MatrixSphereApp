@@ -1,6 +1,6 @@
-
+import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -236,8 +236,8 @@ class BuyerMessage {
         required this.text,
         int? timestamp,
         required this.isFromBuyer,
-    }) : this.id = id ?? UniqueKey().toString(),
-         this.timestamp = timestamp ?? DateTime.now().millisecondsSinceEpoch;
+    }) : id = id ?? UniqueKey().toString(),
+         timestamp = timestamp ?? DateTime.now().millisecondsSinceEpoch;
 }
 
 class BuyerChat {
@@ -283,12 +283,25 @@ class AppViewModel extends ChangeNotifier {
   List<Product> _products = [];
   List<SaleTransaction> _transactions = [];
   List<SalesTarget> _targets = [];
-  List<SaleItem> _saleItems = [];
+  final List<SaleItem> _saleItems = [];
+  final List<NotificationItem> _notifications = [];
+  String? _syncCode;
+  bool _isSyncing = false;
+  final List<String> _syncLogs = [];
+  final Map<Product, int> _cart = {};
 
   // Public getters for state observation
   List<Product> get products => _products;
   List<Product> get lowStockProducts => _products.where((p) => p.isLowStock).toList();
   List<SaleTransaction> get transactions => _transactions;
+  List<NotificationItem> get notifications => _notifications;
+  String? get syncCode => _syncCode;
+  bool get isSyncing => _isSyncing;
+  List<String> get syncLogs => _syncLogs;
+  Map<Product, int> get cart => _cart;
+
+  Product? _selectedProductForLabel;
+  Product? get selectedProductForLabel => _selectedProductForLabel;
 
   List<ShopsphereOrder> _shopsphereOrders = [];
   List<ShopsphereOrder> get shopsphereOrders => _shopsphereOrders;
@@ -320,9 +333,6 @@ class AppViewModel extends ChangeNotifier {
 
   String get sellerSphereNode => _getSanitizedStoreName();
   String get shopSphereNode => _getSanitizedStoreName();
-
-  Map<Product, int> _cart = {};
-  Map<Product, int> get cart => _cart;
 
   final StreamController<NotificationItem> _notificationController = StreamController.broadcast();
   Stream<NotificationItem> get notificationFlow => _notificationController.stream;
@@ -369,6 +379,25 @@ class AppViewModel extends ChangeNotifier {
     prefs.setString("default_payment_method", method);
     notifyListeners();
   }
+
+  void updateCustomStoreName(String name) async {
+    _customStoreName = name;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("custom_store_name", name);
+    notifyListeners();
+  }
+
+  void updateRtdbUrl(String url) async {
+    _rtdbUrl = url;
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString("firebase_rtdb_url", url);
+    notifyListeners();
+  }
+
+  void setSelectedProductForLabel(Product? product) {
+    _selectedProductForLabel = product;
+    notifyListeners();
+  }
   
   // --- POS and Cart Logic ---
   void addToCart(Product product) {
@@ -410,7 +439,6 @@ class AppViewModel extends ChangeNotifier {
         totalProfit: totalProfit,
         paymentMethod: paymentMethod,
     );
-    // In a real app, this would return the ID from the database
     final newTransactionId = (_transactions.isNotEmpty ? _transactions.map((t) => t.id).reduce(max) : 0) + 1;
     _transactions.add(SaleTransaction(id: newTransactionId, timestamp: transaction.timestamp, totalAmount: transaction.totalAmount, totalProfit: transaction.totalProfit, paymentMethod: transaction.paymentMethod));
 
@@ -435,7 +463,6 @@ class AppViewModel extends ChangeNotifier {
     });
 
     clearCart();
-    // In a real app, you might await this
     pushDataToRtdb();
     triggerNotification("Penjualan Berhasil", "Transaksi #$newTransactionId selesai. Total: ${formatRupiah(totalAmount)}");
     notifyListeners();
@@ -499,20 +526,91 @@ class AppViewModel extends ChangeNotifier {
   }
 
   // --- RTDB Sync ---
+  void generateSyncCode() {
+    final random = Random();
+    _syncCode = List.generate(6, (_) => random.nextInt(10).toString()).join();
+    _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Kode baru dibuat: $_syncCode");
+    notifyListeners();
+    Future.delayed(const Duration(minutes: 5), () {
+      if (_syncCode != null) {
+        _syncCode = null;
+        _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Kode sinkronisasi kedaluwarsa.");
+        notifyListeners();
+      }
+    });
+  }
+
+  Future<void> triggerManualSync() async {
+    _isSyncing = true;
+    _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Memulai sinkronisasi manual (PUSH)...");
+    notifyListeners();
+    await pushDataToRtdb();
+    _isSyncing = false;
+    _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Sinkronisasi manual selesai.");
+    notifyListeners();
+  }
+
+  Future<void> pullDataFromRtdb(String code) async {
+    _isSyncing = true;
+    _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Menarik data dengan kode: $code...");
+    notifyListeners();
+
+    final baseNodeUrl = "$_rtdbUrl/seller-sphere/$sellerSphereNode";
+
+    try {
+      final productsResponse = await http.get(Uri.parse("$baseNodeUrl/products.json"));
+      if (productsResponse.statusCode == 200 && productsResponse.body != "null" && productsResponse.body.isNotEmpty) {
+        final List<dynamic> productListJson = json.decode(productsResponse.body);
+        _products = productListJson.map((json) => Product.fromJson(json)).toList();
+        _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Sukses: ${_products.length} produk diterima.");
+      }
+
+      final transactionsResponse = await http.get(Uri.parse("$baseNodeUrl/transactions.json"));
+      if (transactionsResponse.statusCode == 200 && transactionsResponse.body != "null" && transactionsResponse.body.isNotEmpty) {
+         final List<dynamic> transactionListJson = json.decode(transactionsResponse.body);
+        _transactions = transactionListJson.map((json) => SaleTransaction.fromJson(json)).toList();
+        _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Sukses: ${_transactions.length} transaksi diterima.");
+      }
+
+       final targetsResponse = await http.get(Uri.parse("$baseNodeUrl/targets.json"));
+      if (targetsResponse.statusCode == 200 && targetsResponse.body != "null" && targetsResponse.body.isNotEmpty) {
+         final List<dynamic> targetListJson = json.decode(targetsResponse.body);
+        _targets = targetListJson.map((json) => SalesTarget.fromJson(json)).toList();
+        _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Sukses: ${_targets.length} target diterima.");
+      }
+
+      loadTodayTarget();
+      triggerNotification("Sinkronisasi Selesai", "Data berhasil ditarik dari cloud.");
+
+    } catch (e) {
+      triggerNotification("Sinkronisasi Gagal", "Gagal menarik data: $e");
+      _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Error: $e");
+    } finally {
+      _isSyncing = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> pushDataToRtdb() async {
-    final baseNodeUrl = "$_rtdbUrl/seller-sphere/${sellerSphereNode}";
+    final baseNodeUrl = "$_rtdbUrl/seller-sphere/$sellerSphereNode";
 
     final productListJson = json.encode(_products.map((p) => p.toJson()).toList());
     final transactionListJson = json.encode(_transactions.map((t) => t.toJson()).toList());
     final targetListJson = json.encode(_targets.map((t) => t.toJson()).toList());
+    _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Mengunggah data ke cloud...");
+    notifyListeners();
 
     try {
         await _uploadJsonNode("$baseNodeUrl/products.json", productListJson);
         await _uploadJsonNode("$baseNodeUrl/transactions.json", transactionListJson);
         await _uploadJsonNode("$baseNodeUrl/targets.json", targetListJson);
         triggerNotification("Sinkronisasi Sukses", "Data lokal berhasil diunggah ke cloud.");
+        _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Unggah sukses.");
     } catch (e) {
         triggerNotification("Sinkronisasi Gagal", "Gagal mengunggah data: $e");
+        _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Unggah gagal: $e");
+    } finally {
+      notifyListeners();
     }
   }
 
@@ -523,6 +621,61 @@ class AppViewModel extends ChangeNotifier {
         throw Exception("Failed to write to $url. Code: ${response.statusCode}");
     }
   }
+
+  // --- CSV Import/Export ---
+  String exportProductsToCsv() {
+      final buffer = StringBuffer();
+      buffer.writeln("nama_produk,stok,harga_beli,harga_jual,batas_minimum_stok,sku,kategori");
+      for (final product in _products) {
+          buffer.writeln(
+              '"${product.name}",${product.stock},${product.purchasePrice},${product.sellingPrice},${product.minStockThreshold},"${product.sku}","${product.category}"'
+          );
+      }
+      _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Mengekspor ${_products.length} produk ke format CSV.");
+      notifyListeners();
+      return buffer.toString();
+  }
+
+  bool importProductsFromCsv(String csvText) {
+      int successCount = 0;
+      final lines = csvText.trim().split('\n');
+      final startIndex = lines.first.toLowerCase().contains("nama_produk") ? 1 : 0;
+
+      for (int i = startIndex; i < lines.length; i++) {
+          final line = lines[i];
+          if (line.trim().isEmpty) continue;
+          final fields = line.split(',');
+          try {
+              final newProduct = Product(
+                id: (_products.isNotEmpty ? _products.map((p) => p.id).reduce(max) : 0) + 1 + successCount,
+                name: fields[0].replaceAll('"', ''),
+                stock: int.parse(fields[1]),
+                purchasePrice: double.parse(fields[2]),
+                sellingPrice: double.parse(fields[3]),
+                minStockThreshold: int.parse(fields[4]),
+                sku: fields.length > 5 ? fields[5].replaceAll('"', '') : '',
+                category: fields.length > 6 ? fields[6].replaceAll('"', '') : 'Uncategorized',
+              );
+              _products.add(newProduct);
+              successCount++;
+          } catch (e) {
+              if (kDebugMode) {
+                print("Failed to parse CSV line: $line. Error: $e");
+              }
+              _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Gagal impor baris CSV: $line");
+          }
+      }
+
+      if (successCount > 0) {
+          pushDataToRtdb();
+          triggerNotification("Impor Berhasil", "$successCount produk berhasil ditambahkan dari CSV.");
+          _syncLogs.insert(0, "[${DateFormat('HH:mm:ss').format(DateTime.now())}] Mengimpor $successCount produk dari CSV.");
+          notifyListeners();
+          return true;
+      }
+      return false;
+  }
+
 
   // --- Shopsphere & Chat Logic ---
   
@@ -605,6 +758,7 @@ class AppViewModel extends ChangeNotifier {
       message: message,
       timestamp: DateTime.now().millisecondsSinceEpoch,
     );
+    _notifications.add(newItem);
     _notificationController.add(newItem);
   }
 

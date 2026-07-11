@@ -30,9 +30,9 @@ class AppViewModel extends ChangeNotifier {
     customStoreName = "Toko Kelontong";
   }
 
-  bool get isDarkTheme => null;
+  bool get isDarkTheme => false;
 
-  get notificationStream => null;
+  Stream<dynamic>? get notificationStream => null;
 
   String? get rtdbUrl => null;
 
@@ -142,11 +142,11 @@ class _ChatScreenState extends State<ChatScreen> {
   // --- HELPER METHODS (Converted from Kotlin) ---
 
   String _formatNumber(double number) {
-    final format = NumberFormat.getNumberInstance(const Locale('in', 'ID'));
+    final format = NumberFormat.decimalPattern('id_ID');
     return format.format(number);
   }
 
-  String _formatTime(int timestamp) {
+  String formatTime(int timestamp) {
     final sdf = DateFormat("HH:mm", 'id_ID');
     return sdf.format(DateTime.fromMillisecondsSinceEpoch(timestamp));
   }
@@ -400,9 +400,9 @@ class _ChatScreenState extends State<ChatScreen> {
       margin: const EdgeInsets.all(16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: neonCyan.withValues(alpha: 0.25)),
+        side: BorderSide(color: neonCyan.withAlpha(64)),
       ),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(77),
       child: Padding(
         padding: const EdgeInsets.all(14.0),
         child: Column(
@@ -427,7 +427,7 @@ class _ChatScreenState extends State<ChatScreen> {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: neonCyan.withValues(alpha: 0.15),
+            color: neonCyan.withAlpha(38),
             shape: BoxShape.circle,
           ),
           child: const Icon(Icons.smart_toy_outlined, color: neonCyan, size: 20),
@@ -451,7 +451,7 @@ class _ChatScreenState extends State<ChatScreen> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
           decoration: BoxDecoration(
-            color: softTeal.withValues(alpha: 0.15),
+            color: softTeal.withAlpha(38),
             borderRadius: BorderRadius.circular(8),
           ),
           child: const Text(
@@ -469,9 +469,9 @@ class _ChatScreenState extends State<ChatScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor.withValues(alpha: 0.6),
+        color: Theme.of(context).scaffoldBackgroundColor.withAlpha(153),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.15)),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withAlpha(38)),
       ),
       child: ListView.builder(
         controller: _aiScrollController,
@@ -508,7 +508,7 @@ class _ChatScreenState extends State<ChatScreen> {
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2)),
+                border: Border.all(color: Theme.of(context).colorScheme.outline.withAlpha(51)),
               ),
               child: Text(
                 label,
@@ -536,14 +536,14 @@ class _ChatScreenState extends State<ChatScreen> {
               onSubmitted: (_) => _handleAiSend(),
               decoration: InputDecoration(
                 hintText: "Ketik pesan untuk AI...",
-                hintStyle: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
+                hintStyle: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(153)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withAlpha(77)),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3)),
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withAlpha(77)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
@@ -574,7 +574,7 @@ class _ChatScreenState extends State<ChatScreen> {
               size: 16,
               color: _aiInputController.text.isNotEmpty && !_isAiLoading
                   ? Colors.white
-                  : Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(102),
             ),
           ),
         ),
@@ -626,7 +626,7 @@ class _ChatScreenState extends State<ChatScreen> {
               Icon(
                 Icons.chat_bubble_outline,
                 size: 40,
-                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(77),
               ),
               const SizedBox(height: 6),
               Text("Tidak ada pesan dari pembeli", style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12)),
@@ -649,10 +649,10 @@ class _ChatScreenState extends State<ChatScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: hasUnread ? neonCyan.withValues(alpha: 0.3) : Theme.of(context).colorScheme.outline.withValues(alpha: 0.1),
+          color: hasUnread ? neonCyan.withAlpha(77) : Theme.of(context).colorScheme.outline.withAlpha(26),
         ),
       ),
-      color: hasUnread ? neonCyan.withValues(alpha: 0.04) : Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+      color: hasUnread ? neonCyan.withAlpha(10) : Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(102),
       child: InkWell(
         onTap: () {
           context.read<AppViewModel>().activeChatBuyerName = buyerChat.customerName;
@@ -667,7 +667,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 width: 42,
                 height: 42,
                 decoration: BoxDecoration(
-                  color: hasUnread ? neonCyan : softTeal.withValues(alpha: 0.15),
+                  color: hasUnread ? neonCyan : softTeal.withAlpha(38),
                   shape: BoxShape.circle,
                 ),
                 alignment: Alignment.center,
@@ -799,15 +799,15 @@ class _ChatScreenState extends State<ChatScreen> {
                   hintText: "Ketik balasan untuk $currentBuyerName...",
                   hintStyle: TextStyle(
                     fontSize: 13,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(153),
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.4)),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withAlpha(102)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
-                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.4)),
+                    borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withAlpha(102)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(24),
@@ -829,7 +829,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Icon(
                   Icons.send,
                   size: 20,
-                  color: _buyerInputController.text.isNotEmpty ? Colors.white : Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
+                  color: _buyerInputController.text.isNotEmpty ? Colors.white : Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(102),
                 ),
               ),
             ),
@@ -875,7 +875,7 @@ class _AiChatBubble extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Text(
             DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(message.timestamp)),
-            style: TextStyle(fontSize: 8, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
+            style: TextStyle(fontSize: 8, color: theme.colorScheme.onSurfaceVariant.withAlpha(128)),
           ),
         ),
       ],
@@ -908,7 +908,7 @@ class _BuyerChatBubble extends StatelessWidget {
                               padding: const EdgeInsets.only(right: 8.0, top: 4.0),
                               child: CircleAvatar(
                                   radius: 14,
-                                  backgroundColor: softTeal.withValues(alpha: 0.15),
+                                  backgroundColor: softTeal.withAlpha(38),
                                   child: const Icon(Icons.person, size: 16, color: softTeal),
                               ),
                           ),
@@ -937,7 +937,7 @@ class _BuyerChatBubble extends StatelessWidget {
                   ),
                   child: Text(
                       DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(message.timestamp)),
-                      style: TextStyle(fontSize: 9, color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.6)),
+                      style: TextStyle(fontSize: 9, color: theme.colorScheme.onSurfaceVariant.withAlpha(153)),
                   ),
               )
           ],

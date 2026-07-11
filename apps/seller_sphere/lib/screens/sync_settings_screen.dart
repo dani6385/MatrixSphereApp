@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +46,7 @@ class __RealtimeSyncCardState extends State<_RealtimeSyncCard> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<AppViewModel>();
-    final syncCode = viewModel.syncCode;
+    final syncCode = viewModel.syncCode ?? "------";
     final isSyncing = viewModel.isSyncing;
 
     return Card(
@@ -67,7 +66,7 @@ class __RealtimeSyncCardState extends State<_RealtimeSyncCard> {
             const SizedBox(height: 8),
             Text(
               "Gunakan kode unik di bawah untuk menyinkronkan data secara instan di antara berbagai perangkat toko Anda.",
-              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8)),
+              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.8)),
             ),
             const SizedBox(height: 16),
             _buildSyncCodeDisplay(context, syncCode, viewModel),
@@ -100,7 +99,7 @@ class __RealtimeSyncCardState extends State<_RealtimeSyncCard> {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Theme.of(context).colorScheme.outline.withOpacity(0.5)),
+        border: Border.all(color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -124,7 +123,7 @@ class __RealtimeSyncCardState extends State<_RealtimeSyncCard> {
               ),
               IconButton(
                 icon: const Icon(Icons.refresh, color: kWarmOrange, size: 20),
-                onPressed: viewModel.generateNewSyncCode,
+                onPressed: viewModel.generateSyncCode,
                 tooltip: "Buat Kode Baru",
               ),
             ],
@@ -157,7 +156,7 @@ class __RealtimeSyncCardState extends State<_RealtimeSyncCard> {
           child: ElevatedButton(
             onPressed: () {
               if (_joinCodeController.text.isNotEmpty) {
-                viewModel.triggerManualSync(); // Simulate joining
+                viewModel.pullDataFromRtdb(_joinCodeController.text);
                 _joinCodeController.clear();
               }
             },
@@ -196,7 +195,7 @@ class _SyncLoggerCard extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Text(
                     syncLogs[index],
-                    style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.8), fontFamily: 'monospace'),
+                    style: TextStyle(fontSize: 10, color: Colors.white.withValues(alpha: 0.8), fontFamily: 'monospace'),
                   );
                 },
               ),
@@ -244,7 +243,7 @@ class __CsvImportExportCardState extends State<_CsvImportExportCard> {
             const SizedBox(height: 10),
             Text(
               "Tempel teks CSV di bawah untuk memasukkan produk sekaligus ke inventaris toko.",
-              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant.withOpacity(0.8)),
+              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.8)),
             ),
             const SizedBox(height: 12),
             TextField(

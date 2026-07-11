@@ -3,191 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:math';
 
-// --- DUMMY DATA MODELS & VIEWMODEL ---
-// Replace with your actual data models and ViewModel
-class Product {
-  final String id;
-  final String name;
-  final int stock;
-  final int minStockThreshold;
-  Product({
-    required this.id,
-    required this.name,
-    required this.stock,
-    required this.minStockThreshold,
-  });
-}
-
-class SaleTransaction {
-  final double totalAmount;
-  final double totalProfit;
-  final int timestamp;
-  SaleTransaction({
-    required this.totalAmount,
-    required this.totalProfit,
-    required this.timestamp,
-  });
-}
-
-class ShopsphereOrder {
-  final String id;
-  final String customerName;
-  final String productName;
-  final int quantity;
-  final double totalAmount;
-  final String courierPhone;
-  final String verificationCode;
-  final int dayIndex; // 0-6 where 6 is today
-  String status; // "Perlu Dipacking", "Siap Diambil", "Selesai Diambil"
-
-  ShopsphereOrder({
-    required this.id,
-    required this.customerName,
-    required this.productName,
-    required this.quantity,
-    required this.totalAmount,
-    required this.courierPhone,
-    required this.verificationCode,
-    required this.dayIndex,
-    required this.status,
-  });
-}
-
-class TodayTarget {
-  final double targetAmount;
-  TodayTarget({required this.targetAmount});
-}
-
-class AppViewModel extends ChangeNotifier {
-  List<Product> products = [];
-  List<Product> get lowStockProducts =>
-      products.where((p) => p.stock < p.minStockThreshold).toList();
-  List<SaleTransaction> transactions = [];
-  TodayTarget? todayTarget;
-  List<ShopsphereOrder> shopsphereOrders = [];
-
-  AppViewModel() {
-    _loadDummyData();
-  }
-
-  void _loadDummyData() {
-    products = [
-      Product(id: 'P01', name: 'Kopi Instan', stock: 5, minStockThreshold: 10),
-      Product(id: 'P02', name: 'Mie Goreng', stock: 15, minStockThreshold: 10),
-    ];
-
-    final now = DateTime.now();
-    transactions = [
-      SaleTransaction(
-        totalAmount: 50000,
-        totalProfit: 10000,
-        timestamp: now.millisecondsSinceEpoch,
-      ),
-      SaleTransaction(
-        totalAmount: 75000,
-        totalProfit: 15000,
-        timestamp: now.subtract(const Duration(days: 1)).millisecondsSinceEpoch,
-      ),
-    ];
-
-    shopsphereOrders = [
-      ShopsphereOrder(
-        id: 'SS-76251',
-        customerName: 'Budi Hartono',
-        productName: 'Kopi Susu',
-        quantity: 2,
-        totalAmount: 30000,
-        courierPhone: '081234567890',
-        verificationCode: '123456',
-        dayIndex: 6,
-        status: 'Siap Diambil',
-      ),
-      ShopsphereOrder(
-        id: 'SS-76252',
-        customerName: 'Citra Lestari',
-        productName: 'Teh Manis',
-        quantity: 1,
-        totalAmount: 10000,
-        courierPhone: '081234567891',
-        verificationCode: '789012',
-        dayIndex: 6,
-        status: 'Perlu Dipacking',
-      ),
-      ShopsphereOrder(
-        id: 'SS-76253',
-        customerName: 'Doni Firmansyah',
-        productName: 'Nasi Goreng',
-        quantity: 1,
-        totalAmount: 25000,
-        courierPhone: '081234567892',
-        verificationCode: '345678',
-        dayIndex: 5,
-        status: 'Selesai Diambil',
-      ),
-    ];
-
-    todayTarget = TodayTarget(targetAmount: 500000);
-    notifyListeners();
-  }
-
-  double getTodaySalesTotal() {
-    final todayStart = DateTime.now().copyWith(
-      hour: 0,
-      minute: 0,
-      second: 0,
-      millisecond: 0,
-    );
-    return transactions
-        .where(
-          (t) => DateTime.fromMillisecondsSinceEpoch(
-            t.timestamp,
-          ).isAfter(todayStart),
-        )
-        .fold(0.0, (sum, t) => sum + t.totalAmount);
-  }
-
-  String formatRupiah(double amount) {
-    final format = NumberFormat.currency(
-      locale: 'id_ID',
-      symbol: 'Rp ',
-      decimalDigits: 0,
-    );
-    return format.format(amount);
-  }
-
-  void loadTodayTarget() {
-    /* Fetches target from repository */
-  }
-
-  void updateTodayTarget(double amount) {
-    todayTarget = TodayTarget(targetAmount: amount);
-    notifyListeners();
-  }
-
-  void finishPacking(String orderId) {
-    final order = shopsphereOrders.firstWhere((o) => o.id == orderId);
-    order.status = "Siap Diambil";
-    notifyListeners();
-  }
-
-  void callCourier(String orderId) {
-    /* Implementation to call courier */
-  }
-  void printOrderLabel(String orderId) {
-    /* Implementation to print label */
-  }
-
-  void confirmOrderPickup(String orderId) {
-    final order = shopsphereOrders.firstWhere((o) => o.id == orderId);
-    order.status = "Selesai Diambil";
-    notifyListeners();
-  }
-}
-
-// --- UI CONSTANTS ---
-const Color neonCyan = Color(0xFF00FFFF);
-const Color softTeal = Color(0xFF48A0A6);
-const Color warmOrange = Color(0xFFFF8C00);
+import '../viewmodels/app_view_model.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 // --- DASHBOARD SCREEN ---
 class DashboardScreen extends StatelessWidget {
@@ -206,9 +23,8 @@ class DashboardScreen extends StatelessWidget {
     final lowStockList = viewModel.lowStockProducts;
     final todaySalesTotal = viewModel.getTodaySalesTotal();
     final targetValue = viewModel.todayTarget?.targetAmount ?? 1000000.0;
-    final targetProgress = targetValue > 0
-        ? (todaySalesTotal / targetValue).clamp(0.0, 1.0)
-        : 1.0;
+    final targetProgress =
+        targetValue > 0 ? (todaySalesTotal / targetValue).clamp(0.0, 1.0) : 1.0;
     final targetPercentage = (targetProgress * 100).toInt();
 
     return Scaffold(
@@ -342,9 +158,10 @@ class _LowStockWarningCard extends StatelessWidget {
                     Text(
                       "Ketuk untuk melihat detail barang di inventaris.",
                       style: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onErrorContainer.withValues(alpha: 0.8),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onErrorContainer
+                            .withValues(alpha: 0.8),
                         fontSize: 12,
                       ),
                     ),
@@ -420,7 +237,7 @@ class __DailyTargetCardState extends State<_DailyTargetCard> {
                   children: [
                     Icon(
                       Icons.notifications_active,
-                      color: warmOrange,
+                      color: kWarmOrange,
                       size: 20,
                     ),
                     SizedBox(width: 8),
@@ -461,7 +278,7 @@ class __DailyTargetCardState extends State<_DailyTargetCard> {
                 minHeight: 16,
                 borderRadius: BorderRadius.circular(8),
                 backgroundColor: const Color(0xFF2E3E66),
-                valueColor: const AlwaysStoppedAnimation<Color>(warmOrange),
+                valueColor: const AlwaysStoppedAnimation<Color>(kWarmOrange),
               ),
             ),
             const SizedBox(height: 8),
@@ -480,8 +297,8 @@ class __DailyTargetCardState extends State<_DailyTargetCard> {
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: widget.targetPercentage >= 100
-                        ? softTeal
-                        : warmOrange,
+                        ? kSoftTeal
+                        : kWarmOrange,
                     fontSize: 14,
                   ),
                 ),
@@ -491,11 +308,12 @@ class __DailyTargetCardState extends State<_DailyTargetCard> {
             Text(
               motivationText,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.9),
-                fontSize: 13,
-              ),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurfaceVariant
+                        .withValues(alpha: 0.9),
+                    fontSize: 13,
+                  ),
             ),
           ],
         ),
@@ -579,12 +397,10 @@ class _PickupSummaryCards extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final todayOrders = orders.where((it) => it.dayIndex == 6).toList();
-    final awaitingPickupCount = todayOrders
-        .where((it) => it.status != "Selesai Diambil")
-        .length;
-    final pickedUpCount = todayOrders
-        .where((it) => it.status == "Selesai Diambil")
-        .length;
+    final awaitingPickupCount =
+        todayOrders.where((it) => it.status != "Selesai Diambil").length;
+    final pickedUpCount =
+        todayOrders.where((it) => it.status == "Selesai Diambil").length;
 
     return Row(
       children: [
@@ -593,7 +409,7 @@ class _PickupSummaryCards extends StatelessWidget {
             title: "Belum Diambil",
             value: "$awaitingPickupCount Paket",
             icon: Icons.warning,
-            color: warmOrange,
+            color: kWarmOrange,
           ),
         ),
         const SizedBox(width: 12),
@@ -602,7 +418,7 @@ class _PickupSummaryCards extends StatelessWidget {
             title: "Selesai Diambil",
             value: "$pickedUpCount Paket",
             icon: Icons.check_circle,
-            color: softTeal,
+            color: kSoftTeal,
           ),
         ),
       ],
@@ -707,9 +523,8 @@ class __ShopsphereWeeklyOrderChartState
       final dayLabel = sdfLabel.format(checkCalendar);
 
       final dayOrders = widget.orders.where((o) => o.dayIndex == i).toList();
-      final completed = dayOrders
-          .where((o) => o.status == "Selesai Diambil")
-          .length;
+      final completed =
+          dayOrders.where((o) => o.status == "Selesai Diambil").length;
       final awaiting = dayOrders.length - completed;
 
       list.add(Triple(dayLabel, dateStr, DayOrderStats(completed, awaiting)));
@@ -735,9 +550,10 @@ class __ShopsphereWeeklyOrderChartState
               "Ketuk hari untuk detail paket masuk & pengambilan oleh pembeli",
               style: TextStyle(
                 fontSize: 11,
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurfaceVariant
+                    .withValues(alpha: 0.7),
               ),
             ),
             const SizedBox(height: 16),
@@ -761,6 +577,7 @@ class __ShopsphereWeeklyOrderChartState
               orders: widget.orders
                   .where((o) => o.dayIndex == _selectedIndex)
                   .toList(),
+              viewModel: context.read<AppViewModel>(),
             ),
           ],
         ),
@@ -838,9 +655,9 @@ class _ChartLegend extends StatelessWidget {
       children: [
         Row(
           children: [
-            _LegendItem(color: softTeal, label: "Selesai"),
+            _LegendItem(color: kSoftTeal, label: "Selesai"),
             const SizedBox(width: 12),
-            _LegendItem(color: warmOrange, label: "Belum"),
+            _LegendItem(color: kWarmOrange, label: "Belum"),
           ],
         ),
         Text(
@@ -952,17 +769,15 @@ class _WeeklyChartPainter extends CustomPainter {
       // Completed bar
       canvas.drawRect(
         Rect.fromLTWH(barX, size.height - completedHeight, 16, completedHeight),
-        Paint()
-          ..color = i == selectedIndex ? softTeal : softTeal.withValues(alpha: 0.7),
+        Paint()..color = i == selectedIndex ? kSoftTeal : kSoftTeal.withValues(alpha: 0.7),
       );
 
       // Awaiting bar
       canvas.drawRect(
         Rect.fromLTWH(barX, size.height - totalHeight, 16, awaitingHeight),
         Paint()
-          ..color = i == selectedIndex
-              ? warmOrange
-              : warmOrange.withValues(alpha: 0.7),
+          ..color =
+              i == selectedIndex ? kWarmOrange : kWarmOrange.withValues(alpha: 0.7),
       );
     }
   }
@@ -1008,9 +823,10 @@ class _ChartLabels extends StatelessWidget {
                   fontSize: 9,
                   color: isSelected
                       ? Theme.of(context).primaryColor.withValues(alpha: 0.8)
-                      : Theme.of(
-                          context,
-                        ).colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                      : Theme.of(context)
+                          .colorScheme
+                          .onSurfaceVariant
+                          .withValues(alpha: 0.5),
                 ),
               ),
             ],
@@ -1025,11 +841,13 @@ class _OrderListForSelectedDay extends StatelessWidget {
   final String dayName;
   final String dateStr;
   final List<ShopsphereOrder> orders;
+  final AppViewModel viewModel;
 
   const _OrderListForSelectedDay({
     required this.dayName,
     required this.dateStr,
     required this.orders,
+    required this.viewModel,
   });
 
   @override
@@ -1059,7 +877,7 @@ class _OrderListForSelectedDay extends StatelessWidget {
           ...orders.map(
             (order) => Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: _OrderPickupItem(order: order),
+              child: OrderPickupItem(order: order, viewModel: viewModel),
             ),
           ),
       ],
@@ -1067,13 +885,14 @@ class _OrderListForSelectedDay extends StatelessWidget {
   }
 }
 
-class _OrderPickupItem extends StatelessWidget {
+class OrderPickupItem extends StatelessWidget {
   final ShopsphereOrder order;
-  const _OrderPickupItem({required this.order});
+  final AppViewModel viewModel;
+
+  const OrderPickupItem({super.key, required this.order, required this.viewModel});
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<AppViewModel>(context, listen: false);
     final isPickedUp = order.status == "Selesai Diambil";
 
     return Card(
@@ -1096,9 +915,7 @@ class _OrderPickupItem extends StatelessWidget {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
-                        color: isPickedUp
-                            ? null
-                            : Theme.of(context).primaryColor,
+                        color: isPickedUp ? null : Theme.of(context).primaryColor,
                       ),
                     ),
                     Text(
@@ -1137,13 +954,13 @@ class _OrderPickupItem extends StatelessWidget {
                 "No. HP Pembeli: ${order.courierPhone}",
                 style: TextStyle(
                   fontSize: 11,
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurfaceVariant.withValues(alpha: 0.8),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurfaceVariant
+                      .withValues(alpha: 0.8),
                 ),
               ),
             ),
-
             if (!isPickedUp) ...[
               const SizedBox(height: 10),
               _ActionButtons(order: order, viewModel: viewModel),
@@ -1164,13 +981,13 @@ class _StatusBadge extends StatelessWidget {
     Color color;
     switch (status) {
       case "Selesai Diambil":
-        color = softTeal;
+        color = kSoftTeal;
         break;
       case "Siap Diambil":
-        color = neonCyan;
+        color = kNeonCyan;
         break;
       default:
-        color = warmOrange;
+        color = kWarmOrange;
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -1208,7 +1025,7 @@ class _ActionButtons extends StatelessWidget {
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: neonCyan,
+            backgroundColor: kNeonCyan,
             foregroundColor: Colors.black,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -1223,7 +1040,7 @@ class _ActionButtons extends StatelessWidget {
           Expanded(
             flex: 13,
             child: OutlinedButton.icon(
-              onPressed: () => viewModel.callCourier(order.id),
+              onPressed: () {},
               icon: const Icon(Icons.call, size: 14),
               label: const Text("Hubungi", style: TextStyle(fontSize: 11)),
             ),
@@ -1232,7 +1049,7 @@ class _ActionButtons extends StatelessWidget {
           Expanded(
             flex: 12,
             child: OutlinedButton.icon(
-              onPressed: () => viewModel.printOrderLabel(order.id),
+              onPressed: () {},
               icon: const Icon(Icons.print, size: 14),
               label: const Text("Cetak", style: TextStyle(fontSize: 11)),
             ),
@@ -1257,7 +1074,7 @@ class _ActionButtons extends StatelessWidget {
                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: softTeal,
+                backgroundColor: kSoftTeal,
                 foregroundColor: Colors.black,
               ),
             ),
@@ -1279,8 +1096,6 @@ class _OrderVerificationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // This is a simplified version. A real implementation would need a StatefulWidget
-    // to handle the camera, tab changes, and input.
     return AlertDialog(
       title: const Text("Verifikasi Pengambilan"),
       content: Text(
