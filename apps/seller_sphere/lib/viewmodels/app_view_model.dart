@@ -64,7 +64,8 @@ class AppViewModel extends ChangeNotifier {
   int get safeModeAgeLimit => _safeModeAgeLimit;
 
   // --- Firebase RTDB Config ---
-  String _rtdbUrl = "https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app";
+  String _rtdbUrl =
+      "https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app";
   String get rtdbUrl => _rtdbUrl;
 
   String _customStoreName = "SS Seller Sphere";
@@ -119,17 +120,24 @@ class AppViewModel extends ChangeNotifier {
 
     // Load settings
     _isDarkTheme = _prefs.getBool('is_dark_theme') ?? true;
-    _defaultPaymentMethod = _prefs.getString('default_payment_method') ?? 'Tunai';
+    _defaultPaymentMethod =
+        _prefs.getString('default_payment_method') ?? 'Tunai';
     _isSafeModeEnabled = _prefs.getBool('is_safe_mode_enabled') ?? false;
     _safeModeAgeLimit = _prefs.getInt('safe_mode_age_limit') ?? 13;
-    _rtdbUrl = _prefs.getString('firebase_rtdb_url') ?? "https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app";
-    _customStoreName = _prefs.getString('custom_store_name') ?? 'SS Seller Sphere';
+    _rtdbUrl =
+        _prefs.getString('firebase_rtdb_url') ??
+        "https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app";
+    _customStoreName =
+        _prefs.getString('custom_store_name') ?? 'SS Seller Sphere';
     _ownerName = _prefs.getString('owner_name') ?? 'Dani';
     _ownerEmail = _prefs.getString('owner_email') ?? 'dani6385@gmail.com';
-    _pickupAddress = _prefs.getString('pickup_address') ?? 'Jl. Kebon Jeruk No. 88, Jakarta Barat';
+    _pickupAddress =
+        _prefs.getString('pickup_address') ??
+        'Jl. Kebon Jeruk No. 88, Jakarta Barat';
     _pickupLatitude = _prefs.getDouble('pickup_latitude') ?? -6.1751;
     _pickupLongitude = _prefs.getDouble('pickup_longitude') ?? 106.8272;
-    _pickupNotes = _prefs.getString('pickup_notes') ?? 'Pagar hitam, di depan minimarket';
+    _pickupNotes =
+        _prefs.getString('pickup_notes') ?? 'Pagar hitam, di depan minimarket';
 
     // Listen to data streams
     repository.getAllProducts().listen((data) {
@@ -179,11 +187,56 @@ class AppViewModel extends ChangeNotifier {
     final productCount = (await repository.getAllProducts().first).length;
     if (productCount == 0) {
       final sampleProducts = [
-        Product(name: "Kemeja Flanel Slimfit", sku: "BJU-01", stock: 3, purchasePrice: 85000.0, sellingPrice: 135000.0, category: "Pakaian", minStockThreshold: 4, ageRating: 13),
-        Product(name: "Jeans Denim Premium", sku: "BJU-02", stock: 12, purchasePrice: 120000.0, sellingPrice: 199000.0, category: "Pakaian", minStockThreshold: 5, ageRating: 18),
-        Product(name: "Botol Minum Tumbler", sku: "ACC-01", stock: 20, purchasePrice: 25000.0, sellingPrice: 45000.0, category: "Aksesoris", minStockThreshold: 6, ageRating: 0),
-        Product(name: "Sepatu Sneakers Klasik", sku: "SPT-01", stock: 2, purchasePrice: 150000.0, sellingPrice: 250000.0, category: "Sepatu", minStockThreshold: 3, ageRating: 13),
-        Product(name: "Kaos Polos Cotton 30s", sku: "BJU-03", stock: 45, purchasePrice: 18000.0, sellingPrice: 35000.0, category: "Pakaian", minStockThreshold: 8, ageRating: 0),
+        Product(
+          name: "Kemeja Flanel Slimfit",
+          sku: "BJU-01",
+          stock: 3,
+          purchasePrice: 85000.0,
+          sellingPrice: 135000.0,
+          category: "Pakaian",
+          minStockThreshold: 4,
+          ageRating: 13,
+        ),
+        Product(
+          name: "Jeans Denim Premium",
+          sku: "BJU-02",
+          stock: 12,
+          purchasePrice: 120000.0,
+          sellingPrice: 199000.0,
+          category: "Pakaian",
+          minStockThreshold: 5,
+          ageRating: 18,
+        ),
+        Product(
+          name: "Botol Minum Tumbler",
+          sku: "ACC-01",
+          stock: 20,
+          purchasePrice: 25000.0,
+          sellingPrice: 45000.0,
+          category: "Aksesoris",
+          minStockThreshold: 6,
+          ageRating: 0,
+        ),
+        Product(
+          name: "Sepatu Sneakers Klasik",
+          sku: "SPT-01",
+          stock: 2,
+          purchasePrice: 150000.0,
+          sellingPrice: 250000.0,
+          category: "Sepatu",
+          minStockThreshold: 3,
+          ageRating: 13,
+        ),
+        Product(
+          name: "Kaos Polos Cotton 30s",
+          sku: "BJU-03",
+          stock: 45,
+          purchasePrice: 18000.0,
+          sellingPrice: 35000.0,
+          category: "Pakaian",
+          minStockThreshold: 8,
+          ageRating: 0,
+        ),
       ];
       for (var p in sampleProducts) {
         await repository.insertProduct(p);
@@ -191,13 +244,20 @@ class AppViewModel extends ChangeNotifier {
     }
   }
 
-    void initShopsphereOrders() {
+  void initShopsphereOrders() {
     _shopsphereOrders = List.generate(15, (i) {
-      final status = i % 4 == 0 ? "Perlu Dipacking" : (i % 4 == 1 ? "Siap Diambil" : "Selesai Diambil");
+      final status = i % 4 == 0
+          ? "Perlu Dipacking"
+          : (i % 4 == 1 ? "Siap Diambil" : "Selesai Diambil");
       return ShopsphereOrder(
         id: "SS-100${Random().nextInt(900)}",
         dayIndex: Random().nextInt(7),
-        productName: ["Kemeja", "Celana", "Sepatu", "Topi"][Random().nextInt(4)],
+        productName: [
+          "Kemeja",
+          "Celana",
+          "Sepatu",
+          "Topi",
+        ][Random().nextInt(4)],
         quantity: Random().nextInt(3) + 1,
         customerName: ["Andi", "Budi", "Siti"][Random().nextInt(3)],
         courierPhone: "08123456789",
@@ -214,18 +274,29 @@ class AppViewModel extends ChangeNotifier {
       BuyerChat(
         customerName: "Andi",
         messages: [
-          BuyerMessage(senderName: "Andi", text: "Halo, produk ready?", timestamp: now - 3600 * 1000, isFromBuyer: true),
+          BuyerMessage(
+            senderName: "Andi",
+            text: "Halo, produk ready?",
+            timestamp: now - 3600 * 1000,
+            isFromBuyer: true,
+          ),
         ],
         unreadCount: 1,
         lastMessageTimestamp: now - 3600 * 1000,
       ),
     ];
   }
-  
+
   void loadTodayTarget() async {
     final dateString = DateFormat("yyyy-MM-dd").format(DateTime.now());
     repository.getTargetForDate(dateString).listen((target) {
-      _todayTarget = target ?? SalesTarget(date: dateString, targetAmount: 1000000.0, dateString: '');
+      _todayTarget =
+          target ??
+          SalesTarget(
+            date: dateString,
+            targetAmount: 1000000.0,
+            dateString: '',
+          );
       notifyListeners();
     });
   }
@@ -298,11 +369,11 @@ class AppViewModel extends ChangeNotifier {
       );
       await repository.updateProduct(updatedProduct);
     }
-    
+
     clearCart();
   }
 
-   Future<void> uploadImageToImgBB(
+  Future<void> uploadImageToImgBB(
     File imageFile,
     Function(String) onSuccess,
     Function(String) onError,
@@ -312,9 +383,13 @@ class AppViewModel extends ChangeNotifier {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse("https://api.imgbb.com/1/upload?key=f601727fed32cf7a175833d01d8a10ff"),
+        Uri.parse(
+          "https://api.imgbb.com/1/upload?key=f601727fed32cf7a175833d01d8a10ff",
+        ),
       );
-      request.files.add(await http.MultipartFile.fromPath('image', imageFile.path));
+      request.files.add(
+        await http.MultipartFile.fromPath('image', imageFile.path),
+      );
       final response = await request.send();
 
       if (response.statusCode == 200) {
@@ -338,7 +413,11 @@ class AppViewModel extends ChangeNotifier {
 
   void updateTodayTarget(double amount) async {
     final dateString = DateFormat("yyyy-MM-dd").format(DateTime.now());
-    _todayTarget = SalesTarget(date: dateString, targetAmount: amount, dateString: '');
+    _todayTarget = SalesTarget(
+      date: dateString,
+      targetAmount: amount,
+      dateString: '',
+    );
     addSyncLog("Target penjualan harian diperbarui: ${formatRupiah(amount)}");
     notifyListeners();
   }
@@ -348,23 +427,24 @@ class AppViewModel extends ChangeNotifier {
     if (index != -1) {
       var order = _shopsphereOrders[index];
       _shopsphereOrders[index] = ShopsphereOrder(
-          id: order.id,
-          dayIndex: order.dayIndex,
-          productName: order.productName,
-          quantity: order.quantity,
-          customerName: order.customerName,
-          courierPhone: order.courierPhone,
-          totalAmount: order.totalAmount,
-          status: "Siap Diambil",
-          verificationCode: order.verificationCode);
+        id: order.id,
+        dayIndex: order.dayIndex,
+        productName: order.productName,
+        quantity: order.quantity,
+        customerName: order.customerName,
+        courierPhone: order.courierPhone,
+        totalAmount: order.totalAmount,
+        status: "Siap Diambil",
+        verificationCode: order.verificationCode,
+      );
       addSyncLog("Pesanan $orderId selesai dipacking.");
       notifyListeners();
     }
   }
 
   void callCourier(String orderId) {
-     addSyncLog("Menghubungi pembeli untuk pesanan $orderId...");
-     logger.i("Calling courier for order $orderId");
+    addSyncLog("Menghubungi pembeli untuk pesanan $orderId...");
+    logger.i("Calling courier for order $orderId");
   }
 
   void printOrderLabel(String orderId) {
@@ -376,16 +456,17 @@ class AppViewModel extends ChangeNotifier {
     final index = _shopsphereOrders.indexWhere((o) => o.id == orderId);
     if (index != -1) {
       var order = _shopsphereOrders[index];
-       _shopsphereOrders[index] = ShopsphereOrder(
-          id: order.id,
-          dayIndex: order.dayIndex,
-          productName: order.productName,
-          quantity: order.quantity,
-          customerName: order.customerName,
-          courierPhone: order.courierPhone,
-          totalAmount: order.totalAmount,
-          status: "Selesai Diambil",
-          verificationCode: order.verificationCode);
+      _shopsphereOrders[index] = ShopsphereOrder(
+        id: order.id,
+        dayIndex: order.dayIndex,
+        productName: order.productName,
+        quantity: order.quantity,
+        customerName: order.customerName,
+        courierPhone: order.courierPhone,
+        totalAmount: order.totalAmount,
+        status: "Selesai Diambil",
+        verificationCode: order.verificationCode,
+      );
       addSyncLog("Pesanan $orderId telah dikonfirmasi diambil oleh pembeli.");
       notifyListeners();
     }
@@ -393,12 +474,18 @@ class AppViewModel extends ChangeNotifier {
 
   double getTodaySalesTotal() {
     if (_transactions.isEmpty) {
-        return 0.0;
+      return 0.0;
     }
-    final todayStart = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day).millisecondsSinceEpoch;
-    final todaysTransactions = _transactions.where((t) => t.timestamp >= todayStart);
+    final todayStart = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    ).millisecondsSinceEpoch;
+    final todaysTransactions = _transactions.where(
+      (t) => t.timestamp >= todayStart,
+    );
     if (todaysTransactions.isEmpty) {
-        return 0.0;
+      return 0.0;
     }
     return todaysTransactions.map((t) => t.totalAmount).reduce((a, b) => a + b);
   }
@@ -427,10 +514,7 @@ class ImgBbData {
   ImgBbData({this.url, this.displayUrl});
 
   factory ImgBbData.fromJson(Map<String, dynamic> json) {
-    return ImgBbData(
-      url: json['url'],
-      displayUrl: json['display_url'],
-    );
+    return ImgBbData(url: json['url'], displayUrl: json['display_url']);
   }
 }
 
@@ -467,10 +551,13 @@ class BuyerChat {
 class Uuid {
   final Random _random = Random();
   String v4() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAllMapped(RegExp(r'[xy]'), (match) {
-      final int r = (_random.nextDouble() * 16).floor();
-      final int v = match.group(0) == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toRadixString(16);
-    });
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replaceAllMapped(
+      RegExp(r'[xy]'),
+      (match) {
+        final int r = (_random.nextDouble() * 16).floor();
+        final int v = match.group(0) == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toRadixString(16);
+      },
+    );
   }
 }
