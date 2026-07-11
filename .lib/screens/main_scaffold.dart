@@ -3,10 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 
 import '../viewmodels/app_view_model.dart';
-import 'home_screen.dart';
-import 'seller_screen.dart';
-import 'approval_screen.dart';
-import 'system_screen.dart';
+import 'package:seller_sphere/screens/dashboard_screen.dart';
+import 'package:seller_sphere/screens/inventory_screen.dart';
+import 'package:seller_sphere/screens/transactions_screen.dart';
+import 'package:seller_sphere/screens/chat_screen.dart';
+import 'package:seller_sphere/screens/slides_screen.dart';
 import 'settings_screen.dart';
 import '../models/notification.dart' as model;
 
@@ -21,17 +22,40 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const HomeScreen(),
-    const SellerScreen(),
-    const ApprovalScreen(),
-    const SystemScreen(),
+    DashboardScreen(
+      onNavigateToInventory: () {},
+      onNavigateToTransactions: () {},
+      onNavigateToChat: (String customerName) {},
+      onNavigateToSlides: () {},
+    ),
+    const InventoryScreen(),
+    const TransactionsScreen(),
+    const ChatScreen(),
+    const SlidesScreen(),
     const SettingsScreen(),
   ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<AppViewModel>(context);
     final theme = Theme.of(context);
+
+    // Update the DashboardScreen with real navigation callbacks
+    _screens[0] = DashboardScreen(
+      onNavigateToInventory: () => _onItemTapped(1),
+      onNavigateToTransactions: () => _onItemTapped(2),
+      onNavigateToChat: (String customerName) {
+        viewModel.activeChatBuyerName = customerName;
+        _onItemTapped(3);
+      },
+      onNavigateToSlides: () => _onItemTapped(4),
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +63,7 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "GUARDIAN CONSOLE",
+              "SELLER SPHERE",
               style: theme.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w600,
                 color: theme.colorScheme.primary,
@@ -50,13 +74,13 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
-                  Icons.shield_outlined,
+                  Icons.storefront,
                   color: theme.colorScheme.primary,
                   size: 18,
                 ),
                 const SizedBox(width: 6),
                 Text(
-                  "SecurApp Admin",
+                  "Store Intelligence",
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -66,9 +90,7 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
             ),
           ],
         ),
-        actions: [
-          _buildNotificationsMenu(context, viewModel),
-        ],
+        actions: [_buildNotificationsMenu(context, viewModel)],
         backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
       ),
@@ -105,18 +127,24 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildNavItem(Icons.home, "Home", 0, theme),
-            _buildNavItem(Icons.storefront, "Seller", 1, theme),
-            _buildNavItem(Icons.fact_check, "Approval", 2, theme),
-            _buildNavItem(Icons.lock_outline, "System", 3, theme),
-            _buildNavItem(Icons.settings, "Settings", 4, theme),
+            _buildNavItem(Icons.dashboard, "Dashboard", 0, theme),
+            _buildNavItem(Icons.inventory_2, "Inventory", 1, theme),
+            _buildNavItem(Icons.receipt_long, "Transactions", 2, theme),
+            _buildNavItem(Icons.chat_bubble_outline, "Chat", 3, theme),
+            _buildNavItem(Icons.slideshow, "Slides", 4, theme),
+            _buildNavItem(Icons.settings, "Settings", 5, theme),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildNavItem(IconData icon, String title, int index, ThemeData theme) {
+  Widget _buildNavItem(
+    IconData icon,
+    String title,
+    int index,
+    ThemeData theme,
+  ) {
     final isSelected = _selectedIndex == index;
     return GestureDetector(
       onTap: () => setState(() => _selectedIndex = index),
@@ -128,11 +156,11 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
           height: 48,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: isSelected ? Colors.white.withAlpha(2) : Colors.transparent,
+            color: isSelected ? Colors.white.withAlpha(50) : Colors.transparent,
           ),
           child: Icon(
             icon,
-            color: Colors.white.withAlpha(isSelected ? 10 : 07),
+            color: Colors.white.withAlpha(isSelected ? 255 : 150),
             size: 24,
           ),
         ),
@@ -159,14 +187,17 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
       ),
       itemBuilder: (context) {
         final notifications = []; // Replace with actual data from ViewModel
-        
+
         return [
           PopupMenuItem(
             enabled: false,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Aktivitas Seller", style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  "Aktivitas Seller",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 TextButton(
                   onPressed: () {
                     // viewModel.markAllNotificationsAsRead();
@@ -190,11 +221,13 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
                 child: Text(
                   notif.message,
                   style: TextStyle(
-                    fontWeight: notif.isRead ? FontWeight.normal : FontWeight.bold,
+                    fontWeight: notif.isRead
+                        ? FontWeight.normal
+                        : FontWeight.bold,
                   ),
                 ),
               );
-            })
+            }),
         ];
       },
     );

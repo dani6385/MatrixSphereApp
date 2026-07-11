@@ -3,13 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:shared_ui/theme/app_theme.dart';
 import 'viewmodels/app_view_model.dart';
 import 'screens/login_screen.dart';
-import 'package:shared_services/shared_services.dart'; // Assuming this path
+import 'screens/main_scaffold.dart';
+import 'package:shared_services/shared_services.dart';
 
 void main() {
-  final firestoreService = FirestoreService(); // Instantiate FirestoreService
+  final firestoreService = FirestoreService();
   runApp(
     ChangeNotifierProvider(
-      create: (context) => AppViewModel(firestoreService), // Pass the service here
+      create: (context) => AppViewModel(firestoreService),
       child: const MyApp(),
     ),
   );
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
     final viewModel = context.watch<AppViewModel>();
     return MaterialApp(
       theme: AppTheme.dark,
-      home: viewModel.isLoggedIn ? const LoginScreen() : const LoginScreen(),
+      home: viewModel.isLoggedIn ? const MainAppScaffold() : const LoginScreen(),
     );
   }
 }

@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:seller_sphere/models/shopsphere_order.dart';
 import '../models/app_access.dart';
 import '../models/notification.dart' as model;
 import '../models/seller.dart';
 import '../models/approval_request.dart';
 import '../models/user_profile.dart';
 import '../models/system_user.dart';
+import 'package:intl/intl.dart';
 
 enum LoginStep {
   loginSelection,
@@ -27,7 +29,8 @@ class AppViewModel extends ChangeNotifier {
   String _twoFactorCode = "";
   String? _authError;
   String? _profileSuccessMessage;
-  
+  String _activeChatBuyerName = "";
+
   final otpController = TextEditingController();
 
   final List<AppAccess> _appAccessList = [];
@@ -35,6 +38,10 @@ class AppViewModel extends ChangeNotifier {
   List<ApprovalRequest> _approvalRequests = [];
   List<model.Notification> _notifications = [];
   final List<SystemUser> _systemUsers = [];
+  List<dynamic> _products = [];
+  List<dynamic> _transactions = [];
+  dynamic _todayTarget;
+  List<ShopsphereOrder> _shopsphereOrders = [];
 
   StreamSubscription? _sellersSubscription;
   StreamSubscription? _notificationsSubscription;
@@ -52,6 +59,17 @@ class AppViewModel extends ChangeNotifier {
   String? get authError => _authError;
   String? get profileSuccessMessage => _profileSuccessMessage;
   String get sellerFilterStatus => _sellerFilterStatus;
+  List<dynamic> get products => _products;
+  List<dynamic> get lowStockProducts => _products.where((p) => p['stock'] < 5).toList();
+  List<dynamic> get transactions => _transactions;
+  dynamic get todayTarget => _todayTarget;
+  List<ShopsphereOrder> get shopsphereOrders => _shopsphereOrders;
+  String get activeChatBuyerName => _activeChatBuyerName;
+
+  set activeChatBuyerName(String name) {
+    _activeChatBuyerName = name;
+    notifyListeners();
+  }
 
   List<AppAccess> get appAccessList => _appAccessList;
   List<model.Notification> get notifications => _notifications.reversed.toList();
@@ -76,6 +94,19 @@ class AppViewModel extends ChangeNotifier {
 
   AppViewModel(this._firestoreService) {
     _initializeDataStreams();
+    _loadMockData();
+  }
+  
+  void _loadMockData() {
+    _products = List.generate(20, (i) => {'name': 'Product $i', 'stock': i + 1});
+    _transactions = List.generate(5, (i) => {'total': (i + 1) * 10000.0, 'profit': (i + 1) * 2000.0, 'timestamp': DateTime.now().millisecondsSinceEpoch});
+    _todayTarget = {'targetAmount': 1500000.0};
+    _shopsphereOrders = [
+      ShopsphereOrder(id: "SS-2405-1A", customerName: "Budi", productName: "Kopi Lokal", quantity: 2, totalAmount: 50000, courierPhone: "08123456789", verificationCode: "123456", status: "Siap Diambil", dayIndex: 6),
+      ShopsphereOrder(id: "SS-2405-2B", customerName: "Ani", productName: "Teh Impor", quantity: 1, totalAmount: 75000, courierPhone: "08987654321", verificationCode: "654321", status: "Perlu Dipacking", dayIndex: 6),
+      ShopsphereOrder(id: "SS-2405-3C", customerName: "Caca", productName: "Susu Segar", quantity: 3, totalAmount: 45000, courierPhone: "08111222333", verificationCode: "112233", status: "Selesai Diambil", dayIndex: 5),
+    ];
+    notifyListeners();
   }
 
   void _initializeDataStreams() {
@@ -116,6 +147,53 @@ class AppViewModel extends ChangeNotifier {
     _systemUsersSubscription?.cancel();
     otpController.dispose();
     super.dispose();
+  }
+  
+  String formatRupiah(double amount) {
+      final format = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+      return format.format(amount);
+  }
+  
+  double getTodaySalesTotal() {
+      final todayStart = DateTime.now().subtract(const Duration(hours: 24));
+      return _transactions.where((t) => DateTime.fromMillisecondsSinceEpoch(t['timestamp']).isAfter(todayStart)).fold(0.0, (sum, t) => sum + t['total']);
+  }
+
+  void loadTodayTarget() {
+    // In a real app, this would load from a persistent source.
+    // For now, it's loaded in _loadMockData
+    notifyListeners();
+  }
+  
+  void updateTodayTarget(double amount) {
+    _todayTarget = {'targetAmount': amount};
+    notifyListeners();
+  }
+  
+  void confirmOrderPickup(String orderId) {
+    final index = _shopsphereOrders.indexWhere((o) => o.id == orderId);
+    if (index != -1) {
+      _shopsphereOrders[index] = ShopsphereOrder(id: _shopsphereOrders[index].id, customerName: _shopsphereOrders[index].customerName, productName: _shopsphereOrders[index].productName, quantity: _shopsphereOrders[index].quantity, totalAmount: _shopsphereOrders[index].totalAmount, courierPhone: _shopsphereOrders[index].courierPhone, verificationCode: _shopsphereOrders[index].verificationCode, status: "Selesai Diambil", dayIndex: _shopsphereOrders[index].dayIndex);
+      notifyListeners();
+    }
+  }
+  
+  void finishPacking(String orderId) {
+    final index = _shopsphereOrders.indexWhere((o) => o.id == orderId);
+    if (index != -1) {
+      _shopsphereOrders[index] = ShopsphereOrder(id: _shopsphereOrders[index].id, customerName: _shopsphereOrders[index].customerName, productName: _shopsphereOrders[index].productName, quantity: _shopsphereOrders[index].quantity, totalAmount: _shopsphereOrders[index].totalAmount, courierPhone: _shopsphereOrders[index].courierPhone, verificationCode: _shopsphereOrders[index].verificationCode, status: "Siap Diambil", dayIndex: _shopsphereOrders[index].dayIndex);
+      notifyListeners();
+    }
+  }
+  
+  void callCourier(String orderId) {
+    // In a real app, this would trigger a phone call
+    print("Calling courier for order $orderId");
+  }
+
+  void printOrderLabel(String orderId) {
+    // In a real app, this would connect to a printer
+    print("Printing label for order $orderId");
   }
 
   void approveRequest(String id) {

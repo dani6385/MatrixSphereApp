@@ -14,25 +14,50 @@ class Product {
   final int? id;
   final String name;
   final String sku;
-  final double stock;
-  final double minStockThreshold;
+  final int stock;
+  final double purchasePrice;
+  final double sellingPrice;
+  final String category;
+  final int minStockThreshold;
+  final String imageUrls;
+  final int ageRating;
 
   Product({
     this.id,
     required this.name,
-    required this.sku,
-    required this.stock,
-    required this.minStockThreshold,
+    this.sku = "",
+    this.stock = 0,
+    this.purchasePrice = 0.0,
+    this.sellingPrice = 0.0,
+    this.category = "Umum",
+    this.minStockThreshold = 5,
+    this.imageUrls = "",
+    this.ageRating = 0,
   });
+
+  @ignore
+  bool get isLowStock => stock <= minStockThreshold;
+
+  @ignore
+  double get profitPerUnit => sellingPrice - purchasePrice;
 }
 
 @entity
 class SaleTransaction {
   @primaryKey
   final int? id;
-  final int timestamp; // Using int for timestamp as in the original code (long)
+  final int timestamp;
+  final double totalAmount;
+  final double totalProfit;
+  final String paymentMethod;
 
-  SaleTransaction({this.id, required this.timestamp});
+  SaleTransaction({
+    this.id,
+    required this.timestamp,
+    this.totalAmount = 0.0,
+    this.totalProfit = 0.0,
+    this.paymentMethod = "Tunai",
+  });
 }
 
 @entity
@@ -40,26 +65,36 @@ class SaleItem {
   @primaryKey
   final int? id;
   final int transactionId;
-  // You might want to add a foreign key constraint here
   final int productId;
+  final String productName;
   final int quantity;
-
+  final double purchasePrice;
+  final double sellingPrice;
 
   SaleItem({
     this.id,
     required this.transactionId,
     required this.productId,
+    required this.productName,
     required this.quantity,
+    required this.purchasePrice,
+    required this.sellingPrice,
   });
+
+  @ignore
+  double get totalAmount => sellingPrice * quantity;
+
+  @ignore
+  double get totalProfit => (sellingPrice - purchasePrice) * quantity;
 }
 
 @entity
 class SalesTarget {
   @primaryKey
-  final String dateString;
+  final String dateString; // YYYY-MM-DD
   final double targetAmount;
 
-  SalesTarget({required this.dateString, required this.targetAmount});
+  SalesTarget({required this.dateString, this.targetAmount = 0.0, required String date});
 }
 
 
