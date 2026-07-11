@@ -124,7 +124,6 @@ class _MainShellState extends State<MainShell> {
             appBar: _buildAppBar(context, scaffoldKey),
             body: PageView(
               controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(), // Disable swipe navigation
               children: pages,
             ),
             bottomNavigationBar: _buildBottomNavBar(context),
