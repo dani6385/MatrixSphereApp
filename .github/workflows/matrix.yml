@@ -49,19 +49,19 @@ jobs:
           - app: "SS Shop Sphere"
             dir: "apps/shop_sphere"
             firebase_project: "ss-shop-sphere" # ID Project Firebase untuk Shop
-            firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_SS_SHOP_SPHERE"
+            firebase_site: "ss-shop-sph"
             should_run: ${{ needs.detect-changes.outputs.shop_sphere }}
 
           - app: "SS Seller Sphere"
             dir: "apps/seller_sphere"
             firebase_project: "ss-selles-sphere" # ID Project Firebase untuk Seller
-            firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_SS_SELLES_SPHERE"
+            firebase_site: "ss-seller-sph"
             should_run: ${{ needs.detect-changes.outputs.seller_sphere }}
 
           - app: "CC Client Connectivity"
             dir: "apps/client_connectivity"
             firebase_project: "cc-client-connectivity"
-            firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_CC_CLIENT"
+            firebase_site: "cc-client-connect"
             should_run: ${{ needs.detect-changes.outputs.client_connectivity }}
 
           - app: "Admin Mikrotik"
