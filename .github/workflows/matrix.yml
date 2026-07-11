@@ -35,7 +35,7 @@ jobs:
               - 'apps/admin_mikrotik/**'
               - 'apps/admin_mikrotik/pubspec.yaml'
             matrix_sphere:
-              - '**'
+              - 'lib/**'
               - 'pubspec.yaml'
 
   # JOB 2: Melakukan Build dan Deploy secara paralel menggunakan Matrix
@@ -72,7 +72,7 @@ jobs:
             should_run: ${{ needs.detect-changes.outputs.admin_mikrotik }}
 
           - app: "Matrix Sphere"
-            dir: "apps/matrix_sphere"
+            dir: "**"
             firebase_project: "matrix-sphere-project-id" # Sesuaikan ID Project Firebase Anda
             firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_MATRIX_SPHERE"
             should_run: ${{ needs.detect-changes.outputs.matrix_sphere }}

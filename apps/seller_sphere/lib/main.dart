@@ -55,7 +55,6 @@ class MainShell extends StatefulWidget {
 
 class _MainShellState extends State<MainShell> {
   int _selectedIndex = 0;
-  final PageController _pageController = PageController();
 
   // Toast notification state
   String _toastTitle = '';
@@ -86,7 +85,6 @@ class _MainShellState extends State<MainShell> {
 
   @override
   void dispose() {
-    _pageController.dispose();
     _toastTimer?.cancel();
     super.dispose();
   }
@@ -94,11 +92,11 @@ class _MainShellState extends State<MainShell> {
   void _onItemTapped(int index) {
     // Handle navigation logic
     if (index < 5) { // Standard bottom nav items
-      _pageController.jumpToPage(index);
+      setState(() => _selectedIndex = index);
     } else if (index == 5) { // Notifications
-       Navigator.of(context).push(MaterialPageRoute(builder: (_) => NotificationScreen(onNavigateBack: () => Navigator.pop(context), onNavigateToInventory: (){ _onItemTapped(1); }))).then((_) => setState((){_selectedIndex = _pageController.page?.round() ?? 0;}));
+       Navigator.of(context).push(MaterialPageRoute(builder: (_) => NotificationScreen(onNavigateBack: () => Navigator.pop(context), onNavigateToInventory: (){ _onItemTapped(1); }))).then((_) => setState((){_selectedIndex = 0;})); // Reset to home after returning
     } else if (index == 6) { // Chat
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChatScreen(onNavigateBack: () => Navigator.pop(context)))).then((_) => setState((){_selectedIndex = _pageController.page?.round() ?? 0;}));
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => ChatScreen(onNavigateBack: () => Navigator.pop(context)))).then((_) => setState((){_selectedIndex = 0;})); // Reset to home after returning
     }
   }
 
@@ -121,13 +119,8 @@ class _MainShellState extends State<MainShell> {
         children: [
           Scaffold(
             appBar: _buildAppBar(context, scaffoldKey),
-            body: PageView(
-              controller: _pageController,
-              onPageChanged: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
+            body: IndexedStack(
+              index: _selectedIndex,
               children: pages,
             ),
             bottomNavigationBar: _buildBottomNavBar(context),
