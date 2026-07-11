@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/app_extraor.dart';
+import '../viewmodels/app_view_model.dart';
+import '../widgets/dashboard/action_buttons.dart';
+import '../widgets/dashboard/daily_target_card.dart';
+import '../widgets/dashboard/hero_banner.dart';
+import '../widgets/dashboard/low_stock_warning.dart';
+import '../widgets/dashboard/pickup_summary.dart';
+import '../widgets/dashboard/weekly_order_chart.dart';
 
 class DashboardScreen extends StatelessWidget {
   final VoidCallback onNavigateToInventory;
   final VoidCallback onNavigateToTransactions;
   final void Function(String) onNavigateToChat;
   final VoidCallback onNavigateToSlides;
+  final VoidCallback onNavigateToLive;
 
   const DashboardScreen({
     super.key,
@@ -14,6 +22,7 @@ class DashboardScreen extends StatelessWidget {
     required this.onNavigateToTransactions,
     required this.onNavigateToChat,
     required this.onNavigateToSlides,
+    required this.onNavigateToLive,
   });
 
   @override
@@ -24,15 +33,13 @@ class DashboardScreen extends StatelessWidget {
 
     final todaySalesTotal = viewModel.getTodaySalesTotal();
     final targetValue = viewModel.todayTarget?.targetAmount ?? 1000000.0;
-    final targetProgress = targetValue > 0
-        ? (todaySalesTotal / targetValue).clamp(0.0, 1.0)
-        : 1.0;
+    final targetProgress =
+        targetValue > 0 ? (todaySalesTotal / targetValue).clamp(0.0, 1.0) : 1.0;
     final targetPercentage = (targetProgress * 100).toInt();
 
     final todayOrders = shopsphereOrders.where((o) => o.dayIndex == 6).toList();
-    final awaitingPickupCount = todayOrders
-        .where((o) => o.status != "Selesai Diambil")
-        .length;
+    final awaitingPickupCount =
+        todayOrders.where((o) => o.status != "Selesai Diambil").length;
     final pickedUpCount = todayOrders.length - awaitingPickupCount;
 
     return Scaffold(
@@ -69,6 +76,7 @@ class DashboardScreen extends StatelessWidget {
           ActionButtons(
             onNavigateToTransactions: onNavigateToTransactions,
             onNavigateToInventory: onNavigateToInventory,
+            onNavigateToLive: onNavigateToLive,
           ),
         ],
       ),

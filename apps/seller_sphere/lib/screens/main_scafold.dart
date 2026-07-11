@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as model show Notification;
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 
 import '../viewmodels/app_view_model.dart';
-import 'package:seller_sphere/screens/dashboard_screen.dart';
-import 'package:seller_sphere/screens/inventory_screen.dart';
-import 'package:seller_sphere/screens/transactions_screen.dart';
-import 'package:seller_sphere/screens/chat_screen.dart';
-import 'package:seller_sphere/screens/slides_screen.dart';
-//import 'settings_screen.dart';
-//import '../models/notification.dart' as model;
+import 'dashboard_screen.dart';
+import 'inventory_screen.dart';
+import 'transactions_screen.dart';
+import 'chat_screen.dart';
+import 'slides_screen.dart';
+import 'streaming_screen.dart';
+import '../widgets/common/custom_bottom_nav.dart';
+import '../widgets/common/main_app_bar.dart';
 
 class MainAppScaffold extends StatefulWidget {
   const MainAppScaffold({super.key});
@@ -22,19 +22,30 @@ class MainAppScaffold extends StatefulWidget {
 class _MainAppScaffoldState extends State<MainAppScaffold> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    DashboardScreen(
-      onNavigateToInventory: () {},
-      onNavigateToTransactions: () {},
-      onNavigateToChat: (String customerName) {},
-      onNavigateToSlides: () {},
-    ),
-    const InventoryScreen(),
-    const TransactionsScreen(),
-    const ChatScreen(),
-    const SlidesScreen(),
-    //const SettingsScreen(),
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void initState() {
+    super.initState();
+    final viewModel = Provider.of<AppViewModel>(context, listen: false);
+    _screens = [
+      DashboardScreen(
+        onNavigateToInventory: () => _onItemTapped(1),
+        onNavigateToTransactions: () => _onItemTapped(2),
+        onNavigateToChat: (String customerName) {
+          viewModel.activeChatBuyerName = customerName;
+          _onItemTapped(3);
+        },
+        onNavigateToSlides: () => _onItemTapped(4),
+        onNavigateToLive: () => _onItemTapped(5),
+      ),
+      const InventoryScreen(),
+      const TransactionsScreen(),
+      const ChatScreen(),
+      const SlidesScreen(),
+      StreamingScreen(viewModel: viewModel),
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -44,57 +55,8 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<AppViewModel>(context);
-    final theme = Theme.of(context);
-
-    // Update the DashboardScreen with real navigation callbacks
-    _screens[0] = DashboardScreen(
-      onNavigateToInventory: () => _onItemTapped(1),
-      onNavigateToTransactions: () => _onItemTapped(2),
-      onNavigateToChat: (String customerName) {
-        viewModel.activeChatBuyerName = customerName;
-        _onItemTapped(3);
-      },
-      onNavigateToSlides: () => _onItemTapped(4),
-    );
-
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "SELLER SPHERE",
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-                color: theme.colorScheme.primary,
-                letterSpacing: 1.5,
-              ),
-            ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.storefront,
-                  color: theme.colorScheme.primary,
-                  size: 18,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  "Store Intelligence",
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        actions: [_buildNotificationsMenu(context, viewModel)],
-        backgroundColor: theme.scaffoldBackgroundColor,
-        elevation: 0,
-      ),
+      appBar: const MainAppBar(),
       body: PageTransitionSwitcher(
         transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
           return FadeThroughTransition(
@@ -105,132 +67,10 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
         },
         child: _screens[_selectedIndex],
       ),
-      bottomNavigationBar: _buildCustomBottomNav(theme),
-    );
-  }
-
-  Widget _buildCustomBottomNav(ThemeData theme) {
-    return Container(
-      padding: const EdgeInsets.only(left: 24, right: 24, bottom: 20, top: 8),
-      child: Container(
-        height: 64,
-        decoration: BoxDecoration(
-          color: const Color(0xFF008577),
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(15),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _buildNavItem(Icons.dashboard, "Dashboard", 0, theme),
-            _buildNavItem(Icons.inventory_2, "Inventory", 1, theme),
-            _buildNavItem(Icons.receipt_long, "Transactions", 2, theme),
-            _buildNavItem(Icons.chat_bubble_outline, "Chat", 3, theme),
-            _buildNavItem(Icons.slideshow, "Slides", 4, theme),
-            _buildNavItem(Icons.settings, "Settings", 5, theme),
-          ],
-        ),
+      bottomNavigationBar: CustomBottomNav(
+        selectedIndex: _selectedIndex,
+        onItemTapped: _onItemTapped,
       ),
-    );
-  }
-
-  Widget _buildNavItem(
-    IconData icon,
-    String title,
-    int index,
-    ThemeData theme,
-  ) {
-    final isSelected = _selectedIndex == index;
-    return GestureDetector(
-      onTap: () => setState(() => _selectedIndex = index),
-      child: Semantics(
-        label: title,
-        selected: isSelected,
-        child: Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: isSelected ? Colors.white.withAlpha(50) : Colors.transparent,
-          ),
-          child: Icon(
-            icon,
-            color: Colors.white.withAlpha(isSelected ? 255 : 150),
-            size: 24,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNotificationsMenu(BuildContext context, AppViewModel viewModel) {
-    final unreadCount = 0; // Replace with actual data from ViewModel
-
-    return PopupMenuButton<model.Notification>(
-      onSelected: (notification) {
-        // viewModel.dismissNotification(notification.id);
-      },
-      child: IconButton(
-        icon: Badge(
-          label: Text(unreadCount.toString()),
-          isLabelVisible: unreadCount > 0,
-          child: const Icon(Icons.notifications),
-        ),
-        onPressed: () {
-          // This will be handled by PopupMenuButton
-        },
-      ),
-      itemBuilder: (context) {
-        final notifications = []; // Replace with actual data from ViewModel
-
-        return [
-          PopupMenuItem(
-            enabled: false,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Aktivitas Seller",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                TextButton(
-                  onPressed: () {
-                    // viewModel.markAllNotificationsAsRead();
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Tandai Baca"),
-                ),
-              ],
-            ),
-          ),
-          const PopupMenuDivider(),
-          if (notifications.isEmpty)
-            const PopupMenuItem(
-              enabled: false,
-              child: Text("Tidak ada notifikasi"),
-            )
-          else
-            ...notifications.take(5).map((notif) {
-              return PopupMenuItem(
-                value: notif,
-                child: Text(
-                  notif.message,
-                  style: TextStyle(
-                    fontWeight: notif.isRead
-                        ? FontWeight.normal
-                        : FontWeight.bold,
-                  ),
-                ),
-              );
-            }),
-        ];
-      },
     );
   }
 }
