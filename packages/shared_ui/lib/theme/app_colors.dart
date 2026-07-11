@@ -48,4 +48,5 @@ const Color kNeonCyan = Color(0xFF00E5FF);
 const Color kWarmOrange = Color(0xFFF57C00);
 const Color kSoftTeal = Color(0xFF388E3C);
 const Color kNeonBlue = Color(0xFF007AFF);
+const Color kElectricBlue = Color(0xFF2E5BFF);
 

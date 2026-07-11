@@ -33,6 +33,9 @@
 	<!-- Izinkan Flutter untuk merender tampilan platform (Google Maps) -->
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs camera access to scan order verification barcodes.</string>
+
 
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
