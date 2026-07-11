@@ -28,7 +28,7 @@ jobs:
             admin_mikrotik:
               - 'apps/admin_mikrotik/**'
             matrix_sphere:
-              - 'lib/**'
+              - '**'
             shop_sphere:
               - 'apps/shop_sphere/**'
 
@@ -59,27 +59,26 @@ jobs:
           fi
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
-  # JOB 2: Build Multiplatform menggunakan 2D Matrix
+  # JOB 2: Build Multiplatform (Web, Android, Desktop)
   build-multiplatform:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     
-    # Menentukan OS Runner secara dinamis berdasarkan platform target
-    runs-on: ${{ matrix.os }}
+    # PERBAIKAN: Menambahkan '|| 'ubuntu-latest' sebagai fallback agar tidak memicu eror validasi saat matrix kosong
+    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
     
     defaults:
       run:
-        # Menggunakan Bash secara global (bahkan di Windows) agar sintaksis skrip tetap seragam
         shell: bash
 
     strategy:
       fail-fast: false
       matrix:
         project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+        # 'web' ditambahkan di awal daftar platform sesuai permintaan Anda
         platform: [web, android, windows, linux, macos]
-        # Memetakan target platform ke OS Runner yang sesuai
         include:
-          - platform: linux
+          - platform: web
             os: ubuntu-latest
           - platform: android
             os: ubuntu-latest
@@ -94,7 +93,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Mengatur variabel folder kerja dan kredensial Firebase
+      # Mengatur variabel folder kerja dan kredensial Firebase secara dinamis
       - name: Resolve Project Variables
         id: vars
         run: |
@@ -127,7 +126,7 @@ jobs:
               ;;
           esac
 
-      # Langkah khusus Linux: Memasang dependensi GTK/CMake yang dibutuhkan Flutter
+      # Langkah khusus Linux: Memasang dependensi GTK/CMake yang dibutuhkan Flutter Desktop Linux
       - name: Install Linux Build Dependencies
         if: matrix.platform == 'linux'
         run: |
@@ -148,8 +147,9 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Enable Flutter Desktop Platforms
+      - name: Enable Flutter Platforms
         run: |
+          flutter config --enable-web
           flutter config --enable-windows-desktop
           flutter config --enable-linux-desktop
           flutter config --enable-macos-desktop
@@ -158,7 +158,9 @@ jobs:
       - name: Build Application
         run: |
           cd ${{ steps.vars.outputs.dir }}
-          if [ "${{ matrix.platform }}" = "android" ]; then
+          if [ "${{ matrix.platform }}" = "web" ]; then
+            flutter build web --release
+          elif [ "${{ matrix.platform }}" = "android" ]; then
             flutter build apk --release
           elif [ "${{ matrix.platform }}" = "windows" ]; then
             flutter build windows --release
@@ -168,7 +170,18 @@ jobs:
             flutter build macos --release
           fi
 
-      # ALUR DISTRIBUSI 1: Jika Android -> Deploy ke Firebase App Distribution
+      # ALUR DISTRIBUSI WEB: Deploy ke Firebase Hosting (Live Channel)
+      - name: Deploy to Firebase Hosting (Web Only)
+        if: matrix.platform == 'web'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ steps.vars.outputs.service_account }}
+          projectId: "matrixsphere-c3de9"
+          channelId: live
+          entryPoint: ${{ steps.vars.outputs.dir }}
+
+      # ALUR DISTRIBUSI ANDROID: Deploy ke Firebase App Distribution
       - name: Deploy to Firebase App Distribution (Android Only)
         if: matrix.platform == 'android'
         uses: w9jds/firebase-action@v2.2.0
@@ -177,13 +190,15 @@ jobs:
         env:
           GCP_SA_KEY: ${{ steps.vars.outputs.service_account }}
 
-      # ALUR DISTRIBUSI 2: Jika Desktop (Win/Linux/Mac) -> Unggah ke GitHub Artifacts
-      - name: Determine Desktop Artifact Path
+      # ALUR DISTRIBUSI DESKTOP & CADANGAN WEB: Mengunggah Artifacts ke GitHub
+      - name: Determine Non-Android Artifact Path
         if: matrix.platform != 'android'
         id: artifact-path
         run: |
           DIR="${{ steps.vars.outputs.dir }}"
-          if [ "${{ matrix.platform }}" = "windows" ]; then
+          if [ "${{ matrix.platform }}" = "web" ]; then
+            echo "path=$DIR/build/web" >> $GITHUB_OUTPUT
+          elif [ "${{ matrix.platform }}" = "windows" ]; then
             echo "path=$DIR/build/windows/x64/runner/Release" >> $GITHUB_OUTPUT
           elif [ "${{ matrix.platform }}" = "linux" ]; then
             echo "path=$DIR/build/linux/x64/release/bundle" >> $GITHUB_OUTPUT
@@ -191,7 +206,7 @@ jobs:
             echo "path=$DIR/build/macos/Build/Products/Release" >> $GITHUB_OUTPUT
           fi
 
-      - name: Upload Desktop Artifacts (Windows, Linux, macOS)
+      - name: Upload Non-Android Artifacts (Web & Desktop)
         if: matrix.platform != 'android'
         uses: actions/upload-artifact@v4
         with:
