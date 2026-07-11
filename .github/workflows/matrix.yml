@@ -127,7 +127,7 @@ jobs:
         run: |
           mkdir -p build/web
           cp -r ${{ matrix.dir }}/build/web/* build/web/
-
+          cp ${{ matrix.dir }}/firebase.json ./firebase.json
       # Mengunggah hasil build aplikasi ke Firebase Hosting masing-masing
       - name: Deploy to Firebase Hosting
         if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
@@ -138,7 +138,6 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
           projectId: "matrixsphere-c3de9" # ID Proyek Firebase Anda
           channelId: live
-          cwd: ${{ matrix.dir }}
 
   # 2. BUILD ANDROID
   build_android:
