@@ -78,8 +78,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
 
       - name: Setup Java
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: actions/setup-java@v4
         with:
           java-version: '21'
@@ -88,6 +90,7 @@ jobs:
 
       # Cache dependensi yang dipisahkan per aplikasi agar tidak bentrok
       - name: Cache Pub & Gradle
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: actions/cache@v4
         with:
           path: |
@@ -98,6 +101,7 @@ jobs:
 
       # Cache folder build unik untuk masing-masing aplikasi
       - name: Cache Flutter Build
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: actions/cache@v4
         with:
           path: ${{ matrix.dir }}/build
@@ -106,17 +110,20 @@ jobs:
             build-${{ runner.os }}-${{ matrix.app }}-
 
       - name: Setup Flutter
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
       - name: Build Web
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: flutter build web --release
         working-directory: ${{ matrix.dir }} # Berpindah ke folder aplikasi yang sesuai sebelum build
 
       # Mengunggah hasil build aplikasi ke Firebase Hosting masing-masing
       - name: Deploy to Firebase Hosting
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
