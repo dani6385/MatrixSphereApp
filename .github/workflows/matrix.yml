@@ -167,15 +167,16 @@ jobs:
       - name: Build Apk
         if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: flutter build apk --release
-        working-directory: apps/client_connectivity
-      - name: Deploy to Firebase
+        working-directory: ${{ matrix.dir }}
+      - ame: Deploy to Firebase App Distribution (Seller Group)
         if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
-        uses: w9jds/firebase-action@master
+        uses: w9jds/firebase-action@v2.2.0
         with:
-          args: deploy --only hosting --project matrixsphere-c3de9
+          # Perintah untuk mendistribusikan file APK ke grup "seller"
+          args: appdistribution:distribute ${{ matrix.dir }}/app/build/outputs/apk/release/app-release.apk --app "${{ secrets.FIREBASE_APP_ID }}" --groups "seller" --release-notes "Build otomatis dari GitHub Actions"
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-          PROJECT_PATH: .
+          # Menggunakan kredensial akun layanan Firebase Anda
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
   # 3. BUILD WINDOWS (Optimasi Cache)
   build_windows:
