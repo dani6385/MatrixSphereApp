@@ -40,7 +40,7 @@ class SellerSphereApp extends StatelessWidget {
         onNavigateToInventory: () {},
         onNavigateToTransactions: () {},
         onNavigateToChat: (String p1) {},
-        onNavigateToSlides: () {},
+        onNavigateToSlides: () {}, onNavigateToLive: () {  },
       ),
     );
   }

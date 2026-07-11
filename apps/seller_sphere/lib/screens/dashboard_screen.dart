@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/app_extraor.dart';
-import '../viewmodels/app_view_model.dart';
-import '../widgets/dashboard/action_buttons.dart';
-import '../widgets/dashboard/daily_target_card.dart';
-import '../widgets/dashboard/hero_banner.dart';
-import '../widgets/dashboard/low_stock_warning.dart';
-import '../widgets/dashboard/pickup_summary.dart';
-import '../widgets/dashboard/weekly_order_chart.dart';
 
 class DashboardScreen extends StatelessWidget {
   final VoidCallback onNavigateToInventory;

@@ -31,12 +31,11 @@ class CustomBottomNav extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildNavItem(Icons.dashboard, "Dashboard", 0, theme),
-            _buildNavItem(Icons.inventory_2, "Inventory", 1, theme),
-            _buildNavItem(Icons.receipt_long, "Transactions", 2, theme),
-            _buildNavItem(Icons.chat_bubble_outline, "Chat", 3, theme),
-            _buildNavItem(Icons.slideshow, "Slides", 4, theme),
-            _buildNavItem(Icons.live_tv, "Live", 5, theme),
+            _buildNavItem(Icons.home, "Home", 0, theme),
+            _buildNavItem(Icons.live_tv, "Streaming", 1, theme),
+            _buildNavItem(Icons.receipt_long, "Transaction", 2, theme),
+            _buildNavItem(Icons.assessment, "Laporan", 3, theme),
+            _buildNavItem(Icons.trending_up, "Trend", 4, theme),
           ],
         ),
       ),
