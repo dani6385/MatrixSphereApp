@@ -5,39 +5,91 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
-# Definisi Template untuk reusable steps agar lebih bersih
 jobs:
-  # 1. BUILD WEB & DEPLOY
-  build_web:
+  # JOB 1: Mendeteksi folder mana saja yang memiliki perubahan kode
+  detect-changes:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          - app: SS Shop Sphere
-            path:
-              - 'apps/client_connectivity/**'
-              - 'apps/client_connectivity/pubspec.yaml'
-          - app: SS Seller Sphere
-            paths:
-              - 'apps/seller_sphere/**'
-              - 'apps/seller_sphere/pubspec.yaml'
-          - app: CC Client Connectivity
-            paths:
-              - 'apps/seller_sphere/**'
-              - 'apps/seller_sphere/pubspec.yaml'
-          - app: Admin Mikrotik
-            paths:
-              - 'apps/shop_sphere/**'
-              - 'apps/shop_sphere/pubspec.yaml'
-          - app: Matrix Sphere
-            paths:
-              - '**'
-              - 'pubspec.yaml'
+    outputs:
+      # Mengekspor hasil deteksi agar bisa dibaca oleh job berikutnya
+      shop_sphere: ${{ steps.filter.outputs.shop_sphere }}
+      seller_sphere: ${{ steps.filter.outputs.seller_sphere }}
+      client_connectivity: ${{ steps.filter.outputs.client_connectivity }}
+      admin_mikrotik: ${{ steps.filter.outputs.admin_mikrotik }}
+      matrix_sphere: ${{ steps.filter.outputs.matrix_sphere }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with: { java-version: '21', distribution: 'temurin', cache: 'gradle' }
-        # 1. Cache SDK & Dependensi (Pub & Gradle)
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            shop_sphere:
+              - 'apps/shop_sphere/**'
+              - 'pubspec.yaml'
+            seller_sphere:
+              - 'apps/seller_sphere/**'
+              - 'pubspec.yaml'
+            client_connectivity:
+              - 'apps/client_connectivity/**'
+              - 'pubspec.yaml'
+            admin_mikrotik:
+              - 'apps/admin_mikrotik/**'
+              - 'pubspec.yaml'
+            matrix_sphere:
+              - 'apps/matrix_sphere/**'
+              - 'pubspec.yaml'
+
+  # JOB 2: Melakukan Build dan Deploy secara paralel menggunakan Matrix
+  build_and_deploy:
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Jika satu aplikasi gagal build, aplikasi lain tetap lanjut
+      matrix:
+        include:
+          - app: "SS Shop Sphere"
+            dir: "apps/shop_sphere"
+            firebase_project: "ss-shop-sphere" # ID Project Firebase untuk Shop
+            firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_SS_SHOP_SPHERE"
+            should_run: ${{ needs.detect-changes.outputs.shop_sphere }}
+
+          - app: "SS Seller Sphere"
+            dir: "apps/seller_sphere"
+            firebase_project: "ss-selles-sphere" # ID Project Firebase untuk Seller
+            firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_SS_SELLES_SPHERE"
+            should_run: ${{ needs.detect-changes.outputs.seller_sphere }}
+
+          - app: "CC Client Connectivity"
+            dir: "apps/client_connectivity"
+            firebase_project: "cc-client-connectivity"
+            firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_CC_CLIENT"
+            should_run: ${{ needs.detect-changes.outputs.client_connectivity }}
+
+          - app: "Admin Mikrotik"
+            dir: "apps/admin_mikrotik"
+            firebase_project: "admin-mikrotik-project-id" # Sesuaikan ID Project Firebase Anda
+            firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_ADMIN_MIKROTIK"
+            should_run: ${{ needs.detect-changes.outputs.admin_mikrotik }}
+
+          - app: "Matrix Sphere"
+            dir: "apps/matrix_sphere"
+            firebase_project: "matrix-sphere-project-id" # Sesuaikan ID Project Firebase Anda
+            firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_MATRIX_SPHERE"
+            should_run: ${{ needs.detect-changes.outputs.matrix_sphere }}
+
+    # Jalankan hanya jika ada perubahan di folder aplikasi tersebut, atau jika dijalankan manual (workflow_dispatch)
+    if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      # Cache dependensi yang dipisahkan per aplikasi agar tidak bentrok
       - name: Cache Pub & Gradle
         uses: actions/cache@v4
         with:
@@ -45,21 +97,36 @@ jobs:
             ~/.pub-cache
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-dependencies-${{ hashFiles('**/pubspec.lock', '**/*.gradle*') }}
+          key: ${{ runner.os }}-${{ matrix.app }}-dependencies-${{ hashFiles(format('{0}/pubspec.lock', matrix.dir)) }}
 
-      # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
+      # Cache folder build unik untuk masing-masing aplikasi
       - name: Cache Flutter Build
         uses: actions/cache@v4
         with:
-          path: build
-          key: build-${{ runner.os }}-${{ github.run_id }}
+          path: ${{ matrix.dir }}/build
+          key: build-${{ runner.os }}-${{ matrix.app }}-${{ github.run_id }}
           restore-keys: |
-            build-${{ runner.os }}-
-      - uses: subosito/flutter-action@v2
-        with: { channel: 'stable', cache: true }
-      - name: build web
+            build-${{ runner.os }}-${{ matrix.app }}-
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Build Web
         run: flutter build web --release
-        working-directory: .
+        working-directory: ${{ matrix.dir }} # Berpindah ke folder aplikasi yang sesuai sebelum build
+
+      # Mengunggah hasil build aplikasi ke Firebase Hosting masing-masing
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          # Mengambil kredensial secara dinamis sesuai nama secret yang didefinisikan pada matrix
+          firebaseServiceAccount: ${{ secrets[matrix.firebase_secret_name] }}
+          projectId: ${{ matrix.firebase_project }}
+          channelId: live
 
   # 2. BUILD ANDROID
   build_android:
