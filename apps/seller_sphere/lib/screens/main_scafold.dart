@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as model show Notification;
 import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 
 import '../viewmodels/app_view_model.dart';
-import 'home_screen.dart';
+import 'package:seller_sphere/screens/dashboard_screen.dart';
 import 'package:seller_sphere/screens/inventory_screen.dart';
 import 'package:seller_sphere/screens/transactions_screen.dart';
 import 'package:seller_sphere/screens/chat_screen.dart';
 import 'package:seller_sphere/screens/slides_screen.dart';
-import 'settings_screen.dart';
-import '../models/notification.dart' as model;
+//import 'settings_screen.dart';
+//import '../models/notification.dart' as model;
 
 class MainAppScaffold extends StatefulWidget {
   const MainAppScaffold({super.key});
@@ -22,16 +23,24 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    HomeScreen(
-      
+    DashboardScreen(
+      onNavigateToInventory: () {},
+      onNavigateToTransactions: () {},
+      onNavigateToChat: (String customerName) {},
+      onNavigateToSlides: () {},
     ),
     const InventoryScreen(),
     const TransactionsScreen(),
     const ChatScreen(),
     const SlidesScreen(),
-    const SettingsScreen(),
+    //const SettingsScreen(),
   ];
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +48,14 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
     final theme = Theme.of(context);
 
     // Update the DashboardScreen with real navigation callbacks
-    _screens[0] = HomeScreen(
+    _screens[0] = DashboardScreen(
+      onNavigateToInventory: () => _onItemTapped(1),
+      onNavigateToTransactions: () => _onItemTapped(2),
+      onNavigateToChat: (String customerName) {
+        viewModel.activeChatBuyerName = customerName;
+        _onItemTapped(3);
+      },
+      onNavigateToSlides: () => _onItemTapped(4),
     );
 
     return Scaffold(
