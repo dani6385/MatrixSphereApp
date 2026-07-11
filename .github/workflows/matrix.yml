@@ -120,6 +120,12 @@ jobs:
         if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: flutter build web --release
         working-directory: ${{ matrix.dir }} # Berpindah ke folder aplikasi yang sesuai sebelum build
+         # UNTUK MENYALIN HASIL BUILD KE FOLDER UTAMA
+      - name: Copy Build to Root
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+        run: |
+          mkdir -p build/web
+          cp -r ${{ matrix.dir }}/build/web/* build/web/
 
       # Mengunggah hasil build aplikasi ke Firebase Hosting masing-masing
       - name: Deploy to Firebase Hosting
