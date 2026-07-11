@@ -94,7 +94,6 @@ class _MainShellState extends State<MainShell> {
   void _onItemTapped(int index) {
     // Handle navigation logic
     if (index < 5) { // Standard bottom nav items
-      setState(() => _selectedIndex = index);
       _pageController.jumpToPage(index);
     } else if (index == 5) { // Notifications
        Navigator.of(context).push(MaterialPageRoute(builder: (_) => NotificationScreen(onNavigateBack: () => Navigator.pop(context), onNavigateToInventory: (){ _onItemTapped(1); }))).then((_) => setState((){_selectedIndex = _pageController.page?.round() ?? 0;}));
@@ -124,6 +123,11 @@ class _MainShellState extends State<MainShell> {
             appBar: _buildAppBar(context, scaffoldKey),
             body: PageView(
               controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
               children: pages,
             ),
             bottomNavigationBar: _buildBottomNavBar(context),
