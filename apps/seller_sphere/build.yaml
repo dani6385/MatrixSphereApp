@@ -1,0 +1,5 @@
+targets:
+  $default:
+    builders:
+      floor_generator:
+        enabled: true
