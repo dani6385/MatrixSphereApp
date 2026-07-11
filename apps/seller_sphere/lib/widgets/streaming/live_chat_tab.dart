@@ -6,7 +6,7 @@ class LiveChatTab extends StatelessWidget {
   final List<LiveChatMessage> chatMessages;
   final ScrollController chatScrollController;
   final TextEditingController sellerMessageController;
-  final VoidCallback onSendMessage;
+  final Function(String) onSendMessage;
 
   const LiveChatTab({
     super.key,
@@ -78,10 +78,7 @@ class LiveChatTab extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: replies.map((text) => GestureDetector(
-          onTap: () {
-            sellerMessageController.text = text;
-            onSendMessage();
-          },
+          onTap: () => onSendMessage(text),
           child: Container(
             margin: const EdgeInsets.only(right: 8.0),
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 4.0),
@@ -122,7 +119,7 @@ class LiveChatTab extends StatelessWidget {
                     borderSide: const BorderSide(color: neonCyan),
                   ),
                 ),
-                onSubmitted: (_) => onSendMessage(),
+                onSubmitted: (text) => onSendMessage(text),
               ),
             ),
           ),
@@ -133,7 +130,7 @@ class LiveChatTab extends StatelessWidget {
             child: IconButton(
               style: IconButton.styleFrom(backgroundColor: neonCyan),
               icon: const Icon(Icons.send, size: 16, color: Colors.black),
-              onPressed: onSendMessage,
+              onPressed: () => onSendMessage(sellerMessageController.text),
             ),
           ),
         ],

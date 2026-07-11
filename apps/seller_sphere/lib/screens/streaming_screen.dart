@@ -17,11 +17,10 @@ class StreamingScreen extends StatefulWidget {
   const StreamingScreen({super.key, required this.viewModel});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _StreamingScreenState createState() => _StreamingScreenState();
+  StreamingScreenState createState() => StreamingScreenState();
 }
 
-class _StreamingScreenState extends State<StreamingScreen> with TickerProviderStateMixin {
+class StreamingScreenState extends State<StreamingScreen> with TickerProviderStateMixin {
   bool _isLive = false;
   int _viewerCount = 0;
   int _liveDurationSec = 0;
@@ -128,6 +127,19 @@ class _StreamingScreenState extends State<StreamingScreen> with TickerProviderSt
     });
   }
 
+  void _handleSendMessage(String message) {
+    if (message.trim().isNotEmpty) {
+      setState(() {
+        _chatMessages.add(LiveChatMessage(
+          sender: "Penjual",
+          message: message.trim(),
+          isSeller: true,
+        ));
+        _sellerMessageController.clear();
+        _scrollToBottom();
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -205,6 +217,7 @@ class _StreamingScreenState extends State<StreamingScreen> with TickerProviderSt
                     _initializeVideo(url);
                   });
                 },
+                onSendMessage: _handleSendMessage,
               ),
             ),
           ],

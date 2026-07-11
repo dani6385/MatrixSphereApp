@@ -22,6 +22,7 @@ class InteractiveConsoleWidget extends StatelessWidget {
   final String selectedVideoUrl;
   final TextEditingController customVideoUrlController;
   final Function(String) onSelectVideoUrl;
+  final Function(String) onSendMessage;
 
   const InteractiveConsoleWidget({
     super.key,
@@ -39,6 +40,7 @@ class InteractiveConsoleWidget extends StatelessWidget {
     required this.selectedVideoUrl,
     required this.customVideoUrlController,
     required this.onSelectVideoUrl,
+    required this.onSendMessage,
   });
 
   @override
@@ -132,7 +134,7 @@ class InteractiveConsoleWidget extends StatelessWidget {
                 chatMessages: chatMessages,
                 chatScrollController: chatScrollController,
                 sellerMessageController: sellerMessageController,
-                onSendMessage: () {},
+                onSendMessage: onSendMessage,
               )
             : VideoSettingsTab(
                 useAutoPlayVideo: useAutoPlayVideo,
