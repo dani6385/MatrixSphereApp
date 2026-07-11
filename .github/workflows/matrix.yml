@@ -140,13 +140,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+        
       - uses: subosito/flutter-action@v2
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+        
         with: { channel: 'stable', cache: true }
         # 1. Cache SDK & Dependensi (Pub & Gradle)
       - name: Cache Pub & Gradle
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+        
         uses: actions/cache@v4
         with:
           path: |
@@ -157,7 +157,7 @@ jobs:
 
       # 2. Cache Folder Build (INI YANG BIKIN CEPAT!)
       - name: Cache Flutter Build
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+        
         uses: actions/cache@v4
         with:
           path: build
@@ -165,12 +165,12 @@ jobs:
           restore-keys: |
             build-${{ runner.os }}-
       - name: Build Apk
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+        
         run: flutter build apk --release
         working-directory: ${{ matrix.dir }}
-        
+
       - name: Deploy to Firebase App Distribution (Seller Group)
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+        
         uses: w9jds/firebase-action@v2.2.0
         with:
           # Perintah untuk mendistribusikan file APK ke grup "seller"
