@@ -124,7 +124,14 @@ jobs:
       # Mengunggah hasil build aplikasi ke Firebase Hosting masing-masing
       - name: Deploy to Firebase Hosting
         if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
-        run: firebase deploy --only hosting:${{ matrix.firebase_site }} --token "${{ secrets.FIREBASE_TOKEN }}" --project matrixsphere-c3de9
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          # Mengambil kredensial secara dinamis sesuai nama secret yang didefinisikan pada matrix
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: "matrixsphere-c3de9" # ID Proyek Firebase Anda
+          site: ${{ matrix.firebase_site }} # Menentukan situs tujuan secara dinamis
+          channelId: live
 
   # 2. BUILD ANDROID
   build_android:
