@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/utils/app_colors.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/utils/streaming_utils.dart';
 
 class VideoSettingsTab extends StatelessWidget {
@@ -41,7 +41,7 @@ class VideoSettingsTab extends StatelessWidget {
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.play_circle_outline, color: neonCyan, size: 20),
+                          Icon(Icons.play_circle_outline, color: kNeonCyan, size: 20),
                           SizedBox(width: 8),
                           Text("Putar Video Demo Otomatis", style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
                         ],
@@ -49,7 +49,7 @@ class VideoSettingsTab extends StatelessWidget {
                       Switch(
                         value: useAutoPlayVideo,
                         onChanged: onToggleAutoPlayVideo,
-                        activeThumbColor: neonCyan,
+                        activeThumbColor: kNeonCyan,
                       )
                     ],
                   ),
@@ -101,10 +101,10 @@ class VideoSettingsTab extends StatelessWidget {
   Widget _buildPresetCard(BuildContext context, String name, String url, IconData icon) {
     final isSelected = selectedVideoUrl == url;
     return Card(
-      color: isSelected ? neonCyan.withAlpha(38) : Theme.of(context).colorScheme.surface.withAlpha(102),
+      color: isSelected ? kNeonCyan.withAlpha(38) : Theme.of(context).colorScheme.surface.withAlpha(102),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
-        side: BorderSide(color: isSelected ? neonCyan : Theme.of(context).colorScheme.outline.withAlpha(38), width: 1.0),
+        side: BorderSide(color: isSelected ? kNeonCyan : Theme.of(context).colorScheme.outline.withAlpha(38), width: 1.0),
       ),
       child: InkWell(
         onTap: () {
@@ -116,9 +116,9 @@ class VideoSettingsTab extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              Icon(icon, size: 24, color: isSelected ? neonCyan : Theme.of(context).colorScheme.onSurfaceVariant),
+              Icon(icon, size: 24, color: isSelected ? kNeonCyan : Theme.of(context).colorScheme.onSurfaceVariant),
               const SizedBox(height: 6),
-              Text(name, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: isSelected ? neonCyan : Theme.of(context).colorScheme.onSurface)),
+              Text(name, textAlign: TextAlign.center, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: isSelected ? kNeonCyan : Theme.of(context).colorScheme.onSurface)),
             ],
           ),
         ),
@@ -142,7 +142,7 @@ class VideoSettingsTab extends StatelessWidget {
           labelStyle: const TextStyle(fontSize: 12),
           prefixIcon: Icon(Icons.link, color: Theme.of(context).colorScheme.onSurfaceVariant),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0), borderSide: BorderSide(color: Theme.of(context).colorScheme.outline.withAlpha(77))),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0), borderSide: const BorderSide(color: neonCyan)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0), borderSide: const BorderSide(color: kNeonCyan)),
         ),
       ),
     );
@@ -156,7 +156,7 @@ class VideoSettingsTab extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            const Icon(Icons.info_outline, color: softTeal, size: 14),
+            const Icon(Icons.info_outline, color: kSoftTeal, size: 14),
             const SizedBox(width: 6.0),
             Expanded(
               child: Text(

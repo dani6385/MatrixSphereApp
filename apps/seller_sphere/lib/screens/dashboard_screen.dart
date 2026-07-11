@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../core/app_extraor.dart';
 
+
 class DashboardScreen extends StatelessWidget {
   final VoidCallback onNavigateToInventory;
   final VoidCallback onNavigateToTransactions;

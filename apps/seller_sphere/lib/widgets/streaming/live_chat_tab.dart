@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/models/live_chat_message.dart';
-import 'package:seller_sphere/utils/app_colors.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class LiveChatTab extends StatelessWidget {
   final List<LiveChatMessage> chatMessages;
@@ -34,12 +34,12 @@ class LiveChatTab extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
                   decoration: BoxDecoration(
                     color: msg.isSeller
-                        ? neonCyan.withAlpha(30)
+                        ? kNeonCyan.withAlpha(30)
                         : msg.isSystem
                             ? Theme.of(context).colorScheme.surfaceContainerHighest
                             : Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(8.0),
-                    border: msg.isSeller ? Border.all(color: neonCyan.withAlpha(102), width: 0.5) : null,
+                    border: msg.isSeller ? Border.all(color: kNeonCyan.withAlpha(102), width: 0.5) : null,
                   ),
                   child: RichText(
                     text: TextSpan(
@@ -50,10 +50,10 @@ class LiveChatTab extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: msg.isSeller
-                                ? neonCyan
+                                ? kNeonCyan
                                 : msg.isSystem
-                                    ? softTeal
-                                    : vividOrchid,
+                                    ? kSoftTeal
+                                    : kVividOrchid,
                           ),
                         ),
                         TextSpan(text: msg.message),
@@ -116,7 +116,7 @@ class LiveChatTab extends StatelessWidget {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(22),
-                    borderSide: const BorderSide(color: neonCyan),
+                    borderSide: const BorderSide(color: kNeonCyan),
                   ),
                 ),
                 onSubmitted: (text) => onSendMessage(text),
@@ -128,8 +128,8 @@ class LiveChatTab extends StatelessWidget {
             width: 36,
             height: 36,
             child: IconButton(
-              style: IconButton.styleFrom(backgroundColor: neonCyan),
-              icon: const Icon(Icons.send, size: 16, color: Colors.black),
+              style: IconButton.styleFrom(backgroundColor: kNeonCyan),
+              icon: const Icon(Icons.send, size: 16, color: kDarkSurface),
               onPressed: () => onSendMessage(sellerMessageController.text),
             ),
           ),

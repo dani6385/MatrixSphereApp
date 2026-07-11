@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/data/dao.dart' show Product;
 import 'package:seller_sphere/models/live_chat_message.dart';
-import 'package:seller_sphere/utils/app_colors.dart';
+//import 'package:seller_sphere/utils/app_colors.dart';
+//import 'package:seller_sphere/utils/app_colors.dart';
 import 'package:seller_sphere/utils/streaming_utils.dart';
 import 'live_chat_tab.dart';
 import 'pin_product_tab.dart';
 import 'video_settings_tab.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class InteractiveConsoleWidget extends StatelessWidget {
   final bool isLive;
@@ -47,10 +49,15 @@ class InteractiveConsoleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: Theme.of(context).colorScheme.outline.withAlpha(38), width: 1),
+        side: BorderSide(
+          color: Theme.of(context).colorScheme.outline.withAlpha(38),
+          width: 1,
+        ),
         borderRadius: BorderRadius.circular(16.0),
       ),
-      color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(128),
+      color: Theme.of(
+        context,
+      ).colorScheme.surfaceContainerHighest.withAlpha(128),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -81,11 +88,16 @@ class InteractiveConsoleWidget extends StatelessWidget {
           child: ElevatedButton.icon(
             onPressed: toggleLiveStatus,
             icon: Icon(isLive ? Icons.stop : Icons.play_arrow, size: 16),
-            label: Text(isLive ? "Matikan Live" : "Mulai Live", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+            label: Text(
+              isLive ? "Matikan Live" : "Mulai Live",
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+            ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: isLive ? alertRed : softTeal,
-              foregroundColor: isLive ? Colors.white : Colors.black,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              backgroundColor: isLive ? kAlertRed : kSoftTeal,
+              foregroundColor: isLive ? kLightSurface : kDarkSurface,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
               padding: const EdgeInsets.symmetric(horizontal: 12),
             ),
           ),
@@ -97,9 +109,9 @@ class InteractiveConsoleWidget extends StatelessWidget {
   Widget _buildTabBar(BuildContext context) {
     return TabBar(
       controller: tabController,
-      labelColor: neonCyan,
+      labelColor: kNeonCyan,
       unselectedLabelColor: Theme.of(context).colorScheme.onSurfaceVariant,
-      indicatorColor: neonCyan,
+      indicatorColor: kNeonCyan,
       tabs: const [
         Tab(
           child: Row(
@@ -107,7 +119,10 @@ class InteractiveConsoleWidget extends StatelessWidget {
             children: [
               Icon(Icons.chat_bubble_outline, size: 16),
               SizedBox(width: 4),
-              Text("Live Chat", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              Text(
+                "Live Chat",
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),
@@ -117,7 +132,10 @@ class InteractiveConsoleWidget extends StatelessWidget {
             children: [
               Icon(Icons.shopping_bag_outlined, size: 16),
               SizedBox(width: 4),
-              Text("Sematkan Produk", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+              Text(
+                "Sematkan Produk",
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),

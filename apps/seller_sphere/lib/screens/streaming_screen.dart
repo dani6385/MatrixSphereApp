@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:math';
-
+import 'package:shared_ui/shared_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/data/dao.dart' show Product;
 import 'package:video_player/video_player.dart';
 
 import '../viewmodels/app_view_model.dart';
 import '../models/live_chat_message.dart';
-import '../utils/app_colors.dart';
+//import '../utils/app_colors.dart';
 import '../widgets/streaming/video_player_widget.dart';
 import '../widgets/streaming/interactive_console_widget.dart';
 
@@ -164,7 +164,7 @@ class StreamingScreenState extends State<StreamingScreen> with TickerProviderSta
       appBar: AppBar(
         title: Row(
           children: [
-            const Icon(Icons.live_tv, color: neonCyan),
+            const Icon(Icons.live_tv, color: kNeonCyan),
             const SizedBox(width: 8),
             Text(
               "Live Streaming Console",

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/data/dao.dart' show Product;
-import 'package:seller_sphere/utils/app_colors.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class PinProductTab extends StatelessWidget {
   final List<Product> products;
@@ -45,7 +45,7 @@ class PinProductTab extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surface.withAlpha(128),
                   borderRadius: BorderRadius.circular(8.0),
                   border: Border.all(
-                    color: isPinned ? neonCyan : Colors.transparent,
+                    color: isPinned ? kNeonCyan : Colors.transparent,
                     width: 0.5,
                   ),
                 ),
@@ -60,7 +60,7 @@ class PinProductTab extends StatelessWidget {
                           Text(prod.name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                           Row(
                             children: [
-                              Text(formatRupiah(prod.sellingPrice), style: const TextStyle(fontSize: 11, color: softTeal, fontWeight: FontWeight.bold)),
+                              Text(formatRupiah(prod.sellingPrice), style: const TextStyle(fontSize: 11, color: kSoftTeal, fontWeight: FontWeight.bold)),
                               const SizedBox(width: 8),
                               Text("Stok: ${prod.stock}", style: TextStyle(fontSize: 10, color: Theme.of(context).colorScheme.onSurfaceVariant)),
                             ],
@@ -73,8 +73,8 @@ class PinProductTab extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: () => onPinProduct(isPinned ? -1 : index),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: isPinned ? neonCyan : Theme.of(context).colorScheme.surfaceContainerHighest,
-                          foregroundColor: isPinned ? Colors.black : Theme.of(context).colorScheme.onSurfaceVariant,
+                          backgroundColor: isPinned ? kNeonCyan : Theme.of(context).colorScheme.surfaceContainerHighest,
+                          foregroundColor: isPinned ? kDarkSurface : Theme.of(context).colorScheme.onSurfaceVariant,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                         ),

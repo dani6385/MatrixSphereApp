@@ -49,4 +49,6 @@ const Color kWarmOrange = Color(0xFFF57C00);
 const Color kSoftTeal = Color(0xFF388E3C);
 const Color kNeonBlue = Color(0xFF007AFF);
 const Color kElectricBlue = Color(0xFF2E5BFF);
+const Color kAlertRed = Color(0xFFF44336);
+const Color kVividOrchid = Color(0xFFD000C8);
 

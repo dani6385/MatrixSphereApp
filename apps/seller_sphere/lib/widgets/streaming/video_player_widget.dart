@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:seller_sphere/data/dao.dart' show Product;
 import 'package:video_player/video_player.dart';
 import '../../utils/streaming_utils.dart';
-import 'package:seller_sphere/utils/app_colors.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class VideoPlayerWidget extends StatelessWidget {
   final bool isLive;
@@ -30,7 +30,7 @@ class VideoPlayerWidget extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.black,
           border: Border.all(
-            color: isLive ? alertRed : Theme.of(context).colorScheme.outline.withAlpha(77),
+            color: isLive ? kAlertRed : Theme.of(context).colorScheme.outline.withAlpha(77),
             width: 2,
           ),
           borderRadius: BorderRadius.circular(16.0),
@@ -92,7 +92,7 @@ class VideoPlayerWidget extends StatelessWidget {
             height: MediaQuery.of(context).size.height * 0.4,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: neonCyan.withAlpha(10),
+              color: kNeonCyan.withAlpha(10),
             ),
           ),
         ),
@@ -136,7 +136,7 @@ class VideoPlayerWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             decoration: BoxDecoration(
-              color: alertRed,
+              color: kAlertRed,
               borderRadius: BorderRadius.circular(6.0),
             ),
             child: const Text("LIVE", style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
@@ -184,7 +184,7 @@ class VideoPlayerWidget extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface.withAlpha(230),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
-          side: BorderSide(color: neonCyan.withAlpha(128), width: 1),
+          side: BorderSide(color: kNeonCyan.withAlpha(128), width: 1),
         ),
         child: Container(
           width: 135,
@@ -199,7 +199,7 @@ class VideoPlayerWidget extends StatelessWidget {
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(4.0),
                 ),
-                child: const Icon(Icons.shopping_bag_outlined, color: neonCyan, size: 16),
+                child: const Icon(Icons.shopping_bag_outlined, color: kNeonCyan, size: 16),
               ),
               const SizedBox(height: 4),
               Text(
@@ -210,14 +210,14 @@ class VideoPlayerWidget extends StatelessWidget {
               ),
               Text(
                 formatRupiah(pinnedProduct.sellingPrice),
-                style: const TextStyle(fontSize: 9, color: softTeal, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 9, color: kSoftTeal, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 2.0),
                 decoration: BoxDecoration(
-                  color: neonCyan,
+                  color: kNeonCyan,
                   borderRadius: BorderRadius.circular(4.0),
                 ),
                 child: const Center(
