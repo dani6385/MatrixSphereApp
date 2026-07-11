@@ -76,9 +76,6 @@ jobs:
             firebase_secret_name: "FIREBASE_SERVICE_ACCOUNT_MATRIX_SPHERE"
             should_run: ${{ needs.detect-changes.outputs.matrix_sphere }}
 
-    # Jalankan hanya jika ada perubahan di folder aplikasi tersebut, atau jika dijalankan manual (workflow_dispatch)
-    if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
-
     steps:
       - uses: actions/checkout@v4
 
