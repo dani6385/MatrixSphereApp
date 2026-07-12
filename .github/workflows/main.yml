@@ -144,7 +144,7 @@ jobs:
               echo "app_id=${{ secrets.FIREBASE_APP_ID_ADMIN }}" >> $GITHUB_OUTPUT
               ;;
             "matrix_sphere")
-              echo "dir=apps/matrix_sphere" >> $GITHUB_OUTPUT
+              echo "dir=." >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_MATRIX }}" >> $GITHUB_OUTPUT
               ;;
             "shop_sphere")

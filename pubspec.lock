@@ -804,18 +804,18 @@ packages:
     dependency: transitive
     description:
       name: google_mlkit_barcode_scanning
-      sha256: "60171e66d05a57f19d4a4e4422bbd8d448569db9ab59f3c5e13bbea2492598c7"
+      sha256: "1df232be24ae9cb93443d2786681efab71b5964c8c476f6072d8b4d61aa03ecc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.0"
+    version: "0.12.1"
   google_mlkit_commons:
     dependency: transitive
     description:
       name: google_mlkit_commons
-      sha256: "42c31500be3aba08bcc2cf45d5af648affc40e46684f437b8383084657e982cf"
+      sha256: "9990a65f407a3ef6bae646bf10143faa93fec126683771465bc6c0b43fb0e6e9"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.0"
+    version: "0.8.1"
   google_nav_bar:
     dependency: transitive
     description:
