@@ -1,91 +1,75 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-
-class DayOrderStats {
-  final int completed;
-  final int awaiting;
-  int get total => completed + awaiting;
-  DayOrderStats(this.completed, this.awaiting);
-}
-
-class DayChartData {
-  final String dayLabel;
-  final String dateLabel;
-  final DayOrderStats stats;
-  DayChartData(
-      {required this.dayLabel, required this.dateLabel, required this.stats});
-}
+import 'package:intl/intl.dart';
 
 class ChartPainter extends CustomPainter {
-  final List<DayChartData> daysData;
+  final List<double> data;
   final int selectedIndex;
-  final double maxOrders;
-  final ThemeData theme;
 
-  ChartPainter(
-      {required this.daysData,
-      required this.selectedIndex,
-      required this.maxOrders,
-      required this.theme});
+  ChartPainter({required this.data, required this.selectedIndex});
 
   @override
   void paint(Canvas canvas, Size size) {
-    final colWidth = size.width / 7;
-    const topPadding = 20.0;
-    const bottomPadding = 20.0;
-    final chartHeight = size.height - topPadding - bottomPadding;
-    final barWidth = 16.0;
+    if (data.isEmpty) return;
 
+    final maxValue = data.reduce(max) > 0 ? data.reduce(max) : 1;
+    final barPaint = Paint();
+    final selectedBarPaint = Paint()..color = const Color(0xFF00FFFF);
     final gridPaint = Paint()
-      ..color = const Color(0xFF2E3E66).withValues(alpha: 0.3)
+      ..color = Colors.grey.withValues(alpha: 0.3)
       ..strokeWidth = 1.0;
+    
+    final double barWidth = 18.0;
+    final double barSpacing = (size.width - (data.length * barWidth)) / (data.length);
+    final double startX = barSpacing / 2;
 
-    for (int i = 0; i <= 3; i++) {
-      final y = topPadding + (i / 3.0) * chartHeight;
+    const double bottomPadding = 20.0;
+    final double chartHeight = size.height - bottomPadding;
+
+    // Draw grid lines
+    for (int i = 0; i <= 4; i++) {
+      final y = chartHeight - (i / 4.0) * chartHeight;
       canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
-
-    for (int i = 0; i < daysData.length; i++) {
-      final stats = daysData[i].stats;
-      final x = colWidth * i + colWidth / 2;
-      final isSelected = i == selectedIndex;
-
-      if (stats.total > 0) {
-        final compHeight = (stats.completed / maxOrders) * chartHeight;
-        final awatHeight = (stats.awaiting / maxOrders) * chartHeight;
-
-        final compTopY = size.height - bottomPadding - compHeight;
-        final compRect =
-            Rect.fromLTWH(x - barWidth / 2, compTopY, barWidth, compHeight);
-        final compPaint = Paint()
-          ..color = isSelected
-              ? const Color(0xFF4CAF50)
-              : const Color(0xFF4CAF50).withValues(alpha: 0.7);
-        canvas.drawRect(compRect, compPaint);
-
-        final awatTopY = compTopY - awatHeight;
-        final awatRect =
-            Rect.fromLTWH(x - barWidth / 2, awatTopY, barWidth, awatHeight);
-        final awatPaint = Paint()
-          ..color = isSelected
-              ? const Color(0xFFFFA500)
-              : const Color(0xFFFFA500).withValues(alpha: 0.7);
-        canvas.drawRect(awatRect, awatPaint);
+    
+    for (int i = 0; i < data.length; i++) {
+      final barHeight = data[i] / maxValue * chartHeight;
+      final left = startX + i * (barWidth + barSpacing);
+      
+      final rect = Rect.fromLTWH(left, chartHeight - barHeight, barWidth, barHeight);
+      
+      if (i == selectedIndex) {
+        canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(5)), selectedBarPaint);
+      } else {
+        barPaint.shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xFF334155),
+            const Color(0xFF1E293B),
+          ],
+        ).createShader(rect);
+        canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(5)), barPaint);
       }
-      if (isSelected) {
-        final selectionPaint = Paint()
-          ..color = Colors.white.withValues(alpha: 0.15)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1.0;
-        final selectionRect = Rect.fromLTWH(colWidth * i + 2.0,
-            topPadding - 10, colWidth - 4.0, chartHeight + 20);
-        canvas.drawRect(selectionRect, selectionPaint);
-      }
+      
+      // Draw day label
+      final dayText = DateFormat('E', 'id_ID').format(DateTime.now().subtract(Duration(days: 6 - i)));
+      final textSpan = TextSpan(
+        text: dayText,
+        style: TextStyle(
+            color: i == selectedIndex ? Colors.white : Colors.grey,
+            fontSize: 12),
+      );
+      final textPainter = TextPainter(
+        text: textSpan,
+              );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(rect.center.dx - textPainter.width / 2, size.height - textPainter.height));
     }
   }
 
   @override
   bool shouldRepaint(covariant ChartPainter oldDelegate) {
-    return oldDelegate.selectedIndex != selectedIndex ||
-        oldDelegate.daysData != daysData;
+    return oldDelegate.data != data || oldDelegate.selectedIndex != selectedIndex;
   }
 }

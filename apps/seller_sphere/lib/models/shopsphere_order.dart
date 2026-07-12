@@ -1,23 +1,23 @@
 class ShopsphereOrder {
   final String id;
-  final int dayIndex;
+  final String customerName;
   final String productName;
   final int quantity;
-  final String customerName;
-  final String courierPhone;
   final double totalAmount;
+  final String courierPhone;
   final String status;
+  final int dayIndex;
   final String verificationCode;
 
   ShopsphereOrder({
     required this.id,
-    required this.dayIndex,
+    required this.customerName,
     required this.productName,
     required this.quantity,
-    required this.customerName,
-    required this.courierPhone,
     required this.totalAmount,
+    required this.courierPhone,
     required this.status,
+    required this.dayIndex,
     required this.verificationCode,
   });
 }

@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:seller_sphere/models/product.dart';
 
 class LowStockWarning extends StatelessWidget {
-  final List<dynamic> lowStockList;
+  final List<Product> lowStockList;
   final VoidCallback onNavigateToInventory;
 
-  const LowStockWarning({super.key, required this.lowStockList, required this.onNavigateToInventory});
+  const LowStockWarning({
+    super.key,
+    required this.lowStockList,
+    required this.onNavigateToInventory,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Theme.of(context).colorScheme.errorContainer.withValues(alpha: 0.9),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: Theme.of(context).colorScheme.errorContainer.withAlpha(230), // 0.9 alpha
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
       child: InkWell(
         onTap: onNavigateToInventory,
-        borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Row(
             children: [
-              Icon(
-                Icons.warning,
-                color: Theme.of(context).colorScheme.error,
-                size: 28,
-              ),
+              Icon(Icons.warning, color: Theme.of(context).colorScheme.error, size: 28),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -39,7 +39,7 @@ class LowStockWarning extends StatelessWidget {
                     Text(
                       "Ketuk untuk melihat detail barang di inventaris.",
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onErrorContainer.withValues(alpha: 0.8),
+                        color: Theme.of(context).colorScheme.onErrorContainer.withAlpha(204), // 0.8 alpha
                         fontSize: 12,
                       ),
                     ),

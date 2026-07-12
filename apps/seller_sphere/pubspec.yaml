@@ -44,6 +44,7 @@ dependencies:
   shared_preferences: ^2.5.5
   mobile_scanner: ^7.2.0
   fl_chart: ^1.2.0
+  shared_ui: ^0.0.1
 
 dev_dependencies:
   flutter_test:

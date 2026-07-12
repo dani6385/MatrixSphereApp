@@ -5,11 +5,14 @@ class DailyTargetDialog extends StatefulWidget {
   final AppViewModel viewModel;
   final double currentTarget;
 
-  const DailyTargetDialog(
-      {super.key, required this.viewModel, required this.currentTarget});
+  const DailyTargetDialog({
+    super.key,
+    required this.viewModel,
+    required this.currentTarget,
+  });
 
   @override
-  _DailyTargetDialogState createState() => _DailyTargetDialogState();
+  State<DailyTargetDialog> createState() => _DailyTargetDialogState();
 }
 
 class _DailyTargetDialogState extends State<DailyTargetDialog> {
@@ -18,21 +21,24 @@ class _DailyTargetDialogState extends State<DailyTargetDialog> {
   @override
   void initState() {
     super.initState();
-    _controller =
-        TextEditingController(text: widget.currentTarget.toInt().toString());
+    _controller = TextEditingController(text: widget.currentTarget.toInt().toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      title: const Text("Atur Target Penjualan Harian"),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      title: const Text(
+        "Atur Target Penjualan Harian",
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      ),
       content: TextField(
         controller: _controller,
         keyboardType: TextInputType.number,
         decoration: const InputDecoration(
-          prefixText: "Rp ",
           labelText: "Target Rp",
+          prefixText: "Rp ",
         ),
       ),
       actions: [
@@ -42,19 +48,13 @@ class _DailyTargetDialogState extends State<DailyTargetDialog> {
         ),
         TextButton(
           onPressed: () {
-            final amount = double.tryParse(_controller.text) ?? 0.0;
-            widget.viewModel.updateTodayTarget(amount);
+            final newTarget = double.tryParse(_controller.text) ?? widget.currentTarget;
+            widget.viewModel.updateTodayTarget(newTarget);
             Navigator.of(context).pop();
           },
           child: const Text("Simpan"),
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 }

@@ -1,64 +1,37 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:seller_sphere/models/shopsphere_order.dart';
-import 'package:seller_sphere/screens/dashboard_screen.dart';
 import 'package:seller_sphere/viewmodels/app_view_model.dart';
+import 'package:seller_sphere/widgets/dashboard/chart_painter.dart';
 import 'package:seller_sphere/widgets/dashboard/order_pickup_item.dart';
+import 'package:seller_sphere/widgets/dashboard/order_verification_dialog.dart';
 
-class WeeklyOrderChart extends StatefulWidget {
+class ShopsphereWeeklyOrderChart extends StatefulWidget {
   final List<ShopsphereOrder> orders;
-  final void Function(String) onNavigateToChat;
   final AppViewModel viewModel;
+  final Function(String) onNavigateToChat;
 
-  const WeeklyOrderChart(
-      {super.key,
-      required this.orders,
-      required this.onNavigateToChat,
-      required this.viewModel});
+  const ShopsphereWeeklyOrderChart({
+    super.key,
+    required this.orders,
+    required this.viewModel,
+    required this.onNavigateToChat,
+  });
 
   @override
-  State<WeeklyOrderChart> createState() => _WeeklyOrderChartState();
+  State<ShopsphereWeeklyOrderChart> createState() =>
+      _ShopsphereWeeklyOrderChartState();
 }
 
-class _WeeklyOrderChartState extends State<WeeklyOrderChart> {
-  int _selectedIndex = 6; // Default to today
-
-  List<DayChartData> _getDaysData() {
-    final sdfLabel = DateFormat('E', 'id_ID');
-    final sdfDate = DateFormat('dd/MM');
-    final list = <DayChartData>[];
-
-    for (int i = 0; i <= 6; i++) {
-      final checkCalendar = DateTime.now().subtract(Duration(days: 6 - i));
-      final dateStr = sdfDate.format(checkCalendar);
-      final dayLabel = sdfLabel.format(checkCalendar);
-
-      final dayOrders = widget.orders.where((o) => o.dayIndex == i);
-      final completed =
-          dayOrders.where((o) => o.status == "Selesai Diambil").length;
-      final awaiting = dayOrders.length - completed;
-
-      list.add(DayChartData(
-          dayLabel: dayLabel,
-          dateLabel: dateStr,
-          stats: DayOrderStats(completed, awaiting)));
-    }
-    return list;
-  }
+class _ShopsphereWeeklyOrderChartState extends State<ShopsphereWeeklyOrderChart> {
+  int selectedIndex = 6; // Default to today
 
   @override
   Widget build(BuildContext context) {
-    final daysData = _getDaysData();
-    final maxOrders = daysData
-        .map((d) => d.stats.total)
-        .reduce((a, b) => a > b ? a : b)
-        .clamp(5, 1000)
-        .toDouble();
-    final selectedDayStats = daysData[_selectedIndex].stats;
+    final weeklyData = _calculateWeeklyData();
 
     return Card(
-      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -66,235 +39,129 @@ class _WeeklyOrderChartState extends State<WeeklyOrderChart> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Statistik Pengambilan Pesanan Toko",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              "Pesanan Seminggu",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            Text(
-              "Ketuk hari untuk detail paket masuk & pengambilan oleh pembeli",
-              style: TextStyle(
-                fontSize: 11,
-                color: Theme.of(context).colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+            const SizedBox(height: 16),
+            GestureDetector(
+              onTapDown: (details) => _handleChartTap(details, weeklyData),
+              child: CustomPaint(
+                painter: ChartPainter(
+                  data: weeklyData,
+                  selectedIndex: selectedIndex,
+                ),
+                size: const Size(double.infinity, 150),
               ),
             ),
             const SizedBox(height: 16),
-
-            // Chart Legend
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    _LegendItem(
-                        color: const Color(0xFF4CAF50), text: "Selesai Diambil"),
-                    const SizedBox(width: 12),
-                    _LegendItem(
-                        color: const Color(0xFFFFA500), text: "Belum Diambil"),
-                  ],
-                ),
-                Text(
-                  "${selectedDayStats.total} Pesanan",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                )
-              ],
-            ),
-
-            const SizedBox(height: 16),
-            // Bar Chart
-            SizedBox(
-              height: 180,
-              child: BarChart(
-                BarChartData(
-                  maxY: maxOrders,
-                  barTouchData: BarTouchData(
-                    touchTooltipData: BarTouchTooltipData(
-                      getTooltipColor: (group) => Colors.blueGrey,
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) => null,
-                    ),
-                    touchCallback: (FlTouchEvent event, barTouchResponse) {
-                      if (event is FlTapUpEvent &&
-                          barTouchResponse != null &&
-                          barTouchResponse.spot != null) {
-                        setState(() {
-                          _selectedIndex =
-                              barTouchResponse.spot!.touchedBarGroupIndex;
-                        });
-                      }
-                    },
-                  ),
-                  titlesData: const FlTitlesData(
-                    show: true,
-                    rightTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    bottomTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    leftTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  ),
-                  borderData: FlBorderData(show: false),
-                  gridData: const FlGridData(show: false),
-                  barGroups: List.generate(7, (i) {
-                    final stats = daysData[i].stats;
-                    final isSelected = i == _selectedIndex;
-                    const barWidth = 16.0;
-                    return BarChartGroupData(x: i, barRods: [
-                      BarChartRodData(
-                          toY: stats.total.toDouble(),
-                          width: barWidth,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(4),
-                            topRight: Radius.circular(4),
-                          ),
-                          rodStackItems: [
-                            BarChartRodStackItem(
-                                0,
-                                stats.completed.toDouble(),
-                                isSelected
-                                    ? const Color(0xFF4CAF50)
-                                    : const Color(0xFF4CAF50).withValues(alpha: 0.7)),
-                            BarChartRodStackItem(
-                                stats.completed.toDouble(),
-                                stats.total.toDouble(),
-                                isSelected
-                                    ? const Color(0xFFFFA500)
-                                    : const Color(0xFFFFA500).withValues(alpha: 0.7)),
-                          ])
-                    ]);
-                  }),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-
-            // Day Labels
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(7, (i) {
-                final isSelected = i == _selectedIndex;
-                return GestureDetector(
-                  onTap: () => setState(() => _selectedIndex = i),
-                  child: Column(
-                    children: [
-                      Text(
-                        daysData[i].dayLabel,
-                        style: TextStyle(
-                          color: isSelected
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).colorScheme.onSurfaceVariant,
-                          fontSize: 11,
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                        ),
-                      ),
-                      Text(
-                        daysData[i].dateLabel,
-                        style: TextStyle(
-                          color: isSelected
-                              ? Theme.of(context).primaryColor.withValues(alpha: 0.8)
-                              : Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant
-                                  .withValues(alpha: 0.5),
-                          fontSize: 9,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ),
-
-            const SizedBox(height: 16),
-            // Order List for Selected Day
-            _DailyOrderList(
-                dayIndex: _selectedIndex,
-                dayName: daysData[_selectedIndex].dayLabel,
-                dateStr: daysData[_selectedIndex].dateLabel,
-                orders: widget.orders,
-                onNavigateToChat: widget.onNavigateToChat,
-                viewModel: widget.viewModel),
+            _buildSelectedDayDetails(weeklyData[selectedIndex]),
           ],
         ),
       ),
     );
   }
-}
 
-class _LegendItem extends StatelessWidget {
-  final Color color;
-  final String text;
-  const _LegendItem({required this.color, required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(width: 10, height: 10, color: color),
-        const SizedBox(width: 4),
-        Text(text, style: const TextStyle(fontSize: 11)),
-      ],
-    );
+  List<double> _calculateWeeklyData() {
+    List<double> data = List.filled(7, 0.0);
+    for (var order in widget.orders) {
+      if (order.dayIndex >= 0 && order.dayIndex < 7) {
+        data[order.dayIndex] += order.totalAmount;
+      }
+    }
+    return data;
   }
-}
 
-class _DailyOrderList extends StatelessWidget {
-  final int dayIndex;
-  final String dayName;
-  final String dateStr;
-  final List<ShopsphereOrder> orders;
-  final void Function(String) onNavigateToChat;
-  final AppViewModel viewModel;
+  void _handleChartTap(TapDownDetails details, List<double> weeklyData) {
+    final RenderBox renderBox = context.findRenderObject() as RenderBox;
+    final localPosition = renderBox.globalToLocal(details.globalPosition);
+    final barWidth = renderBox.size.width / weeklyData.length;
+    final index = (localPosition.dx / barWidth).floor();
+    if (index >= 0 && index < weeklyData.length) {
+      setState(() {
+        selectedIndex = index;
+      });
+    }
+  }
 
-  const _DailyOrderList({
-    required this.dayIndex,
-    required this.dayName,
-    required this.dateStr,
-    required this.orders,
-    required this.onNavigateToChat,
-    required this.viewModel,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final dayOrders = orders.where((o) => o.dayIndex == dayIndex).toList();
+  Widget _buildSelectedDayDetails(double total) {
+    final dayOrders = widget.orders
+        .where((order) => order.dayIndex == selectedIndex)
+        .toList();
+    final dayOfWeek = DateFormat('EEEE', 'id_ID')
+        .format(DateTime.now().subtract(Duration(days: 6 - selectedIndex)));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Daftar Paket Hari $dayName ($dateStr)",
+          'Total Pesanan Hari $dayOfWeek: ${NumberFormat.compactCurrency(locale: 'id_ID', symbol: 'Rp').format(total)}',
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
-        const SizedBox(height: 8),
-        if (dayOrders.isEmpty)
-          Card(
-            color: const Color(0xFF0F172A).withValues(alpha: 0.4),
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            child: const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24.0),
-                child: Text("Tidak ada orderan masuk untuk tanggal ini.",
-                    style: TextStyle(fontSize: 12)),
-              ),
-            ),
-          )
-        else
-          ...dayOrders.map((order) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: OrderPickupItem(
-                    order: order,
-                    onNavigateToChat: onNavigateToChat,
-                    viewModel: viewModel),
-              )),
+        Text(
+          '${dayOrders.length} pesanan perlu diurus',
+          style: const TextStyle(fontSize: 12, color: Colors.grey),
+        ),
+        if (dayOrders.isNotEmpty)
+          TextButton(
+            onPressed: () => _showOrderDetails(context, dayOrders),
+            child: const Text('Lihat Rincian & Lakukan Aksi',
+                style: TextStyle(color: Color(0xFF00FFFF))),
+          ),
       ],
+    );
+  }
+
+  void _showOrderDetails(BuildContext context, List<ShopsphereOrder> dayOrders) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => DraggableScrollableSheet(
+        expand: false,
+        builder: (_, controller) => Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              const Text("Rincian Pesanan",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Expanded(
+                child: ListView.builder(
+                  controller: controller,
+                  itemCount: dayOrders.length,
+                  itemBuilder: (context, index) {
+                    final order = dayOrders[index];
+                    return OrderPickupItem(
+                      order: order,
+                      onAction: () {
+                        if (order.status == 'Perlu Dipacking') {
+                          widget.viewModel.finishPacking(order.id);
+                          Navigator.of(context).pop(); // Close the modal
+                        } else if (order.status == 'Siap Diambil') {
+                          _showVerificationDialog(context, order);
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showVerificationDialog(BuildContext context, ShopsphereOrder order) {
+    showDialog(
+      context: context,
+      builder: (_) => OrderVerificationDialog(
+        order: order,
+        onVerifySuccess: () {
+          widget.viewModel.confirmOrderPickup(order.id);
+          Navigator.of(context).pop(); // Close the verification dialog
+          Navigator.of(context).pop(); // Close the order details modal
+        },
+      ),
     );
   }
 }

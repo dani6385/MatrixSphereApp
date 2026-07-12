@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class HeroBanner extends StatelessWidget {
@@ -46,7 +47,7 @@ class HeroBanner extends StatelessWidget {
                   Text(
                     "Real-time Store Intelligence Pro",
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: Colors.white.withAlpha(204), // 0.8 alpha
                       fontSize: 12,
                     ),
                   ),
