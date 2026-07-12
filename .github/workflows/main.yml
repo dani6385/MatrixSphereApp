@@ -106,13 +106,12 @@ jobs:
             echo "OK: Secret FIREBASE_SERVICE_ACCOUNT berhasil dideteksi."
           fi
       - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: w9jds/firebase-action@v2.2.0
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ steps.vars.outputs.service_account }}
-          projectId: "matrixsphere-c3de9"
-          channelId: live
-          entryPoint: ${{ steps.vars.outputs.dir }}
+          args: deploy --only hosting --project matrixsphere-c3de9
+        env:
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT_PATH: ${{ steps.vars.outputs.dir }}
 
 
   # 3. JOB BUILD ANDROID (Hanya berjalan jika build-web telah sukses selesai)
