@@ -5,8 +5,11 @@ class SlidesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Slides'),
+      ),
+      body: const Center(
         child: Text('Slides Screen'),
       ),
     );

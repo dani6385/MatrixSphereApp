@@ -5,8 +5,11 @@ class InventoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Inventory'),
+      ),
+      body: const Center(
         child: Text('Inventory Screen'),
       ),
     );
