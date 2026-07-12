@@ -1,4 +1,4 @@
-name: Dynamic Monorepo Multiplatform Build
+name: Sequential Monorepo Multiplatform Build
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  # JOB 1: Deteksi perubahan folder (Sama seperti sebelumnya)
+  # 1. JOB DETEKSI PERUBAHAN
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
@@ -59,41 +59,20 @@ jobs:
           fi
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
-  # JOB 2: Build Multiplatform (Web, Android, Desktop)
-  build-multiplatform:
+
+  # 2. JOB BUILD WEB (Berjalan pertama setelah deteksi selesai)
+  build-web:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
-    
-    # PERBAIKAN: Menambahkan '|| 'ubuntu-latest' sebagai fallback agar tidak memicu eror validasi saat matrix kosong
-    runs-on: ${{ matrix.os || 'ubuntu-latest' }}
-    
-    defaults:
-      run:
-        shell: bash
-
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
-        # 'web' ditambahkan di awal daftar platform sesuai permintaan Anda
-        platform: [web, android, windows, linux, macos]
-        include:
-          - platform: web
-            os: ubuntu-latest
-          - platform: android
-            os: ubuntu-latest
-          - platform: linux
-            os: ubuntu-latest
-          - platform: windows
-            os: windows-latest
-          - platform: macos
-            os: macos-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Mengatur variabel folder kerja dan kredensial Firebase secara dinamis
       - name: Resolve Project Variables
         id: vars
         run: |
@@ -101,40 +80,93 @@ jobs:
           case "$PROJECT" in
             "seller_sphere")
               echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_SS_SELLER }}" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
+              ;;
+            "client_connectivity")
+              echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
+              ;;
+            "admin_mikrotik")
+              echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
+              ;;
+            "matrix_sphere")
+              echo "dir=." >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
+              ;;
+            "shop_sphere")
+              echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Build Web Application
+        run: |
+          cd ${{ steps.vars.outputs.dir }}
+          flutter config --enable-web
+          flutter build web --release
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ steps.vars.outputs.service_account }}
+          projectId: "matrixsphere-c3de9"
+          channelId: live
+          entryPoint: ${{ steps.vars.outputs.dir }}
+
+
+  # 3. JOB BUILD ANDROID (Hanya berjalan jika build-web telah sukses selesai)
+  build-android:
+    needs: [detect-changes, build-web]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Resolve Project Variables
+        id: vars
+        run: |
+          PROJECT="${{ matrix.project }}"
+          case "$PROJECT" in
+            "seller_sphere")
+              echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
               ;;
             "client_connectivity")
               echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_CC_CLIENT }}" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_CLIENT }}" >> $GITHUB_OUTPUT
               ;;
             "admin_mikrotik")
               echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_ADMIN }}" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_ADMIN }}" >> $GITHUB_OUTPUT
               ;;
             "matrix_sphere")
-              echo "dir=apps/matrix_sphere" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_MATRIX }}" >> $GITHUB_OUTPUT
+              echo "dir=." >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_MATRIX }}" >> $GITHUB_OUTPUT
               ;;
             "shop_sphere")
               echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT_SHOP }}" >> $GITHUB_OUTPUT
+              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_SHOP }}" >> $GITHUB_OUTPUT
               ;;
           esac
 
-      # Langkah khusus Linux: Memasang dependensi GTK/CMake yang dibutuhkan Flutter Desktop Linux
-      - name: Install Linux Build Dependencies
-        if: matrix.platform == 'linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
-
-      - name: Set up Java 17 (Hanya untuk Android)
-        if: matrix.platform == 'android'
+      - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
@@ -147,68 +179,150 @@ jobs:
           channel: 'stable'
           cache: true
 
-      - name: Enable Flutter Platforms
-        run: |
-          flutter config --enable-web
-          flutter config --enable-windows-desktop
-          flutter config --enable-linux-desktop
-          flutter config --enable-macos-desktop
-
-      # Proses kompilasi berdasarkan platform target masing-masing runner
-      - name: Build Application
+      - name: Build Android APK
         run: |
           cd ${{ steps.vars.outputs.dir }}
-          if [ "${{ matrix.platform }}" = "web" ]; then
-            flutter build web --release
-          elif [ "${{ matrix.platform }}" = "android" ]; then
-            flutter build apk --release
-          elif [ "${{ matrix.platform }}" = "windows" ]; then
-            flutter build windows --release
-          elif [ "${{ matrix.platform }}" = "linux" ]; then
-            flutter build linux --release
-          elif [ "${{ matrix.platform }}" = "macos" ]; then
-            flutter build macos --release
-          fi
+          flutter build apk --release
 
-      # ALUR DISTRIBUSI WEB: Deploy ke Firebase Hosting (Live Channel)
-      - name: Deploy to Firebase Hosting (Web Only)
-        if: matrix.platform == 'web'
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ steps.vars.outputs.service_account }}
-          projectId: "matrixsphere-c3de9"
-          channelId: live
-          entryPoint: ${{ steps.vars.outputs.dir }}
-
-      # ALUR DISTRIBUSI ANDROID: Deploy ke Firebase App Distribution
-      - name: Deploy to Firebase App Distribution (Android Only)
-        if: matrix.platform == 'android'
+      - name: Deploy to Firebase App Distribution
         uses: w9jds/firebase-action@v2.2.0
         with:
           args: appdistribution:distribute ${{ steps.vars.outputs.dir }}/build/app/outputs/flutter-apk/app-release.apk --app "${{ steps.vars.outputs.app_id }}" --groups "seller"
         env:
           GCP_SA_KEY: ${{ steps.vars.outputs.service_account }}
 
-      # ALUR DISTRIBUSI DESKTOP & CADANGAN WEB: Mengunggah Artifacts ke GitHub
-      - name: Determine Non-Android Artifact Path
-        if: matrix.platform != 'android'
-        id: artifact-path
-        run: |
-          DIR="${{ steps.vars.outputs.dir }}"
-          if [ "${{ matrix.platform }}" = "web" ]; then
-            echo "path=$DIR/build/web" >> $GITHUB_OUTPUT
-          elif [ "${{ matrix.platform }}" = "windows" ]; then
-            echo "path=$DIR/build/windows/x64/runner/Release" >> $GITHUB_OUTPUT
-          elif [ "${{ matrix.platform }}" = "linux" ]; then
-            echo "path=$DIR/build/linux/x64/release/bundle" >> $GITHUB_OUTPUT
-          elif [ "${{ matrix.platform }}" = "macos" ]; then
-            echo "path=$DIR/build/macos/Build/Products/Release" >> $GITHUB_OUTPUT
-          fi
 
-      - name: Upload Non-Android Artifacts (Web & Desktop)
-        if: matrix.platform != 'android'
+  # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)
+  build-windows:
+    needs: [detect-changes, build-android]
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Resolve Project Variables
+        id: vars
+        shell: bash
+        run: |
+          PROJECT="${{ matrix.project }}"
+          case "$PROJECT" in
+            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
+            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
+            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
+            "matrix_sphere") echo "dir=." >> $GITHUB_OUTPUT ;;
+            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Build Windows App
+        shell: bash
+        run: |
+          cd ${{ steps.vars.outputs.dir }}
+          flutter config --enable-windows-desktop
+          flutter build windows --release
+
+      - name: Upload Windows Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.project }}-${{ matrix.platform }}-build
-          path: ${{ steps.artifact-path.outputs.path }}
+          name: ${{ matrix.project }}-windows-build
+          path: ${{ steps.vars.outputs.dir }}/build/windows/x64/runner/Release
+
+
+  # 5. JOB BUILD LINUX (Menunggu build-windows selesai)
+  build-linux:
+    needs: [detect-changes, build-windows]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Resolve Project Variables
+        id: vars
+        run: |
+          PROJECT="${{ matrix.project }}"
+          case "$PROJECT" in
+            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
+            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
+            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
+            "matrix_sphere") echo "dir=." >> $GITHUB_OUTPUT ;;
+            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Install Linux Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Build Linux App
+        run: |
+          cd ${{ steps.vars.outputs.dir }}
+          flutter config --enable-linux-desktop
+          flutter build linux --release
+
+      - name: Upload Linux Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.project }}-linux-build
+          path: ${{ steps.vars.outputs.dir }}/build/linux/x64/release/bundle
+
+
+  # 6. JOB BUILD MACOS (Menunggu build-linux selesai)
+  build-macos:
+    needs: [detect-changes, build-linux]
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Resolve Project Variables
+        id: vars
+        run: |
+          PROJECT="${{ matrix.project }}"
+          case "$PROJECT" in
+            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
+            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
+            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
+            "matrix_sphere") echo "dir=." >> $GITHUB_OUTPUT ;;
+            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Build macOS App
+        run: |
+          cd ${{ steps.vars.outputs.dir }}
+          flutter config --enable-macos-desktop
+          flutter build macos --release
+
+      - name: Upload macOS Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.project }}-macos-build
+          path: ${{ steps.vars.outputs.dir }}/build/macos/Build/Products/Release
