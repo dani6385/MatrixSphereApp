@@ -172,12 +172,11 @@ jobs:
           flutter build apk --release
 
       - name: Deploy to Firebase App Distribution
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
-        run: |
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > gcp_key.json
-          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp_key.json
-          npx firebase-tools appdistribution:distribute ${{ matrix.dir }}/build/app/outputs/flutter-apk/app-release.apk --app "1:359008687014:android:1052b96111a1c1efa9f567" --groups "seller"
-          rm gcp_key.json
+        uses: w9jds/firebase-action@v2.2.0
+        with:
+          args: appdistribution:distribute ${{ steps.vars.outputs.dir }}/build/app/outputs/flutter-apk/app-release.apk --app "${{ steps.vars.outputs.app_id }}" --groups "seller"
+        env:
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
 
   # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)
