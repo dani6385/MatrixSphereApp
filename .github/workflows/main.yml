@@ -97,6 +97,14 @@ jobs:
           flutter config --enable-web
           flutter build web --release
 
+      - name: Verifikasi Deteksi Secret
+        run: |
+          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" ]; then
+            echo "EROR: Secret FIREBASE_SERVICE_ACCOUNT tidak ditemukan di repositori ini!"
+            exit 1
+          else
+            echo "OK: Secret FIREBASE_SERVICE_ACCOUNT berhasil dideteksi."
+          fi
       - name: Deploy to Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
