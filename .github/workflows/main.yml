@@ -181,7 +181,7 @@ jobs:
 
   # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)
   build-windows:
-    needs: [detect-changes, build-android]
+    needs: build-android
     runs-on: windows-latest
     strategy:
       fail-fast: false
