@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:shared_ui/widgets/app_navigation.dart';
 
-class AppScaffold extends StatelessWidget {
-  final StatefulNavigationShell navigationShell;
+class AppScaffold extends StatefulWidget {
+  final List<Widget> screens;
+  const AppScaffold({super.key, required this.screens});
 
-  const AppScaffold({required this.navigationShell, super.key});
+  @override
+  State<AppScaffold> createState() => _AppScaffoldState();
+}
+
+class _AppScaffoldState extends State<AppScaffold> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(extendBody: true, body: navigationShell);
+    return Scaffold(
+      body: Center(
+        child: widget.screens.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: AppNavigation(
+        currentIndex: _selectedIndex,
+        onTapped: _onItemTapped,
+      ),
+    );
   }
 }
