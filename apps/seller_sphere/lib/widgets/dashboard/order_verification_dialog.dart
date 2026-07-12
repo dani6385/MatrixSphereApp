@@ -72,7 +72,7 @@ class _OrderVerificationDialogState extends State<OrderVerificationDialog> with 
 
   Widget _buildOrderInfo() {
     return Card(
-      color: Theme.of(context).colorScheme.surfaceVariant.withAlpha(128), // 0.5 alpha
+      color: Theme.of(context).colorScheme.surfaceContainerHighest.withAlpha(128), // 0.5 alpha
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       child: Padding(
         padding: const EdgeInsets.all(10.0),

@@ -11,10 +11,10 @@ class CameraScanner extends StatefulWidget {
       {super.key, required this.onBarcodeDetected, required this.onError});
 
   @override
-  _CameraScannerState createState() => _CameraScannerState();
+  CameraScannerState createState() => CameraScannerState();
 }
 
-class _CameraScannerState extends State<CameraScanner> {
+class CameraScannerState extends State<CameraScanner> {
   PermissionStatus _cameraPermissionStatus = PermissionStatus.denied;
   CameraController? _cameraController;
   final BarcodeScanner _barcodeScanner = BarcodeScanner();
