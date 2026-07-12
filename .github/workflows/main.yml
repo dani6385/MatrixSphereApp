@@ -28,7 +28,7 @@ jobs:
             admin_mikrotik:
               - 'apps/admin_mikrotik/**'
             matrix_sphere:
-              - '**'
+              - 'lib/**'
             shop_sphere:
               - 'apps/shop_sphere/**'
 
@@ -116,7 +116,7 @@ jobs:
 
   # 3. JOB BUILD ANDROID (Hanya berjalan jika build-web telah sukses selesai)
   build-android:
-    needs: [detect-changes, build-web]
+    needs: detect-changes
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -226,7 +226,7 @@ jobs:
 
   # 5. JOB BUILD LINUX (Menunggu build-windows selesai)
   build-linux:
-    needs: [detect-changes, build-windows]
+    needs: [detect-changes, build-web]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
