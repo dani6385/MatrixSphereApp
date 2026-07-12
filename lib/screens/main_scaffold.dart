@@ -19,7 +19,7 @@ class MainAppScaffold extends StatelessWidget {
         ApprovalScreen(),
         SystemScreen(),
         SettingsScreen(),
-      ],
+      ], bottomNavBarItems: [],
     );
   }
 }

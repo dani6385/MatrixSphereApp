@@ -3,7 +3,7 @@ import 'package:shared_ui/widgets/app_navigation.dart';
 
 class AppScaffold extends StatefulWidget {
   final List<Widget> screens;
-  const AppScaffold({super.key, required this.screens});
+  const AppScaffold({super.key, required this.screens, required List<BottomNavigationBarItem> bottomNavBarItems});
 
   @override
   State<AppScaffold> createState() => _AppScaffoldState();
