@@ -78,26 +78,11 @@ jobs:
         run: |
           PROJECT="${{ matrix.project }}"
           case "$PROJECT" in
-            "seller_sphere")
-              echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
-              ;;
-            "client_connectivity")
-              echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
-              ;;
-            "admin_mikrotik")
-              echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
-              ;;
-            "matrix_sphere")
-              echo "dir=." >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
-              ;;
-            "shop_sphere")
-              echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
-              ;;
+            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
+            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
+            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
+            "matrix_sphere") echo "dir=." >> $GITHUB_OUTPUT ;;
+            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
           esac
 
       - name: Set up Flutter
@@ -141,27 +126,22 @@ jobs:
           case "$PROJECT" in
             "seller_sphere")
               echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
               ;;
             "client_connectivity")
               echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_CLIENT }}" >> $GITHUB_OUTPUT
               ;;
             "admin_mikrotik")
               echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_ADMIN }}" >> $GITHUB_OUTPUT
               ;;
             "matrix_sphere")
-              echo "dir=." >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
+              echo "dir=apps/matrix_sphere" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_MATRIX }}" >> $GITHUB_OUTPUT
               ;;
             "shop_sphere")
               echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
-              echo "service_account=${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" >> $GITHUB_OUTPUT
               echo "app_id=${{ secrets.FIREBASE_APP_ID_SHOP }}" >> $GITHUB_OUTPUT
               ;;
           esac
