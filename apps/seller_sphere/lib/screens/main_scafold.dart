@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 import 'package:animations/animations.dart';
 
-import '../viewmodels/app_view_model.dart';
+//import '../viewmodels/app_view_model.dart';
 import 'dashboard_screen.dart';
 import 'streaming_screen.dart';
 import 'transactions_screen.dart';
@@ -31,10 +31,10 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
   @override
   void initState() {
     super.initState();
+    
+    /* 
+    // --- DISABLED FOR DEBUGGING ---
     final viewModel = Provider.of<AppViewModel>(context, listen: false);
-
-    // Note: The DashboardScreen is initialized with placeholder callbacks here.
-    // The actual callbacks with navigation logic are provided in the build method.
     _screens = [
       DashboardScreen(
         onNavigateToLive: () {},
@@ -44,6 +44,16 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
         onNavigateToSlides: () {},
       ),
       StreamingScreen(viewModel: viewModel),
+      const TransactionsScreen(),
+      const ReportScreen(),
+      const TrendScreen(),
+    ];
+    */
+
+    // Simplified screens for debugging
+    _screens = [
+      const Center(child: Text("Dashboard (Disabled)")),
+      const Center(child: Text("Streaming (Disabled)")),
       const TransactionsScreen(),
       const ReportScreen(),
       const TrendScreen(),
@@ -58,15 +68,15 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
 
   @override
   Widget build(BuildContext context) {
+    /*
+    // --- DISABLED FOR DEBUGGING ---
     final viewModel = Provider.of<AppViewModel>(context, listen: false);
 
-    // Replace the placeholder DashboardScreen with one that has navigation logic.
-    // This is done here because Navigator needs a BuildContext.
     _screens[0] = DashboardScreen(
       onNavigateToLive: () => _onItemTapped(1),
       onNavigateToTransactions: () => _onItemTapped(2),
       onNavigateToChat: (String customerName) {
-        viewModel.activeChatBuyerName = customerName;
+        // viewModel.activeChatBuyerName = customerName;
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const ChatScreen()),
@@ -85,6 +95,7 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
         );
       },
     );
+    */
 
     return Scaffold(
       appBar: const MainAppBar(),
@@ -96,7 +107,6 @@ class _MainAppScaffoldState extends State<MainAppScaffold> {
             child: child,
           );
         },
-        // Use a key to ensure the PageTransitionSwitcher updates when the index changes.
         child: KeyedSubtree(
           key: ValueKey<int>(_selectedIndex),
           child: _screens[_selectedIndex],

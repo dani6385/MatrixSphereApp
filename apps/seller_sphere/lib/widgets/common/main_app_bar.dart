@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as model show Notification;
-import 'package:provider/provider.dart';
-import '../../viewmodels/app_view_model.dart';
+// import 'package:provider/provider.dart';
+// import '../../viewmodels/app_view_model.dart';
 
 class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MainAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<AppViewModel>(context);
+    // final viewModel = Provider.of<AppViewModel>(context);
     final theme = Theme.of(context);
 
     return AppBar(
@@ -33,7 +32,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               const SizedBox(width: 6),
               Text(
-                "Store Intelligence",
+                "Store Intelligence (Debug)", // Added (Debug)
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -43,12 +42,21 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-      actions: [_buildNotificationsMenu(context, viewModel)],
+      // --- ACTIONS DISABLED FOR DEBUGGING ---
+      // actions: [_buildNotificationsMenu(context, viewModel)],
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.notifications_off), // Placeholder icon
+          onPressed: () {},
+        )
+      ],
       backgroundColor: theme.scaffoldBackgroundColor,
       elevation: 0,
     );
   }
 
+  /*
+  // --- DISABLED FOR DEBUGGING ---
   Widget _buildNotificationsMenu(BuildContext context, AppViewModel viewModel) {
     final unreadCount = 0; // Replace with actual data from ViewModel
 
@@ -113,6 +121,7 @@ class MainAppBar extends StatelessWidget implements PreferredSizeWidget {
       },
     );
   }
+  */
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
