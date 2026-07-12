@@ -12,42 +12,36 @@ class DailyTargetDialog extends StatefulWidget {
   });
 
   @override
-  _DailyTargetDialogState createState() => _DailyTargetDialogState();
+  State<DailyTargetDialog> createState() => _DailyTargetDialogState();
 }
 
 class _DailyTargetDialogState extends State<DailyTargetDialog> {
-  late final TextEditingController _controller;
+  late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.currentTarget.toStringAsFixed(0));
+    _controller = TextEditingController(text: widget.currentTarget.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Ubah Target Hari Ini'),
+      title: const Text('Ubah Target Harian'),
       content: TextField(
         controller: _controller,
         keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          labelText: 'Target Penjualan',
-          prefixText: 'Rp. ',
-        ),
+        decoration: const InputDecoration(labelText: 'Target Penjualan Harian'),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Batal'),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Batal')),
         TextButton(
           onPressed: () {
             final newTarget = double.tryParse(_controller.text);
             if (newTarget != null) {
-              widget.viewModel.updateTodayTarget(newTarget);
-              Navigator.of(context).pop();
+              widget.viewModel.setDailyTarget(newTarget);
             }
+            Navigator.of(context).pop();
           },
           child: const Text('Simpan'),
         ),
