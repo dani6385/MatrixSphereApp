@@ -12,47 +12,44 @@ class DailyTargetDialog extends StatefulWidget {
   });
 
   @override
-  State<DailyTargetDialog> createState() => _DailyTargetDialogState();
+  _DailyTargetDialogState createState() => _DailyTargetDialogState();
 }
 
 class _DailyTargetDialogState extends State<DailyTargetDialog> {
-  late TextEditingController _controller;
+  late final TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.currentTarget.toInt().toString());
+    _controller = TextEditingController(text: widget.currentTarget.toStringAsFixed(0));
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      title: const Text(
-        "Atur Target Penjualan Harian",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-      ),
+      title: const Text('Ubah Target Hari Ini'),
       content: TextField(
         controller: _controller,
         keyboardType: TextInputType.number,
         decoration: const InputDecoration(
-          labelText: "Target Rp",
-          prefixText: "Rp ",
+          labelText: 'Target Penjualan',
+          prefixText: 'Rp. ',
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text("Batal"),
+          child: const Text('Batal'),
         ),
         TextButton(
           onPressed: () {
-            final newTarget = double.tryParse(_controller.text) ?? widget.currentTarget;
-            widget.viewModel.updateTodayTarget(newTarget);
-            Navigator.of(context).pop();
+            final newTarget = double.tryParse(_controller.text);
+            if (newTarget != null) {
+              widget.viewModel.updateTodayTarget(newTarget);
+              Navigator.of(context).pop();
+            }
           },
-          child: const Text("Simpan"),
+          child: const Text('Simpan'),
         ),
       ],
     );

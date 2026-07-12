@@ -176,7 +176,7 @@ jobs:
         with:
           args: appdistribution:distribute ${{ steps.vars.outputs.dir }}/build/app/outputs/flutter-apk/app-release.apk --app "${{ steps.vars.outputs.app_id }}" --groups "seller"
         env:
-          GCP_SA_KEY: ${{ steps.vars.outputs.service_account }}
+          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
 
 
   # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)

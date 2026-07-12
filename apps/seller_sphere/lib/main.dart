@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/models/shopsphere_order.dart';
-
-import 'package:seller_sphere/core/app_extractor.dart';
+import 'package:seller_sphere/viewmodels/app_view_model.dart';
+import 'package:seller_sphere/widgets/dashboard/daily_target_card.dart';
+import 'package:seller_sphere/widgets/dashboard/daily_target_dialog.dart';
+import 'package:seller_sphere/widgets/dashboard/pickup_summary.dart';
+import 'package:seller_sphere/widgets/dashboard/weekly_order_chart.dart';
 
 void main() {
   runApp(const MyApp());
