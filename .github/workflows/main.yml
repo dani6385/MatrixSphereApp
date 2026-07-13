@@ -167,6 +167,7 @@ jobs:
           cache: true
 
       - name: Build Android APK
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: |
           cd ${{ steps.vars.outputs.dir }}
           flutter build apk --release
