@@ -116,7 +116,7 @@ jobs:
 
   # 3. JOB BUILD ANDROID (Hanya berjalan jika build-web telah sukses selesai)
   build-android:
-    needs: detect-changes
+    needs: [detect-changes, build-web]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -172,22 +172,29 @@ jobs:
           flutter build apk --release
 
       - name: Deploy to Firebase App Distribution
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-          echo "$GCP_SA_KEY" > firebase-key.json
-          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/firebase-key.json
-          
+          # 1. Cari file APK secara dinamis di direktori proyek
+          # Menggunakan head -n 1 untuk memastikan hanya mengambil satu file jika ada duplikat
           APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
           
+          if [ -z "$APK_PATH" ]; then
+            echo "Error: APK file tidak ditemukan di ${{ steps.vars.outputs.dir }}"
+            exit 1
+          fi
+          
+          echo "Deploying $APK_PATH to Firebase..."
+
+          # 2. Deploy menggunakan Firebase Token dan App ID yang sesuai
+          # Kita tidak lagi menggunakan GCS_SA_KEY untuk menghindari error 403
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
             --app "${{ steps.vars.outputs.app_id }}" \
             --groups "seller" \
+            --token "${{ secrets.FIREBASE_TOKEN }}" \
             --project "matrixsphere-c3de9"
 
   # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)
   build-windows:
-    needs: build-android
+    needs: [detect-changes, build-android]
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -232,7 +239,7 @@ jobs:
 
   # 5. JOB BUILD LINUX (Menunggu build-windows selesai)
   build-linux:
-    needs: [detect-changes, build-web]
+    needs: [detect-changes, build-windows]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
