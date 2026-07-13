@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:seller_sphere/features/home/widgets/home_app_bar.dart';
-import 'package:seller_sphere/features/home/widgets/home_banner.dart';
-import 'package:seller_sphere/features/home/widgets/stock_warning.dart';
-import 'package:seller_sphere/features/home/widgets/sales_target.dart';
-import 'package:seller_sphere/features/home/widgets/package_status.dart';
-import 'package:seller_sphere/features/home/widgets/order_statistics.dart';
+import '../features/home/widgets/home_app_bar.dart';
+import '../features/home/widgets/home_banner.dart';
+import '../features/home/widgets/order_statistics.dart';
+import '../features/home/widgets/package_status.dart';
+import '../features/home/widgets/sales_target.dart';
+import '../features/home/widgets/stock_warning.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

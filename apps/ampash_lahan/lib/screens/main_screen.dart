@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/features/pos/screens/pos_screen.dart';
-import 'package:seller_sphere/screens/home_screen.dart';
-import 'package:seller_sphere/screens/streaming_screen.dart';
-import 'package:seller_sphere/widgets/bottom_nav_bar.dart';
+import '../features/pos/screens/pos_screen.dart';
+import 'home_screen.dart';
+import 'streaming_screen.dart';
+import '../widgets/bottom_nav_bar.dart';
 
 // Placeholder screens for other tabs
 class ReportScreen extends StatelessWidget {
