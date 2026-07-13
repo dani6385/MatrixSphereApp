@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import 'widgets/video_preview.dart';
-import 'widgets/interactive_controls.dart';
+import '../features/streaming/widgets/video_preview.dart';
+import '../features/streaming/widgets/interactive_controls.dart';
 
 class StreamingScreen extends StatelessWidget {
   const StreamingScreen({super.key});

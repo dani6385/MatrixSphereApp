@@ -60,7 +60,7 @@ class InteractiveControls extends StatelessWidget {
                   ],
                 ),
               ),
-              Switch(value: true, onChanged: (value) {}, activeColor: kPurple),
+              Switch(value: true, onChanged: (value) {}, activeThumbColor: kPurple),
             ],
           ),
           const SizedBox(height: 16),

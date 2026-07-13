@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/features/streaming/streaming_screen.dart';
+import 'package:seller_sphere/screens/streaming_screen.dart';
 
 void main() {
   runApp(const MyApp());
