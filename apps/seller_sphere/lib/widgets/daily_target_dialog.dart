@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
-const Color darkBlueBackground = Color(0xFF0D1B2A);
-const Color neonCyan = Color(0xFF26C6DA);
+
 
 class DailyTargetDialog extends StatefulWidget {
   final double currentTarget;
   const DailyTargetDialog({super.key, required this.currentTarget});
 
   @override
-  _DailyTargetDialogState createState() => _DailyTargetDialogState();
+  DailyTargetDialogState createState() => DailyTargetDialogState();
 }
 
-class _DailyTargetDialogState extends State<DailyTargetDialog> {
+class DailyTargetDialogState extends State<DailyTargetDialog> {
   late TextEditingController _controller;
 
   @override
@@ -31,14 +31,14 @@ class _DailyTargetDialogState extends State<DailyTargetDialog> {
     return AlertDialog(
       backgroundColor: darkBlueBackground,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      title: const Text("Atur Target Penjualan Harian", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: neonCyan)),
+      title: const Text("Atur Target Penjualan Harian", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: kNeonCyan)),
       content: TextField(
         controller: _controller,
         keyboardType: TextInputType.number,
         decoration: const InputDecoration(
           labelText: "Target Rp",
           prefixText: "Rp ",
-          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: neonCyan)),
+          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: kNeonCyan)),
           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white54)),
         ),
       ),
@@ -52,7 +52,7 @@ class _DailyTargetDialogState extends State<DailyTargetDialog> {
             // In a real app: context.read<AppViewModel>().updateTodayTarget(newTarget);
             Navigator.of(context).pop();
           },
-          child: const Text("Simpan", style: TextStyle(color: neonCyan, fontWeight: FontWeight.bold)),
+          child: const Text("Simpan", style: TextStyle(color: kNeonCyan, fontWeight: FontWeight.bold)),
         ),
       ],
     );

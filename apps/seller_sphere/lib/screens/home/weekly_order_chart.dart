@@ -1,4 +1,3 @@
-
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +8,6 @@ import '../../utils/triple.dart';
 import '../../widgets/order_pickup_item.dart';
 import '../../widgets/charts/chart_painter.dart';
 import '../../widgets/charts/legend_item.dart';
-
 
 class WeeklyOrderChart extends StatefulWidget {
   final List<ShopsphereOrder> orders;
@@ -22,12 +20,10 @@ class WeeklyOrderChart extends StatefulWidget {
   });
 
   @override
-  _WeeklyOrderChartState createState() =>
-      _WeeklyOrderChartState();
+  WeeklyOrderChartState createState() => WeeklyOrderChartState();
 }
 
-class _WeeklyOrderChartState
-    extends State<WeeklyOrderChart> {
+class WeeklyOrderChartState extends State<WeeklyOrderChart> {
   int _selectedIndex = 6; // Default to today
   late List<Triple<String, String, DayOrderStats>> _daysData;
 
@@ -66,7 +62,7 @@ class _WeeklyOrderChartState
     }
     return list;
   }
-  
+
   void _handleChartTap(TapUpDetails details) {
     final box = context.findRenderObject() as RenderBox;
     final localPosition = box.globalToLocal(details.globalPosition);
@@ -76,13 +72,13 @@ class _WeeklyOrderChartState
       _selectedIndex = tappedCol;
     });
   }
-  
+
   void _selectDay(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-  
+
   void _handleOrderUpdate() {
     setState(() {
       _daysData = _calculateDaysData(widget.orders);
@@ -105,9 +101,9 @@ class _WeeklyOrderChartState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _ChartHeader(),
+            const ChartHeader(),
             const SizedBox(height: 16),
-            _ChartLegend(totalOrders: selectedDayData.third.total),
+            ChartLegend(totalOrders: selectedDayData.third.total),
             const SizedBox(height: 16),
             GestureDetector(
               onTapUp: _handleChartTap,
@@ -121,15 +117,15 @@ class _WeeklyOrderChartState
               ),
             ),
             const SizedBox(height: 8),
-            _DaySelector(
+            DaySelector(
               daysData: _daysData,
               selectedIndex: _selectedIndex,
               onDaySelected: _selectDay,
             ),
             const SizedBox(height: 16),
-            _OrderListHeader(dayData: selectedDayData),
+            OrderListHeader(dayData: selectedDayData),
             const SizedBox(height: 4),
-            _OrderList(
+            OrderList(
               orders: selectedDayOrders,
               onNavigateToChat: widget.onNavigateToChat,
               onUpdate: _handleOrderUpdate,
@@ -141,9 +137,9 @@ class _WeeklyOrderChartState
   }
 }
 
-class _ChartHeader extends StatelessWidget {
-  const _ChartHeader();
-  
+class ChartHeader extends StatelessWidget {
+  const ChartHeader({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -165,10 +161,10 @@ class _ChartHeader extends StatelessWidget {
   }
 }
 
-class _ChartLegend extends StatelessWidget {
+class ChartLegend extends StatelessWidget {
   final int totalOrders;
-  
-  const _ChartLegend({required this.totalOrders});
+
+  const ChartLegend({super.key, required this.totalOrders});
 
   @override
   Widget build(BuildContext context) {
@@ -177,9 +173,9 @@ class _ChartLegend extends StatelessWidget {
       children: [
         const Row(
           children: [
-            LegendItem(color: softTeal, text: "Selesai Diambil"),
+            LegendItem(color: kSoftTeal, text: "Selesai Diambil"),
             SizedBox(width: 12),
-            LegendItem(color: warmOrange, text: "Belum Diambil"),
+            LegendItem(color: kWarmOrange, text: "Belum Diambil"),
           ],
         ),
         Text(
@@ -195,17 +191,18 @@ class _ChartLegend extends StatelessWidget {
   }
 }
 
-class _DaySelector extends StatelessWidget {
+class DaySelector extends StatelessWidget {
   final List<Triple<String, String, DayOrderStats>> daysData;
   final int selectedIndex;
   final ValueChanged<int> onDaySelected;
-  
-  const _DaySelector({
+
+  const DaySelector({
+    super.key,
     required this.daysData,
     required this.selectedIndex,
     required this.onDaySelected,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -235,7 +232,9 @@ class _DaySelector extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 9,
                     color: isSelected
-                        ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.8)
+                        ? Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.8)
                         : Colors.white.withValues(alpha: 0.5),
                   ),
                 ),
@@ -248,11 +247,11 @@ class _DaySelector extends StatelessWidget {
   }
 }
 
-class _OrderListHeader extends StatelessWidget {
+class OrderListHeader extends StatelessWidget {
   final Triple<String, String, DayOrderStats> dayData;
-  
-  const _OrderListHeader({required this.dayData});
-  
+
+  const OrderListHeader({super.key, required this.dayData});
+
   @override
   Widget build(BuildContext context) {
     return Text(
@@ -266,12 +265,13 @@ class _OrderListHeader extends StatelessWidget {
   }
 }
 
-class _OrderList extends StatelessWidget {
+class OrderList extends StatelessWidget {
   final List<ShopsphereOrder> orders;
   final Function(String) onNavigateToChat;
   final VoidCallback onUpdate;
 
-  const _OrderList({
+  const OrderList({
+    super.key,
     required this.orders,
     required this.onNavigateToChat,
     required this.onUpdate,
@@ -281,10 +281,8 @@ class _OrderList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (orders.isEmpty) {
       return Card(
-        color: const Color(0xFF0F172A).withValues(alpha: 0.4),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        color: kDarkBackground.withValues(alpha: 0.4),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: const SizedBox(
           width: double.infinity,
           height: 80,
@@ -297,18 +295,20 @@ class _OrderList extends StatelessWidget {
         ),
       );
     }
-    
+
     return Column(
-      children: orders.map(
-        (order) => Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: OrderPickupItem(
-            order: order,
-            onNavigateToChat: onNavigateToChat,
-            onUpdate: onUpdate,
-          ),
-        ),
-      ).toList(),
+      children: orders
+          .map(
+            (order) => Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: OrderPickupItem(
+                order: order,
+                onNavigateToChat: onNavigateToChat,
+                onUpdate: onUpdate,
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }

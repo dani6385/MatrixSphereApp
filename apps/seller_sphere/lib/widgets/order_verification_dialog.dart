@@ -19,10 +19,10 @@ class OrderVerificationDialog extends StatefulWidget {
   });
 
   @override
-  _OrderVerificationDialogState createState() => _OrderVerificationDialogState();
+  OrderVerificationDialogState createState() => OrderVerificationDialogState();
 }
 
-class _OrderVerificationDialogState extends State<OrderVerificationDialog> {
+class OrderVerificationDialogState extends State<OrderVerificationDialog> {
   int _activeTab = 1; // 1 for camera, 0 for manual
   String _inputCode = "";
   String _errorMessage = "";

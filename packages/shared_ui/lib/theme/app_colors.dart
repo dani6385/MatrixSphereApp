@@ -28,6 +28,7 @@ const Color kLightTextSecondary = Color(0xFF475569); // Teks sekunder (Charcoal)
 // pada kode yang sudah ada.
 
 const Color kCyanPrimary = kBrandPrimary;
+const Color darkBlueBackground = Color(0xFF0D1B2A);
 const Color kBlueSecondary = kBrandSecondary;
 const Color kTealTertiary = kBrandTertiary;
 const Color kSlateBackgroundDark = kDarkBackground;
