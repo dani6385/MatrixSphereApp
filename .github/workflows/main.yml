@@ -194,7 +194,7 @@ jobs:
 
   # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)
   build-windows:
-    needs: [detect-changes, build-android]
+    needs: [detect-changes, build-macos]
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -239,7 +239,7 @@ jobs:
 
   # 5. JOB BUILD LINUX (Menunggu build-windows selesai)
   build-linux:
-    needs: [detect-changes, build-windows]
+    needs: [detect-changes, build-android]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

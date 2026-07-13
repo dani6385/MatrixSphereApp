@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class DebugScreen extends StatefulWidget {
@@ -28,9 +29,7 @@ class _DebugScreenState extends State<DebugScreen> {
           ),
           const ListTile(
             title: Text('Mode Build'),
-            subtitle: Text(String.fromEnvironment('dart.vm.product') == 'true'
-                ? 'Release'
-                : 'Debug'),
+            subtitle: Text(kReleaseMode ? 'Release' : 'Debug'),
           ),
           const Divider(),
           const Text(
