@@ -9,7 +9,10 @@ environment:
   sdk: '>=3.12.1 <4.0.0'
 
 workspace:
-  - apps/*
+  - apps/admin_mikrotik
+  - apps/client_connectivity
+  - apps/shop_sphere
+  - apps/seller_sphere
   - packages/*
 dependencies:
   animations: ^2.2.0
