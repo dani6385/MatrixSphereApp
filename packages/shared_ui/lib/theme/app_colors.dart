@@ -42,7 +42,6 @@ const Color kSlateBorderLight = kLightBorder;
 const Color kTextOnLightPrimary = kLightTextPrimary;
 const Color kTextOnLightSecondary = kLightTextSecondary;
 
-
 const Color kInfoColor = Color(0xFF0288D1); // NeonCyan
 const Color kRadiantRose = Color(0xFFE91E63);
 const Color kNeonCyan = Color(0xFF00E5FF);
@@ -52,4 +51,6 @@ const Color kNeonBlue = Color(0xFF007AFF);
 const Color kElectricBlue = Color(0xFF2E5BFF);
 const Color kAlertRed = Color(0xFFF44336);
 const Color kVividOrchid = Color(0xFFD000C8);
-
+const Color kPurple = Color(0xFF6A5AE0);
+const Color kSeaGreen = Color(0xFF2E8B57);
+const Color kTextTheme = Colors.white;

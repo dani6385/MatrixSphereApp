@@ -8,8 +8,8 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       backgroundColor: kDarkBackground,
-      selectedItemColor: Colors.blue,
-      unselectedItemColor: Colors.grey,
+      selectedItemColor: kNeonBlue,
+      unselectedItemColor: kSoftTeal,
       type: BottomNavigationBarType.fixed,
       items: const [
         BottomNavigationBarItem(
