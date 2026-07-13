@@ -106,12 +106,14 @@ jobs:
             echo "OK: Secret FIREBASE_SERVICE_ACCOUNT berhasil dideteksi."
           fi
       - name: Deploy to Firebase Hosting
-        uses: w9jds/firebase-action@v2.2.0
-        with:
-          args: deploy --only hosting --project matrixsphere-c3de9
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          PROJECT_PATH: ${{ steps.vars.outputs.dir }}
+        run: |
+          APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
+          echo "APK found at: $APK_PATH"
+          npx firebase-tools appdistribution:distribute "$APK_PATH" \
+            --app "${{ steps.vars.outputs.app_id }}" \
+            --groups "seller"
 
 
   # 3. JOB BUILD ANDROID (Hanya berjalan jika build-web telah sukses selesai)
