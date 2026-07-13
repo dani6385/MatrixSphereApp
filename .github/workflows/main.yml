@@ -175,19 +175,15 @@ jobs:
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
-
           echo "$GCP_SA_KEY" > firebase-key.json
-          
-
           export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/firebase-key.json
           
-
           APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
-          echo "Deploying $APK_PATH..."
-
+          
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
             --app "${{ steps.vars.outputs.app_id }}" \
-            --groups "seller"
+            --groups "seller" \
+            --project "matrixsphere-c3de9"
 
   # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)
   build-windows:
