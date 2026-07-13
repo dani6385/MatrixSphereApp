@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
-import 'streaming_screen.dart';
+import 'package:seller_sphere/features/pos/screens/pos_screen.dart';
+import 'package:seller_sphere/screens/home_screen.dart';
+import 'package:seller_sphere/screens/streaming_screen.dart';
 import 'package:seller_sphere/widgets/bottom_nav_bar.dart';
 
 // Placeholder screens for other tabs
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Home Screen', style: TextStyle(color: Colors.white))));
-}
-
-class ArticleScreen extends StatelessWidget {
-  const ArticleScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('Article Screen', style: TextStyle(color: Colors.white))));
-}
-
 class ReportScreen extends StatelessWidget {
   const ReportScreen({super.key});
   @override
@@ -40,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     StreamingScreen(),
-    ArticleScreen(),
+    POSScreen(),
     ReportScreen(),
     TrendScreen(),
   ];
