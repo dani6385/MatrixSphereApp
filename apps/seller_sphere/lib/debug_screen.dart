@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 class DebugScreen extends StatelessWidget {
   const DebugScreen({super.key});
@@ -20,7 +19,7 @@ class DebugScreen extends StatelessWidget {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                FirebaseCrashlytics.instance.crash();
+                throw Exception('Test error');
               },
               child: const Text('Test Crash'),
             ),
