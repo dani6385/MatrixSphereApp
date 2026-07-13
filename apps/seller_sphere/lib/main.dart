@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/screens/streaming_screen.dart';
+import 'package:seller_sphere/screens/main_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const StreamingScreen(),
+      home: const MainScreen(),
     );
   }
 }

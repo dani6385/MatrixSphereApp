@@ -6,7 +6,6 @@ import 'package:seller_sphere/features/home/widgets/stock_warning.dart';
 import 'package:seller_sphere/features/home/widgets/sales_target.dart';
 import 'package:seller_sphere/features/home/widgets/package_status.dart';
 import 'package:seller_sphere/features/home/widgets/order_statistics.dart';
-import 'package:seller_sphere/widgets/bottom_nav_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -35,7 +34,6 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }

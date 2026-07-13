@@ -1,30 +1,15 @@
 import 'package:flutter/material.dart';
-import '../screens/streaming_screen.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+class BottomNavBar extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTap;
 
-  @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
-}
-
-class _BottomNavBarState extends State<BottomNavBar> {
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const StreamingScreen()),
-      );
-    }
-    // TODO: Implement navigation for other items
-  }
+  const BottomNavBar({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +18,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       selectedItemColor: kNeonBlue,
       unselectedItemColor: kSoftTeal,
       type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
+      currentIndex: currentIndex,
+      onTap: onTap,
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
