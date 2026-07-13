@@ -172,13 +172,22 @@ jobs:
           flutter build apk --release
 
       - name: Deploy to Firebase App Distribution
-        if: success()
-        uses: w9jds/firebase-action@v2.2.0
-        with:
-          args: appdistribution:distribute ${{ steps.vars.outputs.dir }}/build/app/outputs/flutter-apk/app-release.apk --app "${{ steps.vars.outputs.app_id }}" --groups "seller"
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
 
+          echo "$GCP_SA_KEY" > firebase-key.json
+          
+
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/firebase-key.json
+          
+
+          APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
+          echo "Deploying $APK_PATH..."
+
+          npx firebase-tools appdistribution:distribute "$APK_PATH" \
+            --app "${{ steps.vars.outputs.app_id }}" \
+            --groups "seller"
 
   # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)
   build-windows:
