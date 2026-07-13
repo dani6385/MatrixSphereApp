@@ -223,6 +223,15 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Downgrade CMake (Fix Firebase Compatibility)
+        run: choco install cmake --version=3.26.4 --allow-downgrade --yes --force
+
+      # Perintah Build Windows Anda setelahnya
+      - name: Build Windows App
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
+        run: flutter build windows --release
+        working-directory: ${{ matrix.dir }}
+
       - name: Build Windows App
         shell: bash
         run: |
