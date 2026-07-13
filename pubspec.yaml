@@ -13,7 +13,7 @@ workspace:
   - packages/*
 dependencies:
   animations: ^2.2.0
-  cloud_firestore: ^6.6.0
+  cloud_firestore: ^4.17.3
   flutter:
     sdk: flutter
   flutter_test:
