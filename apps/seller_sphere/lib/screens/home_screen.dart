@@ -6,7 +6,7 @@ import '../widgets/daily_target_card.dart';
 import '../widgets/pickup_summary.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/low_stock_warning.dart';
-import '../widgets/shopsphere_weekly_order_chart.dart';
+import '../screens/home/weekly_order_chart.dart';
 import '../widgets/main_actions.dart';
 
 const Color darkBlueBackground = Color(0xFF0D1B2A);
@@ -52,14 +52,15 @@ class HomeScreen extends StatelessWidget {
             onEditTarget: () {
               showDialog(
                 context: context,
-                builder: (context) => DailyTargetDialog(currentTarget: todayTarget),
+                builder: (context) =>
+                    DailyTargetDialog(currentTarget: todayTarget),
               );
             },
           ),
           const SizedBox(height: 16),
           PickupSummary(orders: shopsphereOrders),
           const SizedBox(height: 16),
-          ShopsphereWeeklyOrderChart(
+          WeeklyOrderChart(
             orders: shopsphereOrders,
             onNavigateToChat: onNavigateToChat,
           ),
@@ -75,11 +76,61 @@ class HomeScreen extends StatelessWidget {
 
   List<ShopsphereOrder> _getDummyOrders() {
     return [
-      ShopsphereOrder(id: "SS-240523-001", customerName: "Budi", productName: "Kopi Robusta 250g", quantity: 2, totalAmount: 150000, courierPhone: "081234567890", status: "Perlu Dipacking", dayIndex: 6, verificationCode: "123456"),
-      ShopsphereOrder(id: "SS-240523-002", customerName: "Siti", productName: "Teh Hijau", quantity: 1, totalAmount: 75000, courierPhone: "081234567891", status: "Siap Diambil", dayIndex: 6, verificationCode: "654321"),
-      ShopsphereOrder(id: "SS-240522-001", customerName: "Joko", productName: "Gula Aren 1kg", quantity: 1, totalAmount: 45000, courierPhone: "081234567892", status: "Selesai Diambil", dayIndex: 5, verificationCode: "112233"),
-      ShopsphereOrder(id: "SS-240522-002", customerName: "Ani", productName: "Kopi Robusta 250g", quantity: 3, totalAmount: 225000, courierPhone: "081234567893", status: "Selesai Diambil", dayIndex: 5, verificationCode: "445566"),
-      ShopsphereOrder(id: "SS-240521-001", customerName: "Euis", productName: "Jam Tangan", quantity: 1, totalAmount: 350000, courierPhone: "081234567894", status: "Selesai Diambil", dayIndex: 4, verificationCode: "567890"),
+      ShopsphereOrder(
+        id: "SS-240523-001",
+        customerName: "Budi",
+        productName: "Kopi Robusta 250g",
+        quantity: 2,
+        totalAmount: 150000,
+        courierPhone: "081234567890",
+        status: "Perlu Dipacking",
+        dayIndex: 6,
+        verificationCode: "123456",
+      ),
+      ShopsphereOrder(
+        id: "SS-240523-002",
+        customerName: "Siti",
+        productName: "Teh Hijau",
+        quantity: 1,
+        totalAmount: 75000,
+        courierPhone: "081234567891",
+        status: "Siap Diambil",
+        dayIndex: 6,
+        verificationCode: "654321",
+      ),
+      ShopsphereOrder(
+        id: "SS-240522-001",
+        customerName: "Joko",
+        productName: "Gula Aren 1kg",
+        quantity: 1,
+        totalAmount: 45000,
+        courierPhone: "081234567892",
+        status: "Selesai Diambil",
+        dayIndex: 5,
+        verificationCode: "112233",
+      ),
+      ShopsphereOrder(
+        id: "SS-240522-002",
+        customerName: "Ani",
+        productName: "Kopi Robusta 250g",
+        quantity: 3,
+        totalAmount: 225000,
+        courierPhone: "081234567893",
+        status: "Selesai Diambil",
+        dayIndex: 5,
+        verificationCode: "445566",
+      ),
+      ShopsphereOrder(
+        id: "SS-240521-001",
+        customerName: "Euis",
+        productName: "Jam Tangan",
+        quantity: 1,
+        totalAmount: 350000,
+        courierPhone: "081234567894",
+        status: "Selesai Diambil",
+        dayIndex: 4,
+        verificationCode: "567890",
+      ),
     ];
   }
 }
