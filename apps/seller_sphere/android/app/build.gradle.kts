@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -35,14 +34,6 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-    dependencies {
-    // Import the BoM for the Firebase platform
-    implementation(platform("com.google.firebase:firebase-bom:34.15.0"))
-
-    // Add the dependencies for the Crashlytics and Analytics libraries
-    implementation("com.google.firebase:firebase-crashlytics")
-    implementation("com.google.firebase:firebase-analytics")
-}
 }
 
 kotlin {
