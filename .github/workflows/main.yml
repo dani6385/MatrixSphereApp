@@ -60,10 +60,58 @@ jobs:
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
 
+  # 2. JOB BUILD WEB
+  build-web:
+    needs: [detect-changes, build-macos]
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Resolve Project Variables
+        id: vars
+        run: |
+          PROJECT="${{ matrix.project }}"
+          case "$PROJECT" in
+            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
+            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
+            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
+            "matrix_sphere") echo "dir=." >> $GITHUB_OUTPUT ;;
+            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
+          esac
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.44.6'
+          cache: true
+
+      - name: Build Web Application
+        run: |
+          cd ${{ steps.vars.outputs.dir }}
+          flutter config --enable-web
+          flutter build web --release
+
+      # Menggunakan action resmi dengan entryPoint untuk deploy web murni dari sub-folder
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: "matrixsphere-c3de9"
+          channelId: live
+          entryPoint: ${{ steps.vars.outputs.dir }}
+
 
   # 3. JOB BUILD ANDROID
   build-android:
-    
+    needs: detect-changes
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -294,53 +342,3 @@ jobs:
         with:
           name: ${{ matrix.project }}-macos-build
           path: ${{ steps.vars.outputs.dir }}/build/macos/Build/Products/Release
-
-          
-  # 2. JOB BUILD WEB
-  build-web:
-    needs: [detect-changes, build-macos]
-    needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Resolve Project Variables
-        id: vars
-        run: |
-          PROJECT="${{ matrix.project }}"
-          case "$PROJECT" in
-            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
-            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
-            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
-            "matrix_sphere") echo "dir=." >> $GITHUB_OUTPUT ;;
-            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
-          esac
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          flutter-version: '3.44.6'
-          cache: true
-
-      - name: Build Web Application
-        run: |
-          cd ${{ steps.vars.outputs.dir }}
-          flutter config --enable-web
-          flutter build web --release
-
-      # Menggunakan action resmi dengan entryPoint untuk deploy web murni dari sub-folder
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: "matrixsphere-c3de9"
-          channelId: live
-          entryPoint: ${{ steps.vars.outputs.dir }}
