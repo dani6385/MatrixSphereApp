@@ -1,26 +1,15 @@
-import 'dart:async';
-
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/screens/home_screen.dart';
+import 'crashlytics_service.dart'; // Impor layanan baru kita
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  // Hanya inisialisasi Crashlytics jika bukan untuk platform web
-  if (!kIsWeb) {
-    FlutterError.onError = (FlutterErrorDetails details) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-    };
 
-    // Tangkap error asinkronus (Hanya berjalan di Android/iOS)
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
-  }
+  // Inisialisasi Crashlytics menggunakan layanan kondisional kita
+  CrashlyticsService().initialize();
+
   runApp(const MyApp());
 }
 
