@@ -1,0 +1,2 @@
+export 'crashlytics_service_io.dart'
+    if (dart.library.html) 'crashlytics_service_web.dart';

@@ -1,5 +1,5 @@
 export 'services/crashlytics_service_io.dart'
-    if (dart.library.html) 'crashlytics_service_web.dart';
+    if (dart.library.html) 'services/crashlytics_service_web.dart';
 // Ekspor semua layanan yang ingin Anda gunakan di seluruh aplikasi dari file ini.
 export 'services/firebase_options.dart';
 export 'services/firestore_service.dart';
