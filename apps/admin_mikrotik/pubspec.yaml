@@ -25,6 +25,7 @@ dependencies:
     path: ../../packages/shared_services
   logger:
   freezed_annotation:
+  firebase_crashlytics: ^3.5.7
 
 dev_dependencies:
   flutter_test:

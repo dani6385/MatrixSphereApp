@@ -26,6 +26,7 @@ dependencies:
   logger:
   freezed_annotation:
   intl:
+  firebase_crashlytics: ^3.5.7
 
 dev_dependencies:
   flutter_test:
