@@ -89,6 +89,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.44.6'
           cache: true
 
       - name: Build Web Application
@@ -159,6 +160,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.44.6' # <-- GANTI DENGAN VERSI FLUTTER LAPTOP ANDA (misal: 3.22.2, 3.24.0, dll)
           cache: true
 
       # Menghapus kondisi "matrix.should_run" yang tidak terdefinisi agar build tidak terlewati
@@ -225,6 +227,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.44.6'
           cache: true
 
       # Downgrade CMake untuk menghindari error ketidakcocokan versi lama Firebase SDK
@@ -280,6 +283,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.44.6'
           cache: true
 
       - name: Build Linux App
@@ -324,6 +328,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          flutter-version: '3.44.6'
           cache: true
 
       - name: Build macOS App
