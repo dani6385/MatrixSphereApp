@@ -19,6 +19,7 @@ dependencies:
 
   shared_services:
     path: ../../packages/shared_services
+  shared_ui: ^0.0.1
 
 dev_dependencies:
   flutter_test:
