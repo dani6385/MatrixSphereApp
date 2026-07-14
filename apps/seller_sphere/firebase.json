@@ -1,0 +1,32 @@
+{
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "matrixsphere-c3de9",
+          "configurations": {
+            "android": "1:359008687014:android:1052b96111a1c1efa9f567",
+            "ios": "1:359008687014:ios:44cab6f288ce9132a9f567",
+            "web": "1:359008687014:web:6e1aac1cd5c0eae1a9f567"
+            
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "site": "ss-seller-sph",
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
