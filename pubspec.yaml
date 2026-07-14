@@ -9,9 +9,9 @@ environment:
   sdk: '>=3.12.1 <4.0.0'
 
 workspace:
-  - apps/admin_mikrotik
-  - apps/client_connectivity
-  - apps/shop_sphere
+  #- apps/admin_mikrotik
+  #- apps/client_connectivity
+  #- apps/shop_sphere
   - apps/seller_sphere
   - packages/*
 dependencies:
