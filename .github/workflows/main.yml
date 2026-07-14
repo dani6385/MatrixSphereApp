@@ -60,7 +60,7 @@ jobs:
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
 
-  # 2. JOB BUILD WEB (Berjalan pertama setelah deteksi selesai)
+  # 2. JOB BUILD WEB
   build-web:
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
@@ -97,26 +97,21 @@ jobs:
           flutter config --enable-web
           flutter build web --release
 
-      - name: Verifikasi Deteksi Secret
-        run: |
-          if [ -z "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" ]; then
-            echo "EROR: Secret FIREBASE_SERVICE_ACCOUNT tidak ditemukan di repositori ini!"
-            exit 1
-          else
-            echo "OK: Secret FIREBASE_SERVICE_ACCOUNT berhasil dideteksi."
-          fi
+      # Menggunakan action resmi dengan entryPoint untuk deploy web murni dari sub-folder
       - name: Deploy to Firebase Hosting
-        uses: w9jds/firebase-action@v2.2.0
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          args: deploy --only hosting --project matrixsphere-c3de9
-        env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          PROJECT_PATH: ${{ steps.vars.outputs.dir }}
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: "matrixsphere-c3de9"
+          channelId: live
+          entryPoint: ${{ steps.vars.outputs.dir }}
 
 
-  # 3. JOB BUILD ANDROID (Hanya berjalan jika build-web telah sukses selesai)
+  # 3. JOB BUILD ANDROID
   build-android:
     needs: [detect-changes, build-web]
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -154,7 +149,7 @@ jobs:
           esac
 
       - name: Set up Java 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -166,19 +161,23 @@ jobs:
           channel: 'stable'
           cache: true
 
+      # Menghapus kondisi "matrix.should_run" yang tidak terdefinisi agar build tidak terlewati
       - name: Build Android APK
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: |
           cd ${{ steps.vars.outputs.dir }}
           flutter build apk --release
 
+      # Deploy APK menggunakan npx lokal (bebas error hak akses Docker & selalu versi terbaru)
       - name: Deploy to Firebase App Distribution
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: |
-          # 1. Cari file APK secara dinamis di direktori proyek
-          # Menggunakan head -n 1 untuk memastikan hanya mengambil satu file jika ada duplikat
-          APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
+          # 1. Tulis kunci JSON dari secret ke file lokal sementara
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > gcp_key.json
           
+          # 2. Daftarkan kredensial ke sistem
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp_key.json
+          
+          # 3. Cari file APK secara dinamis di direktori proyek
+          APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
           if [ -z "$APK_PATH" ]; then
             echo "Error: APK file tidak ditemukan di ${{ steps.vars.outputs.dir }}"
             exit 1
@@ -186,17 +185,20 @@ jobs:
           
           echo "Deploying $APK_PATH to Firebase..."
 
-          # 2. Deploy menggunakan Firebase Token dan App ID yang sesuai
-          # Kita tidak lagi menggunakan GCS_SA_KEY untuk menghindari error 403
+          # 4. Jalankan pengunggahan APK
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
             --app "${{ steps.vars.outputs.app_id }}" \
             --groups "seller" \
-            --token "${{ secrets.FIREBASE_TOKEN }}" \
             --project "matrixsphere-c3de9"
+            
+          # 5. Hapus file kunci setelah selesai demi keamanan
+          rm gcp_key.json
 
-  # 4. JOB BUILD WINDOWS (Menunggu build-android selesai)
+
+  # 4. JOB BUILD WINDOWS
   build-windows:
     needs: [detect-changes, build-macos]
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -225,15 +227,11 @@ jobs:
           channel: 'stable'
           cache: true
 
+      # Downgrade CMake untuk menghindari error ketidakcocokan versi lama Firebase SDK
       - name: Downgrade CMake (Fix Firebase Compatibility)
         run: choco install cmake --version=3.26.4 --allow-downgrade --yes --force
 
-      # Perintah Build Windows Anda setelahnya
-      - name: Build Windows App
-        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
-        run: flutter build windows --release
-        working-directory: ${{ matrix.dir }}
-
+      # Menggabungkan dan membersihkan duplikasi langkah Build Windows App Anda
       - name: Build Windows App
         shell: bash
         run: |
@@ -248,9 +246,10 @@ jobs:
           path: ${{ steps.vars.outputs.dir }}/build/windows/x64/runner/Release
 
 
-  # 5. JOB BUILD LINUX (Menunggu build-windows selesai)
+  # 5. JOB BUILD LINUX
   build-linux:
     needs: [detect-changes, build-android]
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -296,9 +295,10 @@ jobs:
           path: ${{ steps.vars.outputs.dir }}/build/linux/x64/release/bundle
 
 
-  # 6. JOB BUILD MACOS (Menunggu build-linux selesai)
+  # 6. JOB BUILD MACOS
   build-macos:
     needs: [detect-changes, build-linux]
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: macos-latest
     strategy:
       fail-fast: false
