@@ -3,7 +3,7 @@
   "packages": [
     {
       "name": "_flutterfire_internals",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.74",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/_flutterfire_internals-1.3.75",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
@@ -45,19 +45,19 @@
     },
     {
       "name": "cloud_firestore",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/cloud_firestore-6.7.0",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/cloud_firestore-6.7.1",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "cloud_firestore_platform_interface",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/cloud_firestore_platform_interface-8.0.4",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/cloud_firestore_platform_interface-8.0.5",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "cloud_firestore_web",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/cloud_firestore_web-5.7.0",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/cloud_firestore_web-5.7.1",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
@@ -104,50 +104,68 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "firebase_analytics",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_analytics-12.4.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "firebase_analytics_platform_interface",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_analytics_platform_interface-6.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "firebase_analytics_web",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_analytics_web-0.6.1+11",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
       "name": "firebase_core",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_core-4.12.0",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_core-4.12.1",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "firebase_core_platform_interface",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_core_platform_interface-7.1.0",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_core_platform_interface-8.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "firebase_core_web",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_core_web-3.9.0",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_core_web-3.9.1",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "firebase_crashlytics",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_crashlytics-5.2.5",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_crashlytics-5.2.6",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "firebase_crashlytics_platform_interface",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_crashlytics_platform_interface-3.8.25",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_crashlytics_platform_interface-3.8.26",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "firebase_database",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_database-12.4.5",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_database-12.4.6",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "firebase_database_platform_interface",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_database_platform_interface-0.4.0+4",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_database_platform_interface-0.4.0+5",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
     {
       "name": "firebase_database_web",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_database_web-0.2.7+11",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/firebase_database_web-0.2.7+12",
       "packageUri": "lib/",
       "languageVersion": "3.6"
     },
