@@ -17,7 +17,6 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
 version: 1.0.0+1
-resolution: workspace
 
 environment:
   sdk: ^3.12.2
@@ -31,14 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^4.12.0
-  firebase_crashlytics: ^5.2.5
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  shared_services: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -87,7 +82,7 @@ flutter:
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
-  #       - asset.s/TrajanPro_Bold.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,

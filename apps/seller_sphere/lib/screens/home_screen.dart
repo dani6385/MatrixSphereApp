@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,95 +7,205 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Seller Sphere Dashboard'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        leading: const CircleAvatar(
+          backgroundImage: NetworkImage('https://i.pravatar.cc/150?u=a042581f4e29026704d'),
+        ),
+        title: const Text('Seller Sphere'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.flag),
+            onPressed: () {},
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          _buildStatsCard(
-            context,
-            icon: Icons.people,
-            label: 'Total Sellers',
-            value: '1,234',
-            color: Colors.blue,
+          // Banner
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[850],
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'SS Seller Sphere',
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.white),
+                ),
+                const Text(
+                  'Real-time Store Intelligence Pro',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 16),
-          _buildStatsCard(
-            context,
-            icon: Icons.check_circle,
-            label: 'Active Sellers',
-            value: '1,198',
-            color: Colors.green,
+          const SizedBox(height: 16.0),
+
+          // Stock Alert
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.red[900],
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.warning, color: Colors.white),
+                SizedBox(width: 8.0),
+                Expanded(
+                  child: Text(
+                    'Peringatan Stok Menipis! (2 Produk)\nKetuk untuk melihat detail barang di inventaris.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 16),
-          _buildStatsCard(
-            context,
-            icon: Icons.remove_circle,
-            label: 'Banned Sellers',
-            value: '36',
-            color: Colors.red,
+          const SizedBox(height: 16.0),
+
+          // Daily Sales Target
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[850],
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Target Penjualan Harian', style: TextStyle(color: Colors.white)),
+                    TextButton(onPressed: () {}, child: const Text('Ubah')),
+                  ],
+                ),
+                const SizedBox(height: 8.0),
+                const LinearProgressIndicator(value: 0.75),
+                const SizedBox(height: 8.0),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Rp 750.000 / Rp 1.000.000', style: TextStyle(color: Colors.white70)),
+                    Text('75%', style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+                const SizedBox(height: 8.0),
+                const Text(
+                  'Hampir sampai 75% target tercapai. Tambah beberapa transaksi lagi untuk mencapai sukses hari ini!',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ],
+            ),
           ),
-          // Hanya tampilkan tombol tes crash jika bukan di web
-          if (!kIsWeb) ...[
-            const SizedBox(height: 16),
-            _buildCrashButtonCard(context),
-          ],
+          const SizedBox(height: 16.0),
+
+          // Packages
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[850],
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: const Column(
+                    children: [
+                      Icon(Icons.warning_amber, color: Colors.orange),
+                      Text('Belum Diambil', style: TextStyle(color: Colors.white)),
+                      Text('4 Paket', style: TextStyle(color: Colors.white, fontSize: 24)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16.0),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[850],
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: const Column(
+                    children: [
+                      Icon(Icons.check_circle_outline, color: Colors.green),
+                      Text('Selesai Diambil', style: TextStyle(color: Colors.white)),
+                      Text('1 Paket', style: TextStyle(color: Colors.white, fontSize: 24)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16.0),
+
+          // Order Pickup Statistics
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[850],
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Statistik Pengambilan Pesanan Toko', style: TextStyle(color: Colors.white)),
+                const Text('Ketuk leri antak detail paket masak & perpendice ich pombek', style: TextStyle(color: Colors.white70)),
+                const SizedBox(height: 8.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(Icons.circle, color: Colors.green, size: 10),
+                        SizedBox(width: 4),
+                        Text('Selesai Diambil', style: TextStyle(color: Colors.white70)),
+                        SizedBox(width: 8),
+                        Icon(Icons.circle, color: Colors.orange, size: 10),
+                        SizedBox(width: 4),
+                        Text('Belum Diambil', style: TextStyle(color: Colors.white70)),
+                      ],
+                    ),
+                    TextButton(onPressed: (){}, child: const Text('5 Pesanan')),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.ondemand_video),
+            label: 'Streaming',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.list_alt),
+            label: 'Laporan',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.trending_up),
+            label: 'Trend',
+          ),
         ],
       ),
     );
-  }
-
-  Widget _buildStatsCard(BuildContext context, {required IconData icon, required String label, required String value, required Color color}) {
-    final textTheme = Theme.of(context).textTheme;
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Icon(icon, size: 40, color: color),
-            const SizedBox(width: 16),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: textTheme.titleMedium),
-                Text(value, style: textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCrashButtonCard(BuildContext context) {
-      return Card(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    Text("Test Crashlytics", style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    Text("Tekan tombol di bawah ini untuk menguji pelaporan kerusakan aplikasi ke Firebase Crashlytics.", style: Theme.of(context).textTheme.bodyMedium),
-                    const SizedBox(height: 12),
-                    Center(
-                        child: ElevatedButton(
-                            onPressed: () => throw Exception('Ini adalah sebuah tes kerusakan!'),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Theme.of(context).colorScheme.error,
-                                foregroundColor: Theme.of(context).colorScheme.onError,
-                            ),
-                            child: const Text('Tes Kerusakan'),
-                        ),
-                    ),
-                ],
-            ),
-        ),
-      );
   }
 }
