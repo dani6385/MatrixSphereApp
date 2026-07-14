@@ -199,7 +199,7 @@ jobs:
 
   # 4. JOB BUILD WINDOWS
   build-windows:
-    needs: [detect-changes, build-macos]
+    needs: [detect-changes, build-web]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: windows-latest
     strategy:
