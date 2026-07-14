@@ -1,32 +1,25 @@
 {
-  "flutter": {
-    "platforms": {
-      "dart": {
-        "lib/firebase_options.dart": {
-          "projectId": "matrixsphere-c3de9",
-          "configurations": {
-            "android": "",
-            "ios": "",
-            "web": "1:359008687014:web:e7c98a976d64b61ba9f567"
-            
-          }
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "matrixsphere-c3de9",
+                    "appId": "1:359008687014:android:d322874fab38399fa9f567",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "matrixsphere-c3de9",
+                    "configurations": {
+                        "android": "1:359008687014:android:d322874fab38399fa9f567",
+                        "ios": "1:359008687014:ios:a9996dcd91521b0ca9f567",
+                        "macos": "1:359008687014:ios:a9996dcd91521b0ca9f567",
+                        "web": "1:359008687014:web:036b5fce56c6b123a9f567",
+                        "windows": "1:359008687014:web:b177541eedc590d2a9f567"
+                    }
+                }
+            }
         }
-      }
     }
-  },
-  "hosting": {
-    "site": "ms-matrix-sphere",
-    "public": "build/web",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  }
 }
