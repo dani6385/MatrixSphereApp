@@ -2,13 +2,17 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  // Hanya inisialisasi Crashlytics jika bukan untuk platform web
+  if (!kIsWeb) {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  }
   runApp(const MyApp());
 }
 

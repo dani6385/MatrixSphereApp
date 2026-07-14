@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -36,8 +37,11 @@ class HomeScreen extends StatelessWidget {
             value: '36',
             color: Colors.red,
           ),
-          const SizedBox(height: 16),
-          _buildCrashButtonCard(context),
+          // Hanya tampilkan tombol tes crash jika bukan di web
+          if (!kIsWeb) ...[
+            const SizedBox(height: 16),
+            _buildCrashButtonCard(context),
+          ],
         ],
       ),
     );
