@@ -8,6 +8,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:359008687014:android:06e8c912af25ea45a9f567",
+        "android_client_info": {
+          "package_name": "com.matrixsphere.seller"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFAyd8hhswA_fsYlzhW6oCdu6irzs7yaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:359008687014:android:88b053146a75722fa9f567",
         "android_client_info": {
           "package_name": "com.matrixsphere.admin"
