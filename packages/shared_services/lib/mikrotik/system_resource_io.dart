@@ -1,4 +1,3 @@
-import 'dart:io';
 
 /// Kelas data yang merepresentasikan respons dari endpoint /system/resource di MikroTik.
 class SystemResource {
