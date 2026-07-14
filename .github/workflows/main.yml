@@ -169,32 +169,26 @@ jobs:
           cd ${{ steps.vars.outputs.dir }}
           flutter build apk --release
 
-      # Deploy APK menggunakan npx lokal (bebas error hak akses Docker & selalu versi terbaru)
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
+          service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
+
       - name: Deploy to Firebase App Distribution
         run: |
-          # 1. Tulis kunci JSON dari secret ke file lokal sementara
-          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > gcp_key.json
+          # 1. Tidak perlu lagi menulis file gcp_key.json dari secrets!
           
-          # 2. Daftarkan kredensial ke sistem
-          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp_key.json
-          
-          # 3. Cari file APK secara dinamis di direktori proyek
+          # 2. Cari file APK
           APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
-          if [ -z "$APK_PATH" ]; then
-            echo "Error: APK file tidak ditemukan di ${{ steps.vars.outputs.dir }}"
-            exit 1
-          fi
           
-          echo "Deploying $APK_PATH to Firebase..."
-
-          # 4. Jalankan pengunggahan APK
+          # ... (sisanya tetap sama) ...
+          
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
             --app "${{ steps.vars.outputs.app_id }}" \
             --groups "seller" \
             --project "matrixsphere-c3de9"
-            
-          # 5. Hapus file kunci setelah selesai demi keamanan
-          rm gcp_key.json
 
 
   # 4. JOB BUILD WINDOWS
