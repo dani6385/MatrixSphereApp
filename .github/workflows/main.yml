@@ -173,6 +173,7 @@ jobs:
           flutter build apk --release
 
       - name: Deploy to Firebase App Distribution
+        if: ${{ matrix.should_run == 'true' || github.event_name == 'workflow_dispatch' }}
         run: |
           # 1. Cari file APK secara dinamis di direktori proyek
           # Menggunakan head -n 1 untuk memastikan hanya mengambil satu file jika ada duplikat
