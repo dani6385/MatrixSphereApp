@@ -62,6 +62,7 @@ jobs:
 
   # 2. JOB BUILD WEB
   build-web:
+    needs: [detect-changes, build-macos]
     needs: detect-changes
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
@@ -111,7 +112,7 @@ jobs:
 
   # 3. JOB BUILD ANDROID
   build-android:
-    needs: [detect-changes, build-web]
+    
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
