@@ -1,11 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/screens/home_screen.dart';
-import 'crashlytics_service.dart'; // Impor layanan baru kita
+import 'package:shared_services/shared_services.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // Sediakan opsi saat inisialisasi Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Inisialisasi Crashlytics menggunakan layanan kondisional kita
   CrashlyticsService().initialize();

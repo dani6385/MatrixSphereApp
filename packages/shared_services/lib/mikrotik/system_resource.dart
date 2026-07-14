@@ -1,1 +1,0 @@
-export 'system_resource_io.dart' if (dart.library.html) 'system_resource_web.dart';
