@@ -10,8 +10,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   // Hanya inisialisasi Crashlytics jika bukan untuk platform web
-  if (!kIsWeb) {
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  if (!kIsWeb) {FlutterError.onError = (FlutterErrorDetails details) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
+    };
+
+    // Tangkap error asinkronus (Hanya berjalan di Android/iOS)
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
   }
   runApp(const MyApp());
 }
