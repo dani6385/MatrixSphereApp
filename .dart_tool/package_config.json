@@ -587,13 +587,13 @@
       "name": "matrix_sphere_workspace",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "seller_sphere",
       "rootUri": "../apps/seller_sphere",
       "packageUri": "lib/",
-      "languageVersion": "3.12"
+      "languageVersion": "3.5"
     },
     {
       "name": "shared_services",
