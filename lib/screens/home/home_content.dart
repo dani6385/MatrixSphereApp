@@ -38,7 +38,7 @@ class HomeContent extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     'Berjalan dalam Offline-first Mode. Database lokal Room siap menyinkronkan data begitu google-services.json diaktifkan.',
-                    style: TextStyle(color: Colors.white.withOpacity(0.7)),
+                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
                   ),
                 ],
               ),

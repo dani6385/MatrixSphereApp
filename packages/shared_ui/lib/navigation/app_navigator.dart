@@ -1,8 +1,7 @@
-
 import 'package:flutter/material.dart';
-import '../screens/seller/seller_screen.dart';
-import '../screens/home/home_content.dart';
-import '../screens/approval/approval_screen.dart';
+//import '../screens/seller/seller_screen.dart';
+//import '../screens/home/home_content.dart';
+//import '../screens/approval/approval_screen.dart';
 
 class AppNavigator extends StatefulWidget {
   const AppNavigator({super.key});
@@ -15,11 +14,9 @@ class _AppNavigatorState extends State<AppNavigator> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    HomeContent(),
-    SellerScreen(),
-    ApprovalScreen(),
     Center(child: Text('System Screen', style: TextStyle(color: Colors.white))),
-    Center(child: Text('Settings Screen', style: TextStyle(color: Colors.white))),
+    Center(
+        child: Text('Settings Screen', style: TextStyle(color: Colors.white))),
   ];
 
   void _onItemTapped(int index) {
@@ -41,9 +38,12 @@ class _AppNavigatorState extends State<AppNavigator> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Seller'),
-          BottomNavigationBarItem(icon: Icon(Icons.approval), label: 'Approval'),
-          BottomNavigationBarItem(icon: Icon(Icons.system_update), label: 'System'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.approval), label: 'Approval'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.system_update), label: 'System'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Settings'),
         ],
       ),
     );

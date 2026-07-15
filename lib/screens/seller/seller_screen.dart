@@ -168,7 +168,7 @@ class SellerScreen extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 decoration: BoxDecoration(
-                  color: isPending ? Colors.transparent : statusColor.withOpacity(0.2),
+                  color: isPending ? Colors.transparent : statusColor.withValues(alpha: 0.2),
                   border: isPending ? Border.all(color: statusColor, width: 1) : null,
                   borderRadius: BorderRadius.circular(20),
                 ),
