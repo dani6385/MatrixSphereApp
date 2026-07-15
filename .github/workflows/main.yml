@@ -170,7 +170,7 @@ jobs:
         run: |
           cd ${{ steps.vars.outputs.dir }}
           flutter clean
-          flutter pub get
+          flutter pub upgrade --major-versions
           flutter build apk --release
 
       - id: 'auth'

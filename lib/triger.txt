@@ -24,3 +24,4 @@ environment:
   dependencies {
     classpath 'com.android.tools.build:gradle:8.7.0'
 }
+flutter pub upgrade --major-versions
