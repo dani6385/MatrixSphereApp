@@ -16,7 +16,7 @@ workspace:
   - packages/shared_services
   - packages/shared_ui
 dependencies:
-  animations: ^2.2.0
+  animations: ^2.0.11
   cloud_firestore: ^6.7.0
   firebase_analytics: ^12.4.5
   firebase_core: ^4.12.1
