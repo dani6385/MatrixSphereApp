@@ -30,7 +30,9 @@
       "version": "1.0.0+1",
       "dependencies": [
         "cupertino_icons",
+        "firebase_analytics",
         "firebase_core",
+        "firebase_crashlytics",
         "flutter"
       ],
       "devDependencies": [
