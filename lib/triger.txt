@@ -11,3 +11,5 @@ environment:
   flutter_lints: ^5.0.0 di seller_sphere
   flutter_lints: ^5.0.0 di shared ui
   masih pada pubspeck
+  menggati dependencies:
+  shared_preferences: ^2.3.2 di shared ui
