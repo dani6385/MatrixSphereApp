@@ -1,8 +1,55 @@
 
 import 'package:flutter/material.dart';
+import 'seller_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _widgetOptions = <Widget>[
+    HomeContent(),
+    SellerScreen(),
+    Center(child: Text('Approval Screen', style: TextStyle(color: Colors.white))),
+    Center(child: Text('System Screen', style: TextStyle(color: Colors.white))),
+    Center(child: Text('Settings Screen', style: TextStyle(color: Colors.white))),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.grey[900],
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Seller'),
+          BottomNavigationBarItem(icon: Icon(Icons.approval), label: 'Approval'),
+          BottomNavigationBarItem(icon: Icon(Icons.system_update), label: 'System'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+        ],
+      ),
+    );
+  }
+}
+
+class HomeContent extends StatelessWidget {
+  const HomeContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     'Berjalan dalam Offline-first Mode. Database lokal Room siap menyinkronkan data begitu google-services.json diaktifkan.',
-                    style: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
+                    style: TextStyle(color: Colors.white.withOpacity(0.7)),
                   ),
                 ],
               ),
@@ -88,18 +135,6 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[900],
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Seller'),
-          BottomNavigationBarItem(icon: Icon(Icons.approval), label: 'Approval'),
-          BottomNavigationBarItem(icon: Icon(Icons.system_update), label: 'System'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
-        ],
       ),
     );
   }
