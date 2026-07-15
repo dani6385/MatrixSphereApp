@@ -3,3 +3,4 @@ ah lah
 kenapa jadi nuruni gradle
 error gradle
 error gradle
+sukses build apk
