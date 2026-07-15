@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.codehaus.groovy:groovy-all:3.0.21")
+    }
+}
+
 allprojects {
     repositories {
         google()
