@@ -10,3 +10,4 @@ environment:
   mengganti dev_dependencies:
   flutter_lints: ^5.0.0 di seller_sphere
   flutter_lints: ^5.0.0 di shared ui
+  masih pada pubspeck
