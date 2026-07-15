@@ -169,6 +169,8 @@ jobs:
       - name: Build Android APK
         run: |
           cd ${{ steps.vars.outputs.dir }}
+          flutter clean
+          flutter pub get
           flutter build apk --release
 
       - id: 'auth'
