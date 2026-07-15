@@ -65,7 +65,7 @@
 		331C80D7294CF71000263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		333000ED22D3DE5D00554162 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedPluginRegistrant.swift; sourceTree = "<group>"; };
-		33CC10ED2044A3C60003C045 /* sphere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "sphere.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		33CC10ED2044A3C60003C045 /* Matrix Sphere.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Matrix Sphere.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		33CC10F02044A3C60003C045 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33CC10F22044A3C60003C045 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Runner/Assets.xcassets; sourceTree = "<group>"; };
 		33CC10F52044A3C60003C045 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 		33CC10EE2044A3C60003C045 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				33CC10ED2044A3C60003C045 /* sphere.app */,
+				33CC10ED2044A3C60003C045 /* Matrix Sphere.app */,
 				331C80D5294CF71000263BE5 /* RunnerTests.xctest */,
 			);
 			name = Products;
@@ -223,8 +223,8 @@
 			packageProductDependencies = (
 				78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */,
 			);
-			productName = Runner;
-			productReference = 33CC10ED2044A3C60003C045 /* sphere.app */;
+			productName = "Matrix Sphere";
+			productReference = 33CC10ED2044A3C60003C045 /* Matrix Sphere.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -356,7 +356,7 @@
 			files = (
 				33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */,
 				33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */,
-				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
+				335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,7 +398,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.matrix.sphere.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/sphere.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/sphere";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Matrix Sphere.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Matrix Sphere";
 			};
 			name = Debug;
 		};
@@ -412,7 +412,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.matrix.sphere.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/sphere.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/sphere";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Matrix Sphere.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Matrix Sphere";
 			};
 			name = Release;
 		};
@@ -426,7 +426,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.matrix.sphere.RunnerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/sphere.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/sphere";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Matrix Sphere.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Matrix Sphere";
 			};
 			name = Profile;
 		};
