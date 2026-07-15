@@ -26,4 +26,5 @@ environment:
 }
 flutter pub upgrade --major-versions
 distributionUrl=https\://services.gradle.org/distributions/gradle-8.10-bin.zip
-distributionUrl=https\://services.gradle.org/distributions/gradle-8.10-bin.zip
+
+distributionUrl=https\://services.gradle.org/distributions/gradle-9.1-bin.zip
