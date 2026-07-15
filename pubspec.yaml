@@ -12,7 +12,7 @@ workspace:
   #- apps/admin_mikrotik
   #- apps/client_connectivity
   #- apps/shop_sphere
-  - apps/seller_sphere
+  #- apps/seller_sphere
   - packages/shared_services
   - packages/shared_ui
 dependencies:
