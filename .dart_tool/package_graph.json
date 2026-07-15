@@ -42,6 +42,14 @@
       ]
     },
     {
+      "name": "shared_core",
+      "version": "1.0.0",
+      "dependencies": [
+        "flutter"
+      ],
+      "devDependencies": []
+    },
+    {
       "name": "shared_services",
       "version": "1.0.0",
       "dependencies": [
@@ -69,14 +77,6 @@
         "flutter_lints",
         "flutter_test"
       ]
-    },
-    {
-      "name": "shared_core",
-      "version": "1.0.0",
-      "dependencies": [
-        "flutter"
-      ],
-      "devDependencies": []
     },
     {
       "name": "provider",
