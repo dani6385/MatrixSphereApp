@@ -70,12 +70,12 @@ class DefaultFirebaseOptions {
   );
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBINvlwwv6WoKi3OPSw4Js5kPtEzXi0BRE',
-    appId: '1:359008687014:ios:b45c323ec27f2f4ea9f567',
+    appId: '1:359008687014:ios:a04c8c6c12596562a9f567',
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
     databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
-    iosBundleId: 'com.matrix.sphere',
+    iosBundleId: 'com.matrix.sphereApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

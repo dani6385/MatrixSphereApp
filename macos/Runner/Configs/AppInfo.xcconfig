@@ -8,7 +8,7 @@
 PRODUCT_NAME = Matrix Sphere
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.matrix.sphere
+PRODUCT_BUNDLE_IDENTIFIER = com.matrix.sphereApp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 com.matrix.sphere. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 com.matrix.sphereApp. All rights reserved.
