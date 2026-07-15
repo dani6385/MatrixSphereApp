@@ -179,21 +179,7 @@ jobs:
         with:
           workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
           service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
-      - id: vars
-        name: Set App ID
-        run: |
-          # Masukkan App ID dari secrets ke output agar bisa dibaca step selanjutnya
-          echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
-
-      - name: Deploy to Firebase App Distribution
-        run: |
-          APK_PATH=$(find build/app/outputs/flutter-apk/ -name "app-release.apk" | head -n 1)
-          
-          npx firebase-tools appdistribution:distribute "$APK_PATH" \
-            --app "${{ steps.vars.outputs.app_id }}" \
-            --groups "seller" \
-            --project "matrixsphere-c3de9"
-            
+      
       - name: Deploy to Firebase App Distribution
         run: |
           # 1. Tidak perlu lagi menulis file gcp_key.json dari secrets!
@@ -205,7 +191,7 @@ jobs:
           
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
             --app "${{ steps.vars.outputs.app_id }}" \
-            --groups "seller" \
+            --groups "sphere" \
             --project "matrixsphere-c3de9"
 
 
