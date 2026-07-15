@@ -44,3 +44,12 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // Import Firebase BoM (Bill of Materials)
+    implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
+
+    // Tambahkan library Crashlytics dan Analytics
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+}
