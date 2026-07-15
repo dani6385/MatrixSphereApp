@@ -1,2 +1,3 @@
 mulai dari awal
 ah lah
+kenapa jadi nuruni gradle
