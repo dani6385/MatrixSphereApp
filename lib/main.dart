@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:shared_services/shared_services.dart'; // Import file yang baru dibuat
+import 'package:shared_services/firebase_options.dart'; // Import file yang baru dibuat
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'debug_screen.dart';
 
