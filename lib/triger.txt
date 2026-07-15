@@ -17,3 +17,5 @@ environment:
   google_fonts: ^6.2.1 shred ui
   mengganti dependencies:
   go_router: ^14.6.3 shred ui
+  mengganti dependencies:
+  flutter_svg: ^2.0.10 shared ui
