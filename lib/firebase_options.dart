@@ -47,7 +47,7 @@ class DefaultFirebaseOptions {
     projectId: 'matrixsphere-c3de9',
     authDomain: 'matrixsphere-c3de9.firebaseapp.com',
     databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
+    storageBucket: 'matrixsphere-c3de9.appspot.com',
     measurementId: 'G-5VD50MFNS0',
   );
 
@@ -57,24 +57,26 @@ class DefaultFirebaseOptions {
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
     databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
+    storageBucket: 'matrixsphere-c3de9.appspot.com',
   );
+
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBINvlwwv6WoKi3OPSw4Js5kPtEzXi0BRE',
     appId: '1:359008687014:ios:b45c323ec27f2f4ea9f567',
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
     databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
+    storageBucket: 'matrixsphere-c3de9.appspot.com',
     iosBundleId: 'com.matrix.sphere',
   );
+
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBINvlwwv6WoKi3OPSw4Js5kPtEzXi0BRE',
     appId: '1:359008687014:ios:a04c8c6c12596562a9f567',
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
     databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
+    storageBucket: 'matrixsphere-c3de9.appspot.com',
     iosBundleId: 'com.matrix.sphereApp',
   );
 
@@ -85,7 +87,7 @@ class DefaultFirebaseOptions {
     projectId: 'matrixsphere-c3de9',
     authDomain: 'matrixsphere-c3de9.firebaseapp.com',
     databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
+    storageBucket: 'matrixsphere-c3de9.appspot.com',
     measurementId: 'G-XKLPW1R0YX',
   );
 }
