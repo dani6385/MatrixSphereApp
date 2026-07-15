@@ -165,12 +165,6 @@ jobs:
           flutter-version: '3.24.5' # <-- GANTI DENGAN VERSI FLUTTER LAPTOP ANDA (misal: 3.22.2, 3.24.0, dll)
           cache: true
 
-      - name: Clean build
-        run: flutter clean
-
-      - name: Get dependencies
-        run: flutter pub get
-
       # Menghapus kondisi "matrix.should_run" yang tidak terdefinisi agar build tidak terlewati
       - name: Build Android APK
         run: |
