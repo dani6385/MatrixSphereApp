@@ -1,12 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    // START: FlutterFire Configuration
+    id("dev.flutter.flutter-gradle-plugin")
+    // Panggil tanpa menuliskan 'version' lagi
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    // END: FlutterFire Configuration
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
-    id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {

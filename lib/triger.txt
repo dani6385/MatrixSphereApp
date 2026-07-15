@@ -5,3 +5,4 @@ error gradle
 error gradle
 sukses build apk
 error deploy
+coba crashlytics
