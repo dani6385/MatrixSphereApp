@@ -2,3 +2,4 @@ mulai dari awal
 ah lah
 kenapa jadi nuruni gradle
 error gradle
+error gradle
