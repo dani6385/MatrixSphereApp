@@ -1,12 +1,5 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.codehaus.groovy:groovy-all:3.0.21")
-    }
-}
+// Hapus blok buildscript yang berisi groovy-all jika tidak sangat diperlukan
+// Karena plugin sudah didefinisikan di settings.gradle.kts
 
 allprojects {
     repositories {
@@ -15,6 +8,7 @@ allprojects {
     }
 }
 
+// Logika pemindahan direktori build (agar tidak mengotori folder project)
 val newBuildDir: Directory =
     rootProject.layout.buildDirectory
         .dir("../../build")
@@ -25,6 +19,11 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
+}
+
+tasks.register<Delete>("clean") {
+    delete(rootProject.layout.buildDirectory)
 }
