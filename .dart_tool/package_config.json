@@ -599,7 +599,7 @@
       "name": "shared_services",
       "rootUri": "../packages/shared_services",
       "packageUri": "lib/",
-      "languageVersion": "3.12"
+      "languageVersion": "3.6"
     },
     {
       "name": "shared_ui",

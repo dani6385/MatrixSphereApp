@@ -3,4 +3,4 @@ di sini masih melakukan build
 menaikan flutter version 3.27.0
 menurunkan enviroment
 environment:
-  sdk: ^3.6.0
+  sdk: ^3.6.0 di shraed ui dan shared services
