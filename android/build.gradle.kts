@@ -1,58 +1,24 @@
-plugins {
-    id("com.android.application")
-    // Gunakan format yang konsisten dengan settings.gradle.kts
-    id("org.jetbrains.kotlin.android") 
-    id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
-}
-
-android {
-    namespace = "com.seller.sphere"
-    // Jika flutter.compileSdkVersion bermasalah, ganti manual ke 34
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    defaultConfig {
-        applicationId = "com.seller.sphere"
-        minSdk = 21 // Minimal SDK untuk Firebase
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
-    }
-
-    buildTypes {
-        release {
-            // Untuk sementara pakai debug key tidak apa-apa, 
-            // tapi nanti untuk Microsoft Store/Play Store harus pakai Keystore asli
-            signingConfig = signingConfigs.getByName("debug")
-            isMinifyEnabled = false
-            isShrinkResources = false
-        }
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-    }
+val newBuildDir: Directory =
+    rootProject.layout.buildDirectory
+        .dir("../../build")
+        .get()
+rootProject.layout.buildDirectory.value(newBuildDir)
+
+subprojects {
+    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
+    project.layout.buildDirectory.value(newSubprojectBuildDir)
+}
+subprojects {
+    project.evaluationDependsOn(":app")
 }
 
-flutter {
-    source = "../.."
-}
-
-dependencies {
-    // Menggunakan versi Firebase BOM yang lebih baru untuk kompatibilitas
-    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    
-    // NDK versi terbaru yang stabil
-    implementation("com.google.firebase:firebase-crashlytics-ndk")
+tasks.register<Delete>("clean") {
+    delete(rootProject.layout.buildDirectory)
 }

@@ -1,9 +1,0 @@
-name: matrix_sphere
-
-packages:
-  - apps/admin_mikrotik
-  - apps/client_connectivity
-  - apps/shop_sphere
-  - packages/Shared_core
-  - packages/shared_services
-  - packages/shared_ui
