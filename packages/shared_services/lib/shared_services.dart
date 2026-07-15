@@ -3,7 +3,7 @@ export 'services/crashlytics_service.dart';
 export 'services/firebase_options.dart';
 export 'services/firestore_service.dart';
 export 'services/services_provider.dart';
-export 'services/rtdb_service.dart';
+//export 'services/rtdb_service.dart';
 //export 'services/ip_sync_service.dart';
 
 //export 'mikrotik/mikrotik_api_service.dart';

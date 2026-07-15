@@ -1,18 +1,22 @@
 name: shared_services
-version: 1.0.0
-description: A collection of shared services for MatrixSphere.
+description: A new Flutter project.
+
 publish_to: 'none'
 resolution: workspace
 
 environment:
-  sdk: '>=3.6.0 <4.0.0'
+  sdk: '>=3.11.0 <4.0.0'
 
 dependencies:
-  cloud_firestore: ^6.7.0
-  firebase_core: ^4.12.0
-  firebase_crashlytics: ^5.2.5
-  firebase_database: ^12.4.5
-  flutter:           # <--- INI WAJIB ADA
-    sdk: flutter     # <--- INI WAJIB ADA
+  cloud_firestore: ^6.7.1
+  firebase_core: ^4.12.1
+  firebase_database: ^12.4.6
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
 flutter:
   uses-material-design: true
