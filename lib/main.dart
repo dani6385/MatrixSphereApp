@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:shared_services/firebase_options.dart'; // Import file yang baru dibuat
+import 'package:shared_services/shared_services.dart'; // Import file yang baru dibuat
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 
@@ -51,6 +51,9 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _counter++;
     });
+    // Menambahkan log kustom ke Crashlytics setiap kali counter di-increment
+    // Log ini akan muncul di laporan jika terjadi crash.
+    FirebaseCrashlytics.instance.log("Counter incremented to: $_counter");
   }
 
   @override
@@ -70,9 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             ElevatedButton(
-              onPressed: () {
-              },
-              child: const Text('Go to Debug Screen'),
+              // Menyebabkan aplikasi crash untuk pengujian
+              onPressed: () => FirebaseCrashlytics.instance.crash(),
+              child: const Text('Test Crash'),
             ),
           ],
         ),
