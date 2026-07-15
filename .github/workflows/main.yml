@@ -162,7 +162,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.24.5' # <-- GANTI DENGAN VERSI FLUTTER LAPTOP ANDA (misal: 3.22.2, 3.24.0, dll)
+          flutter-version: '3.27.0' # <-- GANTI DENGAN VERSI FLUTTER LAPTOP ANDA (misal: 3.22.2, 3.24.0, dll)
           cache: true
 
       # Menghapus kondisi "matrix.should_run" yang tidak terdefinisi agar build tidak terlewati
