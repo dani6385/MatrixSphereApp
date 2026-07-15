@@ -13,3 +13,5 @@ environment:
   masih pada pubspeck
   menggati dependencies:
   shared_preferences: ^2.3.2 di shared ui
+  mengganti dependencies:
+  google_fonts: ^6.2.1 shred ui
