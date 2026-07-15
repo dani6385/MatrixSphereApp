@@ -596,12 +596,6 @@
       "languageVersion": "3.12"
     },
     {
-      "name": "shared_core",
-      "rootUri": "../packages/Shared_core",
-      "packageUri": "lib/",
-      "languageVersion": "3.12"
-    },
-    {
       "name": "shared_services",
       "rootUri": "../packages/shared_services",
       "packageUri": "lib/",

@@ -13,7 +13,8 @@ workspace:
   #- apps/client_connectivity
   #- apps/shop_sphere
   - apps/seller_sphere
-  - packages/*
+  - packages/shared_services
+  - packages/shared_ui
 dependencies:
   animations: ^2.2.0
   cloud_firestore: ^6.7.0
