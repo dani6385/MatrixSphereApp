@@ -80,7 +80,7 @@
     },
     {
       "name": "intl",
-      "version": "0.19.0",
+      "version": "0.20.3",
       "dependencies": [
         "clock",
         "meta",
@@ -171,7 +171,7 @@
     },
     {
       "name": "flutter_lints",
-      "version": "6.0.0",
+      "version": "5.0.0",
       "dependencies": [
         "lints"
       ]
@@ -446,11 +446,6 @@
         "meta",
         "plugin_platform_interface"
       ]
-    },
-    {
-      "name": "lints",
-      "version": "6.1.0",
-      "dependencies": []
     },
     {
       "name": "shared_preferences_windows",
@@ -939,6 +934,11 @@
         "meta",
         "pub_semver"
       ]
+    },
+    {
+      "name": "lints",
+      "version": "5.1.1",
+      "dependencies": []
     }
   ],
   "configVersion": 1
