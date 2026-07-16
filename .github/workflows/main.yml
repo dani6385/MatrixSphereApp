@@ -64,7 +64,7 @@ jobs:
 
   # 2. JOB BUILD WEB
   build-web:
-    needs: [detect-changes, build-windows]
+    needs: detect-changes
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -96,24 +96,27 @@ jobs:
 
       - name: Build Web Application
         run: |
-          cd ${{ steps.vars.outputs.dir }}
           flutter config --enable-web
+          flutter pub get
           flutter build web --release
 
-      # Menggunakan action resmi dengan entryPoint untuk deploy web murni dari sub-folder
-      - name: Deploy to Firebase Hosting
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      # 1. Autentikasi menggunakan Workload Identity Federation (WIF)
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
         with:
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          projectId: "matrixsphere-c3de9"
-          channelId: live
-          entryPoint: ${{ steps.vars.outputs.dir }}
+          workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
+          service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
+
+      # 2. Deploy ke Firebase Hosting secara Keyless
+      - name: Deploy to Firebase Hosting
+        run: |
+          npx firebase-tools deploy --only hosting --project "matrixsphere-c3de9"
 
 
   # 3. JOB BUILD ANDROID
   build-android:
-    needs: detect-changes
+    needs: [detect-changes, build-web]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -197,7 +200,7 @@ jobs:
 
   # 4. JOB BUILD WINDOWS
   build-windows:
-    needs: [detect-changes, build-linux]
+    needs: [detect-changes, build-android]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: windows-latest
     strategy:
@@ -253,7 +256,7 @@ jobs:
 
   # 5. JOB BUILD LINUX
   build-linux:
-    needs: [detect-changes, build-android]
+    needs: [detect-changes, build-windows]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -303,7 +306,7 @@ jobs:
 
   # 6. JOB BUILD MACOS
   build-macos:
-    needs: [detect-changes, build-web]
+    needs: [detect-changes, build-linux]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: macos-latest
     strategy:

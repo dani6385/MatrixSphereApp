@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'widgets/home_app_bar.dart';
 import 'home_content.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -6,19 +7,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('Matrix Sphere', style: TextStyle(color: Colors.white)),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-          ),
-        ],
-      ),
-      body: const HomeContent(),
+      appBar: HomeAppBar(),
+      body: HomeContent(),
     );
   }
 }
