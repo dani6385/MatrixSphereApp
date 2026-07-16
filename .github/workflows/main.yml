@@ -325,18 +325,20 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.0' # atau versi yang Anda gunakan
+          flutter-version: '3.27.0'
 
-      # TAMBAHKAN LANGKAH INI DI SINI
       - name: Disable Swift Package Manager
         run: flutter config --no-enable-swift-package-manager
 
-      # Baru kemudian jalankan perintah build macOS Anda setelahnya
-
       - name: Build macOS App
         run: |
-          cd ${{ steps.vars.outputs.dir }}
+          # 1. Aktifkan dukungan macOS desktop
           flutter config --enable-macos-desktop
+          
+          # 2. Jalankan pub get kembali untuk menggenerasikan folder ephemeral
+          flutter pub get
+          
+          # 3. Mulai proses build
           flutter build macos --release
 
       - name: Upload macOS Artifacts
