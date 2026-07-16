@@ -197,7 +197,7 @@ jobs:
 
   # 4. JOB BUILD WINDOWS
   build-windows:
-    needs: [detect-changes, build-macos]
+    needs: [detect-changes, build-linux]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: windows-latest
     strategy:
@@ -299,7 +299,7 @@ jobs:
 
   # 6. JOB BUILD MACOS
   build-macos:
-    needs: [detect-changes, build-linux]
+    needs: [detect-changes, build-windows]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: macos-latest
     strategy:
