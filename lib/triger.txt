@@ -22,3 +22,4 @@ tujuh
 sembilan
 sepuluh
 11
+12
