@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class SystemIntegrityCard extends StatelessWidget {
   const SystemIntegrityCard({super.key});
@@ -8,7 +9,7 @@ class SystemIntegrityCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: kDarkTextSecondary,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -18,7 +19,7 @@ class SystemIntegrityCard extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             'Berjalan dalam Offline-first Mode. Database lokal Room siap menyinkronkan data begitu google-services.json diaktifkan.',
-            style: TextStyle(color: Colors.white.withAlpha(178)),
+            style: TextStyle(color: kTextOnDarkPrimary.withAlpha(178)),
           ),
         ],
       ),

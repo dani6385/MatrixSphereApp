@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class InfoCard extends StatelessWidget {
   final String count;
@@ -11,13 +12,13 @@ class InfoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.grey[900],
+        color: kDarkTextSecondary,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
-          Text(count, style: const TextStyle(color: Colors.white, fontSize: 24)),
-          Text(label, style: const TextStyle(color: Colors.grey)),
+          Text(count, style: const TextStyle(color: kLightTextPrimary, fontSize: 24)),
+          Text(label, style: const TextStyle(color: kDarkTextSecondary)),
         ],
       ),
     );

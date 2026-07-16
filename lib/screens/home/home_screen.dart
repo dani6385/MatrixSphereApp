@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'widgets/home_app_bar.dart';
 import 'home_content.dart';
 
@@ -8,7 +9,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: kDarkBackground,
       appBar: HomeAppBar(),
       body: HomeContent(),
     );

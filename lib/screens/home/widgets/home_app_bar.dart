@@ -9,13 +9,15 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   void _showAccountMenu(BuildContext context) {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => const AccountMenuModal(),
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            const AccountMenuModal(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           const begin = Offset(-1.0, 0.0);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
 
-          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
           return SlideTransition(
             position: animation.drive(tween),
@@ -31,7 +33,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return AppBar(
-      backgroundColor: Colors.black,
+      backgroundColor: kDarkBackground,
       elevation: 0,
       title: Row(
         children: [
@@ -48,7 +50,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Text(
                 'Matrix Sphere',
-                style: textTheme.titleMedium?.copyWith(color: Colors.white),
+                style: textTheme.titleMedium?.copyWith(color: kDarkBackground),
               ),
               Row(
                 children: [
@@ -56,14 +58,15 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     width: 8,
                     height: 8,
                     decoration: const BoxDecoration(
-                      color: Colors.orange,
+                      color: kWarmOrange,
                       shape: BoxShape.circle,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.xxs),
                   Text(
                     'Local Mode',
-                    style: textTheme.bodySmall?.copyWith(color: Colors.grey),
+                    style: textTheme.bodySmall
+                        ?.copyWith(color: kDarkTextSecondary),
                   ),
                 ],
               ),
@@ -74,7 +77,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {},
-          icon: const Icon(Icons.cloud_outlined, color: Colors.orange),
+          icon: const Icon(Icons.cloud_outlined, color: kWarmOrange),
         ),
       ],
     );

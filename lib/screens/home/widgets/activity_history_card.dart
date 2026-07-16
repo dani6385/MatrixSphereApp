@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class ActivityHistoryCard extends StatelessWidget {
   const ActivityHistoryCard({super.key});
@@ -8,13 +9,13 @@ class ActivityHistoryCard extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('HISTORI AKTIVITAS TERKINI', style: TextStyle(color: Colors.white)),
+        Text('HISTORI AKTIVITAS TERKINI', style: TextStyle(color: kTextOnDarkPrimary)),
         Expanded(
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.history, color: Colors.grey, size: 50),
+                Icon(Icons.history, color: kDarkTextSecondary, size: 50),
                 SizedBox(height: 10),
                 Text('Belum ada histori persetujuan.', style: TextStyle(color: Colors.grey)),
               ],
