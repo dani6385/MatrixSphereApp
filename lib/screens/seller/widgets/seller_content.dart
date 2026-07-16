@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:matrix/screens/seller/models/seller_model.dart';
-import 'package:matrix/screens/seller/widgets/filter_chip.dart';
-import 'package:matrix/screens/seller/widgets/seller_card.dart';
+import '../models/seller_model.dart';
+import 'filter_chip.dart';
+import 'seller_card.dart';
 
 class SellerContent extends StatelessWidget {
   const SellerContent({super.key});

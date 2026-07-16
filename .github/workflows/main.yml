@@ -325,9 +325,13 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
-          flutter-version: '3.44.6'
-          cache: true
+          flutter-version: '3.27.0' # atau versi yang Anda gunakan
+
+      # TAMBAHKAN LANGKAH INI DI SINI
+      - name: Disable Swift Package Manager
+        run: flutter config --no-enable-swift-package-manager
+
+      # Baru kemudian jalankan perintah build macOS Anda setelahnya
 
       - name: Build macOS App
         run: |

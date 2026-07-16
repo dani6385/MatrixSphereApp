@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matrix/screens/seller/widgets/seller_content.dart';
+import 'widgets/seller_content.dart';
 
 class SellerScreen extends StatelessWidget {
   const SellerScreen({super.key});

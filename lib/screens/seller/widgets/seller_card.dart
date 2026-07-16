@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:matrix/screens/seller/models/seller_model.dart';
+import '../models/seller_model.dart';
 
 class SellerCard extends StatelessWidget {
   final Seller seller;
