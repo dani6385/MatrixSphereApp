@@ -4,8 +4,8 @@ platform :osx, '10.15'
 # cocoapods_disable_stats
 
 flutter_application_path = '..'
-# Perbaikan jalur load dengan menambahkan sub-folder 'macos'
-load File.join(flutter_application_path, 'macos', 'Flutter', 'ephemeral', 'podhelper.rb')
+# Kembalikan ke jalur standar bawaan Flutter
+load File.join(flutter_application_path, 'Flutter', 'ephemeral', 'podhelper.rb')
 
 target 'Runner' do
   use_frameworks!

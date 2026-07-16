@@ -332,13 +332,16 @@ jobs:
 
       - name: Build macOS App
         run: |
-          # 1. Aktifkan dukungan macOS desktop
+          # 1. Aktifkan desktop macOS
           flutter config --enable-macos-desktop
           
-          # 2. Jalankan pub get kembali untuk menggenerasikan folder ephemeral
+          # 2. Paksa hapus cache runner untuk meregenerasi folder ephemeral
+          flutter clean
+          
+          # 3. Unduh ulang dependency secara bersih
           flutter pub get
           
-          # 3. Mulai proses build
+          # 4. Jalankan build release
           flutter build macos --release
 
       - name: Upload macOS Artifacts
