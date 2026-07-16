@@ -15,7 +15,7 @@ class ActivityHistoryCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.history, color: kDarkTextSecondary, size: 50),
+                Icon(Icons.history, color: kDarkTextPrimary, size: 50),
                 SizedBox(height: 10),
                 Text('Belum ada histori persetujuan.', style: TextStyle(color: Colors.grey)),
               ],

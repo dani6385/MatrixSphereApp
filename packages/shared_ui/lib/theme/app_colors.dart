@@ -53,4 +53,5 @@ const Color kAlertRed = Color(0xFFF44336);
 const Color kVividOrchid = Color(0xFFD000C8);
 const Color kPurple = Color(0xFF6A5AE0);
 const Color kSeaGreen = Color(0xFF2E8B57);
-
+const Color kTransparent = Colors.transparent;
+const Color kDarkSecondary = Colors.black12;

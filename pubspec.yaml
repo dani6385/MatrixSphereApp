@@ -42,6 +42,7 @@ dependencies:
   shared_services: ^1.0.0+1
   google_nav_bar: ^5.0.7
   shared_ui: ^1.0.0+1
+  intl: ^0.20.3
 
 dev_dependencies:
   flutter_test:

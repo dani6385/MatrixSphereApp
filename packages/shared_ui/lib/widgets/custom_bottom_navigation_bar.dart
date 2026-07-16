@@ -16,7 +16,8 @@ class CustomBottomNavigationBar extends StatefulWidget {
   });
 
   @override
-  State<CustomBottomNavigationBar> createState() => _CustomBottomNavigationBarState();
+  State<CustomBottomNavigationBar> createState() =>
+      _CustomBottomNavigationBarState();
 }
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
@@ -52,8 +53,8 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         items: items,
         onTap: _onItemTapped,
         color: kDarkBackground,
-        buttonBackgroundColor: kDarkBorder,
-        backgroundColor: Colors.transparent, 
+        buttonBackgroundColor: kElectricBlue,
+        backgroundColor: kTransparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 400),
       ),
