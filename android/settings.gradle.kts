@@ -18,9 +18,11 @@ pluginManagement {
 }
 
 plugins {
+    // Memperbaiki sintaksis menggunakan kurung () dan menghapus versi 9.0.1 yang ganda
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
-    id("com.android.application") version "9.0.1" apply false
-    id("org.jetbrains.kotlin.android") version "2.3.20" apply false
+    id("com.android.application") version "8.4.0" apply false
+    // Menyesuaikan versi Kotlin agar kompatibel dengan AGP 8.4.0
+    id("org.jetbrains.kotlin.android") version "1.9.23" apply false 
 }
 
 include(":app")

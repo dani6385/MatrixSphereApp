@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Menggunakan tanda petik ganda dan tanda kurung untuk Kotlin DSL
+        classpath("com.android.tools.build:gradle:8.4.0")
+    }
+}
+
 allprojects {
     repositories {
         google()
@@ -15,6 +26,7 @@ subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
 }
+
 subprojects {
     project.evaluationDependsOn(":app")
 }
