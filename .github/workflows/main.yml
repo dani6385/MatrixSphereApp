@@ -234,10 +234,14 @@ jobs:
 
       # Menggabungkan dan membersihkan duplikasi langkah Build Windows App Anda
       - name: Build Windows App
-        shell: bash
+        # TAMBAHKAN BLOK ENV DI BAWAH INI
+        env:
+          CL: "/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECAT_WARNINGS"
         run: |
-          cd ${{ steps.vars.outputs.dir }}
+          # 1. Aktifkan desktop Windows
           flutter config --enable-windows-desktop
+          
+          # 2. Mulai proses build release
           flutter build windows --release
 
       - name: Upload Windows Artifacts
