@@ -322,26 +322,25 @@ jobs:
             "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
           esac
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.27.0'
-
-      - name: Disable Swift Package Manager
-        run: flutter config --no-enable-swift-package-manager
-
       - name: Build macOS App
         run: |
-          # 1. Aktifkan desktop macOS
+          # 1. Aktifkan dukungan macOS desktop
           flutter config --enable-macos-desktop
           
-          # 2. Paksa hapus cache runner untuk meregenerasi folder ephemeral
-          flutter clean
+          # 2. Generate ulang folder macos yang bersih langsung di mesin runner Mac (Menjamin semua file & ephemeral lengkap)
+          flutter create . --platforms=macos
           
-          # 3. Unduh ulang dependency secara bersih
+          # 3. Otomatis ubah target platform di Podfile yang baru dibuat menjadi 10.15
+          sed -i '' "s/# platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
+          sed -i '' "s/platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
+          
+          # 4. Otomatis ubah target deployment di project.pbxproj menjadi 10.15
+          sed -i '' "s/MACOSX_DEPLOYMENT_TARGET = 10.14;/MACOSX_DEPLOYMENT_TARGET = 10.15;/g" macos/Runner.xcodeproj/project.pbxproj
+          
+          # 5. Jalankan pub get untuk mengonfigurasi dependensi baru
           flutter pub get
           
-          # 4. Jalankan build release
+          # 6. Mulai proses build release
           flutter build macos --release
 
       - name: Upload macOS Artifacts
