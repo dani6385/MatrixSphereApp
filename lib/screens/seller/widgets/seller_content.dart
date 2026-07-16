@@ -17,10 +17,10 @@ class SellerContent extends StatelessWidget {
           const SizedBox(height: 4),
           const Text('Daftar penjual terdaftar di sistem', style: TextStyle(color: Colors.grey)),
           const SizedBox(height: 20),
-          SingleChildScrollView(
+          const SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: const [
+              children: [
                 FilterChipWidget(label: 'Semua', selected: true),
                 SizedBox(width: 8),
                 FilterChipWidget(label: 'Pending'),
