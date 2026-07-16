@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.matrix_sphere"
+    namespace = "com.matrix.sphere"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
