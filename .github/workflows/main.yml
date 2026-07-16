@@ -299,7 +299,7 @@ jobs:
 
   # 6. JOB BUILD MACOS
   build-macos:
-    needs: [detect-changes, build-windows]
+    needs: [detect-changes, build-web]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: macos-latest
     strategy:
