@@ -1,5 +1,7 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final List<Widget> screens;
@@ -34,33 +36,26 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    final items = widget.tabs
+        .map((tab) => Icon(tab.icon, size: 24, color: kDarkTextPrimary))
+        .toList();
+
     return Scaffold(
+      extendBody: true,
       body: IndexedStack(
         index: _selectedIndex,
         children: widget.screens,
       ),
-      bottomNavigationBar: Container(
-        color: Colors.grey[900],
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-          child: GNav(
-            backgroundColor: Colors.grey[900]!,
-            rippleColor: Colors.grey[800]!,
-            hoverColor: Colors.grey[700]!,
-            gap: 8,
-            activeColor: Colors.white,
-            iconSize: 24,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            duration: const Duration(milliseconds: 400),
-            tabBackgroundColor: Colors.grey[800]!,
-            color: Colors.grey,
-            tabs: widget.tabs,
-            selectedIndex: _selectedIndex,
-            onTabChange: (index) {
-              _onItemTapped(index);
-            },
-          ),
-        ),
+      bottomNavigationBar: CurvedNavigationBar(
+        index: _selectedIndex,
+        height: 60,
+        items: items,
+        onTap: _onItemTapped,
+        color: kCyanPrimary,
+        buttonBackgroundColor: kBrandTertiary,
+        backgroundColor: Colors.transparent, 
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 400),
       ),
     );
   }

@@ -17,7 +17,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           // Placeholder for the avatar image
           const CircleAvatar(
             radius: 16,
-            child: Icon(Icons.person_outline, size: 20),
+            backgroundImage: AssetImage('images/img_profile-avatar.jpg'),
           ),
           const SizedBox(width: AppSpacing.sm),
           Column(
