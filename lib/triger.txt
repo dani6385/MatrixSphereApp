@@ -21,3 +21,4 @@ enam
 tujuh
 sembilan
 sepuluh
+11
