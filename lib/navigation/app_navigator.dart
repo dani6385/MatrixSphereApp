@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../screens/seller/seller_screen.dart';
-import '../screens/home/home_content.dart';
+import '../screens/home/home_screen.dart';
 import '../screens/approval/approval_screen.dart';
 
 class AppNavigator extends StatelessWidget {
@@ -13,7 +13,7 @@ class AppNavigator extends StatelessWidget {
     return const CustomBottomNavigationBar(
       initialSelectedIndex: 0,
       screens: [
-        HomeContent(),
+        HomeScreen(),
         SellerScreen(),
         ApprovalScreen(),
         Center(child: Text('System Screen', style: TextStyle(color: Colors.white))),
