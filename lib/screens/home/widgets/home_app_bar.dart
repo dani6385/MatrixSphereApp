@@ -1,9 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
+import '../../account/widgets/account_menu_modal.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
+
+  void _showAccountMenu(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => const AccountMenuModal(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(-1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +35,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       title: Row(
         children: [
-          // Placeholder for the avatar image
-          const CircleAvatar(
-            radius: 16,
-            backgroundImage: AssetImage('images/img_profile-avatar.jpg'),
+          GestureDetector(
+            onTap: () => _showAccountMenu(context),
+            child: const CircleAvatar(
+              radius: 16,
+              backgroundImage: AssetImage('images/img_profile-avatar.jpg'),
+            ),
           ),
           const SizedBox(width: AppSpacing.sm),
           Column(

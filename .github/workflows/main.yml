@@ -317,27 +317,27 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Resolve Project Variables
-        id: vars
-        run: |
-          PROJECT="${{ matrix.project }}"
-          case "$PROJECT" in
-            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
-            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
-            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
-            "matrix_sphere") echo "dir=." >> $GITHUB_OUTPUT ;;
-            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
-          esac
+      # PASTIKAN BLOK "Set up Flutter" INI ADA DI SINI
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.0'
+          channel: 'stable'
 
+      # Langkah menonaktifkan SPM sebelum build dimulai
+      - name: Disable Swift Package Manager
+        run: flutter config --no-enable-swift-package-manager
+
+      # Langkah build macOS otomatis kita sebelumnya
       - name: Build macOS App
         run: |
           # 1. Aktifkan dukungan macOS desktop
           flutter config --enable-macos-desktop
           
-          # 2. Generate ulang folder macos yang bersih langsung di mesin runner Mac (Menjamin semua file & ephemeral lengkap)
+          # 2. Generate ulang folder macos yang bersih langsung di mesin runner Mac
           flutter create . --platforms=macos
           
-          # 3. Otomatis ubah target platform di Podfile yang baru dibuat menjadi 10.15
+          # 3. Otomatis ubah target platform di Podfile menjadi 10.15
           sed -i '' "s/# platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
           sed -i '' "s/platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
           
@@ -349,9 +349,3 @@ jobs:
           
           # 6. Mulai proses build release
           flutter build macos --release
-
-      - name: Upload macOS Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.project }}-macos-build
-          path: ${{ steps.vars.outputs.dir }}/build/macos/Build/Products/Release
