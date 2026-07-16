@@ -1,4 +1,4 @@
-package com.example.matrix_sphere
+package com.matrix.sphere
 
 import io.flutter.embedding.android.FlutterActivity
 
