@@ -3,11 +3,14 @@ platform :osx, '10.15'
 # CocoaPods analytics sends network stats so feel free to disable it.
 # cocoapods_disable_stats
 
+# --- TAMBAHKAN DUA BARIS DI BAWAH INI UNTUK MEMUAT HELPER FLUTTER ---
+flutter_application_path = '..'
+load File.join(flutter_application_path, 'Flutter', 'ephemeral', 'podhelper.rb')
+
 target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  # Perbaikan pada penulisan __FILE__ di bawah ini (menggunakan huruf kapital)
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
