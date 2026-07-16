@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 // Set of Material typography styles to start with
-final TextTheme appTypography = TextTheme(
+const TextTheme appTypography = TextTheme(
   bodyLarge: TextStyle(
     fontFamily: 'Roboto', // Default font family in Flutter
     fontWeight: FontWeight.normal,

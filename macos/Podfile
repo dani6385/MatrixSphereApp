@@ -7,7 +7,8 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  flutter_install_all_ios_pods File.dirname(File.realpath(__file__))
+  # Perbaikan pada penulisan __FILE__ di bawah ini (menggunakan huruf kapital)
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 end
 
 post_install do |installer|
