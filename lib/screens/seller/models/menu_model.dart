@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class MenuModel extends StatelessWidget {
@@ -90,49 +89,9 @@ class MenuModel extends StatelessWidget {
       leading: const Icon(Icons.palette_outlined, color: kDarkTextPrimary),
       title: Text('Ubah Tema', style: textTheme.bodyLarge),
       trailing: const Icon(Icons.chevron_right, color: kDarkTextSecondary),
-      onTap: () => _showThemePicker(context),
-    );
-  }
-
-  void _showThemePicker(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Pilih Tema'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<ThemeMode>(
-              title: const Text('Mengikuti Sistem'),
-              value: ThemeMode.system,
-              groupValue: themeProvider.themeMode,
-              onChanged: (value) {
-                if (value != null) themeProvider.setThemeMode(value);
-                Navigator.pop(context);
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: const Text('Terang'),
-              value: ThemeMode.light,
-              groupValue: themeProvider.themeMode,
-              onChanged: (value) {
-                if (value != null) themeProvider.setThemeMode(value);
-                Navigator.pop(context);
-              },
-            ),
-            RadioListTile<ThemeMode>(
-              title: const Text('Gelap'),
-              value: ThemeMode.dark,
-              groupValue: themeProvider.themeMode,
-              onChanged: (value) {
-                if (value != null) themeProvider.setThemeMode(value);
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+      onTap: () {
+        // TODO: Implement theme picker logic, perhaps via a callback
+      },
     );
   }
 

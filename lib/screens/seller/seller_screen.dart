@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'widgets/seller_app_bar.dart';
 import 'widgets/seller_content.dart';
-import 'widgets/menu_modal.dart';
+import 'models/menu_model.dart';
+
 
 class SellerScreen extends StatelessWidget {
   const SellerScreen({super.key});

@@ -10,11 +10,11 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: kDarkBackground,
       elevation: 0,
-      leading: const Padding(
-        padding: EdgeInsets.all(AppSpacing.sm),
-        child: CircleAvatar(
-          backgroundImage: AssetImage('images/img_profile-avatar.jpg'),
-        ),
+      leading: IconButton(
+        icon: const Icon(Icons.menu, color: kDarkTextPrimary),
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
