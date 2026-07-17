@@ -1,33 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:shared_ui/shared_ui.dart';
-import '../screens/seller/seller_screen.dart';
-import '../screens/home/home_screen.dart';
-import '../screens/approval/approval_screen.dart';
-import '../screens/system/system_screen.dart';
-import '../screens/attendance/attendance_screen.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:shared_ui/shared_ui.dart'; // Untuk kBrandPrimary, dll.
 
-class AppNavigator extends StatelessWidget {
-  const AppNavigator({super.key});
+class AppNavigator extends StatefulWidget {
+  final StatefulNavigationShell navigationShell;
+
+  const AppNavigator({super.key, required this.navigationShell});
+
+  @override
+  State<AppNavigator> createState() => _AppNavigatorState();
+}
+
+class _AppNavigatorState extends State<AppNavigator> {
+  void _onItemTapped(int index) {
+    widget.navigationShell.goBranch(index);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const CustomBottomNavigationBar(
-      initialSelectedIndex: 0,
-      screens: [
-        HomeScreen(),
-        SellerScreen(),
-        ApprovalScreen(),
-        SystemScreen(),
-        AttendanceScreen(),
-      ],
-      tabs: [
-        GButton(icon: Icons.home, text: 'Home'),
-        GButton(icon: Icons.business, text: 'Seller'),
-        GButton(icon: Icons.check_circle_outline, text: 'Approval'),
-        GButton(icon: Icons.system_update, text: 'System'),
-        GButton(icon: Icons.fingerprint, text: 'Absensi'),
-      ],
+    return Scaffold(
+      extendBody: true,
+      body: widget.navigationShell, // Ini adalah IndexedStack dari go_router
+      bottomNavigationBar: CurvedNavigationBar(
+        index: widget.navigationShell.currentIndex,
+        height: 60,
+        items: const <Widget>[
+          Icon(Icons.home, size: 24, color: kDarkTextPrimary),
+          Icon(Icons.business, size: 24, color: kDarkTextPrimary),
+          Icon(Icons.check_circle_outline, size: 24, color: kDarkTextPrimary),
+          Icon(Icons.system_update, size: 24, color: kDarkTextPrimary),
+          Icon(Icons.fingerprint, size: 24, color: kDarkTextPrimary),
+        ],
+        onTap: _onItemTapped,
+        color: kDarkBackground,
+        buttonBackgroundColor: kBrandPrimary,
+        backgroundColor: Colors.transparent,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 400),
+      ),
     );
   }
 }
