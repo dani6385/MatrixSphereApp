@@ -455,7 +455,7 @@
       "name": "matrix_sphere",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.6"
     },
     {
       "name": "shared_services",

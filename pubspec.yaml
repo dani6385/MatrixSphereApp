@@ -5,7 +5,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.10.0 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
 
 workspace:
   - packages/shared_services
@@ -37,8 +37,6 @@ dependencies:
     path: packages/shared_services
   shared_ui:
     path: packages/shared_ui
-  curved_navigation_bar: ^1.0.6
-  cross_file: ^0.3.5+4
 
 dev_dependencies:
   flutter_test:
