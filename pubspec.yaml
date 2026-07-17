@@ -47,6 +47,10 @@ dependencies:
   firebase_database: ^12.4.6
   camera: 0.10.5+9 # Menambahkan versi camera yang kompatibel
 
+dependency_overrides:
+  cross_file: 0.3.4+2
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
