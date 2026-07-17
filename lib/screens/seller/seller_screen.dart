@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/theme/app_colors.dart';
 import 'widgets/seller_content.dart';
 
 class SellerScreen extends StatelessWidget {
@@ -7,17 +8,19 @@ class SellerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: kDarkBackground,
       appBar: AppBar(
-        backgroundColor: Colors.black,
+        backgroundColor: kDarkBackground,
         elevation: 0,
-        title: const Text('Matrix Sphere', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text('Matrix Sphere',
+            style: TextStyle(color: kDarkTextPrimary, fontWeight: FontWeight.bold)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
               backgroundColor: Colors.grey[850],
-              child: const Icon(Icons.chat_bubble_outline, color: Colors.orange, size: 20),
+              child: const Icon(Icons.chat_bubble_outline,
+                  color: kWarmOrange, size: 20),
             ),
           ),
         ],
@@ -31,12 +34,12 @@ class SellerScreen extends StatelessWidget {
                   width: 8,
                   height: 8,
                   decoration: const BoxDecoration(
-                    color: Colors.orange,
+                    color: kWarmOrange,
                     shape: BoxShape.circle,
                   ),
                 ),
                 const SizedBox(width: 8),
-                const Text('Local Mode', style: TextStyle(color: Colors.orange)),
+                const Text('Local Mode', style: TextStyle(color: kWarmOrange)),
               ],
             ),
           ),
@@ -45,8 +48,8 @@ class SellerScreen extends StatelessWidget {
       body: const SellerContent(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor: kDarkTextPrimary,
+        foregroundColor: kDarkBackground,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: const Icon(Icons.add),
       ),
