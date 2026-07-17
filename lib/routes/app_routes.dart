@@ -5,4 +5,6 @@ class AppRoutes {
   static const String attendance = '/attendance';
   static const String approvalDetail = '/approval/detail'; // Rute baru
   static const String system = '/system';
+  static const String calendar = '/calendar';
+  static const String account = '/account';
 }

@@ -62,6 +62,16 @@ class _AppNavigatorState extends State<AppNavigator> {
                   selectedIcon: Icon(Icons.fingerprint),
                   label: Text('Absensi'),
                 ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.calendar_month_outlined),
+                  selectedIcon: Icon(Icons.calendar_month),
+                  label: Text('Kalender'),
+                ),
+                NavigationRailDestination(
+                  icon: Icon(Icons.person_2_outlined),
+                  selectedIcon: Icon(Icons.person),
+                  label: Text('Akun'),
+                ),
               ],
             ),
             const VerticalDivider(thickness: 1, width: 1),
