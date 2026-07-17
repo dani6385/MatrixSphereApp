@@ -127,7 +127,7 @@ jobs:
       # 2. Deploy ke Firebase Hosting secara Keyless
       - name: Deploy to Firebase Hosting
         run: |
-          npx firebase-tools deploy --only hosting --site "${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
+          npx firebase-tools@latest deploy --only "hosting:${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
 
 
   # 3. JOB BUILD ANDROID
