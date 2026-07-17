@@ -7,7 +7,7 @@ buildscript {
         // Menggunakan tanda petik ganda dan tanda kurung untuk Kotlin DSL
         classpath("com.android.tools.build:gradle:8.4.0")
         // Menambahkan classpath untuk plugin Kotlin
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24")
     }
 }
 
