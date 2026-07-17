@@ -1,26 +1,16 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import '../navigation/app_navigator.dart';
-import 'package:shared_services/shared_services.dart';
+import 'package:matrix_sphere/navigation/app_navigator.dart';
 import 'package:provider/provider.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+
 import 'package:shared_ui/shared_ui.dart';
+import 'screens/home/home_screen.dart';
+import 'screens/attendance/attendance_screen.dart';
 
 
-void main() async {
-  runZonedGuarded<Future<void>>(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
 
-    // Pass all uncaught errors to Crashlytics.
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-
-    runApp(const MyApp());
-  }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -31,16 +21,42 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
       child: Consumer<ThemeProvider>(
-        builder: (context, themeNotifier, child) {
+        builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: 'Matrix',
+            title: 'Flutter Demo',
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
-            themeMode: themeNotifier.themeMode,
+            themeMode: themeProvider.themeMode,
             home: const AppNavigator(),
           );
         },
       ),
+    );
+  }
+}
+
+class MainScreen extends StatelessWidget {
+  const MainScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final screens = [
+      const HomeScreen(),
+      const AttendanceScreen(),
+      const Scaffold(body: Center(child: Text('History'))),
+      const Scaffold(body: Center(child: Text('Settings'))),
+    ];
+
+    final tabs = [
+      const GButton(icon: Icons.home, text: 'Home'),
+      const GButton(icon: Icons.calendar_today, text: 'Attendance'),
+      const GButton(icon: Icons.history, text: 'History'),
+      const GButton(icon: Icons.settings, text: 'Settings'),
+    ];
+
+    return CustomBottomNavigationBar(
+      screens: screens,
+      tabs: tabs,
     );
   }
 }
