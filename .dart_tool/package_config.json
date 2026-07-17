@@ -461,13 +461,13 @@
       "name": "shared_services",
       "rootUri": "../packages/shared_services",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.6"
     },
     {
       "name": "shared_ui",
       "rootUri": "../packages/shared_ui",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.6"
     }
   ],
   "generator": "pub",

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/foundation.dart' show kIsWeb; // Import untuk deteksi platform web
+import 'package:flutter/foundation.dart'
+    show kIsWeb; // Import untuk deteksi platform web
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:shared_ui/shared_ui.dart'; // Untuk kBrandPrimary, dll.
 
@@ -33,9 +34,11 @@ class _AppNavigatorState extends State<AppNavigator> {
               backgroundColor: kDarkSurface,
               indicatorColor: kBrandPrimary,
               selectedIconTheme: const IconThemeData(color: kDarkTextPrimary),
-              unselectedIconTheme: const IconThemeData(color: kDarkTextSecondary),
+              unselectedIconTheme:
+                  const IconThemeData(color: kDarkTextSecondary),
               selectedLabelTextStyle: const TextStyle(color: kDarkTextPrimary),
-              unselectedLabelTextStyle: const TextStyle(color: kDarkTextSecondary),
+              unselectedLabelTextStyle:
+                  const TextStyle(color: kDarkTextSecondary),
               destinations: const [
                 NavigationRailDestination(
                   icon: Icon(Icons.home_outlined),

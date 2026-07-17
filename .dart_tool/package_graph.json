@@ -11,6 +11,7 @@
       "dependencies": [
         "camera",
         "cupertino_icons",
+        "curved_navigation_bar",
         "firebase_core",
         "firebase_crashlytics",
         "firebase_database",
@@ -46,8 +47,10 @@
       "dependencies": [
         "curved_navigation_bar",
         "flutter",
+        "go_router",
         "google_nav_bar",
-        "permission_handler"
+        "permission_handler",
+        "shared_preferences"
       ],
       "devDependencies": [
         "flutter_test"
@@ -76,6 +79,14 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "curved_navigation_bar",
+      "version": "1.0.6",
+      "dependencies": [
+        "flutter",
+        "meta"
       ]
     },
     {
@@ -207,14 +218,6 @@
         "meta",
         "sky_engine",
         "vector_math"
-      ]
-    },
-    {
-      "name": "curved_navigation_bar",
-      "version": "1.0.6",
-      "dependencies": [
-        "flutter",
-        "meta"
       ]
     },
     {

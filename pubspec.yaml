@@ -37,6 +37,7 @@ dependencies:
     path: packages/shared_services
   shared_ui:
     path: packages/shared_ui
+  curved_navigation_bar: ^1.0.6
 
 dev_dependencies:
   flutter_test:
