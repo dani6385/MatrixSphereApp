@@ -172,8 +172,8 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
                 color: Colors.white, fontWeight: FontWeight.bold),
           ),
           backgroundColor: approval.status == 'waiting'
-              ? Colors.orange.shade800
-              : Colors.green.shade800,
+              ? kWarmOrange
+              : kSoftTeal,
           padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
         ),

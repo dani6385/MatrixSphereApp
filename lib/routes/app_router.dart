@@ -23,23 +23,33 @@ final appRouter = GoRouter(
       branches: <StatefulShellBranch>[
         // Branch 0: Home
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
+          GoRoute(
+              path: AppRoutes.home,
+              builder: (context, state) => const HomeScreen()),
         ]),
         // Branch 1: Seller
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.aktifitas, builder: (context, state) => const SellerScreen()),
+          GoRoute(
+              path: AppRoutes.aktifitas,
+              builder: (context, state) => const SellerScreen()),
         ]),
         // Branch 2: Approval
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.approval, builder: (context, state) => const ApprovalScreen()),
+          GoRoute(
+              path: AppRoutes.approval,
+              builder: (context, state) => const ApprovalScreen()),
         ]),
         // Branch 3: System
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.system, builder: (context, state) => const SystemScreen()),
+          GoRoute(
+              path: AppRoutes.system,
+              builder: (context, state) => const SystemScreen()),
         ]),
         // Branch 4: Attendance
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.attendance, builder: (context, state) => const AttendanceScreen()),
+          GoRoute(
+              path: AppRoutes.attendance,
+              builder: (context, state) => const AttendanceScreen()),
         ]),
       ],
     ),
@@ -47,7 +57,9 @@ final appRouter = GoRouter(
     // Rute ini berada di LUAR ShellRoute, sehingga tidak akan ada Bottom Nav Bar
     GoRoute(
       path: AppRoutes.approvalDetail,
-      builder: (context, state) => const ApprovalDetailScreen(approvalId: '',),
+      builder: (context, state) => const ApprovalDetailScreen(
+        approvalId: '',
+      ),
     ),
   ],
 );

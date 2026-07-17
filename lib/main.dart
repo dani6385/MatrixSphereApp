@@ -18,12 +18,12 @@ void main() async {
     // Pass all uncaught errors to Crashlytics.
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
-    runApp(const MyApp());
+    runApp(const MatrixSphere());
   }, (error, stack) => FirebaseCrashlytics.instance.recordError(error, stack));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MatrixSphere extends StatelessWidget {
+  const MatrixSphere({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         builder: (context, themeProvider, child) {
           // Ganti ke MaterialApp.router
           return MaterialApp.router(
-            title: 'Flutter Demo',
+            title: 'Matrix Spahere',
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeProvider.themeMode,

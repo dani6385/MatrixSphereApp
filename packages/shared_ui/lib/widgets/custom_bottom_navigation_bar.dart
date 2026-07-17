@@ -63,9 +63,9 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
           height: 60,
           items: items,
           onTap: _onItemTapped,
-          color: kDarkBackground,
+          color: kLightBackground,
           buttonBackgroundColor: kBrandPrimary, // Menggunakan kBrandPrimary
-          backgroundColor: Colors.transparent,
+          backgroundColor: kTransparent,
           animationCurve: Curves.easeInOut,
           animationDuration: const Duration(milliseconds: 400),
         ),
