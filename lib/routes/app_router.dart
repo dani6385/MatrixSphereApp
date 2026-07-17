@@ -47,7 +47,7 @@ final appRouter = GoRouter(
     // Rute ini berada di LUAR ShellRoute, sehingga tidak akan ada Bottom Nav Bar
     GoRoute(
       path: AppRoutes.approvalDetail,
-      builder: (context, state) => const ApprovalDetailScreen(),
+      builder: (context, state) => const ApprovalDetailScreen(approvalId: '',),
     ),
   ],
 );

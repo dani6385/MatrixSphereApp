@@ -132,7 +132,7 @@ jobs:
 
   # 3. JOB BUILD ANDROID
   build-android:
-    needs: [detect-changes, build-linux]
+    needs: [detect-changes, build-windows]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -215,7 +215,7 @@ jobs:
 
   # 4. JOB BUILD WINDOWS
   build-windows:
-    needs: [detect-changes, build-web]
+    needs: [detect-changes, build-linux]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: windows-latest
     strategy:
@@ -250,10 +250,6 @@ jobs:
       - name: Downgrade CMake (Fix Firebase Compatibility)
         run: choco install cmake --version=3.26.4 --allow-downgrade --yes --force
 
-      # Menyiapkan lingkungan build MSVC (Visual Studio)
-      - name: Set up MSVC
-        uses: microsoft/setup-msvc@v1
-
       # Menggabungkan dan membersihkan duplikasi langkah Build Windows App Anda
       - name: Build Windows App
         # TAMBAHKAN BLOK ENV DI BAWAH INI
@@ -275,7 +271,7 @@ jobs:
 
   # 5. JOB BUILD LINUX
   build-linux:
-    needs: [detect-changes, build-windows]
+    needs: [detect-changes, build-web]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:

@@ -10,6 +10,7 @@
       "version": "1.0.0+1",
       "dependencies": [
         "cupertino_icons",
+        "curved_navigation_bar",
         "firebase_core",
         "firebase_crashlytics",
         "firebase_database",
@@ -88,6 +89,14 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "curved_navigation_bar",
+      "version": "1.0.6",
+      "dependencies": [
+        "flutter",
+        "meta"
       ]
     },
     {
@@ -199,14 +208,6 @@
         "meta",
         "sky_engine",
         "vector_math"
-      ]
-    },
-    {
-      "name": "curved_navigation_bar",
-      "version": "1.0.6",
-      "dependencies": [
-        "flutter",
-        "meta"
       ]
     },
     {
