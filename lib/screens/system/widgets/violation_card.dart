@@ -1,31 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class ApprovalCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final String description;
-  final IconData icon;
-  final Color iconColor;
-  final VoidCallback onApprove;
-  final VoidCallback onReject;
+class ViolationCard extends StatelessWidget {
+  final String sellerName;
+  final String complaint;
 
-  const ApprovalCard({
+  const ViolationCard({
     super.key,
-    required this.title,
-    required this.subtitle,
-    required this.description,
-    required this.icon,
-    required this.iconColor,
-    required this.onApprove,
-    required this.onReject,
+    required this.sellerName,
+    required this.complaint,
   });
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: kDarkSecondary,
@@ -36,22 +26,17 @@ class ApprovalCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(icon, color: iconColor, size: 20),
+              const Icon(Icons.gpp_bad_outlined, color: kWarmOrange, size: 20),
               const SizedBox(width: AppSpacing.sm),
               Text(
-                title,
-                style: textTheme.titleMedium?.copyWith(color: kDarkTextPrimary),
+                'PELANGGARAN: $sellerName',
+                style: textTheme.titleMedium?.copyWith(color: kWarmOrange),
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            subtitle,
-            style: textTheme.bodyLarge?.copyWith(color: kDarkTextPrimary),
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            description,
+            complaint,
             style: textTheme.bodyMedium?.copyWith(color: kDarkTextSecondary),
           ),
           const SizedBox(height: AppSpacing.md),
@@ -59,17 +44,27 @@ class ApprovalCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               TextButton(
-                onPressed: onReject,
-                child: const Text('Tolak', style: TextStyle(color: Colors.red)),
+                onPressed: () {
+                  // Logika untuk menindaklanjuti (misalnya, kirim peringatan)
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Menindaklanjuti pelanggaran oleh $sellerName')),
+                  );
+                },
+                child: const Text('Tindak', style: TextStyle(color: kDarkTextPrimary)),
               ),
               const SizedBox(width: AppSpacing.sm),
               ElevatedButton(
-                onPressed: onApprove,
+                onPressed: () {
+                  // Logika untuk melakukan banned
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Melakukan banned pada $sellerName')),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green.shade800,
+                  backgroundColor: Colors.red.shade900,
                   foregroundColor: kDarkTextPrimary,
                 ),
-                child: const Text('Setujui'),
+                child: const Text('Banned'),
               ),
             ],
           )
