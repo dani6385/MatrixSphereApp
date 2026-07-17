@@ -16,3 +16,37 @@ buildscript {
     }
 }
 // ... sisa file
+
+
+// File: android/app/build.gradle
+
+...
+android {
+    ...
+
+    // Tambahkan atau modifikasi blok ini
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+...
+
+
+// File: android/build.gradle
+// ... (di bagian paling bawah file)
+
+subprojects {
+    project.afterEvaluate {
+        if (it.hasProperty("android")) {
+            it.android {
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_1_8
+                    targetCompatibility JavaVersion.VERSION_1_8
+                }
+                kotlinOptions {
+                    jvmTarget = "1.8"
+                }
+            }
+        }
+    }
+}
