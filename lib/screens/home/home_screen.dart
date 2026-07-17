@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import '../account/widgets/account_menu_modal.dart';
+import 'account/widgets/account_menu_modal.dart';
+import 'widgets/home_app_bar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -10,19 +11,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kDarkBackground,
-      appBar: AppBar(
-        title: const Text('Home'),
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.account_circle),
-              onPressed: () {
-                Scaffold.of(context).openEndDrawer();
-              },
-            ),
-          ),
-        ],
-      ),
+      appBar: const HomeAppBar(),
       endDrawer: const AccountMenuModal(),
       body: const Center(
         child: Text(
