@@ -1,15 +1,20 @@
+// File: android/build.gradle
+
 buildscript {
+    // Coba ganti versi di bawah ini
+    ext.kotlin_version = '1.8.22' 
     repositories {
         google()
         mavenCentral()
     }
+
     dependencies {
-        // Menggunakan tanda petik ganda dan tanda kurung untuk Kotlin DSL
-        classpath("com.android.tools.build:gradle:8.4.0")
-        // Menambahkan classpath untuk plugin Kotlin
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.24")
+        classpath 'com.android.tools.build:gradle:7.4.2' // Pastikan versi gradle juga cukup modern
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
+// ... sisa file
+
 
 allprojects {
     repositories {
