@@ -250,6 +250,10 @@ jobs:
       - name: Downgrade CMake (Fix Firebase Compatibility)
         run: choco install cmake --version=3.26.4 --allow-downgrade --yes --force
 
+      # Menyiapkan lingkungan build MSVC (Visual Studio)
+      - name: Set up MSVC
+        uses: microsoft/setup-msvc@v1
+
       # Menggabungkan dan membersihkan duplikasi langkah Build Windows App Anda
       - name: Build Windows App
         # TAMBAHKAN BLOK ENV DI BAWAH INI

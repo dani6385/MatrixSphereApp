@@ -90,12 +90,12 @@ class _ApprovalScreenState extends State<ApprovalScreen> {
       await _dbRef.child('approval/${approval.id}').remove();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Pendaftaran toko ${approval.nama} ditolak."),
-        backgroundColor: Colors.orange,
+        backgroundColor: kWarmOrange,
       ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Gagal menolak toko: $e"),
-        backgroundColor: Colors.red,
+        backgroundColor: kAlertRed,
       ));
     }
   }
