@@ -106,7 +106,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.44.6'
+          flutter-version: '3.27.0'
           cache: true
 
       - name: Build Web Application
@@ -181,15 +181,14 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.27.0' # <-- GANTI DENGAN VERSI FLUTTER LAPTOP ANDA (misal: 3.22.2, 3.24.0, dll)
+          flutter-version: '3.27.0'
           cache: true
 
-      # Menghapus kondisi "matrix.should_run" yang tidak terdefinisi agar build tidak terlewati
       - name: Build Android APK
         run: |
           cd ${{ steps.vars.outputs.dir }}
           flutter clean
-          flutter pub upgrade --major-versions
+          flutter pub get
           flutter build apk --release
 
       - id: 'auth'
@@ -244,7 +243,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.44.6'
+          flutter-version: '3.27.0'
           cache: true
 
       # Downgrade CMake untuk menghindari error ketidakcocokan versi lama Firebase SDK
@@ -304,7 +303,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.44.6'
+          flutter-version: '3.27.0'
           cache: true
 
       - name: Build Linux App
