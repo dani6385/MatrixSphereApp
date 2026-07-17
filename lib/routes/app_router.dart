@@ -1,31 +1,47 @@
 import 'package:flutter/material.dart';
-import 'package:matrix_sphere/main.dart';
-
+import 'package:go_router/go_router.dart';
+import '../widgets/main_scafold.dart';
 
 import '../screens/attendance/attendance_screen.dart';
 import '../screens/approval/approval_screen.dart';
-import '../screens/approval/approval_detail_screen.dart'; // Impor baru
+import '../screens/approval/approval_detail_screen.dart';
+import '../screens/home/home_screen.dart';
 import 'app_routes.dart';
 
-class AppRouter {
-  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
-    switch (settings.name) {
-      case AppRoutes.home:
-        return MaterialPageRoute(builder: (_) => const MainScreen());
-      case AppRoutes.approval:
-        return MaterialPageRoute(builder: (_) => const ApprovalScreen());
-      case AppRoutes.attendance:
-        return MaterialPageRoute(builder: (_) => const AttendanceScreen());
-      case AppRoutes.approvalDetail: // Case baru
-        return MaterialPageRoute(builder: (_) => const ApprovalDetailScreen());
-      default:
-        return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text('No route defined for ${settings.name}'),
-            ),
-          ),
-        );
-    }
-  }
-}
+final appRouter = GoRouter(
+  initialLocation: AppRoutes.home,
+  routes: [
+    // ShellRoute akan membungkus semua rute di dalamnya dengan MainScaffold
+    ShellRoute(
+      builder: (context, state, child) {
+        return MainScaffold(child: child);
+      },
+      routes: [
+        // Rute untuk setiap tab
+        GoRoute(
+          path: AppRoutes.home,
+          builder: (context, state) => const HomeScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.attendance,
+          builder: (context, state) => const AttendanceScreen(),
+        ),
+        GoRoute(
+          path: AppRoutes.approval,
+          builder: (context, state) => const ApprovalScreen(),
+        ),
+        GoRoute(
+          path: '/settings', // Contoh rute tanpa konstanta
+          builder: (context, state) =>
+              const Scaffold(body: Center(child: Text('Settings Page'))),
+        ),
+      ],
+    ),
+
+    // Rute ini berada di LUAR ShellRoute, sehingga tidak akan ada Bottom Nav Bar
+    GoRoute(
+      path: AppRoutes.approvalDetail,
+      builder: (context, state) => const ApprovalDetailScreen(),
+    ),
+  ],
+);
