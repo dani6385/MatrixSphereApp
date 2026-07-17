@@ -5,7 +5,7 @@ import 'package:shared_ui/shared_ui.dart';
 class ActiveEmployeeCard extends StatelessWidget {
   final DateTime now;
 
-  const ActiveEmployeeCard({super.key, required this.now});
+  const ActiveEmployeeCard({super.key, required this.now, required String employeeName, required String employeeId});
 
   @override
   Widget build(BuildContext context) {

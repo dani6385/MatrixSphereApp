@@ -1,8 +1,9 @@
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class AttendanceActions extends StatelessWidget {
-  const AttendanceActions({super.key});
+  const AttendanceActions({super.key, DateTime? checkInTime, DateTime? checkOutTime, XFile? checkInImage, XFile? checkOutImage});
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ class AttendanceCamera extends StatefulWidget {
 
   const AttendanceCamera({
     super.key,
-    required this.onControllerCreated,
+    required this.onControllerCreated, required Null Function(XFile? image) onPictureTaken,
   });
 
   @override
