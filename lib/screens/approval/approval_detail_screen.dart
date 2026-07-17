@@ -115,7 +115,7 @@ class ApprovalDetailScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isIcon) Icon(Icons.location_on, color: kDarkTextSecondary, size: 20),
+          if (isIcon) const Icon(Icons.location_on, color: kDarkTextSecondary, size: 20),
           if (isIcon) const SizedBox(width: 8),
           Expanded(
             flex: 2,
