@@ -13,6 +13,9 @@ const Color kDarkSurface = Color(0xFF111622); // Card, App Bar, Dialog
 const Color kDarkBorder = Color(0xFF1E293B); // Divider, Border
 const Color kDarkTextPrimary = Color(0xFFFFFFFF); // Teks utama
 const Color kDarkTextSecondary = Color(0xFF94A3B8); // Teks sekunder/abu-abu
+const Color kDarkAppBar = Color(0xFF111600); // App Bar
+const Color kDarkDivider = Color(0xFF24292E); // Divider
+
 
 // --- Palet Tema Terang (Bright Slate) ---
 const Color kLightBackground = Color(0xFFF8FAFC); // Latar belakang (Ice white)
@@ -20,7 +23,8 @@ const Color kLightSurface = Color(0xFFFFFFFF); // Card, App Bar, Dialog
 const Color kLightBorder = Color(0xFFE2E8F0); // Divider, Border
 const Color kLightTextPrimary = Color(0xFF0F172A); // Teks utama (Dark slate)
 const Color kLightTextSecondary = Color(0xFF475569); // Teks sekunder (Charcoal)
-
+const Color kLightAppBar = Color(0xF0F0F0F0); // App Bar
+const Color kLightDivider = Color(0xfff0f1f2); // Divider
 // ==========================================================================
 // == ALIAS LAMA (Untuk Kompatibilitas Mundur) ==
 // ==========================================================================
