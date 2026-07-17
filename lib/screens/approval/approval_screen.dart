@@ -56,39 +56,31 @@ class _ApprovalScreenState extends State<ApprovalScreen> {
 
   Future<void> _approveShop(Approval approval) async {
     try {
-      // 1. Dapatkan semua ID pengguna dari shop_sphere
-      final shopSphereSnapshot = await _dbRef.child('shop_sphere').get();
-      if (!shopSphereSnapshot.exists) {
-        throw Exception("Shop sphere is empty!");
-      }
-
-      final shoppers = shopSphereSnapshot.value as Map<dynamic, dynamic>;
+      // Buat map untuk menampung semua pembaruan database
       final Map<String, Object?> updates = {};
 
-      // 2. Siapkan pembaruan untuk setiap pengguna
-      for (var shopperId in shoppers.keys) {
-        final recommendationPath = 'system/rekomendasi/$shopperId/${approval.id}';
-        updates[recommendationPath] = {
-          'bukti': 'berupa gambar', // Placeholder
-          'seller': '${approval.nama} segera buka di seller sphere',
-          'tikor': 'berupa titik koordinat', // Placeholder
-        };
-      }
+      // 1. Tambahkan toko baru ke 'seller_sphere' dengan data awal.
+      //    ID toko akan sama dengan ID yang ada di 'approval'.
+      updates['seller_sphere/${approval.id}'] = {
+        'nama': approval.nama,
+        'status': 'active',
+        'createdAt': ServerValue.timestamp, // Menandai kapan toko dibuat
+      };
 
-      // 3. Hapus dari daftar persetujuan
+      // 2. Hapus toko dari daftar 'approval'
       updates['approval/${approval.id}'] = null;
 
-      // 4. Lakukan semua pembaruan dalam satu transaksi atomik
+      // 3. Lakukan semua pembaruan dalam satu operasi atomik
       await _dbRef.update(updates);
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Toko ${approval.nama} disetujui dan direkomendasikan."),
-        backgroundColor: Colors.green,
+        content: Text("Toko ${approval.nama} telah disetujui dan diaktifkan."),
+        backgroundColor: kSoftTeal,
       ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Gagal menyetujui toko: $e"),
-        backgroundColor: Colors.red,
+        backgroundColor: kAlertRed,
       ));
     }
   }
