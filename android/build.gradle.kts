@@ -1,7 +1,7 @@
 // File: android/build.gradle
 
 buildscript {
-    val kotlin_version by extra("1.8.22")
+    ext.kotlin_version = "1.8.22"
     repositories {
         google()
         mavenCentral()
