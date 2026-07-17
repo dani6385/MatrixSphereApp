@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class AccountMenuContent extends StatelessWidget {
-  const AccountMenuContent({super.key});
+class MenuContent extends StatelessWidget {
+  const MenuContent({super.key});
 
   @override
   Widget build(BuildContext context) {
