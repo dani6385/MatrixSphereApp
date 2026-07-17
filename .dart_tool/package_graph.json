@@ -43,7 +43,7 @@
     },
     {
       "name": "shared_ui",
-      "version": "1.0.0+1",
+      "version": "0.0.1",
       "dependencies": [
         "curved_navigation_bar",
         "flutter",
@@ -53,6 +53,7 @@
         "shared_preferences"
       ],
       "devDependencies": [
+        "flutter_lints",
         "flutter_test"
       ]
     },
