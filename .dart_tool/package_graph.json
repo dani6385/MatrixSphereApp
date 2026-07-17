@@ -10,9 +10,7 @@
       "version": "1.0.0+1",
       "dependencies": [
         "camera",
-        "cross_file",
         "cupertino_icons",
-        "curved_navigation_bar",
         "firebase_core",
         "firebase_crashlytics",
         "firebase_database",
@@ -20,7 +18,6 @@
         "go_router",
         "google_nav_bar",
         "intl",
-        "logger",
         "permission_handler",
         "provider",
         "shared_preferences",
@@ -95,39 +92,15 @@
       ]
     },
     {
-      "name": "logger",
-      "version": "2.7.0",
-      "dependencies": [
-        "clock",
-        "meta"
-      ]
-    },
-    {
-      "name": "cross_file",
-      "version": "0.3.5+4",
-      "dependencies": [
-        "meta",
-        "web"
-      ]
-    },
-    {
       "name": "camera",
-      "version": "0.12.0+2",
+      "version": "0.10.5+9",
       "dependencies": [
-        "camera_android_camerax",
+        "camera_android",
         "camera_avfoundation",
         "camera_platform_interface",
         "camera_web",
         "flutter",
         "flutter_plugin_android_lifecycle"
-      ]
-    },
-    {
-      "name": "curved_navigation_bar",
-      "version": "1.0.6",
-      "dependencies": [
-        "flutter",
-        "meta"
       ]
     },
     {
@@ -242,6 +215,14 @@
       ]
     },
     {
+      "name": "curved_navigation_bar",
+      "version": "1.0.6",
+      "dependencies": [
+        "flutter",
+        "meta"
+      ]
+    },
+    {
       "name": "lints",
       "version": "3.0.0",
       "dependencies": []
@@ -331,11 +312,6 @@
       ]
     },
     {
-      "name": "web",
-      "version": "1.1.1",
-      "dependencies": []
-    },
-    {
       "name": "flutter_plugin_android_lifecycle",
       "version": "2.0.35",
       "dependencies": [
@@ -360,26 +336,6 @@
         "cross_file",
         "flutter",
         "plugin_platform_interface",
-        "stream_transform"
-      ]
-    },
-    {
-      "name": "camera_avfoundation",
-      "version": "0.10.2",
-      "dependencies": [
-        "camera_platform_interface",
-        "flutter",
-        "stream_transform"
-      ]
-    },
-    {
-      "name": "camera_android_camerax",
-      "version": "0.7.4+1",
-      "dependencies": [
-        "async",
-        "camera_platform_interface",
-        "flutter",
-        "meta",
         "stream_transform"
       ]
     },
@@ -637,6 +593,11 @@
       ]
     },
     {
+      "name": "web",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
       "name": "stream_transform",
       "version": "2.1.1",
       "dependencies": []
@@ -646,6 +607,14 @@
       "version": "2.1.8",
       "dependencies": [
         "meta"
+      ]
+    },
+    {
+      "name": "cross_file",
+      "version": "0.3.5+4",
+      "dependencies": [
+        "meta",
+        "web"
       ]
     },
     {
@@ -718,6 +687,25 @@
       "dependencies": [
         "meta",
         "path"
+      ]
+    },
+    {
+      "name": "camera_android",
+      "version": "0.10.11",
+      "dependencies": [
+        "camera_platform_interface",
+        "flutter",
+        "flutter_plugin_android_lifecycle",
+        "stream_transform"
+      ]
+    },
+    {
+      "name": "camera_avfoundation",
+      "version": "0.9.23+2",
+      "dependencies": [
+        "camera_platform_interface",
+        "flutter",
+        "stream_transform"
       ]
     }
   ],

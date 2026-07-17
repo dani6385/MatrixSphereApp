@@ -21,21 +21,21 @@
     },
     {
       "name": "camera",
-      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/camera-0.12.0+2",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/camera-0.10.5+9",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.0"
     },
     {
-      "name": "camera_android_camerax",
-      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/camera_android_camerax-0.7.4+1",
+      "name": "camera_android",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/camera_android-0.10.11",
       "packageUri": "lib/",
-      "languageVersion": "3.12"
+      "languageVersion": "3.10"
     },
     {
       "name": "camera_avfoundation",
-      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/camera_avfoundation-0.10.2",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/camera_avfoundation-0.9.23+2",
       "packageUri": "lib/",
-      "languageVersion": "3.10"
+      "languageVersion": "3.9"
     },
     {
       "name": "camera_platform_interface",
@@ -222,12 +222,6 @@
       "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/lints-3.0.0",
       "packageUri": "lib/",
       "languageVersion": "3.0"
-    },
-    {
-      "name": "logger",
-      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/logger-2.7.0",
-      "packageUri": "lib/",
-      "languageVersion": "2.17"
     },
     {
       "name": "logging",
