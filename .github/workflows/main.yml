@@ -80,11 +80,26 @@ jobs:
         run: |
           PROJECT="${{ matrix.project }}"
           case "$PROJECT" in
-            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
-            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
-            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
-            "matrix_sphere") echo "dir=." >> $GITHUB_OUTPUT ;;
-            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
+            "seller_sphere")
+              echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
+              echo "site=ss-seller-sph" >> $GITHUB_OUTPUT
+              ;;
+            "client_connectivity")
+              echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
+              echo "site=cc-client-connet" >> $GITHUB_OUTPUT
+              ;;
+            "admin_mikrotik")
+              echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
+              echo "site=admin-mikrotik" >> $GITHUB_OUTPUT
+              ;;
+            "matrix_sphere")
+              echo "dir=." >> $GITHUB_OUTPUT
+              echo "site=ms-matrix-sphere" >> $GITHUB_OUTPUT
+              ;;
+            "shop_sphere")
+              echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
+              echo "site=ss-shop-sph" >> $GITHUB_OUTPUT
+              ;;
           esac
 
       - name: Set up Flutter
@@ -96,6 +111,7 @@ jobs:
 
       - name: Build Web Application
         run: |
+          cd ${{ steps.vars.outputs.dir }}
           flutter config --enable-web
           flutter pub get
           flutter build web --release
@@ -111,7 +127,7 @@ jobs:
       # 2. Deploy ke Firebase Hosting secara Keyless
       - name: Deploy to Firebase Hosting
         run: |
-          npx firebase-tools deploy --only hosting --project "matrixsphere-c3de9"
+          npx firebase-tools deploy --only hosting --site "${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
 
 
   # 3. JOB BUILD ANDROID
