@@ -1,0 +1,25 @@
+workflows:
+  android-release:
+    name: Android Release Build
+    max_build_duration: 60
+    instance_type: mac_mini_m1
+    environment:
+      flutter: stable
+      java: 17
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter pub get
+      - name: Build Android APK
+        script: |
+          flutter build apk --release --build-name=1.0.0 --build-number=1
+    artifacts:
+      # Menyesuaikan dengan custom build directory di build.gradle.kts Anda
+      - ../build/app/outputs/flutter-apk/app-release.apk
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com # Ganti dengan email Anda
+        notify:
+          success: true
+          failure: true
