@@ -13,17 +13,17 @@ workflows:
       - name: Build Android APK
         script: |
           flutter build apk --release --build-name=1.0.0 --build-number=1
-      - name: Deploy to Firebase App Distribution
-        script: | 
-          # Menggunakan Firebase CLI dengan Token (lebih aman daripada simpan file JSON)
-          npx firebase-tools appdistribution:distribute ../build/app/outputs/flutter-apk/app-release.apk \
-            --app $FIREBASE_APP_ID_matrix \
-            --groups sphere \
-            --token $FIREBASE_TOKEN
     artifacts:
       # Menyesuaikan dengan custom build directory di build.gradle.kts Anda
       - ../build/app/outputs/flutter-apk/app-release.apk
     publishing:
+      firebase:
+        # Codemagic uses a different schema for publishing. 
+        # For Firebase App Distribution, use the built-in integration:
+        android:
+          app_id: $FIREBASE_APP_ID_ANDROID
+          groups:
+            - sphere
       email:
         recipients:
           - your-email@example.com
