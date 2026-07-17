@@ -42,12 +42,16 @@ tasks.register<Delete>("clean") {
 }
 
 subprojects {
-    afterEvaluate {
-        project.extensions.findByType<com.android.build.gradle.BaseExtension>()?.let {
-            it.compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_1_8
-                targetCompatibility = JavaVersion.VERSION_1_8
-            }
+    val configureAndroid = Action<Project> {
+        extensions.findByType<com.android.build.gradle.BaseExtension>()?.apply {
+            compileOptions.sourceCompatibility = JavaVersion.VERSION_1_8
+            compileOptions.targetCompatibility = JavaVersion.VERSION_1_8
         }
+    }
+
+    if (state.executed) {
+        configureAndroid.execute(this)
+    } else {
+        afterEvaluate { configureAndroid.execute(this) }
     }
 }
