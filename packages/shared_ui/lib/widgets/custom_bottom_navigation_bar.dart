@@ -47,16 +47,28 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         index: _selectedIndex,
         children: widget.screens,
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        index: _selectedIndex,
-        height: 60,
-        items: items,
-        onTap: _onItemTapped,
-        color: kDarkBackground,
-        buttonBackgroundColor: kElectricBlue,
-        backgroundColor: kTransparent,
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 400),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: kBrandPrimary.withOpacity(0.3),
+              spreadRadius: 5,
+              blurRadius: 10,
+              offset: const Offset(0, -3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: CurvedNavigationBar(
+          index: _selectedIndex,
+          height: 60,
+          items: items,
+          onTap: _onItemTapped,
+          color: kDarkBackground,
+          buttonBackgroundColor: kBrandPrimary, // Menggunakan kBrandPrimary
+          backgroundColor: Colors.transparent,
+          animationCurve: Curves.easeInOut,
+          animationDuration: const Duration(milliseconds: 400),
+        ),
       ),
     );
   }

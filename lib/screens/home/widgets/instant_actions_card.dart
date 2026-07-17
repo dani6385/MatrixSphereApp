@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class InstantActionsCard extends StatelessWidget {
   const InstantActionsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ButtonStyle glowButtonStyle = ElevatedButton.styleFrom(
+      shadowColor: kWarmOrange.withOpacity(0.8),
+      elevation: 10,
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -15,6 +21,7 @@ class InstantActionsCard extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {},
+                style: glowButtonStyle,
                 child: const Text('+ Simulasi Seller'),
               ),
             ),
@@ -22,6 +29,7 @@ class InstantActionsCard extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 onPressed: () {},
+                style: glowButtonStyle,
                 child: const Text('+ Pesan Konsensus'),
               ),
             ),
@@ -30,6 +38,7 @@ class InstantActionsCard extends StatelessWidget {
         const SizedBox(height: 10),
         ElevatedButton(
           onPressed: () => throw Exception(),
+          style: glowButtonStyle,
           child: const Text("Throw Test Exception"),
         ),
       ],
