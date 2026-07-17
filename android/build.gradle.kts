@@ -31,27 +31,21 @@ rootProject.layout.buildDirectory.value(newBuildDir)
 subprojects {
     val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
-}
 
-subprojects {
-    project.evaluationDependsOn(":app")
-}
-
-tasks.register<Delete>("clean") {
-    delete(rootProject.layout.buildDirectory)
-}
-
-subprojects {
-    val configureAndroid = Action<Project> {
-        extensions.findByType<com.android.build.gradle.BaseExtension>()?.apply {
+    // Konfigurasi Android harus dilakukan SEBELUM evaluationDependsOn
+    plugins.withType<com.android.build.gradle.BasePlugin> {
+        extensions.configure<com.android.build.gradle.BaseExtension> {
             compileOptions.sourceCompatibility = JavaVersion.VERSION_1_8
             compileOptions.targetCompatibility = JavaVersion.VERSION_1_8
         }
     }
 
-    if (state.executed) {
-        configureAndroid.execute(this)
-    } else {
-        afterEvaluate { configureAndroid.execute(this) }
+    // Hanya panggil evaluationDependsOn jika ini bukan proyek :app itu sendiri
+    if (project.name != "app") {
+        evaluationDependsOn(":app")
     }
+}
+
+tasks.register<Delete>("clean") {
+    delete(rootProject.layout.buildDirectory)
 }
