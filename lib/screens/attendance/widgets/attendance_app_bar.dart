@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'menu_content.dart';
 
 class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AttendanceAppBar({super.key});
@@ -43,7 +44,10 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           onPressed: () {
-            // TODO: Navigate to actual settings screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MenuContent()),
+            );
           },
           icon: const Icon(Icons.settings, color: kDarkTextPrimary),
         ),
