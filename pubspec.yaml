@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.0
+  sdk: '>=3.10.0 <4.0.0'
 workspace:
   #- apps/admin_mikrotik
   #- apps/client_connectivity
@@ -45,10 +45,8 @@ dependencies:
   intl: ^0.19.0
   provider: ^6.1.5+1
   firebase_database: ^12.4.6
-  camera: 0.10.5+9 # Menambahkan versi camera yang kompatibel
-
-dependency_overrides:
-  cross_file: 0.3.4+2
+  camera: ^0.10.9 # Kembali ke versi caret untuk fleksibilitas
+  logger: ^2.4.0 # Menambahkan paket logger yang digunakan
 
 
 dev_dependencies:
