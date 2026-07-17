@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:shared_ui/theme/app_colors.dart';
+import 'package:shared_ui/shared_ui.dart';
+import 'widgets/seller_app_bar.dart';
 import 'widgets/seller_content.dart';
+import 'widgets/menu_modal.dart';
 
 class SellerScreen extends StatelessWidget {
   const SellerScreen({super.key});
@@ -9,42 +11,8 @@ class SellerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kDarkBackground,
-      appBar: AppBar(
-        backgroundColor: kDarkBackground,
-        elevation: 0,
-        title: const Text('Matrix Sphere',
-            style: TextStyle(color: kDarkTextPrimary, fontWeight: FontWeight.bold)),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              backgroundColor: Colors.grey[850],
-              child: const Icon(Icons.chat_bubble_outline,
-                  color: kWarmOrange, size: 20),
-            ),
-          ),
-        ],
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(30.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: kWarmOrange,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                const Text('Local Mode', style: TextStyle(color: kWarmOrange)),
-              ],
-            ),
-          ),
-        ),
-      ),
+      appBar: const SellerAppBar(),
+      drawer: const MenuModel(),
       body: const SellerContent(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},

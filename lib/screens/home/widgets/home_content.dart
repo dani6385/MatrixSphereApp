@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'widgets/activity_history_card.dart';
-import 'widgets/info_card.dart';
-import 'widgets/instant_actions_card.dart';
-import 'widgets/system_integrity_card.dart';
+import 'activity_history_card.dart';
+import 'info_card.dart';
+import 'instant_actions_card.dart';
+import 'system_integrity_card.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({super.key});

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'widgets/home_app_bar.dart';
-import 'home_content.dart';
+import 'widgets/home_content.dart';
 import '../account/widgets/account_menu_modal.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -9,11 +9,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: kDarkBackground,
-      appBar: HomeAppBar(),
-      drawer: AccountMenuModal(),
-      body: HomeContent(),
+      appBar: const HomeAppBar(),
+      drawer: const AccountMenuModal(),
+      body: const HomeContent(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: kDarkTextPrimary,
+        foregroundColor: kDarkBackground,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
