@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cross_file/src/types/interface.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:shared_ui/shared_ui.dart';
@@ -9,7 +10,7 @@ import 'monthly_stats.dart';
 import 'attendance_log.dart';
 
 class AttendanceContent extends StatefulWidget {
-  const AttendanceContent({super.key});
+  const AttendanceContent({super.key, DateTime? checkInTime, DateTime? checkOutTime, XFile? checkInImage, XFile? checkOutImage});
 
   @override
   State<AttendanceContent> createState() => _AttendanceContentState();

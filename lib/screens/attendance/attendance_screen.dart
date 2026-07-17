@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:camera/camera.dart';
-import 'dart:io'; // Untuk File
+
 import 'package:shared_ui/shared_ui.dart';
+
+import 'widgets/active_employee_card.dart';
+import 'widgets/attendance_actions.dart';
 import 'widgets/attendance_app_bar.dart';
 import 'widgets/attendance_button.dart';
 import 'widgets/attendance_camera.dart';
+import 'widgets/attendance_content.dart';
+import 'widgets/attendance_log.dart';
+import 'widgets/general_actions.dart';
+//import 'widgets/menu_content.dart';
+import 'widgets/monthly_stats.dart';
+import 'widgets/time_display.dart';
+
 
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
-
+  
   @override
   State<AttendanceScreen> createState() => _AttendanceScreenState();
 }
@@ -66,74 +76,59 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     }
   }
 
-  @override
+@override
   Widget build(BuildContext context) {
-    // Tentukan status tombol berdasarkan state waktu
-    final bool isCheckedIn = _checkInTime != null;
-    final bool isCompleted = _checkOutTime != null;
-
     return Scaffold(
       backgroundColor: kDarkBackground,
       appBar: const AttendanceAppBar(),      
       body: Stack(
         alignment: Alignment.center,
-        children: [
-          // Layer 1: Camera Preview
-          AttendanceCamera(
-            onControllerCreated: (controller) {
-              _cameraController = controller;
-            },
+        children: <Widget>[
+          ActiveEmployeeCard(now: DateTime.now()),
+          AttendanceContent( // Removed const from AttendanceContent
+            checkInTime: _checkInTime,
+            checkOutTime: _checkOutTime,
+            // checkInImage: _checkInImage, // Removed as AttendanceContent doesn't use these directly
+            // checkOutImage: _checkOutImage, // Removed as AttendanceContent doesn't use these directly
           ),
-          // Layer 2: Konten UI di atas kamera
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
+          const AttendanceActions(),
+          const AttendanceLog(),
+          const GeneralActions(),
+          AttendanceCamera(onControllerCreated: (c) => _cameraController = c), // This should be conditionally rendered or placed elsewhere
+          // AttendanceLog(), // This should be inside AttendanceContent or conditionally rendered
+          Positioned( // Use Positioned to place elements on top of the Stack
+            left: AppSpacing.lg, right: AppSpacing.lg, bottom: AppSpacing.lg,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Card untuk menampilkan waktu dan foto
-                Card(
-                  color: kDarkSurface.withOpacity(0.8),
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppSpacing.md),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildTimeDisplay('Masuk', _formatTime(_checkInTime), _checkInImage),
-                        _buildTimeDisplay('Pulang', _formatTime(_checkOutTime), _checkOutImage),
-                      ],
-                    ),
-                  ),
-                ),
-                // Tombol Absensi
+                _buildInfoCard(), // Kita pecah bagian card-nya
                 AttendanceButton(
-                  isCheckedIn: isCheckedIn,
-                  isCompleted: isCompleted,
+                  isCheckedIn: _checkInTime != null,
+                  isCompleted: _checkOutTime != null,
                   onPressed: _handleAttendance,
                 ),
               ],
             ),
           ),
+          const MonthlyStats(),
         ],
       ),
     );
   }
 
-  // Widget helper untuk menampilkan jam
-  Widget _buildTimeDisplay(String label, String time, XFile? imageFile) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: kDarkBackground,
-          backgroundImage: imageFile != null ? FileImage(File(imageFile.path)) : null,
-          child: imageFile == null ? const Icon(Icons.person, size: 30, color: kDarkTextSecondary) : null,
+  Widget _buildInfoCard() {
+    return Card(
+      color: kDarkSurface.withOpacity(0.8),
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            TimeDisplay(label: 'Masuk', time: _formatTime(_checkInTime), imageFile: _checkInImage),
+            TimeDisplay(label: 'Pulang', time: _formatTime(_checkOutTime), imageFile: _checkOutImage),
+          ],
         ),
-        const SizedBox(height: AppSpacing.sm),
-        Text(label, style: const TextStyle(color: kDarkTextSecondary, fontSize: 16)),
-        const SizedBox(height: AppSpacing.xs),
-        Text(time, style: const TextStyle(color: kDarkTextPrimary, fontSize: 24, fontWeight: FontWeight.bold)),
-      ],
+      ),
     );
   }
 }
