@@ -21,6 +21,7 @@ class AppSpacing {
 
   /// Spasi sangat besar: 32.0
   static const double xlg = 32.0;
+  static const double xxl = 35.0;
 
   /// Spasi sangat sangat besar: 40.0
   static const double xxlg = 40.0;

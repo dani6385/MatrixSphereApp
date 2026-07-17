@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_ui/theme/app_colors.dart';
-import 'package:shared_ui/theme/app_typography.dart'; // Impor tipografi
+import 'app_colors.dart';
+import 'app_typography.dart'; // Impor tipografi
 
 // Definisikan tema aplikasi, terinspirasi oleh implementasi Material 3 di Compose.
 // Ini menyediakan ThemeData terpusat untuk mode terang dan gelap.

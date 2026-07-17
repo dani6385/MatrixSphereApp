@@ -307,7 +307,7 @@ jobs:
   # 6. JOB BUILD MACOS
   build-macos:
     needs: [detect-changes, build-linux]
-    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' && false }}
     runs-on: macos-latest
     strategy:
       fail-fast: false

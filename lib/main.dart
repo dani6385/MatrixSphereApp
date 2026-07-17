@@ -1,10 +1,13 @@
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import '../navigation/app_navigator.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_ui/shared_ui.dart';
+
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -25,13 +28,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ChangeNotifierProvider(
+      create: (_) => ThemeProvider(),
+      child: Consumer<ThemeProvider>(
+        builder: (context, themeNotifier, child) {
+          return MaterialApp(
+            title: 'Matrix',
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            themeMode: themeNotifier.themeMode,
+            home: const AppNavigator(),
+          );
+        },
       ),
-      home: const AppNavigator(),
     );
   }
 }
