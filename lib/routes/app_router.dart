@@ -1,4 +1,3 @@
-//import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../navigation/app_navigator.dart';
@@ -8,6 +7,7 @@ import '../screens/approval/approval_detail_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/seller/seller_screen.dart';
 import '../screens/system/system_screen.dart';
+import '../screens/calendar/calendar_screen.dart'; // Impor CalendarScreen
 import 'app_routes.dart';
 
 final appRouter = GoRouter(
@@ -39,13 +39,22 @@ final appRouter = GoRouter(
               path: AppRoutes.approval,
               builder: (context, state) => const ApprovalScreen()),
         ]),
-        // Branch 3: System
+        
+        // Branch 3: Calendar - Rute baru ditambahkan di sini
+        StatefulShellBranch(routes: [
+          GoRoute(
+              path: AppRoutes.calendar,
+              builder: (context, state) => const CalendarScreen()),
+        ]),
+
+        // Branch 4: System (sebelumnya 3)
         StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.system,
               builder: (context, state) => const SystemScreen()),
         ]),
-        // Branch 4: Attendance
+
+        // Branch 5: Attendance (sebelumnya 4)
         StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.attendance,

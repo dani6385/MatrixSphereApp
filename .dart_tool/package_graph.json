@@ -24,7 +24,8 @@
         "provider",
         "shared_preferences",
         "shared_services",
-        "shared_ui"
+        "shared_ui",
+        "table_calendar"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -80,6 +81,15 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "table_calendar",
+      "version": "3.1.3",
+      "dependencies": [
+        "flutter",
+        "intl",
+        "simple_gesture_detector"
       ]
     },
     {
@@ -308,6 +318,13 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "simple_gesture_detector",
+      "version": "0.2.1",
+      "dependencies": [
+        "flutter"
       ]
     },
     {

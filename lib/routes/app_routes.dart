@@ -1,10 +1,10 @@
 class AppRoutes {
   static const String home = '/';
-  static const String aktifitas = '/seller'; // Mengganti nama dari 'aktifitas' ke 'seller' agar konsisten
-  static const String approval = '/approval';
   static const String attendance = '/attendance';
-  static const String approvalDetail = '/approval/detail'; // Rute baru
-  static const String system = '/system';
-  static const String calendar = '/calendar';
-  static const String account = '/account';
+  static const String approval = '/approval';
+  static const String calendar = '/calendar'; // Rute baru ditambahkan
+  static const String aktifitas = '/activity';
+  static const String approvalDetail = '/approval-detail';
+  static const String settings = '/settings'; // Contoh rute lain
+  static const String system = '/system'; // Contoh rute lain
 }
