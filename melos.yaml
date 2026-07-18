@@ -1,13 +1,10 @@
-# File: melos.yaml
+
 name: matrix_sphere
-
 packages:
-  # Semua paket/aplikasi yang ada di dalam direktori 'apps'
-  - apps/**
   - packages/**
-
+  - apps/**
+  - /**
 command:
   bootstrap:
-    # Menjalankan `flutter pub get` di semua paket setelah bootstrap
-    # Ini adalah perilaku default, tetapi baik untuk dicantumkan secara eksplisit.
     run: flutter pub get
+    run: flutter clean
