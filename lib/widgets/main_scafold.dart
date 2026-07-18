@@ -29,6 +29,7 @@ class MainScaffold extends StatelessWidget {
             color: Theme.of(context).iconTheme.color,
             tabs: const [
               GButton(icon: Icons.home, text: 'Home'),
+              GButton(icon: Icons.insert_chart, text: 'Seller'),
               GButton(icon: Icons.calendar_today, text: 'Attendance'),
               GButton(icon: Icons.approval, text: 'Approval'),
               GButton(icon: Icons.settings, text: 'Settings'),
@@ -49,7 +50,7 @@ class MainScaffold extends StatelessWidget {
     if (location.startsWith(AppRoutes.attendance)) {
       return 1;
     }
-    if (location.startsWith(AppRoutes.approval)) {
+    if (location.startsWith(AppRoutes.sellers)) {
       return 2;
     }
     if (location.startsWith('/settings')) { // Ganti jika Anda punya route constant
@@ -68,7 +69,7 @@ class MainScaffold extends StatelessWidget {
         context.go(AppRoutes.attendance);
         break;
       case 2:
-        context.go(AppRoutes.approval);
+        context.go(AppRoutes.sellers);
         break;
       case 3:
         context.go('/settings'); // Ganti jika Anda punya route constant

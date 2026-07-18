@@ -33,7 +33,7 @@ final appRouter = GoRouter(
         // Branch 2: Approval
         StatefulShellBranch(routes: [
           GoRoute(
-              path: AppRoutes.approval,
+              path: AppRoutes.sellers,
               builder: (context, state) => const ApprovalScreen()),
         ]),
         // Branch 3: System
