@@ -8,7 +8,7 @@
 PRODUCT_NAME = seller_sphere
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.sellerSphere
+PRODUCT_BUNDLE_IDENTIFIER = com.seller.sphereApp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 com.seller.sphereApp. All rights reserved.

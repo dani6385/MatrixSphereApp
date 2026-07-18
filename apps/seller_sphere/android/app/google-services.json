@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:359008687014:android:b2a7e311280760b2a9f567",
+        "mobilesdk_app_id": "1:359008687014:android:4abea64449f5e96da9f567",
         "android_client_info": {
-          "package_name": "com.seller.sphere"
+          "package_name": "com.matrix.sphere"
         }
       },
       "oauth_client": [],
@@ -27,9 +27,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:359008687014:android:4abea64449f5e96da9f567",
+        "mobilesdk_app_id": "1:359008687014:android:cd4bea378b5c81cba9f567",
         "android_client_info": {
-          "package_name": "com.matrix.sphere"
+          "package_name": "com.seller.sphere"
         }
       },
       "oauth_client": [],
