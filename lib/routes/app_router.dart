@@ -1,23 +1,20 @@
 import 'package:go_router/go_router.dart';
-
 import '../navigation/app_navigator.dart';
+import '../screens/account/account_screen.dart'; // Impor AccountScreen
 import '../screens/attendance/attendance_screen.dart';
 import '../screens/approval/approval_screen.dart';
 import '../screens/approval/approval_detail_screen.dart';
+import '../screens/calendar/calendar_screen.dart';
 import '../screens/home/home_screen.dart';
 import '../screens/seller/seller_screen.dart';
 import '../screens/system/system_screen.dart';
-import '../screens/calendar/calendar_screen.dart'; // Impor CalendarScreen
 import 'app_routes.dart';
 
 final appRouter = GoRouter(
   initialLocation: AppRoutes.home,
   routes: [
-    // StatefulShellRoute untuk navigasi dengan BottomNavBar yang menjaga state
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        // 'navigationShell' adalah widget yang berisi halaman-halaman (IndexedStack)
-        // dan fungsi untuk bernavigasi. Kita teruskan ke AppNavigator.
         return AppNavigator(navigationShell: navigationShell);
       },
       branches: <StatefulShellBranch>[
@@ -39,31 +36,33 @@ final appRouter = GoRouter(
               path: AppRoutes.approval,
               builder: (context, state) => const ApprovalScreen()),
         ]),
-        
-        // Branch 3: Calendar - Rute baru ditambahkan di sini
+        // Branch 3: System
         StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.system,
-              builder: (context, state) => const CalendarScreen()),
+              builder: (context, state) => const SystemScreen()),
         ]),
-
-        // Branch 4: System (sebelumnya 3)
+        // Branch 4: Attendance (Absensi)
         StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.attendance,
-              builder: (context, state) => const SystemScreen()),
+              builder: (context, state) => const AttendanceScreen()),
         ]),
-
-        // Branch 5: Attendance (sebelumnya 4)
+        // Branch 5: Calendar (Kalender)
         StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.calendar,
-              builder: (context, state) => const AttendanceScreen()),
+              builder: (context, state) => const CalendarScreen()),
+        ]),
+        // Branch 6: Account (Akun)
+        StatefulShellBranch(routes: [
+          GoRoute(
+              path: AppRoutes.account,
+              builder: (context, state) => const AccountScreen()),
         ]),
       ],
     ),
-
-    // Rute ini berada di LUAR ShellRoute, sehingga tidak akan ada Bottom Nav Bar
+    // Rute di luar ShellRoute
     GoRoute(
       path: AppRoutes.approvalDetail,
       builder: (context, state) => const ApprovalDetailScreen(
