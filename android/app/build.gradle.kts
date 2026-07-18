@@ -1,11 +1,7 @@
 plugins {
-  alias(libs.plugins.android.application)
-  alias(libs.plugins.kotlin.compose)
-  alias(libs.plugins.google.devtools.ksp)
-  alias(libs.plugins.roborazzi)
-  alias(libs.plugins.secrets)
-  alias(libs.plugins.google.services)
-  alias(libs.plugins.firebase.crashlytics)
+    id("com.android.application")
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
@@ -18,13 +14,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     defaultConfig {
         applicationId = "com.matrix.sphere"
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -32,19 +24,15 @@ android {
 
     buildTypes {
         release {
-            // PENTING: Anda menggunakan kunci debug untuk build rilis.
-            // Anda harus mengkonfigurasi kunci rilis yang benar untuk publikasi ke Play Store.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
 }
 
-// Menambahkan blok dependensi yang hilang.
-// Saya berasumsi 'libs' tersedia dari katalog versi Gradle Anda.
-dependencies {
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }
 
 flutter {
