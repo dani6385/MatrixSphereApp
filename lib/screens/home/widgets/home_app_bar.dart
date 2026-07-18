@@ -8,6 +8,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: const Text('Home'),
       actions: [
+        IconButton(
+          icon: const Icon(Icons.chat_bubble_outline),
+          onPressed: () {
+            Navigator.pushNamed(context, '/chat');
+          },
+        ),
         Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.account_circle),

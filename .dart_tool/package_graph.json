@@ -65,9 +65,11 @@
       "version": "1.0.0+1",
       "dependencies": [
         "cupertino_icons",
+        "curved_navigation_bar",
         "firebase_core",
         "firebase_crashlytics",
         "flutter",
+        "go_router",
         "provider",
         "shared_services",
         "shared_ui"

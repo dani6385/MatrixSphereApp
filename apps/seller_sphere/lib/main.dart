@@ -6,7 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
-//import 'routes/app_router.dart';
+import 'routes/app_router.dart';
 
 void main() async {
   runZonedGuarded<Future<void>>(() async {
@@ -37,7 +37,7 @@ class SellerSphere extends StatelessWidget {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeProvider.themeMode,
-            //routerConfig: appRouter, // Gunakan konfigurasi router baru
+            routerConfig: appRouter, // Gunakan konfigurasi router baru
           );
         },
       ),
