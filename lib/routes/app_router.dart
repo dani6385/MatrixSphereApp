@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import '../navigation/app_navigator.dart';
-import '../screens/account/account_screen.dart'; // Impor AccountScreen
+import '../screens/account/account_screen.dart';
 import '../screens/attendance/attendance_screen.dart';
 import '../screens/approval/approval_screen.dart';
 import '../screens/approval/approval_detail_screen.dart';
@@ -33,7 +33,7 @@ final appRouter = GoRouter(
         // Branch 2: Approval
         StatefulShellBranch(routes: [
           GoRoute(
-              path: AppRoutes.sellers,
+              path: AppRoutes.approval, // Diperbaiki dari AppRoutes.sellers
               builder: (context, state) => const ApprovalScreen()),
         ]),
         // Branch 3: System

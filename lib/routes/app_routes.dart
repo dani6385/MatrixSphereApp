@@ -6,7 +6,7 @@ class AppRoutes {
   static const String aktifitas = '/activity';
   static const String system = '/system'; // Pastikan rute system ada
   static const String account = '/account'; // Rute baru untuk Akun
-  //static const String approval = '/approval';
+  static const String approval = '/approval';
   static const String approvalDetail = '/approval/approval-detail';
   static const String settings = '/settings'; 
 }
