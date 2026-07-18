@@ -43,21 +43,21 @@ final appRouter = GoRouter(
         // Branch 3: Calendar - Rute baru ditambahkan di sini
         StatefulShellBranch(routes: [
           GoRoute(
-              path: AppRoutes.calendar,
+              path: AppRoutes.system,
               builder: (context, state) => const CalendarScreen()),
         ]),
 
         // Branch 4: System (sebelumnya 3)
         StatefulShellBranch(routes: [
           GoRoute(
-              path: AppRoutes.system,
+              path: AppRoutes.attendance,
               builder: (context, state) => const SystemScreen()),
         ]),
 
         // Branch 5: Attendance (sebelumnya 4)
         StatefulShellBranch(routes: [
           GoRoute(
-              path: AppRoutes.attendance,
+              path: AppRoutes.calendar,
               builder: (context, state) => const AttendanceScreen()),
         ]),
       ],
