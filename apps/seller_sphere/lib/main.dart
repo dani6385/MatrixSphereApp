@@ -33,7 +33,7 @@ class SellerSphere extends StatelessWidget {
         builder: (context, themeProvider, child) {
           // Ganti ke MaterialApp.router
           return MaterialApp.router(
-            title: 'Matrix Spahere',
+            title: 'Seller Spahere',
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeProvider.themeMode,

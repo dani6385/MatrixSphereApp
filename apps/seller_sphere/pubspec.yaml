@@ -18,6 +18,10 @@ dependencies:
   # Dependensi ke paket lokal lain dalam workspace
   shared_ui:
     path: ../../packages/shared_ui
+  firebase_core: ^2.32.0
+  firebase_crashlytics: ^3.5.7
+  shared_services: ^1.0.0+1
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:
