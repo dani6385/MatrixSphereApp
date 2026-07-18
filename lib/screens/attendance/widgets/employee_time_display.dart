@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class TimeDisplay extends StatelessWidget {
+class EmployeeTimeDisplay extends StatelessWidget {
   final String label;
   final String time;
   final XFile? imageFile;
 
-  const TimeDisplay({
+  const EmployeeTimeDisplay({
     super.key,
     required this.label,
     required this.time,

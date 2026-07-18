@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'menu_content.dart';
+
+import '../widgets/menu_content.dart';
 
 class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AttendanceAppBar({super.key});
@@ -21,9 +22,9 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Absensi Karyawan',
-              style: textTheme.titleMedium?.copyWith(color: kDarkTextPrimary)),
+              style: AppStyles.primaryTitle(textTheme)),
           Text('Check-in & Rekap',
-              style: textTheme.bodySmall?.copyWith(color: kDarkTextSecondary)),
+              style: AppStyles.secondarySubtitle(textTheme)),
         ],
       ),
       actions: [
@@ -31,12 +32,7 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {},
           icon: const Icon(Icons.add, size: 16),
           label: const Text('Rekonsiliasi'),
-          style: TextButton.styleFrom(
-            foregroundColor: kDarkTextPrimary,
-            backgroundColor: kDarkSecondary,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          ),
+          style: AppStyles.appBarTextButtonStyle,
         ),
         IconButton(
           onPressed: () {},

@@ -24,7 +24,8 @@ class AppTheme {
       outline: kLightBorder,
       onSurfaceVariant: kLightTextSecondary,
     ),
-    textTheme: kTextTheme.apply( // Terapkan TextTheme
+    textTheme: kTextTheme.apply(
+      // Terapkan TextTheme
       bodyColor: kLightTextPrimary, // Warna default untuk body
       displayColor: kLightTextPrimary, // Warna default untuk headline/display
     ),
@@ -54,7 +55,8 @@ class AppTheme {
       outline: kDarkBorder,
       onSurfaceVariant: kDarkTextSecondary,
     ),
-    textTheme: kTextTheme.apply( // Terapkan TextTheme
+    textTheme: kTextTheme.apply(
+      // Terapkan TextTheme
       bodyColor: kDarkTextPrimary, // Warna default untuk body
       displayColor: kDarkTextPrimary, // Warna default untuk headline/display
     ),
@@ -67,4 +69,14 @@ class AppTheme {
     ),
     dividerColor: kDarkBorder,
   );
+}
+
+TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
+
+extension AppThemeExtensions on BuildContext {
+  TextTheme get textTheme => Theme.of(this).textTheme;
+  TextStyle? get bodySmall => textTheme.bodySmall;
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
+  TextStyle? get titleMedium => textTheme.titleMedium;
+
 }

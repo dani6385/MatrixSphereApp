@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'widgets/attendance_app_bar.dart';
+import 'crads/attendance_app_bar.dart';
 import 'content/attendance_content.dart'; // Import widget utama yang baru kita buat
 
 class AttendanceScreen extends StatelessWidget {
