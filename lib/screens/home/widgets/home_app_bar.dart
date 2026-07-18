@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:matrix_sphere/routes/app_routes.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -8,11 +10,21 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: const Text('Home'),
       actions: [
-        IconButton(
-          icon: const Icon(Icons.chat_bubble_outline),
-          onPressed: () {
-            Navigator.pushNamed(context, '/chat');
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'chat') {
+              // Perintah untuk pergi ke halaman chat
+              GoRouter.of(context).push(AppRoutes.chat);
+            }
           },
+          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+            const PopupMenuItem<String>(
+              value: 'chat',
+              child: Text('Pesan'),
+            ),
+            // Anda bisa menambahkan item dropdown lain di sini
+          ],
+          icon: const Icon(Icons.more_vert), // Ikon titik tiga
         ),
         Builder(
           builder: (context) => IconButton(
