@@ -65,7 +65,7 @@ jobs:
   # 2. JOB BUILD WEB
   build-web:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' && false }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
