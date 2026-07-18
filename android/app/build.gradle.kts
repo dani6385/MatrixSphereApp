@@ -1,11 +1,11 @@
 plugins {
-    id("com.android.application")
-    // START: FlutterFire Configuration
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
-    // END: FlutterFire Configuration
-    id("org.jetbrains.kotlin.android")
-    id("dev.flutter.flutter-gradle-plugin")
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.compose)
+  alias(libs.plugins.google.devtools.ksp)
+  alias(libs.plugins.roborazzi)
+  alias(libs.plugins.secrets)
+  alias(libs.plugins.google.services)
+  alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -32,9 +32,19 @@ android {
 
     buildTypes {
         release {
+            // PENTING: Anda menggunakan kunci debug untuk build rilis.
+            // Anda harus mengkonfigurasi kunci rilis yang benar untuk publikasi ke Play Store.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+}
+
+// Menambahkan blok dependensi yang hilang.
+// Saya berasumsi 'libs' tersedia dari katalog versi Gradle Anda.
+dependencies {
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.crashlytics)
 }
 
 flutter {
