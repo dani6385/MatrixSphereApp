@@ -1,9 +1,10 @@
 
-name: matrix_sphere_Project
+name: matrix_sphere
 packages:
-  - packages/**
   - apps/**
-  - "*"
+  - packages/**
+- "*"
+
 scripts:
   bootstrap:
     run: |

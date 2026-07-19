@@ -9,21 +9,10 @@ environment:
 resolution: workspace
 
 dependencies:
+  firebase_core: ^4.12.1
   flutter:
     sdk: flutter
-
-  cupertino_icons: any
-
-  firebase_core: any
-  firebase_crashlytics: any
-  provider: any
-  go_router: any
-  curved_navigation_bar: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: any
-
-flutter:
-  uses-material-design: true
