@@ -14,11 +14,8 @@ dependencies:
 
   cupertino_icons: any
 
-  shared_ui:
-    path: ../../packages/shared_ui
   firebase_core: any
   firebase_crashlytics: any
-  shared_services: any
   provider: any
   go_router: any
   curved_navigation_bar: any
