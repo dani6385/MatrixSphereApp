@@ -24,9 +24,9 @@ class HomeScreen extends StatelessWidget {
             children: [
               // 1. Widget Atas: FeaturedCard (mengikuti tinggi asli widgetnya)
               FeaturedCard(),
-
               SizedBox(height: 12), // Jarak pemisah tengah
-              HomeContent(),
+              Expanded(
+                child: HomeContent(),),
               SizedBox(height: 12),
               // 2. Widget Bawah: HomeBody (dibungkus Expanded agar sisa layar bisa di-scroll)
               Expanded(

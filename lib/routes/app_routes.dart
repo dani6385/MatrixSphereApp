@@ -10,4 +10,5 @@ class AppRoutes {
   static const String approvalDetail = '/approval/approval-detail';
   static const String settings = '/settings';
   static const String chat = '/chat';
+  static const String chatprovider = 'providers/chat';
 }

@@ -18,18 +18,74 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           builder: (context) {
             // Mengambil data jumlah pesan dari ChatProvider
             final unreadMessages = context.watch<ChatProvider>().unreadCount;
+            final chatProvider = context.watch<ChatProvider>();
+            final messages = chatProvider.unreadMessagesList;
+            //final unreadCount = chatProvider.unreadCount;
 
-            return IconButton(
+            return PopupMenuButton<String>(
               icon: Badge(
-                label: Text('$unreadMessages'), 
-                isLabelVisible: unreadMessages > 0, 
+                label: Text('$unreadMessages'),
+                isLabelVisible: unreadMessages > 0,
                 child: const Icon(Icons.chat),
               ),
-              onPressed: () { // Indentasi dirapikan di sini
-                GoRouter.of(context).push(AppRoutes.chat);
+              onSelected: (value) {
+                if (value == 'see_all') {
+                  // Navigasi ke halaman chat jika memilih "Lihat Semua Pesan"
+                  GoRouter.of(context).push(AppRoutes.chat);
+                } else {
+                  // Menangani klik pada pesan spesifik (bisa diarahkan ke detail chat)
+                  debugPrint("Membuka detail pesan: $value");
+                  GoRouter.of(context).push(AppRoutes.chat);
+                }
+              },
+              itemBuilder: (BuildContext context) {
+                // Jika tidak ada pesan baru
+                if (messages.isEmpty) {
+                  return [
+                    const PopupMenuItem<String>(
+                      enabled: false, // Tidak bisa diklik
+                      child: Text(
+                        'Tidak ada pesan baru',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    )
+                  ]; // Tambahkan return di sini
+                }
+                final List<PopupMenuEntry<String>> items =
+                    messages.map((message) {
+                  return PopupMenuItem<String>(
+                    value: message,
+                    child: Text(
+                      message,
+                      maxLines: 1,
+                      overflow: TextOverflow
+                          .ellipsis, // Potong teks jika terlalu panjang
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  );
+                }).toList();
+
+                // Tambahkan garis pembatas dan tombol "Lihat Semua Pesan" di bagian bawah dropdown
+                items.addAll([
+                  const PopupMenuDivider(), // Garis pembatas tipis
+                  const PopupMenuItem<String>(
+                    value: 'see_all',
+                    child: Center(
+                      child: Text(
+                        'Lihat Semua Pesan',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ]);
+
+                return items;
               },
             );
-          }, // Indentasi dirapikan di sini
+          },
         ),
         Builder(
           builder: (context) => IconButton(
