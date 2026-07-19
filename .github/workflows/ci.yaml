@@ -25,6 +25,7 @@ jobs:
               - 'apps/seller_sphere/**'
             matrix_sphere:
               - 'lib/**'
+              - 'packages/**'
 
       - name: Generate Dynamic Matrix JSON
         id: set-matrix
@@ -49,7 +50,7 @@ jobs:
 
   build-web:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'\'\'[]\'\'\' && needs.detect-changes.outputs.matrix != \'\'\'\'\'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -101,7 +102,7 @@ jobs:
 
   build-android:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'\'\'[]\'\'\' && needs.detect-changes.outputs.matrix != \'\'\'\'\'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -164,7 +165,7 @@ jobs:
 
   build-windows:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'\'\'[]\'\'\' && needs.detect-changes.outputs.matrix != \'\'\'\'\'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -210,7 +211,7 @@ jobs:
 
   build-linux:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'\'\'[]\'\'\' && needs.detect-changes.outputs.matrix != \'\'\'\'\'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -255,7 +256,7 @@ jobs:
 
   build-macos:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'\'\'[]\'\'\' && needs.detect-changes.outputs.matrix != \'\'\'\'\'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: macos-latest
     strategy:
       fail-fast: false
