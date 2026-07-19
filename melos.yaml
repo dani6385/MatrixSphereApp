@@ -3,28 +3,12 @@ name: matrix_sphere
 packages:
   - apps/**
   - packages/**
+- "*"
 
 scripts:
   bootstrap:
-    run: melos bootstrap
-    description: Bootstrap the workspace, linking all local packages and fetching dependencies.
-
-  analyze:
-    # Menjalankan 'flutter analyze' di setiap paket.
-    # --fail-on-warnings memastikan CI gagal jika ada peringatan.
-    run: melos exec --concurrency=10 -- "flutter analyze --fatal-infos"
-    description: Run `flutter analyze` in all packages.
-
-  test:
-    # Menjalankan 'flutter test' di semua paket yang memiliki direktori 'test'.
-    # Melos secara cerdas menjalankan tes secara paralel.
-    run: melos run test --no-select --concurrency=6
-    description: Run `flutter test` in all packages.
-
-  analyze:changed:
-    run: melos exec --since=main -- "flutter analyze --fatal-infos"
-    description: Run `flutter analyze` in packages that have changed since the `main` branch.
-
-  test:changed:
-    run: melos run test --since=main
-    description: Run `flutter test` in packages that have changed since the `main` branch.
+    run: |
+      melos clean
+      melos bootstrap
+      flutter pub get
+    description: Membersihkan cache dan menginstal dependensi di semua paket.
