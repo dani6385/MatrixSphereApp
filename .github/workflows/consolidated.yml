@@ -55,23 +55,21 @@ jobs:
   # 2. JOB BUILD MULTIPLATFORM (Telah Disatukan)
   build:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
+    if: needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != ''
     
-    # Menentukan sistem operasi secara dinamis berdasarkan platform target
     runs-on: ${{ (matrix.platform == 'windows' && 'windows-latest') || (matrix.platform == 'macos' && 'macos-latest') || 'ubuntu-latest' }}
     
     strategy:
       fail-fast: false
       matrix:
         project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
-        # Masukkan semua platform yang ingin di-build di sini (Aktifkan 'macos' jika diperlukan nanti)
+        # Aktifkan 'macos' di sini jika Anda sudah siap untuk build di platform tersebut
         platform: [web, android, windows, linux] 
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # Mengidentifikasi variabel folder proyek dan target rilis (menggunakan bash agar kompatibel di semua OS)
       - name: Resolve Project & Platform Variables
         id: vars
         shell: bash
@@ -79,13 +77,13 @@ jobs:
           PROJECT="${{ matrix.project }}"
           PLATFORM="${{ matrix.platform }}"
           
-          # Tentukan direktori kerja utama
+          # Menggunakan if/elif untuk deteksi proyek yang lebih andal
           if [ "$PROJECT" = "seller_sphere" ]; then
             DIR="apps/seller_sphere"
             echo "dir=$DIR" >> $GITHUB_OUTPUT
             echo "site=ss-seller-sph" >> $GITHUB_OUTPUT
             echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
-          else
+          elif [ "$PROJECT" = "matrix_sphere" ]; then
             DIR="."
             echo "dir=$DIR" >> $GITHUB_OUTPUT
             echo "site=ms-matrix-sphere" >> $GITHUB_OUTPUT
@@ -101,7 +99,6 @@ jobs:
             echo "artifact_path=$DIR/build/macos/Build/Products/Release" >> $GITHUB_OUTPUT
           fi
 
-      # Setup Java (Hanya dijalankan saat build Android)
       - name: Set up Java 17
         if: matrix.platform == 'android'
         uses: actions/setup-java@v4
@@ -110,19 +107,16 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      # Setup dependensi Linux (Hanya dijalankan saat build Linux)
       - name: Install Linux Build Dependencies
         if: matrix.platform == 'linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev
 
-      # Downgrade CMake (Hanya dijalankan saat build Windows)
       - name: Downgrade CMake (Fix Firebase Compatibility)
         if: matrix.platform == 'windows'
         run: choco install cmake --version=3.26.4 --allow-downgrade --yes --force
 
-      # --- SETUP FLUTTER (Hanya ditulis 1 kali untuk semua platform) ---
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -130,7 +124,6 @@ jobs:
           flutter-version: '3.19.6'
           cache: true
 
-      # Langkah kompilasi aplikasi berdasarkan platform masing-masing
       - name: Build Application
         shell: bash
         env:
@@ -148,7 +141,11 @@ jobs:
           elif [ "${{ matrix.platform }}" = "macos" ]; then
             flutter config --enable-macos-desktop
             flutter config --no-enable-swift-package-manager
-            # Penyesuaian Podfile khusus macOS
+            
+            # Buat ulang file proyek macOS untuk memastikan file tersebut ada
+            flutter create . --platforms=macos
+            
+            # Terapkan patch khusus macOS
             if [ -f "macos/Podfile" ]; then
               sed -i '' "s/# platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
               sed -i '' "s/platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
@@ -170,7 +167,6 @@ jobs:
             flutter build ${{ matrix.platform }} --release
           fi
 
-      # GCP Authentication (Hanya untuk Web dan Android guna kebutuhan Firebase)
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         if: matrix.platform == 'web' || matrix.platform == 'android'
@@ -182,8 +178,7 @@ jobs:
       # Deploy ke Firebase Hosting (Hanya untuk Web)
       - name: Deploy to Firebase Hosting
         if: matrix.platform == 'web'
-        run: |
-          npx firebase-tools@latest deploy --only "hosting:${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
+        run: npx firebase-tools@latest deploy --only "hosting:${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
 
       # Deploy ke Firebase App Distribution (Hanya untuk Android)
       - name: Deploy to Firebase App Distribution
