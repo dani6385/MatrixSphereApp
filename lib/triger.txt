@@ -20,3 +20,7 @@ Failed to update packages.
 Error: Process completed with exit code 1.
 
 jngan
+
+- uses: subosito/flutter-action@v2
+  with:
+    flutter-version: '3.10.0' # atau lebih baru
