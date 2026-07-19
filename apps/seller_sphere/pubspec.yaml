@@ -9,17 +9,22 @@ environment:
 resolution: workspace
 
 dependencies:
+  flutter:
+    sdk: flutter
   curved_navigation_bar: ^1.0.6
   firebase_core: ^4.12.1
   firebase_crashlytics: ^5.2.6
-  flutter:
-    sdk: flutter
   go_router: ^17.3.0
   provider: ^6.1.5+1
-  shared_services: ^0.0.1
-  shared_ui: ^0.0.1
+  shared_services:
+    path: ../../packages/shared_services
+  shared_ui:
+    path: ../../packages/shared_ui
 
 dev_dependencies:
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
+
+flutter:
+  uses-material-design: true

@@ -8,7 +8,7 @@
   "packages": [
     {
       "name": "matrix_sphere",
-      "version": "0.0.0",
+      "version": "1.0.0+1",
       "dependencies": [
         "camera",
         "firebase_analytics",
@@ -16,14 +16,15 @@
         "firebase_crashlytics",
         "firebase_database",
         "flutter",
-        "flutter_test",
         "google_nav_bar",
         "intl",
         "logger",
         "shared_services",
+        "shared_ui",
         "table_calendar"
       ],
       "devDependencies": [
+        "flutter_test",
         "melos"
       ]
     },
@@ -95,6 +96,24 @@
         "xml",
         "yaml",
         "yaml_edit"
+      ]
+    },
+    {
+      "name": "flutter_test",
+      "version": "0.0.0",
+      "dependencies": [
+        "clock",
+        "collection",
+        "fake_async",
+        "flutter",
+        "leak_tracker_flutter_testing",
+        "matcher",
+        "meta",
+        "path",
+        "stack_trace",
+        "stream_channel",
+        "test_api",
+        "vector_math"
       ]
     },
     {
@@ -183,24 +202,6 @@
         "camera_web",
         "flutter",
         "flutter_plugin_android_lifecycle"
-      ]
-    },
-    {
-      "name": "flutter_test",
-      "version": "0.0.0",
-      "dependencies": [
-        "clock",
-        "collection",
-        "fake_async",
-        "flutter",
-        "leak_tracker_flutter_testing",
-        "matcher",
-        "meta",
-        "path",
-        "stack_trace",
-        "stream_channel",
-        "test_api",
-        "vector_math"
       ]
     },
     {
@@ -457,10 +458,33 @@
       "dependencies": []
     },
     {
-      "name": "simple_gesture_detector",
-      "version": "0.2.1",
+      "name": "stream_channel",
+      "version": "2.1.4",
       "dependencies": [
-        "flutter"
+        "async"
+      ]
+    },
+    {
+      "name": "leak_tracker_flutter_testing",
+      "version": "3.0.10",
+      "dependencies": [
+        "flutter",
+        "leak_tracker",
+        "leak_tracker_testing",
+        "matcher",
+        "meta"
+      ]
+    },
+    {
+      "name": "vector_math",
+      "version": "2.2.0",
+      "dependencies": []
+    },
+    {
+      "name": "stack_trace",
+      "version": "1.12.1",
+      "dependencies": [
+        "path"
       ]
     },
     {
@@ -469,10 +493,44 @@
       "dependencies": []
     },
     {
-      "name": "stack_trace",
-      "version": "1.12.1",
+      "name": "fake_async",
+      "version": "1.3.3",
       "dependencies": [
-        "path"
+        "clock",
+        "collection"
+      ]
+    },
+    {
+      "name": "matcher",
+      "version": "0.12.19",
+      "dependencies": [
+        "async",
+        "meta",
+        "stack_trace",
+        "term_glyph",
+        "test_api"
+      ]
+    },
+    {
+      "name": "test_api",
+      "version": "0.7.11",
+      "dependencies": [
+        "async",
+        "boolean_selector",
+        "collection",
+        "meta",
+        "source_span",
+        "stack_trace",
+        "stream_channel",
+        "string_scanner",
+        "term_glyph"
+      ]
+    },
+    {
+      "name": "simple_gesture_detector",
+      "version": "0.2.1",
+      "dependencies": [
+        "flutter"
       ]
     },
     {
@@ -602,63 +660,6 @@
         "flutter",
         "meta",
         "stream_transform"
-      ]
-    },
-    {
-      "name": "stream_channel",
-      "version": "2.1.4",
-      "dependencies": [
-        "async"
-      ]
-    },
-    {
-      "name": "leak_tracker_flutter_testing",
-      "version": "3.0.10",
-      "dependencies": [
-        "flutter",
-        "leak_tracker",
-        "leak_tracker_testing",
-        "matcher",
-        "meta"
-      ]
-    },
-    {
-      "name": "vector_math",
-      "version": "2.2.0",
-      "dependencies": []
-    },
-    {
-      "name": "fake_async",
-      "version": "1.3.3",
-      "dependencies": [
-        "clock",
-        "collection"
-      ]
-    },
-    {
-      "name": "matcher",
-      "version": "0.12.19",
-      "dependencies": [
-        "async",
-        "meta",
-        "stack_trace",
-        "term_glyph",
-        "test_api"
-      ]
-    },
-    {
-      "name": "test_api",
-      "version": "0.7.11",
-      "dependencies": [
-        "async",
-        "boolean_selector",
-        "collection",
-        "meta",
-        "source_span",
-        "stack_trace",
-        "stream_channel",
-        "string_scanner",
-        "term_glyph"
       ]
     },
     {
@@ -881,37 +882,6 @@
       "dependencies": []
     },
     {
-      "name": "plugin_platform_interface",
-      "version": "2.1.8",
-      "dependencies": [
-        "meta"
-      ]
-    },
-    {
-      "name": "_flutterfire_internals",
-      "version": "1.3.75",
-      "dependencies": [
-        "collection",
-        "firebase_core",
-        "firebase_core_platform_interface",
-        "flutter",
-        "meta"
-      ]
-    },
-    {
-      "name": "stream_transform",
-      "version": "2.1.1",
-      "dependencies": []
-    },
-    {
-      "name": "cross_file",
-      "version": "0.3.5+4",
-      "dependencies": [
-        "meta",
-        "web"
-      ]
-    },
-    {
       "name": "leak_tracker_testing",
       "version": "3.0.2",
       "dependencies": [
@@ -942,6 +912,37 @@
       "dependencies": [
         "source_span",
         "string_scanner"
+      ]
+    },
+    {
+      "name": "plugin_platform_interface",
+      "version": "2.1.8",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "_flutterfire_internals",
+      "version": "1.3.75",
+      "dependencies": [
+        "collection",
+        "firebase_core",
+        "firebase_core_platform_interface",
+        "flutter",
+        "meta"
+      ]
+    },
+    {
+      "name": "stream_transform",
+      "version": "2.1.1",
+      "dependencies": []
+    },
+    {
+      "name": "cross_file",
+      "version": "0.3.5+4",
+      "dependencies": [
+        "meta",
+        "web"
       ]
     },
     {
