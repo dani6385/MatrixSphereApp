@@ -16,6 +16,7 @@ const Color kDarkTextSecondary = Color(0xFF94A3B8); // Teks sekunder/abu-abu
 const Color kDarkAppBar = Color(0xFF111600); // App Bar
 const Color kDarkDivider = Color(0xFF24292E); // Divider
 
+
 // --- Palet Tema Terang (Bright Slate) ---
 const Color kLightBackground = Color(0xFFF8FAFC); // Latar belakang (Ice white)
 const Color kLightSurface = Color(0xFFFFFFFF); // Card, App Bar, Dialog

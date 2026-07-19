@@ -10,14 +10,15 @@ environment:
   flutter: ">=1.17.0"
 
 dependencies:
+  curved_navigation_bar: any
   flutter:
     sdk: flutter
-  permission_handler: ^12.0.3
-  shared_preferences: ^2.5.5
+  go_router: any
+  google_nav_bar: any
+  permission_handler: any
+  shared_preferences: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-flutter:
-  uses-material-design: true
+  flutter_lints: any

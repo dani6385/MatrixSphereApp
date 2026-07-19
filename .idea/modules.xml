@@ -2,13 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-<module fileurl="file://$PROJECT_DIR$/apps/seller_sphere/melos_seller_sphere.iml" filepath="$PROJECT_DIR$/apps/seller_sphere/melos_seller_sphere.iml"/>
+<module fileurl="file://$PROJECT_DIR$/apps/matrix_sphere/melos_matrix_sphere.iml" filepath="$PROJECT_DIR$/apps/matrix_sphere/melos_matrix_sphere.iml"/>
 <module fileurl="file://$PROJECT_DIR$/packages/shared_services/melos_shared_services.iml" filepath="$PROJECT_DIR$/packages/shared_services/melos_shared_services.iml"/>
 <module fileurl="file://$PROJECT_DIR$/packages/shared_ui/melos_shared_ui.iml" filepath="$PROJECT_DIR$/packages/shared_ui/melos_shared_ui.iml"/>
-<module fileurl="file://$PROJECT_DIR$/melos_matrix_sphere.iml" filepath="$PROJECT_DIR$/melos_matrix_sphere.iml"/>
-<module fileurl="file://$PROJECT_DIR$/melos_matrix.iml" filepath="$PROJECT_DIR$/melos_matrix.iml"/>
-<module fileurl="file://$PROJECT_DIR$/myapp.iml" filepath="$PROJECT_DIR$/myapp.iml"/>
-<module fileurl="file://$PROJECT_DIR$/android/myapp_android.iml" filepath="$PROJECT_DIR$/android/myapp_android.iml"/>
+<module fileurl="file://$PROJECT_DIR$/melos_matrixsphereapp.iml" filepath="$PROJECT_DIR$/melos_matrixsphereapp.iml"/>
+<module fileurl="file://$PROJECT_DIR$/matrixsphereapp.iml" filepath="$PROJECT_DIR$/matrixsphereapp.iml"/>
+<module fileurl="file://$PROJECT_DIR$/android/matrixsphereapp_android.iml" filepath="$PROJECT_DIR$/android/matrixsphereapp_android.iml"/>
     </modules>
   </component>
 </project>

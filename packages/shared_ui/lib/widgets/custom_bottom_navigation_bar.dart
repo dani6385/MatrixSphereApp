@@ -51,7 +51,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: kBrandPrimary.withOpacity(0.3),
+              color: kBrandPrimary.withValues(alpha: 0.3),
               spreadRadius: 5,
               blurRadius: 10,
               offset: const Offset(0, -3), // changes position of shadow

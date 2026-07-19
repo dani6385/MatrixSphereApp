@@ -78,4 +78,5 @@ extension AppThemeExtensions on BuildContext {
   TextStyle? get bodySmall => textTheme.bodySmall;
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
   TextStyle? get titleMedium => textTheme.titleMedium;
+
 }
