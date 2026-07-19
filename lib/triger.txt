@@ -18,4 +18,4 @@ Because melos 8.2.2 requires SDK version ^3.9.0 and no versions of melos match >
 So, because matrix_sphere depends on melos ^8.2.2, version solving failed.
 Failed to update packages.
 Error: Process completed with exit code 1.
- lah
+ lah simple
