@@ -1,140 +1,22 @@
-name: Verified Sequential Monorepo Multiplatform Build
+name: Build and Test
+
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
-permissions:
-  contents: 'read'
-  id-token: 'write'
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
-  detect-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Paths Filter
-        id: filter
-        uses: dorny/paths-filter@v3
-        with:
-          filters: |
-            seller_sphere:
-              - 'apps/seller_sphere/**'
-            matrix_sphere:
-              - 'lib/**'
-              - 'packages/**'
-
-      - name: Generate Dynamic Matrix JSON
-        id: set-matrix
-        run: |
-          MATRIX="[]"
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            MATRIX='["seller_sphere", "matrix_sphere"]'
-          else
-            SELLER="${{ steps.filter.outputs.seller_sphere }}"
-            MATRIX_SPHERE="${{ steps.filter.outputs.matrix_sphere }}"
-
-            LIST=()
-            [ "$SELLER" = "true" ] && LIST+=('"seller_sphere"')
-            [ "$MATRIX_SPHERE" = "true" ] && LIST+=('"matrix_sphere"')
-
-            if [ ${#LIST[@]} -gt 0 ]; then
-              IFS=,
-              MATRIX="[${LIST[*]}]"
-            fi
-          fi
-          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
-
-  build-web:
-    needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Resolve Project Variables
-        id: vars
-        run: |
-          PROJECT="${{ matrix.project }}"
-          case "$PROJECT" in
-            "seller_sphere")
-              echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
-              echo "site=ss-seller-sph" >> $GITHUB_OUTPUT
-              ;;
-            "matrix_sphere")
-              echo "dir=." >> $GITHUB_OUTPUT
-              echo "site=ms-matrix-sphere" >> $GITHUB_OUTPUT
-              ;;
-          esac
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
-          cache: true
-
-      - name: Build Web Application
-        run: |
-          cd ${{ steps.vars.outputs.dir }}
-          flutter config --enable-web
-          flutter pub get
-          flutter build web --release
-
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
-          service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
-
-      - name: Deploy to Firebase Hosting
-        run: |
-          npx firebase-tools@latest deploy --only "hosting:${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
-
   build-android:
-    needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
+    name: Build Android App
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Resolve Project Variables
-        id: vars
-        run: |
-          PROJECT="${{ matrix.project }}"
-          case "$PROJECT" in
-            "seller_sphere")
-              echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
-              echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
-              ;;
-            "matrix_sphere")
-              echo "dir=." >> $GITHUB_OUTPUT
-              echo "app_id=${{ secrets.FIREBASE_APP_ID_MATRIX }}" >> $GITHUB_OUTPUT
-              ;;
-          esac
-
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
         with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
-
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+          distribution: 'zulu'
+          java-version: '11'
+      - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
