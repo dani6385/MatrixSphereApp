@@ -1,3 +1,5 @@
+// lib/screens/home/widgets/home_app_bar.dart
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:matrix_sphere/routes/app_routes.dart';
@@ -14,21 +16,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         Builder(
           builder: (context) {
-            // 1. Ambil data jumlah pesan dari Provider Anda (contoh nama: ChatProvider)
-            // Silakan sesuaikan dengan provider chat asli Anda jika ada
+            // Mengambil data jumlah pesan dari ChatProvider
             final unreadMessages = context.watch<ChatProvider>().unreadCount;
 
             return IconButton(
               icon: Badge(
-                label: Text('$unreadMessages'), // Menampilkan angka dinamis
-                isLabelVisible: unreadMessages > 0, // Hanya muncul jika ada pesan > 0
+                label: Text('$unreadMessages'), 
+                isLabelVisible: unreadMessages > 0, 
                 child: const Icon(Icons.chat),
               ),
-            onPressed: () {
-              GoRouter.of(context).push(AppRoutes.chat);
-            },
-          );
-          }
+              onPressed: () { // Indentasi dirapikan di sini
+                GoRouter.of(context).push(AppRoutes.chat);
+              },
+            );
+          }, // Indentasi dirapikan di sini
         ),
         Builder(
           builder: (context) => IconButton(
@@ -45,4 +46,3 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
-
