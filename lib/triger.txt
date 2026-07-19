@@ -1,1 +1,7 @@
-
+You may need to restart any open editors for them to read new settings.
+Error on line 34, column 3 of pubspec.yaml: `workspace` and `resolution` requires at least language version 3.5
+   ╷
+34 │ ┌   - apps/seller_sphere
+35 │ │   - packages/shared_services
+36 │ └   - packages/shared_ui
+   ╵
