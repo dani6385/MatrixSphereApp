@@ -2,20 +2,16 @@
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    // Plugin Flutter Gradle
     id("dev.flutter.flutter-gradle-plugin")
-    
-    // Terapkan plugin Google Services
     id("com.google.gms.google-services")
-    
-    // Terapkan plugin Firebase Crashlytics
     id("com.google.firebase.crashlytics")
+    // Catatan: "kotlin-android" sengaja dihapus di sini untuk migrasi Built-in Kotlin
 }
 
 android {
-    // Sesuaikan dengan namespace aplikasi Anda
-    namespace = "com.example.nama_aplikasi_anda" 
+    // PENTING: Ganti "com.matrix.sphere" dengan ID Paket asli Anda
+    // (Bisa dilihat di dalam file google-services.json pada bagian "package_name")
+    namespace = "com.matrix.sphere" 
     compileSdk = flutter.compileSdkVersion
 
     compileOptions {
@@ -23,12 +19,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     defaultConfig {
-        // Sesuaikan dengan applicationId aplikasi Anda
+        // PENTING: Samakan juga ID aplikasi di bawah ini dengan nama paket asli Anda
         applicationId = "com.example.nama_aplikasi_anda"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
@@ -39,20 +31,12 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("debug")
-            
-            // Opsional: Konfigurasi tambahan untuk mapping file Crashlytics jika diperlukan
-            ndk {
-                debugSymbolLevel = "SYMBOL_TABLE"
-            }
         }
     }
 }
 
 dependencies {
-    // Menggunakan Firebase BoM (Bill of Materials) untuk menyelaraskan versi library Firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
-
-    // Dependensi untuk Firebase Analytics dan Crashlytics
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-crashlytics")
 }

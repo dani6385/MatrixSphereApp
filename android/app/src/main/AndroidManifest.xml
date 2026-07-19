@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="matrix_sphere"
+        android:label="MS Matrix Sphere"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
