@@ -617,25 +617,25 @@
       "name": "matrix_sphere",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.6"
+      "languageVersion": "3.5"
     },
     {
       "name": "seller_sphere",
       "rootUri": "../apps/seller_sphere",
       "packageUri": "lib/",
-      "languageVersion": "3.6"
+      "languageVersion": "3.5"
     },
     {
       "name": "shared_services",
       "rootUri": "../packages/shared_services",
       "packageUri": "lib/",
-      "languageVersion": "3.6"
+      "languageVersion": "3.5"
     },
     {
       "name": "shared_ui",
       "rootUri": "../packages/shared_ui",
       "packageUri": "lib/",
-      "languageVersion": "3.6"
+      "languageVersion": "3.5"
     }
   ],
   "generator": "pub",
