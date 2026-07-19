@@ -1,25 +1,35 @@
+// android/app/build.gradle.kts
+
 plugins {
     id("com.android.application")
-    // START: FlutterFire Configuration
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
-    // END: FlutterFire Configuration
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id("kotlin-android")
+    // Plugin Flutter Gradle
     id("dev.flutter.flutter-gradle-plugin")
+    
+    // Terapkan plugin Google Services
+    id("com.google.gms.google-services")
+    
+    // Terapkan plugin Firebase Crashlytics
+    id("com.google.firebase.crashlytics")
 }
 
 android {
-    namespace = "com.matrix.sphere"
+    // Sesuaikan dengan namespace aplikasi Anda
+    namespace = "com.example.nama_aplikasi_anda" 
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
     defaultConfig {
-        applicationId = "com.matrix.sphere"
+        // Sesuaikan dengan applicationId aplikasi Anda
+        applicationId = "com.example.nama_aplikasi_anda"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -29,16 +39,20 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName("debug")
+            
+            // Opsional: Konfigurasi tambahan untuk mapping file Crashlytics jika diperlukan
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
         }
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
-    }
-}
+dependencies {
+    // Menggunakan Firebase BoM (Bill of Materials) untuk menyelaraskan versi library Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
 
-flutter {
-    source = "../.."
+    // Dependensi untuk Firebase Analytics dan Crashlytics
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-crashlytics")
 }
