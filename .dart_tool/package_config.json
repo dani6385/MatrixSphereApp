@@ -87,9 +87,9 @@
     },
     {
       "name": "cli_util",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/cli_util-0.5.1",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/cli_util-0.4.2",
       "packageUri": "lib/",
-      "languageVersion": "3.7"
+      "languageVersion": "3.4"
     },
     {
       "name": "clock",
@@ -327,9 +327,9 @@
     },
     {
       "name": "melos",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/melos-8.2.2",
+      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/melos-6.3.3",
       "packageUri": "lib/",
-      "languageVersion": "3.9"
+      "languageVersion": "3.8"
     },
     {
       "name": "meta",
@@ -408,12 +408,6 @@
       "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/permission_handler_windows-0.2.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
-    },
-    {
-      "name": "petitparser",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/petitparser-7.0.2",
-      "packageUri": "lib/",
-      "languageVersion": "3.8"
     },
     {
       "name": "platform",
@@ -600,12 +594,6 @@
       "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/xdg_directories-1.1.0",
       "packageUri": "lib/",
       "languageVersion": "3.3"
-    },
-    {
-      "name": "xml",
-      "rootUri": "file:///home/user/.pub-cache/hosted/pub.dev/xml-7.0.1",
-      "packageUri": "lib/",
-      "languageVersion": "3.11"
     },
     {
       "name": "yaml",

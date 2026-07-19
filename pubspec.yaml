@@ -29,7 +29,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  melos: ^8.2.2
+  melos: ^6.0.0
 flutter:
   uses-material-design: true
   assets:
