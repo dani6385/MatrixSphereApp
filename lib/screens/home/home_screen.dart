@@ -11,11 +11,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: kLightSurface,
-      appBar: HomeAppBar(),
-      endDrawer: AccountMenuModal(),
-      body: Column(
+      appBar: const HomeAppBar(),
+      endDrawer: const AccountMenuModal(),
+      body: const Column(
         children: [
           // 1. Widget Atas: FeaturedCard (mengikuti tinggi asli widgetnya)
           FeaturedCard(),
