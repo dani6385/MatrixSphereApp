@@ -21,14 +21,13 @@ pluginManagement {
 
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
-    id("com.android.application") version "8.3.0" apply false
-    id("com.android.library") version "8.3.0" apply false
     
-    // Konfigurasi FlutterFire (Google Services & Crashlytics)
+    // PERBAIKAN: Diperbarui ke 8.6.0 untuk memenuhi batas minimum Flutter
+    id("com.android.application") version "8.6.0" apply false
+    id("com.android.library") version "8.6.0" apply false
+    
     id("com.google.gms.google-services") version "4.4.2" apply false
     id("com.google.firebase.crashlytics") version "3.0.2" apply false
-    
-    // Menggunakan versi Kotlin stabil 2.0.20 untuk mengatasi peringatan Flutter
     id("org.jetbrains.kotlin.android") version "2.0.20" apply false
 }
 
