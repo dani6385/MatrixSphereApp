@@ -85,7 +85,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.22.2' # Consistent Flutter version
+          flutter-version: '3.27.0-stable' # Updated to support Melos version
           cache: true
 
       - name: Install Melos
@@ -119,8 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -136,7 +135,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.22.2' # Consistent Flutter version
+          flutter-version: '3.27.0-stable' # Updated to support Melos version
           cache: true
 
       - name: Install Melos
@@ -178,8 +177,7 @@ jobs:
     runs-on: windows-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -188,7 +186,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.22.2' # Consistent Flutter version
+          flutter-version: '3.27.0-stable' # Updated to support Melos version
           cache: true
 
       # Downgrade CMake untuk menghindari error ketidakcocokan versi lama Firebase SDK
@@ -204,8 +202,8 @@ jobs:
         env:
           CL: "/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECAT_WARNINGS"
         run: |
+          melos bootstrap
           cd ${{ matrix.dir }}
-          flutter pub get
           # 1. Aktifkan desktop Windows #
           flutter config --enable-windows-desktop
           
@@ -226,8 +224,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -241,7 +238,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.22.2' # Consistent Flutter version
+          flutter-version: '3.27.0-stable' # Updated to support Melos version
           cache: true
 
       - name: Install Melos
@@ -268,8 +265,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -278,7 +274,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.2' # Consistent Flutter version
+          flutter-version: '3.27.0-stable' # Updated to support Melos version
           channel: 'stable'
 
       - name: Install Melos
