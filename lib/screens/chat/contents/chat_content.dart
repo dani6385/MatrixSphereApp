@@ -59,7 +59,7 @@ class _ChatContentState extends State<ChatContent> {
                 BoxShadow(
                   offset: const Offset(0, -1),
                   blurRadius: 2.0,
-                  color: theme.shadowColor.withOpacity(0.05),
+                  color: theme.shadowColor.withValues(alpha: 0.05),
                 )
               ]),
               child: _buildTextComposer(context),
@@ -119,7 +119,7 @@ class _ChatContentState extends State<ChatContent> {
                   BoxShadow(
                     offset: const Offset(0, 1),
                     blurRadius: 1.0,
-                    color: Theme.of(context).shadowColor.withOpacity(0.1),
+                    color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                   )
                 ]),
             child: Text(
