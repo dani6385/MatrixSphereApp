@@ -6,7 +6,7 @@ import '../screens/approval/approval_screen.dart';
 import '../screens/approval/approval_detail_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/home/home_screen.dart';
-import '../screens/seller/seller_screen.dart';
+import '../screens/sellers/seller_screen.dart';
 import '../screens/system/system_screen.dart';
 import '../screens/chat/chat_screen.dart';
 import 'app_routes.dart';

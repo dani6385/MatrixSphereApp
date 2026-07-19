@@ -27,7 +27,7 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
   Future<void> _fetchApprovalDetails() async {
     try {
       final snapshot =
-          await _dbRef.child('approval/${widget.approvalId}').get();
+          await _dbRef.child('approval/\${widget.approvalId}').get();
       if (snapshot.exists && mounted) {
         setState(() {
           _approval = Approval.fromMap(
@@ -41,6 +41,76 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
     } catch (e) {
       if (mounted) setState(() => _isLoading = false);
       // Tampilkan error
+    }
+  }
+
+  // --- Approve Logic ---
+  Future<void> _approveRegistration(Approval approval) async {
+    try {
+      // 1. Update status di node 'approval'
+      await _dbRef
+          .child('approval/\${approval.id}')
+          .update({'status': 'approved'});
+
+      // 2. Buat entri baru di node 'sellers'
+      await _dbRef.child('sellers/\${approval.id}').set({
+        'name': approval.nama,
+        'description': 'Segera buka di Seller Sphere', // Placeholder
+        'latitude': -6.200000, // Placeholder
+        'longitude': 106.816666, // Placeholder
+      });
+
+      if (mounted) {
+        // 3. Tampilkan notifikasi sukses
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pendaftaran berhasil disetujui.'),
+            backgroundColor: kSoftTeal,
+          ),
+        );
+        // 4. Kembali ke layar sebelumnya
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Terjadi error: \$e'),
+            backgroundColor: kAlertRed,
+          ),
+        );
+      }
+    }
+  }
+
+  // --- Reject Logic ---
+  Future<void> _rejectRegistration(Approval approval) async {
+    try {
+      // 1. Update status di node 'approval'
+      await _dbRef
+          .child('approval/\${approval.id}')
+          .update({'status': 'rejected'});
+
+      if (mounted) {
+        // 2. Tampilkan notifikasi
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Pendaftaran berhasil ditolak.'),
+            backgroundColor: kAlertRed,
+          ),
+        );
+        // 3. Kembali ke layar sebelumnya
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Terjadi error: \$e'),
+            backgroundColor: kAlertRed,
+          ),
+        );
+      }
     }
   }
 
@@ -243,9 +313,7 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.close, color: Colors.white),
                 label: const Text('Tolak'),
-                onPressed: () {
-                  // TODO: Implement reject logic
-                },
+                onPressed: () => _rejectRegistration(approval),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kAlertRed,
                   foregroundColor: kDarkTextPrimary,
@@ -260,9 +328,7 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.check, color: kDarkTextPrimary),
                 label: const Text('Setujui'),
-                onPressed: () {
-                  // TODO: Implement approve logic
-                },
+                onPressed: () => _approveRegistration(approval),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: kSoftTeal,
                   foregroundColor: kDarkTextPrimary,
