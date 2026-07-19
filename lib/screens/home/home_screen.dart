@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
         child: const Scaffold(
           backgroundColor: kLightSurface,
           appBar: const HomeAppBar(),
-          endDrawer: const AccountMenuModal(),
+          drawer: const AccountMenuModal(),
           body: const Column(
             children: [
               // 1. Widget Atas: FeaturedCard (mengikuti tinggi asli widgetnya)

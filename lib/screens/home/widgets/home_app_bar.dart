@@ -8,97 +8,46 @@ import '../../chat/providers/chat_provider.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
+// lib/screens/home/widgets/home_app_bar.dart
 
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Home'),
-      actions: [
-        Builder(
-          builder: (context) {
-            // Mengambil data jumlah pesan dari ChatProvider
-            final unreadMessages = context.watch<ChatProvider>().unreadCount;
-            final chatProvider = context.watch<ChatProvider>();
-            final messages = chatProvider.unreadMessagesList;
-            //final unreadCount = chatProvider.unreadCount;
+@override
+Widget build(BuildContext context) {
+  return AppBar(
+    title: const Text('Home'),
+    
+    // 1. PINDAHKAN KE SINI (leading) agar muncul di sebelah kiri:
+    leading: Builder(
+      builder: (context) => IconButton(
+        icon: const Icon(Icons.account_circle),
+        onPressed: () {
+          // DISARANKAN: ganti openEndDrawer() menjadi openDrawer() 
+          // agar menu terbuka dari sisi kiri sesuai posisi tombolnya
+          Scaffold.of(context).openDrawer(); 
+        },
+      ),
+    ),
 
-            return PopupMenuButton<String>(
-              icon: Badge(
-                label: Text('$unreadMessages'),
-                isLabelVisible: unreadMessages > 0,
-                child: const Icon(Icons.chat),
-              ),
-              onSelected: (value) {
-                if (value == 'see_all') {
-                  // Navigasi ke halaman chat jika memilih "Lihat Semua Pesan"
-                  GoRouter.of(context).push(AppRoutes.chat);
-                } else {
-                  // Menangani klik pada pesan spesifik (bisa diarahkan ke detail chat)
-                  debugPrint("Membuka detail pesan: $value");
-                  GoRouter.of(context).push(AppRoutes.chat);
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                // Jika tidak ada pesan baru
-                if (messages.isEmpty) {
-                  return [
-                    const PopupMenuItem<String>(
-                      enabled: false, // Tidak bisa diklik
-                      child: Text(
-                        'Tidak ada pesan baru',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    )
-                  ]; // Tambahkan return di sini
-                }
-                final List<PopupMenuEntry<String>> items =
-                    messages.map((message) {
-                  return PopupMenuItem<String>(
-                    value: message,
-                    child: Text(
-                      message,
-                      maxLines: 1,
-                      overflow: TextOverflow
-                          .ellipsis, // Potong teks jika terlalu panjang
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  );
-                }).toList();
+    // Parameter actions di bawah hanya menyisakan menu chat (di sebelah kanan)
+    actions: [
+      Builder(
+        builder: (context) {
+          final chatProvider = context.watch<ChatProvider>();
+          final messages = chatProvider.unreadMessagesList;
 
-                // Tambahkan garis pembatas dan tombol "Lihat Semua Pesan" di bagian bawah dropdown
-                items.addAll([
-                  const PopupMenuDivider(), // Garis pembatas tipis
-                  const PopupMenuItem<String>(
-                    value: 'see_all',
-                    child: Center(
-                      child: Text(
-                        'Lihat Semua Pesan',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ]);
-
-                return items;
-              },
-            );
-          },
-        ),
-        Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.account_circle),
+          return IconButton(
+            icon: Badge(
+              label: Text('${messages.length}'),
+              isLabelVisible: messages.isNotEmpty,
+              child: const Icon(Icons.chat),
+            ),
             onPressed: () {
-              Scaffold.of(context).openEndDrawer();
+              GoRouter.of(context).push(AppRoutes.chat);
             },
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
+          );
+        },
+      ),
+    ],
+  );
+}  @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
