@@ -69,9 +69,38 @@ jobs:
           fi
 
 
+  # NEW JOB: QUALITY GATE (ANALYZE & TEST)
+  quality-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required for Melos to compare changes with 'main' branch
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.27.0-stable'
+          cache: true
+
+      - name: Install Melos
+        run: dart pub global activate melos
+
+      - name: Bootstrap Workspace
+        run: melos bootstrap
+
+      - name: Run Static Analysis
+        run: melos run analyze:changed
+
+      - name: Run Tests
+        run: melos run test:changed
+
+
   # 2. JOB BUILD WEB
   build-web:
-    needs: detect-changes
+    needs: [detect-changes, quality-gate]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -114,7 +143,7 @@ jobs:
 
   # 3. JOB BUILD ANDROID
   build-android:
-    needs: detect-changes
+    needs: [detect-changes, quality-gate]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -172,7 +201,7 @@ jobs:
 
   # 4. JOB BUILD WINDOWS
   build-windows:
-    needs: detect-changes
+    needs: [detect-changes, quality-gate]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: windows-latest
     strategy:
@@ -219,7 +248,7 @@ jobs:
 
   # 5. JOB BUILD LINUX
   build-linux:
-    needs: detect-changes
+    needs: [detect-changes, quality-gate]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
@@ -260,7 +289,7 @@ jobs:
 
   # 6. JOB BUILD MACOS
   build-macos:
-    needs: detect-changes
+    needs: [detect-changes, quality-gate]
     if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' && false }}
     runs-on: macos-latest
     strategy:
