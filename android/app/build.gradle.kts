@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // PENTING: Samakan juga ID aplikasi di bawah ini dengan nama paket asli Anda
-        applicationId = "com.example.nama_aplikasi_anda"
+        applicationId = "com.matrix.sphere"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
