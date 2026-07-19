@@ -51,16 +51,17 @@ jobs:
           ]'
 
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "matrix=$BASE_MATRIX" >> $GITHUB_OUTPUT
+            # Gunakan jq -c untuk memastikan output adalah satu baris
+            echo "matrix=$(echo "$BASE_MATRIX" | jq -c .)" >> $GITHUB_OUTPUT
           else
             CHANGED_PROJECTS=""
             ${{ steps.filter.outputs.seller_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS seller_sphere"
             ${{ steps.filter.outputs.client_connectivity }} && CHANGED_PROJECTS="$CHANGED_PROJECTS client_connectivity"
             ${{ steps.filter.outputs.admin_mikrotik }} && CHANGED_PROJECTS="$CHANGED_PROJECTS admin_mikrotik"
             ${{ steps.filter.outputs.matrix_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS matrix_sphere"
-            ${{ steps.filter.outputs.shop_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS shop_sphere"
+            ${{ steps.filter.outputs.shop_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS shop_sphere"            
             
-            FILTERED_MATRIX=$(echo "$BASE_MATRIX" | jq --arg projects "$CHANGED_PROJECTS" '[.[] | select(.project as $p | $projects | contains($p))]')
+            FILTERED_MATRIX=$(echo "$BASE_MATRIX" | jq -c --arg projects "$CHANGED_PROJECTS" '[.[] | select(.project as $p | $projects | contains($p))]')
             echo "matrix=$FILTERED_MATRIX" >> $GITHUB_OUTPUT
           fi
 
