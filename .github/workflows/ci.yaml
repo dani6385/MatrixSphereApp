@@ -5,8 +5,8 @@ on:
       - main
   workflow_dispatch:
 permissions:
-  contents: \'read\'
-  id-token: \'write\'
+  contents: 'read'
+  id-token: 'write'
 jobs:
   detect-changes:
     runs-on: ubuntu-latest
@@ -22,24 +22,24 @@ jobs:
         with:
           filters: |
             seller_sphere:
-              - \'apps/seller_sphere/**\'
+              - 'apps/seller_sphere/**'
             matrix_sphere:
-              - \'lib/**\'
-              - \'packages/**\'
+              - 'lib/**'
+              - 'packages/**'
 
       - name: Generate Dynamic Matrix JSON
         id: set-matrix
         run: |
           MATRIX="[]"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            MATRIX=\'["seller_sphere", "matrix_sphere"]\'
+            MATRIX='["seller_sphere", "matrix_sphere"]'
           else
             SELLER="${{ steps.filter.outputs.seller_sphere }}"
             MATRIX_SPHERE="${{ steps.filter.outputs.matrix_sphere }}"
 
             LIST=()
-            [ "$SELLER" = "true" ] && LIST+=(\'"seller_sphere"\')
-            [ "$MATRIX_SPHERE" = "true" ] && LIST+=(\'"matrix_sphere"\')
+            [ "$SELLER" = "true" ] && LIST+=('"seller_sphere"')
+            [ "$MATRIX_SPHERE" = "true" ] && LIST+=('"matrix_sphere"')
 
             if [ ${#LIST[@]} -gt 0 ]; then
               IFS=,
@@ -50,7 +50,7 @@ jobs:
 
   build-web:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'[]\' && needs.detect-changes.outputs.matrix != \'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -78,7 +78,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: \'stable\'
+          channel: 'stable'
           cache: true
 
       - name: Build Web Application
@@ -88,12 +88,12 @@ jobs:
           flutter pub get
           flutter build web --release
 
-      - id: \'auth\'
-        name: \'Authenticate to Google Cloud\'
-        uses: \'google-github-actions/auth@v2\'
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: \'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider\'
-          service_account: \'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com\'
+          workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
+          service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
 
       - name: Deploy to Firebase Hosting
         run: |
@@ -101,7 +101,7 @@ jobs:
 
   build-android:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'[]\' && needs.detect-changes.outputs.matrix != \'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -129,14 +129,14 @@ jobs:
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
-          java-version: \'17\'
-          distribution: \'temurin\'
+          java-version: '17'
+          distribution: 'temurin'
           cache: gradle
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: \'stable\'
+          channel: 'stable'
           cache: true
 
       - name: Build Android APK
@@ -146,12 +146,12 @@ jobs:
           flutter pub get
           flutter build apk --release
 
-      - id: \'auth\'
-        name: \'Authenticate to Google Cloud\'
-        uses: \'google-github-actions/auth@v2\'
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: \'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider\'
-          service_account: \'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com\'
+          workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
+          service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
       
       - name: Deploy to Firebase App Distribution
         run: |
@@ -163,7 +163,7 @@ jobs:
 
   build-windows:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'[]\' && needs.detect-changes.outputs.matrix != \'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -186,7 +186,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: \'stable\'
+          channel: 'stable'
           cache: true
 
       - name: Downgrade CMake (Fix Firebase Compatibility)
@@ -209,7 +209,7 @@ jobs:
 
   build-linux:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'[]\' && needs.detect-changes.outputs.matrix != \'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -236,7 +236,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: \'stable\'
+          channel: 'stable'
           cache: true
 
       - name: Build Linux App
@@ -254,7 +254,7 @@ jobs:
 
   build-macos:
     needs: detect-changes
-    if: ${{ needs.detect-changes.outputs.matrix != \'[]\' && needs.detect-changes.outputs.matrix != \'\' }}
+    if: ${{ needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != '' }}
     runs-on: macos-latest
     strategy:
       fail-fast: false
@@ -280,7 +280,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: \'stable\'
+          channel: 'stable'
           cache: true
 
       - name: Build macOS App
