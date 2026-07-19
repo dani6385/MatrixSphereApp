@@ -22,13 +22,15 @@ pluginManagement {
 plugins {
     id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     
-    // PERBAIKAN: Diperbarui ke 8.6.0 untuk memenuhi batas minimum Flutter
-    id("com.android.application") version "8.6.0" apply false
-    id("com.android.library") version "8.6.0" apply false
+    // PERBAIKAN: Diperbarui ke 8.11.1 untuk mendukung pustaka kamera & rekomendasi Flutter
+    id("com.android.application") version "8.11.1" apply false
+    id("com.android.library") version "8.11.1" apply false
     
     id("com.google.gms.google-services") version "4.4.2" apply false
     id("com.google.firebase.crashlytics") version "3.0.2" apply false
-    id("org.jetbrains.kotlin.android") version "2.0.20" apply false
+    
+    // PERBAIKAN: Diperbarui ke 2.2.20 sesuai rekomendasi Flutter
+    id("org.jetbrains.kotlin.android") version "2.2.20" apply false
 }
 
 include(":app")
