@@ -1,0 +1,74 @@
+# Nama alur kerja yang akan muncul di tab Actions GitHub
+name: Build and Deploy Flutter Web
+
+# Konfigurasi kapan alur kerja ini akan dijalankan
+on:
+  # Dijalankan saat ada push ke branch 'main'
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/matrix_sphere/**' # Hanya berjalan jika ada perubahan di aplikasi ini
+      - 'packages/**'           # Atau jika ada perubahan di package bersama
+      - '.github/workflows/main.yml'
+
+  # Memungkinkan alur kerja dijalankan secara manual dari UI GitHub
+  workflow_dispatch:
+
+# Izin yang diperlukan untuk autentikasi ke Google Cloud tanpa service key
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build-and-deploy-web:
+    runs-on: ubuntu-latest
+
+    # Variabel environment untuk job ini
+    env:
+      # Ganti dengan direktori aplikasi yang ingin Anda bangun
+      PROJECT_DIR: apps/matrix_sphere
+      # Ganti dengan ID proyek Firebase Anda
+      FIREBASE_PROJECT_ID: matrixsphere-c3de9
+      # Ganti dengan nama situs hosting di Firebase
+      FIREBASE_HOSTING_SITE: ms-matrix-sphere
+
+    steps:
+      # 1. Mengunduh kode dari repositori
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Autentikasi ke Google Cloud menggunakan Workload Identity Federation
+      - name: Authenticate to Google Cloud
+        uses: 'google-github-actions/auth@v2'
+        with:
+          # Ganti dengan ID provider dan service account yang sudah Anda konfigurasi di GCP
+          workload_identity_provider: 'projects/YOUR_GCP_PROJECT_NUMBER/locations/global/workloadIdentityPools/YOUR_POOL_ID/providers/YOUR_PROVIDER_ID'
+          service_account: 'your-firebase-service-account@${{ env.FIREBASE_PROJECT_ID }}.iam.gserviceaccount.com'
+
+      # 3. Menginstal dan mengatur cache untuk Flutter SDK
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # 4. Membangun aplikasi web Flutter
+      - name: Build Flutter Web App
+        run: |
+          cd ${{ env.PROJECT_DIR }}
+          flutter pub get
+          flutter build web --release
+
+      # 5. Mendeploy hasil build ke Firebase Hosting
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
+          service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
+
+      # 2. Deploy ke Firebase Hosting secara Keyless
+      - name: Deploy to Firebase Hosting
+        run: |
+          npx firebase-tools@latest deploy --only "hosting:${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
