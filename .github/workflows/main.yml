@@ -26,6 +26,8 @@ jobs:
         uses: dorny/paths-filter@v3
         with:
           filters: |
+            shared:
+              - 'packages/**'
             seller_sphere:
               - 'apps/seller_sphere/**'
             client_connectivity:
@@ -50,16 +52,18 @@ jobs:
             {"project": "shop_sphere", "dir": "apps/shop_sphere", "site": "ss-shop-sph", "app_id": "${{ secrets.FIREBASE_APP_ID_SHOP }}"}
           ]'
 
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          # Jika trigger adalah manual (workflow_dispatch) ATAU ada perubahan di package bersama, build semua aplikasi.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ steps.filter.outputs.shared }}" = "true" ]; then
             # Gunakan jq -c untuk memastikan output adalah satu baris
             echo "matrix=$(echo "$BASE_MATRIX" | jq -c .)" >> $GITHUB_OUTPUT
           else
+            # Jika tidak, bangun hanya aplikasi yang berubah.
             CHANGED_PROJECTS=""
-            ${{ steps.filter.outputs.seller_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS seller_sphere"
-            ${{ steps.filter.outputs.client_connectivity }} && CHANGED_PROJECTS="$CHANGED_PROJECTS client_connectivity"
-            ${{ steps.filter.outputs.admin_mikrotik }} && CHANGED_PROJECTS="$CHANGED_PROJECTS admin_mikrotik"
-            ${{ steps.filter.outputs.matrix_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS matrix_sphere"
-            ${{ steps.filter.outputs.shop_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS shop_sphere"            
+            if [ "${{ steps.filter.outputs.seller_sphere }}" = "true" ]; then CHANGED_PROJECTS="$CHANGED_PROJECTS seller_sphere"; fi
+            if [ "${{ steps.filter.outputs.client_connectivity }}" = "true" ]; then CHANGED_PROJECTS="$CHANGED_PROJECTS client_connectivity"; fi
+            if [ "${{ steps.filter.outputs.admin_mikrotik }}" = "true" ]; then CHANGED_PROJECTS="$CHANGED_PROJECTS admin_mikrotik"; fi
+            if [ "${{ steps.filter.outputs.matrix_sphere }}" = "true" ]; then CHANGED_PROJECTS="$CHANGED_PROJECTS matrix_sphere"; fi
+            if [ "${{ steps.filter.outputs.shop_sphere }}" = "true" ]; then CHANGED_PROJECTS="$CHANGED_PROJECTS shop_sphere"; fi
             
             FILTERED_MATRIX=$(echo "$BASE_MATRIX" | jq -c --arg projects "$CHANGED_PROJECTS" '[.[] | select(.project as $p | $projects | contains($p))]')
             echo "matrix=$FILTERED_MATRIX" >> $GITHUB_OUTPUT
