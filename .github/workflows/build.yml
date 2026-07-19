@@ -61,14 +61,5 @@ jobs:
           flutter build web --release
 
       # 5. Mendeploy hasil build ke Firebase Hosting
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
-        with:
-          workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
-          service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
-
-      # 2. Deploy ke Firebase Hosting secara Keyless
       - name: Deploy to Firebase Hosting
-        run: |
-          npx firebase-tools@latest deploy --only "hosting:${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
+        run: npx firebase-tools@latest deploy --only "hosting:${{ env.FIREBASE_HOSTING_SITE }}" --project "${{ env.FIREBASE_PROJECT_ID }}"
