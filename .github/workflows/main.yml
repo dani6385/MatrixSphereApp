@@ -18,6 +18,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
       - name: Paths Filter
         id: filter
         uses: dorny/paths-filter@v3
@@ -39,29 +42,27 @@ jobs:
       - name: Generate Dynamic Matrix JSON
         id: set-matrix
         run: |
-          MATRIX="[]"
+          BASE_MATRIX='[
+            {"project": "seller_sphere", "dir": "apps/seller_sphere", "site": "ss-seller-sph", "app_id": "${{ secrets.FIREBASE_APP_ID_SELLER }}"},
+            {"project": "client_connectivity", "dir": "apps/client_connectivity", "site": "cc-client-connet", "app_id": "${{ secrets.FIREBASE_APP_ID_CLIENT }}"},
+            {"project": "admin_mikrotik", "dir": "apps/admin_mikrotik", "site": "admin-mikrotik", "app_id": "${{ secrets.FIREBASE_APP_ID_ADMIN }}"},
+            {"project": "matrix_sphere", "dir": "apps/matrix_sphere", "site": "ms-matrix-sphere", "app_id": "${{ secrets.FIREBASE_APP_ID_MATRIX }}"},
+            {"project": "shop_sphere", "dir": "apps/shop_sphere", "site": "ss-shop-sph", "app_id": "${{ secrets.FIREBASE_APP_ID_SHOP }}"}
+          ]'
+
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            MATRIX='["seller_sphere", "client_connectivity", "admin_mikrotik", "matrix_sphere", "shop_sphere"]'
+            echo "matrix=$BASE_MATRIX" >> $GITHUB_OUTPUT
           else
-            SELLER="${{ steps.filter.outputs.seller_sphere }}"
-            CLIENT="${{ steps.filter.outputs.client_connectivity }}"
-            ADMIN="${{ steps.filter.outputs.admin_mikrotik }}"
-            MATRIX_SPHERE="${{ steps.filter.outputs.matrix_sphere }}"
-            SHOP="${{ steps.filter.outputs.shop_sphere }}"
-
-            LIST=()
-            [ "$SELLER" = "true" ] && LIST+=('"seller_sphere"')
-            [ "$CLIENT" = "true" ] && LIST+=('"client_connectivity"')
-            [ "$ADMIN" = "true" ] && LIST+=('"admin_mikrotik"')
-            [ "$MATRIX_SPHERE" = "true" ] && LIST+=('"matrix_sphere"')
-            [ "$SHOP" = "true" ] && LIST+=('"shop_sphere"')
-
-            if [ ${#LIST[@]} -gt 0 ]; then
-              IFS=,
-              MATRIX="[${LIST[*]}]"
-            fi
+            CHANGED_PROJECTS=""
+            ${{ steps.filter.outputs.seller_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS seller_sphere"
+            ${{ steps.filter.outputs.client_connectivity }} && CHANGED_PROJECTS="$CHANGED_PROJECTS client_connectivity"
+            ${{ steps.filter.outputs.admin_mikrotik }} && CHANGED_PROJECTS="$CHANGED_PROJECTS admin_mikrotik"
+            ${{ steps.filter.outputs.matrix_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS matrix_sphere"
+            ${{ steps.filter.outputs.shop_sphere }} && CHANGED_PROJECTS="$CHANGED_PROJECTS shop_sphere"
+            
+            FILTERED_MATRIX=$(echo "$BASE_MATRIX" | jq --arg projects "$CHANGED_PROJECTS" '[.[] | select(.project as $p | $projects | contains($p))]')
+            echo "matrix=$FILTERED_MATRIX" >> $GITHUB_OUTPUT
           fi
-          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
 
   # 2. JOB BUILD WEB
@@ -71,49 +72,21 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Resolve Project Variables
-        id: vars
-        run: |
-          PROJECT="${{ matrix.project }}"
-          case "$PROJECT" in
-            "seller_sphere")
-              echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
-              echo "site=ss-seller-sph" >> $GITHUB_OUTPUT
-              ;;
-            "client_connectivity")
-              echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
-              echo "site=cc-client-connet" >> $GITHUB_OUTPUT
-              ;;
-            "admin_mikrotik")
-              echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
-              echo "site=admin-mikrotik" >> $GITHUB_OUTPUT
-              ;;
-            "matrix_sphere")
-              echo "dir=apps/matrix_sphere" >> $GITHUB_OUTPUT
-              echo "site=ms-matrix-sphere" >> $GITHUB_OUTPUT
-              ;;
-            "shop_sphere")
-              echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
-              echo "site=ss-shop-sph" >> $GITHUB_OUTPUT
-              ;;
-          esac
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.19.6'
+          flutter-version: '3.22.2' # Consistent Flutter version
           cache: true
 
       - name: Build Web Application
         run: |
-          cd ${{ steps.vars.outputs.dir }}
+          cd ${{ matrix.dir }}
           flutter config --enable-web
           flutter pub get
           flutter build web --release
@@ -129,7 +102,7 @@ jobs:
       # 2. Deploy ke Firebase Hosting secara Keyless
       - name: Deploy to Firebase Hosting
         run: |
-          npx firebase-tools@latest deploy --only "hosting:${{ steps.vars.outputs.site }}" --project "matrixsphere-c3de9"
+          npx firebase-tools@latest deploy --only "hosting:${{ matrix.site }}" --project "matrixsphere-c3de9"
 
 
   # 3. JOB BUILD ANDROID
@@ -139,38 +112,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Resolve Project Variables
-        id: vars
-        run: |
-          PROJECT="${{ matrix.project }}"
-          case "$PROJECT" in
-            "seller_sphere")
-              echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT
-              echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
-              ;;
-            "client_connectivity")
-              echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
-              echo "app_id=${{ secrets.FIREBASE_APP_ID_CLIENT }}" >> $GITHUB_OUTPUT
-              ;;
-            "admin_mikrotik")
-              echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
-              echo "app_id=${{ secrets.FIREBASE_APP_ID_ADMIN }}" >> $GITHUB_OUTPUT
-              ;;
-            "matrix_sphere")
-              echo "dir=apps/matrix_sphere" >> $GITHUB_OUTPUT
-              echo "app_id=${{ secrets.FIREBASE_APP_ID_MATRIX }}" >> $GITHUB_OUTPUT
-              ;;
-            "shop_sphere")
-              echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
-              echo "app_id=${{ secrets.FIREBASE_APP_ID_SHOP }}" >> $GITHUB_OUTPUT
-              ;;
-          esac
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -183,12 +128,12 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.27.0'
+          flutter-version: '3.22.2' # Consistent Flutter version
           cache: true
 
       - name: Build Android APK
         run: |
-          cd ${{ steps.vars.outputs.dir }}
+          cd ${{ matrix.dir }}
           flutter clean
           flutter pub get
           flutter build apk --release
@@ -205,12 +150,10 @@ jobs:
           # 1. Tidak perlu lagi menulis file gcp_key.json dari secrets!
           
           # 2. Cari file APK
-          APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
-          
-          # ... (sisanya tetap sama) ...
+          APK_PATH=$(find ${{ matrix.dir }} -name "app-release.apk" | head -n 1)
           
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
-            --app "${{ steps.vars.outputs.app_id }}" \
+            --app "${{ matrix.app_id }}" \
             --groups "sphere" \
             --project "matrixsphere-c3de9"
 
@@ -222,30 +165,16 @@ jobs:
     runs-on: windows-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Resolve Project Variables
-        id: vars
-        shell: bash
-        run: |
-          PROJECT="${{ matrix.project }}"
-          case "$PROJECT" in
-            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
-            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
-            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
-            "matrix_sphere") echo "dir=apps/matrix_sphere" >> $GITHUB_OUTPUT ;;
-            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
-          esac
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.27.0'
+          flutter-version: '3.22.2' # Consistent Flutter version
           cache: true
 
       # Downgrade CMake untuk menghindari error ketidakcocokan versi lama Firebase SDK
@@ -258,17 +187,22 @@ jobs:
         env:
           CL: "/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECAT_WARNINGS"
         run: |
-          # 1. Aktifkan desktop Windows
+          cd ${{ matrix.dir }}
+          
+          # 1. Dapatkan dependensi
+          flutter pub get
+
+          # 2. Aktifkan desktop Windows
           flutter config --enable-windows-desktop
           
-          # 2. Mulai proses build release
+          # 3. Mulai proses build release
           flutter build windows --release
 
       - name: Upload Windows Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.project }}-windows-build
-          path: ${{ steps.vars.outputs.dir }}/build/windows/x64/runner/Release
+          path: ${{ matrix.dir }}/build/windows/x64/runner/Release
 
 
   # 5. JOB BUILD LINUX
@@ -278,23 +212,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Resolve Project Variables
-        id: vars
-        run: |
-          PROJECT="${{ matrix.project }}"
-          case "$PROJECT" in
-            "seller_sphere") echo "dir=apps/seller_sphere" >> $GITHUB_OUTPUT ;;
-            "client_connectivity") echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT ;;
-            "admin_mikrotik") echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT ;;
-            "matrix_sphere") echo "dir=apps/matrix_sphere" >> $GITHUB_OUTPUT ;;
-            "shop_sphere") echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT ;;
-          esac
 
       - name: Install Linux Build Dependencies
         run: |
@@ -305,12 +226,13 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
-          flutter-version: '3.27.0'
+          flutter-version: '3.22.2' # Consistent Flutter version
           cache: true
 
       - name: Build Linux App
         run: |
-          cd ${{ steps.vars.outputs.dir }}
+          cd ${{ matrix.dir }}
+          flutter pub get
           flutter config --enable-linux-desktop
           flutter build linux --release
 
@@ -318,7 +240,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.project }}-linux-build
-          path: ${{ steps.vars.outputs.dir }}/build/linux/x64/release/bundle
+          path: ${{ matrix.dir }}/build/linux/x64/release/bundle
 
 
   # 6. JOB BUILD MACOS
@@ -328,8 +250,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       fail-fast: false
-      matrix:
-        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -338,7 +259,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.0'
+          flutter-version: '3.22.2' # Consistent Flutter version
           channel: 'stable'
 
       # Langkah menonaktifkan SPM sebelum build dimulai
@@ -348,6 +269,8 @@ jobs:
       # Langkah build macOS otomatis kita sebelumnya
       - name: Build macOS App
         run: |
+          cd ${{ matrix.dir }}
+
           # 1. Aktifkan dukungan macOS desktop
           flutter config --enable-macos-desktop
           
