@@ -1,0 +1,117 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "matrixsphere-c3de9",
+                    "appId": "1:359008687014:android:4abea64449f5e96da9f567",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "matrixsphere-c3de9",
+                    "configurations": {
+                        "android": "1:359008687014:android:4abea64449f5e96da9f567",
+                        "ios": "1:359008687014:ios:b45c323ec27f2f4ea9f567",
+                        "macos": "1:359008687014:ios:38f673d3ff3bdbaca9f567",
+                        "web": "1:359008687014:web:87735d266c1d383ca9f567",
+                        "windows": "1:359008687014:web:58893d479e4a5150a9f567"
+                    }
+                }
+            }
+        }
+    },
+    "hosting": [
+        {
+            "site": "matrixsphere-c3de9",
+            "public": "build/web",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ],
+            "rewrites": [
+                {
+                    "source": "**",
+                    "destination": "/index.html"
+                }
+            ]
+        },
+        {
+            "site": "ms-matrix-sphere",
+            "public": "build/web",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ],
+            "rewrites": [
+                {
+                    "source": "**",
+                    "destination": "/index.html"
+                }
+            ]
+        },
+        {
+            "site": "ss-seller-sph",
+            "public": "apps/seller_sphere/build/web",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ],
+            "rewrites": [
+                {
+                    "source": "**",
+                    "destination": "/index.html"
+                }
+            ]
+        },
+        {
+            "site": "ss-shop-sph",
+            "public": "apps/shop_sphere/build/web",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ],
+            "rewrites": [
+                {
+                    "source": "**",
+                    "destination": "/index.html"
+                }
+            ]
+        },
+        {
+            "site": "admin-mikrotik",
+            "public": "apps/admin_mikrotik/build/web",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ],
+            "rewrites": [
+                {
+                    "source": "**",
+                    "destination": "/index.html"
+                }
+            ]
+        },
+        {
+            "site": "cc-client-connet",
+            "public": "apps/client_connectivity/build/web",
+            "ignore": [
+                "firebase.json",
+                "**/.*",
+                "**/node_modules/**"
+            ],
+            "rewrites": [
+                {
+                    "source": "**",
+                    "destination": "/index.html"
+                }
+            ]
+        }
+    ]
+}
