@@ -126,13 +126,6 @@
       ]
     },
     {
-      "name": "google_nav_bar",
-      "version": "5.0.7",
-      "dependencies": [
-        "flutter"
-      ]
-    },
-    {
       "name": "curved_navigation_bar",
       "version": "1.0.6",
       "dependencies": [
@@ -141,52 +134,18 @@
       ]
     },
     {
-      "name": "table_calendar",
-      "version": "3.2.0",
+      "name": "google_nav_bar",
+      "version": "5.0.7",
       "dependencies": [
-        "flutter",
-        "intl",
-        "simple_gesture_detector"
-      ]
-    },
-    {
-      "name": "logger",
-      "version": "2.7.0",
-      "dependencies": [
-        "clock",
-        "meta"
-      ]
-    },
-    {
-      "name": "firebase_database",
-      "version": "12.4.6",
-      "dependencies": [
-        "firebase_core",
-        "firebase_core_platform_interface",
-        "firebase_database_platform_interface",
-        "firebase_database_web",
         "flutter"
       ]
     },
     {
-      "name": "intl",
-      "version": "0.20.3",
+      "name": "cross_file",
+      "version": "0.3.5+4",
       "dependencies": [
-        "clock",
         "meta",
-        "path"
-      ]
-    },
-    {
-      "name": "camera",
-      "version": "0.12.0+2",
-      "dependencies": [
-        "camera_android_camerax",
-        "camera_avfoundation",
-        "camera_platform_interface",
-        "camera_web",
-        "flutter",
-        "flutter_plugin_android_lifecycle"
+        "web"
       ]
     },
     {
@@ -210,14 +169,6 @@
       ]
     },
     {
-      "name": "cross_file",
-      "version": "0.3.5+4",
-      "dependencies": [
-        "meta",
-        "web"
-      ]
-    },
-    {
       "name": "firebase_core",
       "version": "4.12.1",
       "dependencies": [
@@ -225,6 +176,55 @@
         "firebase_core_web",
         "flutter",
         "meta"
+      ]
+    },
+    {
+      "name": "table_calendar",
+      "version": "3.2.0",
+      "dependencies": [
+        "flutter",
+        "intl",
+        "simple_gesture_detector"
+      ]
+    },
+    {
+      "name": "intl",
+      "version": "0.20.3",
+      "dependencies": [
+        "clock",
+        "meta",
+        "path"
+      ]
+    },
+    {
+      "name": "logger",
+      "version": "2.7.0",
+      "dependencies": [
+        "clock",
+        "meta"
+      ]
+    },
+    {
+      "name": "camera",
+      "version": "0.12.0+2",
+      "dependencies": [
+        "camera_android_camerax",
+        "camera_avfoundation",
+        "camera_platform_interface",
+        "camera_web",
+        "flutter",
+        "flutter_plugin_android_lifecycle"
+      ]
+    },
+    {
+      "name": "firebase_database",
+      "version": "12.4.6",
+      "dependencies": [
+        "firebase_core",
+        "firebase_core_platform_interface",
+        "firebase_database_platform_interface",
+        "firebase_database_web",
+        "flutter"
       ]
     },
     {
@@ -538,27 +538,20 @@
       ]
     },
     {
-      "name": "simple_gesture_detector",
-      "version": "0.2.1",
+      "name": "web",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
+      "name": "nested",
+      "version": "1.0.0",
       "dependencies": [
         "flutter"
       ]
     },
     {
-      "name": "firebase_database_web",
-      "version": "0.2.7+12",
-      "dependencies": [
-        "collection",
-        "firebase_core",
-        "firebase_core_web",
-        "firebase_database_platform_interface",
-        "flutter",
-        "flutter_web_plugins"
-      ]
-    },
-    {
-      "name": "firebase_database_platform_interface",
-      "version": "0.4.0+5",
+      "name": "firebase_crashlytics_platform_interface",
+      "version": "3.8.26",
       "dependencies": [
         "_flutterfire_internals",
         "collection",
@@ -577,6 +570,24 @@
         "flutter_test",
         "meta",
         "plugin_platform_interface"
+      ]
+    },
+    {
+      "name": "firebase_core_web",
+      "version": "3.9.1",
+      "dependencies": [
+        "firebase_core_platform_interface",
+        "flutter",
+        "flutter_web_plugins",
+        "meta",
+        "web"
+      ]
+    },
+    {
+      "name": "simple_gesture_detector",
+      "version": "0.2.1",
+      "dependencies": [
+        "flutter"
       ]
     },
     {
@@ -628,15 +639,20 @@
       ]
     },
     {
-      "name": "nested",
-      "version": "1.0.0",
+      "name": "firebase_database_web",
+      "version": "0.2.7+12",
       "dependencies": [
-        "flutter"
+        "collection",
+        "firebase_core",
+        "firebase_core_web",
+        "firebase_database_platform_interface",
+        "flutter",
+        "flutter_web_plugins"
       ]
     },
     {
-      "name": "firebase_crashlytics_platform_interface",
-      "version": "3.8.26",
+      "name": "firebase_database_platform_interface",
+      "version": "0.4.0+5",
       "dependencies": [
         "_flutterfire_internals",
         "collection",
@@ -644,22 +660,6 @@
         "flutter",
         "meta",
         "plugin_platform_interface"
-      ]
-    },
-    {
-      "name": "web",
-      "version": "1.1.1",
-      "dependencies": []
-    },
-    {
-      "name": "firebase_core_web",
-      "version": "3.9.1",
-      "dependencies": [
-        "firebase_core_platform_interface",
-        "flutter",
-        "flutter_web_plugins",
-        "meta",
-        "web"
       ]
     },
     {
