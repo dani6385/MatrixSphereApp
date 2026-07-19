@@ -1,13 +1,13 @@
 import 'package:go_router/go_router.dart';
 import '../navigation/app_navigator.dart';
-//import '../screens/account/account_screen.dart';
-//import '../screens/attendance/attendance_screen.dart';
-//import '../screens/approval/approval_screen.dart';
-//import '../screens/approval/approval_detail_screen.dart';
-//import '../screens/calendar/calendar_screen.dart';
+import '../screens/account/account_screen.dart';
+import '../screens/attendance/attendance_screen.dart';
+import '../screens/approval/approval_screen.dart';
+import '../screens/approval/approval_detail_screen.dart';
+import '../screens/calendar/calendar_screen.dart';
 import '../screens/home/home_screen.dart';
-//import '../screens/seller/seller_screen.dart';
-//import '../screens/system/system_screen.dart';
+import '../screens/seller/seller_screen.dart';
+import '../screens/system/system_screen.dart';
 import '../screens/chat/chat_screen.dart';
 import 'app_routes.dart';
 
@@ -26,7 +26,7 @@ final appRouter = GoRouter(
               builder: (context, state) => const HomeScreen()),
         ]),
         // Branch 1: Seller
-        /*StatefulShellBranch(routes: [
+        StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.aktifitas,
               builder: (context, state) => const SellerScreen()),
@@ -60,16 +60,16 @@ final appRouter = GoRouter(
           GoRoute(
               path: AppRoutes.account,
               builder: (context, state) => const AccountScreen()),
-        ]),*/
+        ]),
       ],
     ),
     // Rute di luar ShellRoute
-    /*GoRoute(
+    GoRoute(
       path: AppRoutes.approvalDetail,
       builder: (context, state) => const ApprovalDetailScreen(
         approvalId: '',
       ),
-    ),*/
+    ),
     GoRoute(
       path: AppRoutes.chat,
       builder: (context, state) => const ChatScreen(),
