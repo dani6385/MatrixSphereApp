@@ -94,7 +94,8 @@ class _AttendanceContentState extends State<AttendanceContent> {
                       logger.w('No image taken.');
                     }
                     Navigator.pop(context);
-                  }, onControllerCreated: (CameraController? p1) {  },
+                  },
+                  onControllerCreated: (CameraController? p1) {},
                 );
               },
             );

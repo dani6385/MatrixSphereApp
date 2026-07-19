@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
+/// A widget that displays the content of the account screen.
 class AccountContent extends StatelessWidget {
+  /// Creates an [AccountContent] widget.
   const AccountContent({super.key});
 
   @override
@@ -22,7 +24,8 @@ class AccountContent extends StatelessWidget {
           // Bagian Informasi Pengguna
           Card(
             color: kDarkSurface,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.md),
               child: Column(
@@ -30,17 +33,20 @@ class AccountContent extends StatelessWidget {
                   const CircleAvatar(
                     radius: 40,
                     backgroundColor: kDarkSecondary,
-                    child: Icon(Icons.person_outline, size: 40, color: kDarkTextPrimary),
+                    child: Icon(Icons.person_outline,
+                        size: 40, color: kDarkTextPrimary),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text(
                     'Nama Pengguna', // Placeholder
-                    style: textTheme.titleLarge?.copyWith(color: kDarkTextPrimary),
+                    style:
+                        textTheme.titleLarge?.copyWith(color: kDarkTextPrimary),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
                     'user.name@example.com', // Placeholder
-                    style: textTheme.bodyMedium?.copyWith(color: kDarkTextSecondary),
+                    style: textTheme.bodyMedium
+                        ?.copyWith(color: kDarkTextSecondary),
                   ),
                 ],
               ),

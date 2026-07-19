@@ -30,7 +30,8 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
           await _dbRef.child('approval/${widget.approvalId}').get();
       if (snapshot.exists && mounted) {
         setState(() {
-          _approval = Approval.fromMap(snapshot.key!, snapshot.value as Map<dynamic, dynamic>);
+          _approval = Approval.fromMap(
+              snapshot.key!, snapshot.value as Map<dynamic, dynamic>);
           _isLoading = false;
         });
       } else {
@@ -171,9 +172,8 @@ class _ApprovalDetailScreenState extends State<ApprovalDetailScreen> {
             style: const TextStyle(
                 color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          backgroundColor: approval.status == 'waiting'
-              ? kWarmOrange
-              : kSoftTeal,
+          backgroundColor:
+              approval.status == 'waiting' ? kWarmOrange : kSoftTeal,
           padding: const EdgeInsets.symmetric(
               horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
         ),

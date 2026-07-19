@@ -41,7 +41,8 @@ class MonthlyStats extends StatelessWidget {
         children: [
           Text(count,
               style: textTheme.titleLarge?.copyWith(
-                  color: color ?? kDarkTextPrimary, fontWeight: FontWeight.bold)),
+                  color: color ?? kDarkTextPrimary,
+                  fontWeight: FontWeight.bold)),
           Text(label,
               style: textTheme.bodySmall?.copyWith(color: kDarkTextSecondary)),
         ],

@@ -47,17 +47,21 @@ class ViolationCard extends StatelessWidget {
                 onPressed: () {
                   // Logika untuk menindaklanjuti (misalnya, kirim peringatan)
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Menindaklanjuti pelanggaran oleh $sellerName')),
+                    SnackBar(
+                        content: Text(
+                            'Menindaklanjuti pelanggaran oleh $sellerName')),
                   );
                 },
-                child: const Text('Tindak', style: TextStyle(color: kDarkTextPrimary)),
+                child: const Text('Tindak',
+                    style: TextStyle(color: kDarkTextPrimary)),
               ),
               const SizedBox(width: AppSpacing.sm),
               ElevatedButton(
                 onPressed: () {
                   // Logika untuk melakukan banned
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Melakukan banned pada $sellerName')),
+                    SnackBar(
+                        content: Text('Melakukan banned pada $sellerName')),
                   );
                 },
                 style: ElevatedButton.styleFrom(

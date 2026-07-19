@@ -28,17 +28,30 @@ class SellerCard extends StatelessWidget {
                 children: [
                   Icon(seller.icon, color: seller.iconColor, size: 22),
                   const SizedBox(width: 10),
-                  Text(seller.storeName, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text(seller.storeName,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold)),
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                 decoration: BoxDecoration(
-                  color: isPending ? Colors.transparent : seller.statusColor.withAlpha(51),
-                  border: isPending ? Border.all(color: seller.statusColor, width: 1) : null,
+                  color: isPending
+                      ? Colors.transparent
+                      : seller.statusColor.withAlpha(51),
+                  border: isPending
+                      ? Border.all(color: seller.statusColor, width: 1)
+                      : null,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(seller.status, style: TextStyle(color: seller.statusColor, fontSize: 10, fontWeight: FontWeight.bold)),
+                child: Text(seller.status,
+                    style: TextStyle(
+                        color: seller.statusColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold)),
               ),
             ],
           ),

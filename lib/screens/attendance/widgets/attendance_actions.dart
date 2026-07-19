@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class AttendanceActions extends StatelessWidget {
-  const AttendanceActions({super.key, DateTime? checkInTime, DateTime? checkOutTime, XFile? checkInImage, XFile? checkOutImage});
+  const AttendanceActions(
+      {super.key,
+      DateTime? checkInTime,
+      DateTime? checkOutTime,
+      XFile? checkInImage,
+      XFile? checkOutImage});
 
   @override
   Widget build(BuildContext context) {

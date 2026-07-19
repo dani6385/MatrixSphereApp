@@ -22,13 +22,21 @@ class EmployeeTimeDisplay extends StatelessWidget {
         CircleAvatar(
           radius: 30,
           backgroundColor: kDarkBackground,
-          backgroundImage: imageFile != null ? FileImage(File(imageFile!.path)) : null,
-          child: imageFile == null ? const Icon(Icons.person, size: 30, color: kDarkTextSecondary) : null,
+          backgroundImage:
+              imageFile != null ? FileImage(File(imageFile!.path)) : null,
+          child: imageFile == null
+              ? const Icon(Icons.person, size: 30, color: kDarkTextSecondary)
+              : null,
         ),
         const SizedBox(height: AppSpacing.sm),
-        Text(label, style: const TextStyle(color: kDarkTextSecondary, fontSize: 16)),
+        Text(label,
+            style: const TextStyle(color: kDarkTextSecondary, fontSize: 16)),
         const SizedBox(height: AppSpacing.xs),
-        Text(time, style: const TextStyle(color: kDarkTextPrimary, fontSize: 24, fontWeight: FontWeight.bold)),
+        Text(time,
+            style: const TextStyle(
+                color: kDarkTextPrimary,
+                fontSize: 24,
+                fontWeight: FontWeight.bold)),
       ],
     );
   }

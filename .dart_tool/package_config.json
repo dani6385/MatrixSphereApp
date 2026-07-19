@@ -623,7 +623,7 @@
       "name": "matrix_sphere",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.12"
+      "languageVersion": "3.6"
     },
     {
       "name": "seller_sphere",

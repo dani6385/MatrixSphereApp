@@ -8,6 +8,6 @@ class AppRoutes {
   static const String account = '/account'; // Rute baru untuk Akun
   static const String approval = '/approval';
   static const String approvalDetail = '/approval/approval-detail';
-  static const String settings = '/settings'; 
+  static const String settings = '/settings';
   static const String chat = '/chat';
 }

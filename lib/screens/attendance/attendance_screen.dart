@@ -11,7 +11,7 @@ class AttendanceScreen extends StatelessWidget {
     return const Scaffold(
       backgroundColor: kDarkBackground,
       appBar: AttendanceAppBar(), // Komponen header Anda
-      body: AttendanceContent(),  // Semua isi halaman ada di sini
+      body: AttendanceContent(), // Semua isi halaman ada di sini
     );
   }
 }

@@ -10,7 +10,8 @@ class SellerAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: kDarkBackground,
       elevation: 0,
       title: const Text('Matrix Sphere',
-          style: TextStyle(color: kDarkTextPrimary, fontWeight: FontWeight.bold)),
+          style:
+              TextStyle(color: kDarkTextPrimary, fontWeight: FontWeight.bold)),
       actions: [
         Padding(
           padding: const EdgeInsets.only(right: 16.0),

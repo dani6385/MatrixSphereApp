@@ -13,7 +13,8 @@ class AttendanceLog extends StatelessWidget {
         Row(
           children: [
             Text('Log Kehadiran Karyawan',
-                style: textTheme.titleMedium?.copyWith(color: kDarkTextPrimary)),
+                style:
+                    textTheme.titleMedium?.copyWith(color: kDarkTextPrimary)),
             const Spacer(),
             Text('8 Catatan',
                 style:
@@ -38,8 +39,8 @@ class AttendanceLog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Dewi Fortuna',
-                      style:
-                          textTheme.bodyLarge?.copyWith(color: kDarkTextPrimary)),
+                      style: textTheme.bodyLarge
+                          ?.copyWith(color: kDarkTextPrimary)),
                   Text('Status: Full Day Off Duty',
                       style: textTheme.bodySmall
                           ?.copyWith(color: kDarkTextSecondary)),
@@ -57,8 +58,7 @@ class AttendanceLog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: Text('Sakit',
-                        style:
-                            textTheme.bodySmall?.copyWith(color: kSoftTeal)),
+                        style: textTheme.bodySmall?.copyWith(color: kSoftTeal)),
                   ),
                   Text('2026-07-16',
                       style: textTheme.bodySmall

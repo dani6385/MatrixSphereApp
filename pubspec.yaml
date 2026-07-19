@@ -1,9 +1,11 @@
 name: matrix_sphere
-description: A new Flutter project.
+description: A comprehensive Flutter project designed to manage and monitor various aspects of your business, including seller performance, system integrity, and employee attendance.
+homepage: https://github.com/user/matrix_sphere
+repository: https://github.com/user/matrix_sphere
 publish_to: 'none'
 version: 1.0.0+1
 environment:
-  sdk: '>=3.12.2 <4.0.0'
+  sdk: '>=3.6.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter

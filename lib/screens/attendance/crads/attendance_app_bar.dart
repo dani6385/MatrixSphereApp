@@ -21,8 +21,7 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Absensi Karyawan',
-              style: AppStyles.primaryTitle(textTheme)),
+          Text('Absensi Karyawan', style: AppStyles.primaryTitle(textTheme)),
           Text('Check-in & Rekap',
               style: AppStyles.secondarySubtitle(textTheme)),
         ],

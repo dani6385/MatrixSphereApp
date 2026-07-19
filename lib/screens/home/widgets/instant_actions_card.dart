@@ -14,7 +14,8 @@ class InstantActionsCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Aksi Demonstrasi Instan', style: TextStyle(color: Colors.white)),
+        const Text('Aksi Demonstrasi Instan',
+            style: TextStyle(color: Colors.white)),
         const SizedBox(height: 10),
         Row(
           children: [

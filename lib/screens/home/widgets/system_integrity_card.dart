@@ -23,7 +23,8 @@ class SystemIntegrityCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('SYSTEM INTEGRITY: ACTIVE', style: TextStyle(color: Colors.orange)),
+          const Text('SYSTEM INTEGRITY: ACTIVE',
+              style: TextStyle(color: Colors.orange)),
           const SizedBox(height: 10),
           Text(
             'Berjalan dalam Offline-first Mode. Database lokal Room siap menyinkronkan data begitu google-services.json diaktifkan.',

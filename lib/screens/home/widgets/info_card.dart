@@ -25,7 +25,8 @@ class InfoCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(count, style: const TextStyle(color: kLightTextPrimary, fontSize: 24)),
+          Text(count,
+              style: const TextStyle(color: kLightTextPrimary, fontSize: 24)),
           Text(label, style: const TextStyle(color: kDarkTextSecondary)),
         ],
       ),

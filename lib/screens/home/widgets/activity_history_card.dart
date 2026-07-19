@@ -9,7 +9,8 @@ class ActivityHistoryCard extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('HISTORI AKTIVITAS TERKINI', style: TextStyle(color: kTextOnDarkPrimary)),
+        Text('HISTORI AKTIVITAS TERKINI',
+            style: TextStyle(color: kTextOnDarkPrimary)),
         Expanded(
           child: Center(
             child: Column(
@@ -17,7 +18,8 @@ class ActivityHistoryCard extends StatelessWidget {
               children: [
                 Icon(Icons.history, color: kDarkTextPrimary, size: 50),
                 SizedBox(height: 10),
-                Text('Belum ada histori persetujuan.', style: TextStyle(color: Colors.grey)),
+                Text('Belum ada histori persetujuan.',
+                    style: TextStyle(color: Colors.grey)),
               ],
             ),
           ),

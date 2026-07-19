@@ -16,7 +16,8 @@ class MainScaffold extends StatelessWidget {
     return Scaffold(
       body: child, // Halaman yang aktif akan ditampilkan di sini
       bottomNavigationBar: Container(
-        color: Theme.of(context).scaffoldBackgroundColor, // Sesuaikan dengan tema
+        color:
+            Theme.of(context).scaffoldBackgroundColor, // Sesuaikan dengan tema
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
           child: GNav(
@@ -53,7 +54,8 @@ class MainScaffold extends StatelessWidget {
     if (location.startsWith(AppRoutes.sellers)) {
       return 2;
     }
-    if (location.startsWith('/settings')) { // Ganti jika Anda punya route constant
+    if (location.startsWith('/settings')) {
+      // Ganti jika Anda punya route constant
       return 3;
     }
     return 0; // Default ke home

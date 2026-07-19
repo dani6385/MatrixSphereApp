@@ -33,8 +33,8 @@ class SystemAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: TextButton.styleFrom(
             foregroundColor: kDarkTextPrimary,
             backgroundColor: kDarkSecondary,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           ),
         ),
         IconButton(

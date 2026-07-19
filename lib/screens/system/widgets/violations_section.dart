@@ -63,7 +63,8 @@ class _ViolationsSectionState extends State<ViolationsSection> {
                 ),
                 child: Text(
                   'Tidak ada data pelanggaran yang terdeteksi.',
-                  style: textTheme.bodyMedium?.copyWith(color: kDarkTextSecondary),
+                  style:
+                      textTheme.bodyMedium?.copyWith(color: kDarkTextSecondary),
                 ),
               );
             }

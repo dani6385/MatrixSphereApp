@@ -46,7 +46,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
     authDomain: 'matrixsphere-c3de9.firebaseapp.com',
-    databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
     measurementId: 'G-5VD50MFNS0',
   );
@@ -56,7 +57,8 @@ class DefaultFirebaseOptions {
     appId: '1:359008687014:android:4abea64449f5e96da9f567',
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
-    databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
   );
   static const FirebaseOptions ios = FirebaseOptions(
@@ -64,7 +66,8 @@ class DefaultFirebaseOptions {
     appId: '1:359008687014:ios:b45c323ec27f2f4ea9f567',
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
-    databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
     iosBundleId: 'com.matrix.sphere',
   );
@@ -73,7 +76,8 @@ class DefaultFirebaseOptions {
     appId: '1:359008687014:ios:38f673d3ff3bdbaca9f567',
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
-    databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
     iosBundleId: 'com.matrix.SphereApp',
   );
@@ -84,7 +88,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '359008687014',
     projectId: 'matrixsphere-c3de9',
     authDomain: 'matrixsphere-c3de9.firebaseapp.com',
-    databaseURL: 'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
+    databaseURL:
+        'https://matrixsphere-c3de9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'matrixsphere-c3de9.firebasestorage.app',
     measurementId: 'G-XKLPW1R0YX',
   );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
+/// A modal that displays the account menu.
 class AccountMenuModal extends StatelessWidget {
+  /// Creates an [AccountMenuModal] widget.
   const AccountMenuModal({super.key});
 
   @override
@@ -26,7 +28,8 @@ class AccountMenuModal extends StatelessWidget {
                             ?.copyWith(color: kDarkTextPrimary)),
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(Icons.arrow_back, color: kDarkTextPrimary),
+                      icon:
+                          const Icon(Icons.arrow_back, color: kDarkTextPrimary),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],

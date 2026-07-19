@@ -13,9 +13,14 @@ class SellerContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('MANAJEMEN SELLER', style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+          const Text('MANAJEMEN SELLER',
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
-          const Text('Daftar penjual terdaftar di sistem', style: TextStyle(color: Colors.grey)),
+          const Text('Daftar penjual terdaftar di sistem',
+              style: TextStyle(color: Colors.grey)),
           const SizedBox(height: 20),
           const SingleChildScrollView(
             scrollDirection: Axis.horizontal,
