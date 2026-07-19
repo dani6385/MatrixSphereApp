@@ -9,7 +9,7 @@ class AttendanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      backgroundColor: kDarkBackground,
+      backgroundColor: kLightBackground,
       appBar: AttendanceAppBar(), // Komponen header Anda
       body: AttendanceContent(), // Semua isi halaman ada di sini
     );

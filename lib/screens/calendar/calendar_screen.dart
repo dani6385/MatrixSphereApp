@@ -11,7 +11,7 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kDarkBackground,
+      backgroundColor: kLightBackground,
       appBar: AppBar(title: const Text('Kalender')),
       endDrawer: const AccountMenuModal(),
       body: const CalendarContent(),

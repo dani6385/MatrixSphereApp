@@ -52,23 +52,32 @@ final appRouter = GoRouter(
 final List<StatefulShellBranch> _mobileBranches = [
   // 0: Home
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
+    GoRoute(
+        path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
   ]),
   // 1: Seller
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.sellers, builder: (context, state) => const SellerScreen()),
+    GoRoute(
+        path: AppRoutes.sellers,
+        builder: (context, state) => const SellerScreen()),
   ]),
   // 2: Approval
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.approval, builder: (context, state) => const ApprovalScreen()),
+    GoRoute(
+        path: AppRoutes.approval,
+        builder: (context, state) => const ApprovalScreen()),
   ]),
   // 3: Absensi
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.attendance, builder: (context, state) => const AttendanceScreen()),
+    GoRoute(
+        path: AppRoutes.attendance,
+        builder: (context, state) => const AttendanceScreen()),
   ]),
   // 4: Akun
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.account, builder: (context, state) => const AccountScreen()),
+    GoRoute(
+        path: AppRoutes.account,
+        builder: (context, state) => const AccountScreen()),
   ]),
 ];
 
@@ -76,30 +85,43 @@ final List<StatefulShellBranch> _mobileBranches = [
 final List<StatefulShellBranch> _webBranches = [
   // 0: Home
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
+    GoRoute(
+        path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
   ]),
   // 1: Seller
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.sellers, builder: (context, state) => const SellerScreen()),
+    GoRoute(
+        path: AppRoutes.sellers,
+        builder: (context, state) => const SellerScreen()),
   ]),
   // 2: Approval
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.approval, builder: (context, state) => const ApprovalScreen()),
+    GoRoute(
+        path: AppRoutes.approval,
+        builder: (context, state) => const ApprovalScreen()),
   ]),
   // 3: System
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.system, builder: (context, state) => const SystemScreen()),
+    GoRoute(
+        path: AppRoutes.system,
+        builder: (context, state) => const SystemScreen()),
   ]),
   // 4: Absensi
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.attendance, builder: (context, state) => const AttendanceScreen()),
+    GoRoute(
+        path: AppRoutes.attendance,
+        builder: (context, state) => const AttendanceScreen()),
   ]),
   // 5: Kalender
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.calendar, builder: (context, state) => const CalendarScreen()),
+    GoRoute(
+        path: AppRoutes.calendar,
+        builder: (context, state) => const CalendarScreen()),
   ]),
   // 6: Akun
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.account, builder: (context, state) => const AccountScreen()),
+    GoRoute(
+        path: AppRoutes.account,
+        builder: (context, state) => const AccountScreen()),
   ]),
 ];

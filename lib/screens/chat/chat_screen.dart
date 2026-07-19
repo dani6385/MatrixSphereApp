@@ -10,11 +10,11 @@ class ChatScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kDarkBackground,
+      backgroundColor: kLightBackground,
       appBar: AppBar(
         title: const Text('Obrolan', style: TextStyle(color: kDarkTextPrimary)),
         centerTitle: true,
-        backgroundColor: kDarkBackground,
+        backgroundColor: kLightBackground,
       ),
       //endDrawer: AccountMenuModal(),
       body: const ChatContent(),
