@@ -63,7 +63,8 @@ jobs:
       fail-fast: false
       matrix:
         project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
-        platform: [web, android, windows, linux] 
+        # macOS kini telah ditambahkan ke dalam daftar platform yang dibangun
+        platform: [web, android, windows, linux, macos] 
 
     steps:
       - name: Checkout Code
@@ -115,10 +116,11 @@ jobs:
         if: matrix.platform == 'windows'
         run: choco install cmake --version=3.26.4 --allow-downgrade --yes --force
 
+      # --- SETUP FLUTTER (Menggunakan versi stable terbaru) ---
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'beta' # Use beta channel for newer SDK
+          channel: 'stable'
           cache: true
 
       # --- BUILD PROCESS ---
@@ -187,6 +189,7 @@ jobs:
             --groups "sphere" \
             --project "matrixsphere-c3de9"
 
+      # Unggah hasil kompilasi macOS ke artifact penyimpanan bersama dengan Windows & Linux
       - name: Upload Desktop Artifacts
         if: matrix.platform == 'windows' || matrix.platform == 'linux' || matrix.platform == 'macos'
         uses: actions/upload-artifact@v4
