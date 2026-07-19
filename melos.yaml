@@ -3,8 +3,11 @@ name: matrix_sphere_Project
 packages:
   - packages/**
   - apps/**
-  - /**
-command:
+  - "*"
+scripts:
   bootstrap:
-    run: flutter pub get
-    run: flutter clean
+    run: |
+      melos clean
+      melos bootstrap
+      flutter pub get
+    description: Membersihkan cache dan menginstal dependensi di semua paket.
