@@ -11,7 +11,7 @@ permissions:
   id-token: 'write'
 
 jobs:
-  # 1. JOB TO DETECT CHANGES
+# 1. JOB TO DETECT CHANGES
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
@@ -52,7 +52,7 @@ jobs:
           echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
 
 
-  # 2. UNIFIED MULTIPLATFORM BUILD JOB
+# 2. UNIFIED MULTIPLATFORM BUILD JOB
   build:
     needs: detect-changes
     if: needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != ''
@@ -63,7 +63,7 @@ jobs:
       matrix:
         project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
         platform: [web, android, windows, linux, macos]
-        # Pemetaan OS yang eksplisit dan aman:
+# Pemetaan OS yang eksplisit dan aman:
         include:
           - platform: web
             os: ubuntu-latest
@@ -128,15 +128,18 @@ jobs:
       - name: Downgrade CMake for Windows
         if: matrix.platform == 'windows'
         run: choco install cmake --version=3.26.4 --allow-downgrade --yes --force
-
-      # --- SETUP FLUTTER (Menggunakan versi stable terbaru) ---
+# KUNCI 3: Langkah krusial mengonfigurasi MSVC C++ Compiler agar terbaca oleh shell Bash di Windows
+      - name: Set up MSVC Developer Command Prompt (Windows)
+        if: matrix.platform == 'windows'
+        uses: ilammy/msvc-dev-cmd@v1
+# --- SETUP FLUTTER (Menggunakan versi stable terbaru) ---
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      # --- BUILD PROCESS ---
+# --- BUILD PROCESS ---
       - name: Configure Flutter for ${{ matrix.platform }}
         shell: bash
         run: |
@@ -179,7 +182,7 @@ jobs:
             flutter build ${{ matrix.platform }} --release
           fi
       
-      # --- DEPLOYMENT ---
+# --- DEPLOYMENT ---
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         if: matrix.platform == 'web' || matrix.platform == 'android'
@@ -202,7 +205,7 @@ jobs:
             --groups "sphere" \
             --project "matrixsphere-c3de9"
 
-      # Unggah hasil kompilasi macOS ke artifact penyimpanan bersama dengan Windows & Linux
+# Unggah hasil kompilasi macOS ke artifact penyimpanan bersama dengan Windows & Linux
       - name: Upload Desktop Artifacts
         if: matrix.platform == 'windows' || matrix.platform == 'linux' || matrix.platform == 'macos'
         uses: actions/upload-artifact@v4
