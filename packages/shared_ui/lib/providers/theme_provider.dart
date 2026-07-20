@@ -9,4 +9,6 @@ class ThemeProvider with ChangeNotifier {
     _themeMode = mode;
     notifyListeners();
   }
+
+  void toggleTheme() {}
 }

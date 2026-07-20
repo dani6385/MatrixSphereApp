@@ -6,6 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_body.dart';
+import '../setting/setting_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -20,6 +21,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: kLightSurface,
       appBar: const HomeAppBar(),
       drawer: const MenuModel(), // Sesuaikan nama kelas menu samping Anda (MenuModel atau AccountMenuModal)
+      endDrawer: const SettingScreen(), 
       body: const HomeBody(),
     );
   }

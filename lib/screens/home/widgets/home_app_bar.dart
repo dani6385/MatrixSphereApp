@@ -32,10 +32,14 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             final messages = chatProvider.unreadMessagesList;
 
             return PopupMenuButton<String>(
-              icon: Badge(
-                label: Text('${messages.length}'),
-                isLabelVisible: messages.isNotEmpty,
-                child: const Icon(Icons.chat),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                child: Badge(
+                  label: Text('${messages.length}'),
+                  isLabelVisible: messages.isNotEmpty,
+                  child: const Icon(Icons.chat),
+                ),
               ),
               onSelected: (value) {
                 if (value == 'see_all') {
