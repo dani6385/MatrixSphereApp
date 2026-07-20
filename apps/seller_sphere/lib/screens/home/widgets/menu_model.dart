@@ -167,7 +167,7 @@ class MenuModel extends StatelessWidget {
           style: textTheme.bodyLarge?.copyWith(color: kDarkTextPrimary)),
       subtitle: Text(subtitle,
           style: textTheme.bodySmall?.copyWith(color: kDarkTextSecondary)),
-      onTap: () {},
+      onTap: onTap,
     );
   }
 
