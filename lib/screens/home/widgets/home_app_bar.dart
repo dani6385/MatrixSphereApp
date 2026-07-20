@@ -1,8 +1,6 @@
-// lib/screens/home/widgets/home_app_bar.dart
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_ui/shared_ui.dart';
+//import 'package:shared_ui/shared_ui.dart';
 import 'package:matrix_sphere/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import '../../chat/providers/chat_provider.dart';
@@ -26,73 +24,29 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
 
       actions: [
+        // --- AWAL PERUBAHAN ---
+        // Menggunakan IconButton untuk navigasi langsung ke halaman chat
         Builder(
           builder: (context) {
+            // Dapatkan provider dan daftar pesan yang belum dibaca
             final chatProvider = context.watch<ChatProvider>();
+            // Asumsi unreadMessagesList adalah List<String> atau bisa di-length
             final messages = chatProvider.unreadMessagesList;
 
-            return PopupMenuButton<String>(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                child: Badge(
-                  label: Text('${messages.length}'),
-                  isLabelVisible: messages.isNotEmpty,
-                  child: const Icon(Icons.chat),
-                ),
+            return IconButton(
+              icon: Badge(
+                label: Text('${messages.length}'),
+                isLabelVisible: messages.isNotEmpty,
+                child: const Icon(Icons.chat),
               ),
-              onSelected: (value) {
-                if (value == 'see_all') {
-                  GoRouter.of(context).push(AppRoutes.chat);
-                } else {
-                  GoRouter.of(context).push(AppRoutes.chat);
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                if (messages.isEmpty) {
-                  return [
-                    const PopupMenuItem<String>(
-                      enabled: false,
-                      child: Text(
-                        'Tidak ada pesan baru',
-                        style: TextStyle(color: kDarkTextSecondary),
-                      ),
-                    )
-                  ];
-                }
-                final List<PopupMenuEntry<String>> items =
-                    messages.map((message) {
-                  return PopupMenuItem<String>(
-                    value: message,
-                    child: Text(
-                      message,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  );
-                }).toList();
-
-                items.addAll([
-                  const PopupMenuDivider(),
-                  const PopupMenuItem<String>(
-                    value: 'see_all',
-                    child: Center(
-                      child: Text(
-                        'Lihat Semua Pesan',
-                        style: TextStyle(
-                          color: kBlueSecondary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ]);
-                return items;
+              onPressed: () {
+                // Navigasi ke halaman chat saat ikon ditekan
+                GoRouter.of(context).push(AppRoutes.chat);
               },
             );
           },
         ),
+        // --- AKHIR PERUBAHAN ---
         Builder(
           builder: (context) => IconButton(
             icon: const Icon(
