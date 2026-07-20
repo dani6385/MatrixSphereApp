@@ -10,7 +10,6 @@ class MenuModel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     final screenWidth = MediaQuery.of(context).size.width;
 
     return SizedBox(
@@ -26,7 +25,7 @@ class MenuModel extends StatelessWidget {
                 child: Row(
                   children: [
                     Text('Menu Akun',
-                        style: textTheme.titleLarge
+                        style: context.titleLarge
                             ?.copyWith(color: kDarkTextPrimary)),
                     const Spacer(),
                     IconButton(
@@ -60,7 +59,7 @@ class MenuModel extends StatelessWidget {
                           backgroundColor: kBrandPrimary.withOpacity(0.15),
                           child: Text(
                             'MA',
-                            style: textTheme.headlineMedium?.copyWith(
+                            style: context.headlineMedium?.copyWith(
                               color: kBrandPrimary,
                               fontWeight: FontWeight.bold,
                             ),
@@ -69,7 +68,7 @@ class MenuModel extends StatelessWidget {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       Text('Matrix Admin',
-                          style: textTheme.titleLarge
+                          style: context.titleLarge
                               ?.copyWith(color: kDarkTextPrimary)),
                       const SizedBox(height: AppSpacing.xs),
                       Row(
@@ -86,7 +85,7 @@ class MenuModel extends StatelessWidget {
                           const SizedBox(width: AppSpacing.xs),
                           Text(
                             'Super Administrator',
-                            style: textTheme.bodyMedium
+                            style: context.bodyMedium
                                 ?.copyWith(color: kDarkTextSecondary),
                           ),
                         ],
@@ -141,7 +140,7 @@ class MenuModel extends StatelessWidget {
                       _buildLogoutButton(context),
                       const SizedBox(height: AppSpacing.md),
                       Text('Matrix Sphere v1.4.2',
-                          style: textTheme.bodySmall
+                          style: context.bodySmall
                               ?.copyWith(color: kDarkTextSecondary)),
                       const SizedBox(height: AppSpacing.md),
                     ],
@@ -160,14 +159,13 @@ class MenuModel extends StatelessWidget {
       required String title,
       required String subtitle,
       required VoidCallback? onTap}) {
-    final textTheme = Theme.of(context).textTheme;
     return ListTile(
       leading: Icon(icon, color: kDarkTextSecondary),
       title: Text(title,
-          style: textTheme.bodyLarge?.copyWith(color: kDarkTextPrimary)),
+          style: context.bodyLarge?.copyWith(color: kDarkTextPrimary)),
       subtitle: Text(subtitle,
-          style: textTheme.bodySmall?.copyWith(color: kDarkTextSecondary)),
-      onTap: () {},
+          style: context.bodySmall?.copyWith(color: kDarkTextSecondary)),
+      onTap: onTap,
     );
   }
 
@@ -181,13 +179,13 @@ class MenuModel extends StatelessWidget {
         leading: const Icon(Icons.exit_to_app, color: kAlertRed), // Warna ikon
         title: Text(
           'Log Keluar',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+          style: context.bodyLarge?.copyWith(
                 color: kAlertRed, // Warna teks
               ),
         ),
         subtitle: Text(
           'Sesi akun Anda',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          style: context.bodySmall?.copyWith(
                 color: kDarkTextSecondary, // Warna subjudul
               ),
         ),

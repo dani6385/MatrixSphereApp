@@ -58,7 +58,7 @@ class AppTheme {
     textTheme: kTextTheme.apply(
       // Terapkan TextTheme
       bodyColor: kDarkTextPrimary, // Warna default untuk body
-      displayColor: kDarkTextPrimary, // Warna default untuk headline/display
+      displayColor: kDarkTextSecondary, // Warna default untuk headline/display
     ),
     appBarTheme: AppBarTheme(
       backgroundColor: kDarkSurface,
@@ -75,7 +75,11 @@ TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
 
 extension AppThemeExtensions on BuildContext {
   TextTheme get textTheme => Theme.of(this).textTheme;
-  TextStyle? get bodySmall => textTheme.bodySmall;
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
+  TextStyle? get titleLarge => textTheme.titleLarge;
   TextStyle? get titleMedium => textTheme.titleMedium;
+  TextStyle? get bodyLarge => textTheme.bodyLarge;
+  TextStyle? get bodyMedium => textTheme.bodyMedium;
+  TextStyle? get bodySmall => textTheme.bodySmall;
+  TextStyle? get headlineMedium => textTheme.headlineMedium;
 }

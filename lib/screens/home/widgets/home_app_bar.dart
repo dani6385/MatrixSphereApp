@@ -1,11 +1,11 @@
 // lib/screens/home/widgets/home_app_bar.dart
 
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:matrix_sphere/routes/app_routes.dart';
 import 'package:provider/provider.dart';
-import '../../chat/providers/chat_provider.dart';
+import '../../../chat/providers/chat_provider.dart';
+import '../home_screen.dart'; // 1. PASTIKAN IMPORT HOMESCREEN
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -14,21 +14,22 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Home'),
-      leading: Builder(
-        builder: (context) => IconButton(
-          icon: const Icon(Icons.account_circle),
-          onPressed: () {
-            Scaffold.of(context).openEndDrawer(); // Membuka menu samping kanan
-          },
-        ),
+      
+      // 2. KODE LEADING MENJADI LEBIH SIMPEL & DIJAMIN AKTIF
+      leading: IconButton(
+        icon: const Icon(Icons.account_circle),
+        onPressed: () {
+          // Membuka laci secara paksa menggunakan GlobalKey milik HomeScreen
+          HomeScreen.scaffoldKey.currentState?.openDrawer(); 
+        },
       ),
+      
       actions: [
         Builder(
           builder: (context) {
             final chatProvider = context.watch<ChatProvider>();
             final messages = chatProvider.unreadMessagesList;
 
-            // MENGGUNAKAN POPUMENUBUTTON UNTUK DROPDOWN YANG BISA DIKLIK
             return PopupMenuButton<String>(
               icon: Badge(
                 label: Text('${messages.length}'),
@@ -49,7 +50,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       enabled: false,
                       child: Text(
                         'Tidak ada pesan baru',
-                        style: TextStyle(color: kDarkTextSecondary),
+                        style: TextStyle(color: Colors.grey),
                       ),
                     )
                   ];
@@ -75,13 +76,14 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: Text(
                         'Lihat Semua Pesan',
                         style: TextStyle(
-                          color: kBlueSecondary,
+                          color: Colors.blue,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                 ]);
+
                 return items;
               },
             );
