@@ -45,6 +45,7 @@ const Color kSlateBorderLight = kLightBorder;
 const Color kTextOnLightPrimary = kLightTextPrimary;
 const Color kTextOnLightSecondary = kLightTextSecondary;
 
+const Color kDarkOutline = Color.fromARGB(57, 17, 16, 16);
 const Color kInfoColor = Color(0xFF0288D1); // NeonCyan
 const Color kRadiantRose = Color(0xFFE91E63);
 const Color kNeonCyan = Color(0xFF00E5FF);
