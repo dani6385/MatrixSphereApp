@@ -6,7 +6,7 @@ import '../navigation/app_navigator.dart';
 //import '../screens/approval/approval_detail_screen.dart';
 //import '../screens/calendar/calendar_screen.dart';
 import '../screens/home/home_screen.dart';
-//import '../screens/seller/seller_screen.dart';
+//import '../screens/sellers/seller_screen.dart';
 //import '../screens/system/system_screen.dart';
 import '../screens/chat/chat_screen.dart';
 import 'app_routes.dart';
@@ -64,12 +64,7 @@ final appRouter = GoRouter(
       ],
     ),
     // Rute di luar ShellRoute
-    /*GoRoute(
-      path: AppRoutes.approvalDetail,
-      builder: (context, state) => const ApprovalDetailScreen(
-        approvalId: '',
-      ),
-    ),*/
+    
     GoRoute(
       path: AppRoutes.chat,
       builder: (context, state) => const ChatScreen(),
