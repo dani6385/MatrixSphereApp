@@ -201,7 +201,8 @@ jobs:
         run: |
           APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
-            --app "${{ steps.vars.outputs.app_id }}" \
+            # --app "${{ steps.vars.outputs.app_id }}" \
+            --app "${{ secrets.app_id }}" \ 
             --groups "sphere" \
             --project "matrixsphere-c3de9"
 
