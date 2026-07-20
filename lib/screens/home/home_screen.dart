@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import '../account/widgets/account_menu_modal.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
+import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_body.dart';
 
