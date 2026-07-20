@@ -6,7 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
 import 'widgets/seller_app_bar.dart';
 import 'widgets/seller_body.dart';
-import '../setting/setting_screen.dart';
+import '../settings/setting_screen.dart';
 
 class SellerScreen extends StatelessWidget {
   const SellerScreen({super.key});

@@ -9,6 +9,7 @@ import '../screens/home/home_screen.dart';
 import '../screens/sellers/seller_screen.dart';
 import '../screens/system/system_screen.dart';
 import '../screens/chat/chat_screen.dart';
+import '../screens/settings/setting_screen.dart';
 import 'app_routes.dart';
 
 final appRouter = GoRouter(
@@ -60,6 +61,11 @@ final appRouter = GoRouter(
           GoRoute(
               path: AppRoutes.account,
               builder: (context, state) => const AccountScreen()),
+        ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
+              path: AppRoutes.settings,
+              builder: (context, state) => const SettingScreen()),
         ]),
       ],
     ),

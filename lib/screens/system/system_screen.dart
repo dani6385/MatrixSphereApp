@@ -6,7 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
 import 'widgets/system_app_bar.dart';
 import 'widgets/System_body.dart';
-import '../setting/setting_screen.dart';
+import '../settings/setting_screen.dart';
 
 class SystemScreen extends StatelessWidget {
   const SystemScreen({super.key});

@@ -3,22 +3,26 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import 'widgets/menu_model.dart';
+import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_body.dart';
+import 'package:seller_sphere/screens/settings/setting_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  // 1. DEKLARASIKAN GLOBALKEY DI SINI
+  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: kLightSurface,
-      appBar: HomeAppBar(),
-      drawer: MenuModel(),
-      
-      // Menggunakan HomeBody murni untuk menghindari crash tata letak
-      body: HomeBody(), 
+    return Scaffold(
+      key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
+      backgroundColor: kBrandTertiary,
+      appBar: const HomeAppBar(),
+      drawer: const MenuModel(), // Sesuaikan nama kelas menu samping Anda (MenuModel atau AccountMenuModal)
+      endDrawer: const SettingScreen(), 
+      body: const HomeBody(),
     );
   }
 }

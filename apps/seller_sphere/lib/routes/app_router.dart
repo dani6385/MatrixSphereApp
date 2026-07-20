@@ -8,6 +8,7 @@ import '../navigation/app_navigator.dart';
 import '../screens/home/home_screen.dart'; 
 import '../screens/streams/stream_screen.dart'; 
 //import '../screens/system/system_screen.dart';
+import '../screens/settings/setting_screen.dart';
 import '../screens/chat/chat_screen.dart';
 import 'app_routes.dart';
 
@@ -30,7 +31,15 @@ final appRouter = GoRouter(
           GoRoute(
               path: AppRoutes.streaming, 
               builder: (context, state) => const StreamScreen()), 
-        ]),/*
+        ]),
+        
+        // Branch 1: Seller
+        StatefulShellBranch(routes: [
+          GoRoute(
+              path: AppRoutes.settings, 
+              builder: (context, state) => const SettingScreen()), 
+        ]),
+        /*
         // Branch 2: Approval
         StatefulShellBranch(routes: [
           GoRoute(
