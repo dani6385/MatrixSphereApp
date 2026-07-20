@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
-import '../screens/chat/providers/chat_provider.dart';
+import '../screens/chat/Providers/chat_provider.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
