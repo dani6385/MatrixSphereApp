@@ -9,7 +9,6 @@ import '../screens/home/home_screen.dart';
 import '../screens/sellers/seller_screen.dart';
 import '../screens/system/system_screen.dart';
 import '../screens/chat/chat_screen.dart';
-import '../screens/chat/providers/chat_provider.dart';
 import 'app_routes.dart';
 
 final appRouter = GoRouter(
