@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
-      backgroundColor: kLightSurface,
+      backgroundColor: kElectricBlue,
       appBar: const HomeAppBar(),
       drawer: const MenuModel(), // Sesuaikan nama kelas menu samping Anda (MenuModel atau AccountMenuModal)
       endDrawer: const SettingScreen(), 

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart'; // Tambahkan import ini untuk Platform
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:matrix_sphere/screens/chat/providers/chat_provider.dart';
 
 import 'package:shared_services/shared_services.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +48,11 @@ class MatrixSphere extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+      ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           // Ganti ke MaterialApp.router
