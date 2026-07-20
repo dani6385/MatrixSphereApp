@@ -116,6 +116,12 @@
       "languageVersion": "3.10"
     },
     {
+      "name": "cupertino_icons",
+      "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/cupertino_icons-1.0.9",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
       "name": "curved_navigation_bar",
       "rootUri": "file:///C:/Users/Dan'z_PC/AppData/Local/Pub/Cache/hosted/pub.dev/curved_navigation_bar-1.0.6",
       "packageUri": "lib/",

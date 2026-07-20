@@ -11,6 +11,7 @@
       "version": "1.0.0+1",
       "dependencies": [
         "camera",
+        "cupertino_icons",
         "firebase_analytics",
         "firebase_core",
         "firebase_crashlytics",
@@ -115,6 +116,11 @@
         "test_api",
         "vector_math"
       ]
+    },
+    {
+      "name": "cupertino_icons",
+      "version": "1.0.9",
+      "dependencies": []
     },
     {
       "name": "table_calendar",

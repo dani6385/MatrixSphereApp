@@ -22,6 +22,7 @@ dependencies:
     path: packages/shared_services
   shared_ui:
     path: packages/shared_ui
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
