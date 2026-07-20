@@ -1,123 +1,165 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'package:go_router/go_router.dart';
+import 'package:matrix_sphere/routes/app_routes.dart';
 
+/// A Model that displays the menu.
 class MenuModel extends StatelessWidget {
+  /// Creates an [MenuModel] widget.
   const MenuModel({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Drawer(
-      width: MediaQuery.of(context).size.width * 0.85,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.close, color: kDarkTextPrimary),
-            onPressed: () => Navigator.of(context).pop(),
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return SizedBox(
+      width: screenWidth * 0.85, // Drawer takes 85% of screen width
+      child: Drawer(
+        backgroundColor: kDarkBorder,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.md),
+                child: Row(
+                  children: [
+                    Text('Menu Akun',
+                        style: context.titleLarge
+                            ?.copyWith(color: kDarkTextPrimary)),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.account_balance,
+                          color: kDarkTextPrimary),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // PERBAIKAN: Mengganti avatar gambar dengan Label Inisial Akun ("MA")
+                      // GANTI BLOK CircleAvatar lama dengan kode ini:
+                      GestureDetector(
+                        onTap: () {
+                          // 1. Tutup Drawer samping terlebih dahulu agar transisi layar bersih
+                          Navigator.of(context).pop();
+
+                          // 2. Navigasi ke halaman akun menggunakan GoRouter
+                          GoRouter.of(context).push(AppRoutes
+                              .account); // Sesuaikan rute dengan nama rute akun Anda
+                        },
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: kBrandPrimary.withOpacity(0.15),
+                          child: Text(
+                            'MA',
+                            style: context.headlineMedium?.copyWith(
+                              color: kBrandPrimary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      Text('Matrix Admin',
+                          style: context.titleLarge
+                              ?.copyWith(color: kDarkTextPrimary)),
+                      const SizedBox(height: AppSpacing.xs),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 8,
+                            height: 8,
+                            decoration: const BoxDecoration(
+                              color: kBlueSecondary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.xs),
+                          Text(
+                            'Seller',
+                            style: context.bodyMedium
+                                ?.copyWith(color: kDarkTextSecondary),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                      _buildMenuItem(
+                        context,
+                        icon: Icons.search,
+                        title: 'Satu',
+                        subtitle: 'Satu',
+                        onTap: () {
+                          // 1. Tutup drawer samping agar transisi navigasi rapi
+                          Navigator.of(context).pop();
+
+                          // 2. Navigasi ke halaman chat menggunakan GoRouter
+                          //GoRouter.of(context).push(AppRoutes.chat);
+                        },
+                      ),
+                      _buildMenuItem(
+                        context,
+                        icon: Icons.search,
+                        title: 'Dua',
+                        subtitle: 'Dua',
+                        onTap: () {
+                          // 1. Tutup drawer samping agar transisi navigasi rapi
+                          Navigator.of(context).pop();
+
+                          // 2. Navigasi ke halaman chat menggunakan GoRouter
+                          //GoRouter.of(context).push(AppRoutes.calendar);
+                        },
+                      ),
+                      /*_buildMenuItem(
+                        context,
+                        icon: Icons.play_lesson,
+                        title: 'akan datang',
+                        subtitle: 'menu selanjutnya',
+                      ),*/
+                      _buildMenuItem(
+                        context,
+                        icon: Icons.search,
+                        title: 'Tiga',
+                        subtitle: 'Tiga',
+                        onTap: () {
+                          // 1. Tutup drawer samping agar transisi navigasi rapi
+                          Navigator.of(context).pop();
+
+                          // 2. Navigasi ke halaman chat menggunakan GoRouter
+                          //GoRouter.of(context).push(AppRoutes.settings);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-          title: Text(
-            'Menu Akun',
-            style: textTheme.titleMedium,
-          ),
-        ),
-        body: ListView(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          children: [
-            _buildProfileSection(context, textTheme),
-            const SizedBox(height: AppSpacing.lg),
-            _buildMenuItem(
-                context, textTheme, Icons.person_outline, 'Profil Saya'),
-            _buildMenuItem(context, textTheme, Icons.business_center_outlined,
-                'Ganti Perusahaan'),
-            _buildMenuItem(context, textTheme, Icons.security_outlined,
-                'Keamanan & Privasi'),
-            _buildThemeMenuItem(context, textTheme),
-            const Divider(color: kDarkTextSecondary, height: AppSpacing.xxl),
-            _buildMenuItem(
-                context, textTheme, Icons.help_outline, 'Pusat Bantuan'),
-            _buildMenuItem(
-                context, textTheme, Icons.info_outline, 'Tentang Aplikasi'),
-            const SizedBox(height: AppSpacing.xxl),
-            _buildLogoutButton(context, textTheme),
-            const SizedBox(height: AppSpacing.lg),
-            _buildAppVersion(textTheme),
-          ],
         ),
       ),
     );
   }
 
-  Widget _buildProfileSection(BuildContext context, TextTheme textTheme) {
-    return Row(
-      children: [
-        const CircleAvatar(
-          radius: 30,
-          backgroundImage: AssetImage('images/img_profile-avatar.jpg'),
-        ),
-        const SizedBox(width: AppSpacing.md),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Matrix Admin', style: textTheme.titleLarge),
-            Text('Administrator', style: textTheme.bodyMedium),
-          ],
-        ),
-        const Spacer(),
-        IconButton(
-          icon: const Icon(Icons.edit_outlined, color: kDarkTextPrimary),
-          onPressed: () {},
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMenuItem(
-      BuildContext context, TextTheme textTheme, IconData icon, String title) {
+  Widget _buildMenuItem(BuildContext context,
+      {required IconData icon,
+      required String title,
+      required String subtitle,
+      required VoidCallback? onTap}) {
     return ListTile(
-      leading: Icon(icon, color: textTheme.bodyLarge?.color),
-      title: Text(title, style: textTheme.bodyLarge),
-      trailing: const Icon(Icons.chevron_right, color: kDarkTextSecondary),
-      onTap: () {},
+      leading: Icon(icon, color: kDarkTextSecondary),
+      title: Text(title,
+          style: context.bodyLarge?.copyWith(color: kDarkTextPrimary)),
+      subtitle: Text(subtitle,
+          style: context.bodySmall?.copyWith(color: kDarkTextSecondary)),
+      onTap: onTap,
     );
   }
 
-  Widget _buildThemeMenuItem(BuildContext context, TextTheme textTheme) {
-    return ListTile(
-      leading: const Icon(Icons.palette_outlined, color: kDarkTextPrimary),
-      title: Text('Ubah Tema', style: textTheme.bodyLarge),
-      trailing: const Icon(Icons.chevron_right, color: kDarkTextSecondary),
-      onTap: () {
-        // TODO: Implement theme picker logic, perhaps via a callback
-      },
-    );
-  }
-
-  Widget _buildLogoutButton(BuildContext context, TextTheme textTheme) {
-    return OutlinedButton.icon(
-      icon: const Icon(Icons.logout, color: kAlertRed),
-      label: Text(
-        'Keluar',
-        style: textTheme.labelLarge?.copyWith(color: kAlertRed),
-      ),
-      style: OutlinedButton.styleFrom(
-        side: const BorderSide(color: kAlertRed),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.sm),
-        ),
-      ),
-      onPressed: () {},
-    );
-  }
-
-  Widget _buildAppVersion(TextTheme textTheme) {
-    return Center(
-      child: Text(
-        'Matrix App v1.0.0',
-        style: textTheme.bodySmall,
-      ),
-    );
-  }
 }

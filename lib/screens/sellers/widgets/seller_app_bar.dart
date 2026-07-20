@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
+//import 'package:go_router/go_router.dart';
+//import 'package:shared_ui/shared_ui.dart';
+//import 'package:matrix_sphere/routes/app_routes.dart';
+//import 'package:provider/provider.dart';
+//import '../../chat/providers/chat_provider.dart';
+import '../seller_screen.dart'; // 1. PASTIKAN IMPORT SellerSCREEN
 
 class SellerAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SellerAppBar({super.key});
@@ -7,41 +12,29 @@ class SellerAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: kDarkBackground,
-      elevation: 0,
-      title: const Text('Matrix Sphere',
-          style:
-              TextStyle(color: kDarkTextPrimary, fontWeight: FontWeight.bold)),
+      title: const Text('Seller'),
+
+      // 2. KODE LEADING MENJADI LEBIH SIMPEL & DIJAMIN AKTIF
+      leading: IconButton(
+        icon: const Icon(Icons.group),
+        onPressed: () {
+          // Membuka laci secara paksa menggunakan GlobalKey milik SellerScreen
+          SellerScreen.scaffoldKey.currentState?.openDrawer();
+        },
+      ),
+
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: CircleAvatar(
-            backgroundColor: Colors.grey[850],
-            child: const Icon(Icons.chat_bubble_outline,
-                color: kWarmOrange, size: 20),
+        Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(
+                Icons.calendar_month), // Menggunakan ikon roda gigi (pengaturan)
+            onPressed: () {
+              // Membuka laci samping sebelah kanan (endDrawer)
+              Scaffold.of(context).openEndDrawer();
+            },
           ),
         ),
       ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(30.0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            children: [
-              Container(
-                width: 8,
-                height: 8,
-                decoration: const BoxDecoration(
-                  color: kWarmOrange,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 8),
-              const Text('Local Mode', style: TextStyle(color: kWarmOrange)),
-            ],
-          ),
-        ),
-      ),
     );
   }
 
