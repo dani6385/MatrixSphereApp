@@ -81,11 +81,11 @@ class _AppNavigatorState extends State<AppNavigator> {
         index: widget.navigationShell.currentIndex,
         height: 65,
         items: const <Widget>[
-          Icon(Icons.home, size: 30),
-          Icon(Icons.business, size: 30),
-          Icon(Icons.system_update, size: 30),
-          Icon(Icons.fingerprint, size: 30),
-          Icon(Icons.calendar_month, size: 30), // Ditambahkan
+          Icon(Icons.home, size: 30, color: kDarkTextSecondary),
+          Icon(Icons.business, size: 30, color: kDarkTextSecondary),
+          Icon(Icons.system_update_outlined, size: 30, color: kDarkTextSecondary),
+          Icon(Icons.fingerprint, size: 30, color: kDarkTextSecondary),
+          Icon(Icons.system_update, size: 30, color: kDarkTextSecondary), // Ditambahkan
         ],
         onTap: _onItemTapped,
         color: kDarkBackground,

@@ -76,7 +76,7 @@ final List<StatefulShellBranch> _mobileBranches = [
   // 4: Akun
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.account,
+        path: AppRoutes.system,
         builder: (context, state) => const AccountScreen()),
   ]),
 ];
