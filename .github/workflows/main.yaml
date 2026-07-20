@@ -146,18 +146,18 @@ jobs:
           cd ${{ steps.vars.outputs.dir }}
           if [ "${{ matrix.platform }}" = "web" ]; then
             flutter config --enable-web
-          # elif [ "${{ matrix.platform }}" = "windows" ]; then
-            # flutter config --enable-windows-desktop
-          # elif [ "${{ matrix.platform }}" = "linux" ]; then
-            # flutter config --enable-linux-desktop
-          # elif [ "${{ matrix.platform }}" = "macos" ]; then
-            # flutter config --enable-macos-desktop
-            # flutter config --no-enable-swift-package-manager
-            # flutter create . --platforms=macos
-            # if [ -f "macos/Podfile" ]; then
-              # sed -i '' "s/# platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
-              # sed -i '' "s/platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
-              # sed -i '' "s/MACOSX_DEPLOYMENT_TARGET = 10.14;/MACOSX_DEPLOYMENT_TARGET = 10.15;/g" macos/Runner.xcodeproj/project.pbxproj
+          elif [ "${{ matrix.platform }}" = "windows" ]; then
+            flutter config --enable-windows-desktop
+          elif [ "${{ matrix.platform }}" = "linux" ]; then
+            flutter config --enable-linux-desktop
+          elif [ "${{ matrix.platform }}" = "macos" ]; then
+            flutter config --enable-macos-desktop
+            flutter config --no-enable-swift-package-manager
+            flutter create . --platforms=macos
+            if [ -f "macos/Podfile" ]; then
+              sed -i '' "s/# platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
+              sed -i '' "s/platform :osx, '10.14'/platform :osx, '10.15'/g" macos/Podfile
+              sed -i '' "s/MACOSX_DEPLOYMENT_TARGET = 10.14;/MACOSX_DEPLOYMENT_TARGET = 10.15;/g" macos/Runner.xcodeproj/project.pbxproj
             fi
           fi
           
