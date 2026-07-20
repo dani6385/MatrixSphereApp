@@ -5,8 +5,8 @@ import '../navigation/app_navigator.dart';
 //import '../screens/approval/approval_screen.dart';
 //import '../screens/approval/approval_detail_screen.dart';
 //import '../screens/calendar/calendar_screen.dart';
-import '../screens/home/home_screen.dart';
-//import '../screens/sellers/seller_screen.dart';
+import '../screens/home/home_screen.dart'; 
+import '../screens/streams/stream_screen.dart'; 
 //import '../screens/system/system_screen.dart';
 import '../screens/chat/chat_screen.dart';
 import 'app_routes.dart';
@@ -26,11 +26,11 @@ final appRouter = GoRouter(
               builder: (context, state) => const HomeScreen()),
         ]),
         // Branch 1: Seller
-        /*StatefulShellBranch(routes: [
+        StatefulShellBranch(routes: [
           GoRoute(
-              path: AppRoutes.aktifitas,
-              builder: (context, state) => const SellerScreen()),
-        ]),
+              path: AppRoutes.streaming, 
+              builder: (context, state) => const StreamScreen()), 
+        ]),/*
         // Branch 2: Approval
         StatefulShellBranch(routes: [
           GoRoute(

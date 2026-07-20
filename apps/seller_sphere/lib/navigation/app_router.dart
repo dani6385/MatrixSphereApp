@@ -59,7 +59,7 @@ final List<StatefulShellBranch> _mobileBranches = [
   // 1: Seller
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.sellers,
+        path: AppRoutes.streaming,
         //builder: (context, state) => const SellerScreen()
         ),
   ]),
@@ -96,7 +96,7 @@ final List<StatefulShellBranch> _webBranches = [
   // 1: Seller
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.sellers,
+        path: AppRoutes.streaming,
         //builder: (context, state) => const SellerScreen()
         ),
   ]),
