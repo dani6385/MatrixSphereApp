@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:matrix_sphere/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 import '../../chat/providers/chat_provider.dart';
-//import '../home_screen.dart'; // 1. PASTIKAN IMPORT HOMESCREEN
+import '../home_screen.dart'; // 1. PASTIKAN IMPORT HOMESCREEN
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -19,7 +19,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.account_circle),
         onPressed: () {
           // Membuka laci secara paksa menggunakan GlobalKey milik HomeScreen
-          //HomeScreen.scaffoldKey.currentState?.openDrawer();
+          HomeScreen.scaffoldKey.currentState?.openDrawer();
         },
       ),
 
