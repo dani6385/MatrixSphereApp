@@ -88,9 +88,9 @@ class _AppNavigatorState extends State<AppNavigator> {
           items: const <Widget>[
             Icon(Icons.home, size: 30, color: Colors.white),
             Icon(Icons.stream, size: 30, color: Colors.white),
-            Icon(Icons.system_update, size: 30, color: Colors.white),
-            Icon(Icons.fingerprint, size: 30, color: Colors.white),
-            Icon(Icons.calendar_month, size: 30, color: Colors.white), 
+            Icon(Icons.inventory, size: 30, color: Colors.white),
+            Icon(Icons.report, size: 30, color: Colors.white),
+            Icon(Icons.trending_up, size: 30, color: Colors.white), 
           ],
           onTap: _onItemTapped,
           color: kDarkBackground,
