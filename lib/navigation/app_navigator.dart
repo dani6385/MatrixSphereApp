@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
+import '../screens/chat/providers/chat_provider.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -74,25 +76,29 @@ class _AppNavigatorState extends State<AppNavigator> {
       );
     }
 
-    return Scaffold(
-      extendBody: true,
-      body: widget.navigationShell,
-      bottomNavigationBar: CurvedNavigationBar(
-        index: widget.navigationShell.currentIndex,
-        height: 65,
-        items: const <Widget>[
-          Icon(Icons.home, size: 30, color: kDarkTextSecondary),
-          Icon(Icons.business, size: 30, color: kDarkTextSecondary),
-          Icon(Icons.system_update_outlined, size: 30, color: kDarkTextSecondary),
-          Icon(Icons.fingerprint, size: 30, color: kDarkTextSecondary),
-          Icon(Icons.system_update, size: 30, color: kDarkTextSecondary), // Ditambahkan
-        ],
-        onTap: _onItemTapped,
-        color: kDarkBackground,
-        buttonBackgroundColor: kBrandPrimary,
-        backgroundColor: Colors.transparent,
-        animationCurve: Curves.easeInOut,
-        animationDuration: const Duration(milliseconds: 400),
+    return ChangeNotifierProvider(
+      create: (_) => ChatProvider(),
+      child: Scaffold(
+        extendBody: true,
+        body: widget.navigationShell,
+        bottomNavigationBar: CurvedNavigationBar(
+          index: widget.navigationShell.currentIndex,
+          height: 65,
+          // PERBAIKAN: Memberikan warna putih (color: Colors.white) pada setiap ikon agar terlihat kontras di latar belakang gelap
+          items: const <Widget>[
+            Icon(Icons.home, size: 30, color: Colors.white),
+            Icon(Icons.business, size: 30, color: Colors.white),
+            Icon(Icons.system_update, size: 30, color: Colors.white),
+            Icon(Icons.fingerprint, size: 30, color: Colors.white),
+            Icon(Icons.calendar_month, size: 30, color: Colors.white), 
+          ],
+          onTap: _onItemTapped,
+          color: kDarkBackground,
+          buttonBackgroundColor: kBrandPrimary,
+          backgroundColor: Colors.transparent,
+          animationCurve: Curves.easeInOut,
+          animationDuration: const Duration(milliseconds: 400),
+        ),
       ),
     );
   }
