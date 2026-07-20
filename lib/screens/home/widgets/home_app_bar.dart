@@ -15,16 +15,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Home'),
-      
+
       // 2. KODE LEADING MENJADI LEBIH SIMPEL & DIJAMIN AKTIF
       leading: IconButton(
         icon: const Icon(Icons.account_circle),
         onPressed: () {
           // Membuka laci secara paksa menggunakan GlobalKey milik HomeScreen
-          HomeScreen.scaffoldKey.currentState?.openDrawer(); 
+          HomeScreen.scaffoldKey.currentState?.openDrawer();
         },
       ),
-      
+
       actions: [
         Builder(
           builder: (context) {
@@ -56,8 +56,8 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     )
                   ];
                 }
-
-                final List<PopupMenuEntry<String>> items = messages.map((message) {
+                final List<PopupMenuEntry<String>> items =
+                    messages.map((message) {
                   return PopupMenuItem<String>(
                     value: message,
                     child: Text(
@@ -84,11 +84,20 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ),
                 ]);
-
                 return items;
               },
             );
           },
+        ),
+        Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(
+                Icons.settings), // Menggunakan ikon roda gigi (pengaturan)
+            onPressed: () {
+              // Membuka laci samping sebelah kanan (endDrawer)
+              Scaffold.of(context).openEndDrawer();
+            },
+          ),
         ),
       ],
     );
