@@ -1,35 +1,28 @@
+// lib/screens/System/System_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
+import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
 import 'widgets/system_app_bar.dart';
-import 'widgets/system_monitoring_section.dart';
-import 'widgets/active_nodes_section.dart';
-import 'widgets/console_log_section.dart';
-import 'widgets/violations_section.dart';
+import 'widgets/System_body.dart';
+import '../setting/setting_screen.dart';
 
 class SystemScreen extends StatelessWidget {
   const SystemScreen({super.key});
 
+  // 1. DEKLARASIKAN GLOBALKEY DI SINI
+  static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: kDarkBackground,
-      appBar: SystemAppBar(),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SystemMonitoringSection(),
-            SizedBox(height: AppSpacing.lg),
-            ActiveNodesSection(),
-            SizedBox(height: AppSpacing.lg),
-            ViolationsSection(),
-            SizedBox(height: AppSpacing.lg),
-            ConsoleLogSection(),
-          ],
-        ),
-      ),
+    return Scaffold(
+      key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
+      backgroundColor: kBrandTertiary,
+      appBar: const SystemAppBar(),
+      drawer: const MenuModel(), // Sesuaikan nama kelas menu samping Anda (MenuModel atau AccountMenuModal)
+      endDrawer: const SettingScreen(), 
+      body: const SystemBody(),
     );
   }
 }

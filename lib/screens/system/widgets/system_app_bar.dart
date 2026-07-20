@@ -1,50 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
+//import 'package:go_router/go_router.dart';
+//import 'package:shared_ui/shared_ui.dart';
+//import 'package:matrix_sphere/routes/app_routes.dart';
+//import 'package:provider/provider.dart';
+//import '../../chat/providers/chat_provider.dart';
+import '../system_screen.dart'; // 1. PASTIKAN IMPORT SystemSCREEN
 
 class SystemAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SystemAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     return AppBar(
-      backgroundColor: kDarkBackground,
-      elevation: 0,
-      leading: const Padding(
-        padding: EdgeInsets.all(8.0),
-        child: CircleAvatar(
-          backgroundImage: AssetImage('images/img_profile-avatar.jpg'),
-        ),
+      title: const Text('System'),
+
+      // 2. KODE LEADING MENJADI LEBIH SIMPEL & DIJAMIN AKTIF
+      leading: IconButton(
+        icon: const Icon(Icons.group),
+        onPressed: () {
+          // Membuka laci secara paksa menggunakan GlobalKey milik SystemScreen
+          SystemScreen.scaffoldKey.currentState?.openDrawer();
+        },
       ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('System Monitor',
-              style: textTheme.titleMedium?.copyWith(color: kDarkTextPrimary)),
-          Text('Konsol Ringkasan',
-              style: textTheme.bodySmall?.copyWith(color: kDarkTextSecondary)),
-        ],
-      ),
+
       actions: [
-        TextButton.icon(
-          onPressed: () {},
-          icon: const Icon(Icons.add, size: 16),
-          label: const Text('Rekonsiliasi'),
-          style: TextButton.styleFrom(
-            foregroundColor: kDarkTextPrimary,
-            backgroundColor: kDarkSecondary,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(
+                Icons.calendar_month), // Menggunakan ikon roda gigi (pengaturan)
+            onPressed: () {
+              // Membuka laci samping sebelah kanan (endDrawer)
+              Scaffold.of(context).openEndDrawer();
+            },
           ),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.cloud_outlined, color: Colors.orange),
         ),
       ],
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 30.0);
 }
