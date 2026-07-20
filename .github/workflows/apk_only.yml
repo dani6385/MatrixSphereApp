@@ -1,0 +1,136 @@
+name: Consolidated Monorepo Android Build (APK Only)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: 'read'
+  id-token: 'write'
+
+jobs:
+  # 1. JOB UNTUK MENDETEKSI PERUBAHAN BERKAS
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Paths Filter
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            seller_sphere:
+              - 'apps/seller_sphere/**'
+            matrix_sphere:
+              - 'lib/**'
+
+      - name: Generate Dynamic Matrix JSON
+        id: set-matrix
+        run: |
+          MATRIX="[]"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            MATRIX='["seller_sphere", "matrix_sphere"]'
+          else
+            SELLER="${{ steps.filter.outputs.seller_sphere }}"
+            MATRIX_SPHERE="${{ steps.filter.outputs.matrix_sphere }}"
+
+            LIST=()
+            [ "$SELLER" = "true" ] && LIST+=('"seller_sphere"')
+            [ "$MATRIX_SPHERE" = "true" ] && LIST+=('"matrix_sphere"')
+
+            if [ ${#LIST[@]} -gt 0 ]; then
+              IFS=,
+              MATRIX="[${LIST[*]}]"
+            fi
+          fi
+          echo "matrix=$MATRIX" >> $GITHUB_OUTPUT
+
+
+  # 2. JOB UNTUK MEMBANGUN APK (HANYA ANDROID)
+  build:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.matrix != '[]' && needs.detect-changes.outputs.matrix != ''
+    runs-on: ubuntu-latest # Berjalan sangat cepat di atas Linux
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Resolve Project Variables
+        id: vars
+        shell: bash
+        run: |
+          PROJECT="${{ matrix.project }}"
+          
+          if [ "$PROJECT" = "seller_sphere" ]; then
+            DIR="apps/seller_sphere"
+            echo "dir=$DIR" >> $GITHUB_OUTPUT
+            echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
+          elif [ "$PROJECT" = "matrix_sphere" ]; then
+            DIR="."
+            echo "dir=$DIR" >> $GITHUB_OUTPUT
+            echo "app_id=${{ secrets.FIREBASE_APP_ID_MATRIX }}" >> $GITHUB_OUTPUT
+          fi
+
+      # --- ENVIRONMENT SETUP ---
+      - name: Set up Java 17 for Android
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      # --- BUILD PROCESS ---
+      - name: Get Dependencies
+        shell: bash
+        run: |
+          cd ${{ steps.vars.outputs.dir }}
+          flutter clean
+          flutter pub get
+
+      - name: Build APK Release
+        shell: bash
+        run: |
+          cd ${{ steps.vars.outputs.dir }}
+          flutter build apk --release
+      
+      # --- DEPLOYMENT & ARTIFACT ---
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: 'projects/359008687014/locations/global/workloadIdentityPools/github-matrixsphere-pool/providers/github-provider'
+          service_account: 'github-actions-deployer@matrixsphere-c3de9.iam.gserviceaccount.com'
+
+      - name: Deploy to App Distribution (Android)
+        shell: bash
+        run: |
+          APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
+          npx firebase-tools appdistribution:distribute "$APK_PATH" \
+            --app "${{ steps.vars.outputs.app_id }}" \
+            --groups "sphere" \
+            --project "matrixsphere-c3de9"
+
+      # Unggah hasil kompilasi APK ke penyimpanan Artifact GitHub agar bisa diunduh langsung
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.project }}-apk-build
+          path: ${{ steps.vars.outputs.dir }}/build/app/outputs/flutter-apk/app-release.apk

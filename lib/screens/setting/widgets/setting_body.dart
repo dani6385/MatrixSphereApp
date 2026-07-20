@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-
 class SettingBody extends StatelessWidget {
   const SettingBody({super.key});
 
