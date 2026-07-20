@@ -1,6 +1,7 @@
 // lib/screens/home/widgets/home_app_bar.dart
 
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'package:go_router/go_router.dart';
 import 'package:matrix_sphere/routes/app_routes.dart';
 import 'package:provider/provider.dart';
@@ -48,7 +49,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       enabled: false,
                       child: Text(
                         'Tidak ada pesan baru',
-                        style: TextStyle(color: Colors.grey),
+                        style: TextStyle(color: kDarkTextSecondary),
                       ),
                     )
                   ];
@@ -74,14 +75,13 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
                       child: Text(
                         'Lihat Semua Pesan',
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: kBlueSecondary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
                 ]);
-
                 return items;
               },
             );
