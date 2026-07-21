@@ -13,7 +13,7 @@ class CalendarScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: kLightBackground,
       appBar: AppBar(title: const Text('Kalender')),
-      //endDrawer: const AccountMenuModal(),
+      drawer: const SideMenu(selectedRoute: MenuRoute.sellers),
       body: const CalendarContent(),
     );
   }

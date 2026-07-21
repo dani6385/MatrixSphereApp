@@ -16,6 +16,7 @@ class ChatScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: kLightBackground,
       ),
+      endDrawer: const SideMenu(selectedRoute: MenuRoute.sellers),
       //endDrawer: AccountMenuModal(),
       body: const ChatContent(),
     );

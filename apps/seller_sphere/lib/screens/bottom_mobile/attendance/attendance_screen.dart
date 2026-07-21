@@ -21,7 +21,7 @@ class AttendanScreen extends StatelessWidget {
       key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
       backgroundColor: kBrandTertiary,
       //appBar: const AttendanceAppBar(),
-      //drawer: const MenuModel(), // Sesuaikan nama kelas menu samping Anda (MenuModel atau AccountMenuModal)
+      drawer: const SideMenu(selectedRoute: MenuRoute.sellers),
       endDrawer: const SettingScreen(), 
       body: const AttendanceBody(),
     );

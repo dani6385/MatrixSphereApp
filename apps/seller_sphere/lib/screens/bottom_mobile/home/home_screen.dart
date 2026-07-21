@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
+
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_body.dart';
 import '../../settings/setting_screen.dart';
@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
       key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
       backgroundColor: kBrandTertiary,
       appBar: const HomeAppBar(),
-      drawer: const MenuModel(), // Sesuaikan nama kelas menu samping Anda (MenuModel atau AccountMenuModal)
+      drawer: const SideMenu(selectedRoute: MenuRoute.account),
       endDrawer: const SettingScreen(), 
       body: const HomeBody(),
     );

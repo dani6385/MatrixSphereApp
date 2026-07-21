@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/routes/app_routes.dart';
 import 'package:provider/provider.dart';
-import '../../chat/Providers/chat_provider.dart';
+import '../../../chat/Providers/chat_provider.dart';
 
 class StreamAppBar extends StatelessWidget implements PreferredSizeWidget {
   const StreamAppBar({super.key});
