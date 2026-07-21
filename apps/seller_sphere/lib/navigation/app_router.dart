@@ -8,7 +8,7 @@ import 'package:seller_sphere/routes/app_routes.dart';
 import '../screens/bottom_mobile/home/home_screen.dart';
 import '../screens/bottom_mobile/sellers/seller_screen.dart';
 import '../screens/approval/approval_screen.dart';
-import '../screens/bottom_mobile/system/system_screen.dart';
+import '../screens/bottom_mobile/status/status_screen.dart';
 import '../screens/bottom_mobile/attendance/attendance_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/account/account_screen.dart';

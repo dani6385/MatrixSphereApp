@@ -6,7 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_body.dart';
-import '../../settings/setting_screen.dart';
+import 'package:seller_sphere/screens/settings/setting_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

@@ -4,10 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:seller_sphere/screens/bottom_mobile/attendance/widgets/attendance_body.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-//import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
-//import 'widgets/attendance_app_bar.dart';
-//import 'widgets/attendance_body.dart';
-import '../../settings/setting_screen.dart';
 
 class AttendanScreen extends StatelessWidget {
   const AttendanScreen({super.key});
@@ -22,7 +18,7 @@ class AttendanScreen extends StatelessWidget {
       backgroundColor: kBrandTertiary,
       //appBar: const AttendanceAppBar(),
       drawer: const SideMenu(selectedRoute: MenuRoute.sellers),
-      endDrawer: const SettingScreen(), 
+      //endDrawer: const SettingScreen(), 
       body: const AttendanceBody(),
     );
   }

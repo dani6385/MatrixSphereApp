@@ -3,8 +3,8 @@ import 'package:shared_ui/shared_ui.dart';
 import '../widgets/setting_app_bar.dart';
 import '../widgets/setting_body.dart';
 
-class SettingsContent extends StatelessWidget {
-  const SettingsContent({super.key});
+class StatussContent extends StatelessWidget {
+  const StatussContent({super.key});
 
   @override
   Widget build(BuildContext context) {

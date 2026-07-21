@@ -6,7 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 //import '../../../widgets/side_menu.dart';
 import 'widgets/system_app_bar.dart';
 import 'widgets/System_body.dart';
-import '../../settings/setting_screen.dart';
+
 
 class SystemScreen extends StatelessWidget {
   const SystemScreen({super.key});
@@ -21,7 +21,7 @@ class SystemScreen extends StatelessWidget {
       backgroundColor: kBrandTertiary,
       appBar: const SystemAppBar(),
       drawer: const SideMenu(selectedRoute: MenuRoute.system),
-      endDrawer: const SettingScreen(), 
+      //endDrawer: const SettingScreen(),
       body: const SystemBody(),
     );
   }

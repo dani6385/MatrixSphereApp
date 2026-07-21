@@ -6,7 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 //import '../../widgets/side_menu.dart';
 //import 'widgets/approval_app_bar.dart';
 //import 'widgets/approval_body.dart';
-import '../settings/setting_screen.dart';
+
 
 class ApprovalScreen extends StatelessWidget {
   const ApprovalScreen({super.key});
@@ -21,7 +21,7 @@ class ApprovalScreen extends StatelessWidget {
       backgroundColor: kBrandTertiary,
       //appBar: const ApprovalAppBar(),
       drawer: const SideMenu(selectedRoute: MenuRoute.approval),
-      endDrawer: const SettingScreen(), 
+      //endDrawer: const SettingScreen(), 
       //body: const ApprovalBody(),
     );
   }

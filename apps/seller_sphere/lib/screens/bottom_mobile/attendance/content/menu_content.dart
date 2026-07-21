@@ -66,22 +66,23 @@ class _MenuContentState extends State<MenuContent> {
       leading: Icon(icon, color: kDarkTextSecondary),
       title: Text(title, style: textTheme.bodyMedium),
       onTap: () {
+        // Simpan router sebelum operasi asinkron
+        final router = GoRouter.of(context);
         // Menutup menu bottom sheet sebelum navigasi
         Navigator.of(context).pop();
 
         // Memberi jeda singkat agar animasi tutup selesai
         Future.delayed(const Duration(milliseconds: 200), () {
-          // Guard clause untuk memastikan widget masih terpasang
           if (!mounted) return;
 
           switch (title) {
             case 'Profil Saya':
               // Asumsi Anda memiliki rute bernama '/profile'
-              context.push('/profile');
+              router.push('/profile');
               break;
             case 'Ganti Perusahaan':
               // Asumsi Anda memiliki rute bernama '/switch-company'
-              context.push('/switch-company');
+              router.push('/switch-company');
               break;
           }
         });

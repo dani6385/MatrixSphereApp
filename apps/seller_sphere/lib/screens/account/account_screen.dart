@@ -5,7 +5,7 @@ import 'package:shared_ui/shared_ui.dart';
  
 import 'widgets/account_app_bar.dart';
 import 'widgets/account_body.dart';
-import '../settings/setting_screen.dart';
+
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -20,7 +20,7 @@ class AccountScreen extends StatelessWidget {
       backgroundColor: kBrandTertiary,
       appBar: const AccountAppBar(),
       drawer: const SideMenu(selectedRoute: MenuRoute.account),
-      endDrawer: const SettingScreen(), 
+      //endDrawer: const SettingScreen(), 
       body: const AccountBody(),
     );
   }

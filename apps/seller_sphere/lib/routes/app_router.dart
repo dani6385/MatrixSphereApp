@@ -7,9 +7,9 @@ import '../screens/approval/approval_detail_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/bottom_mobile/home/home_screen.dart';
 import '../screens/bottom_mobile/sellers/seller_screen.dart';
-import '../screens/bottom_mobile/system/system_screen.dart';
+import '../screens/bottom_mobile/status/status_screen.dart';
 import '../screens/chat/chat_screen.dart';
-import '../screens/settings/setting_screen.dart';
+import 'package:seller_sphere/screens/settings/setting_screen.dart';
 import 'app_routes.dart';
 
 final appRouter = GoRouter(

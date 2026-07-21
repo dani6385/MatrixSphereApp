@@ -87,10 +87,10 @@ class _AppNavigatorState extends State<AppNavigator> {
           // PERBAIKAN: Memberikan warna putih (color: Colors.white) pada setiap ikon agar terlihat kontras di latar belakang gelap
           items: const <Widget>[
             Icon(Icons.home, size: 30, color: Colors.white),
-            Icon(Icons.business, size: 30, color: Colors.white),
-            Icon(Icons.system_update, size: 30, color: Colors.white),
-            Icon(Icons.fingerprint, size: 30, color: Colors.white),
-            Icon(Icons.calendar_month, size: 30, color: Colors.white), 
+            Icon(Icons.cast_sharp, size: 30, color: Colors.white),
+            Icon(Icons.point_of_sale, size: 30, color: Colors.white),
+            Icon(Icons.shopping_bag, size: 30, color: Colors.white),
+            Icon(Icons.fingerprint, size: 30, color: Colors.white), 
           ],
           onTap: _onItemTapped,
           color: kDarkBackground,

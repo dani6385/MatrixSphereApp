@@ -6,7 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 //import '../../../widgets/side_menu.dart';
 import 'widgets/seller_app_bar.dart';
 import 'widgets/seller_body.dart';
-import '../../settings/setting_screen.dart';
+
 
 class SellerScreen extends StatelessWidget {
   const SellerScreen({super.key});
@@ -21,7 +21,7 @@ class SellerScreen extends StatelessWidget {
       backgroundColor: kBrandTertiary,
       appBar: const SellerAppBar(),
       drawer: const SideMenu(selectedRoute: MenuRoute.sellers),
-      endDrawer: const SettingScreen(), 
+      //endDrawer: const SettingScreen(), 
       body: const SellerBody(),
     );
   }
