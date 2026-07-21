@@ -82,7 +82,7 @@ final appRouter = GoRouter(
       builder: (context, state) => const ChatScreen(),
     ),
     GoRoute(
-      path: '/camera-absen', // Rute URL kamera
+      path: AppRoutes.camera, // Rute URL kamera
       builder: (context, state) =>
           const CameraAbsenScreen(), // Memanggil layar kamera
     ),
