@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -17,13 +18,19 @@ class _DateCardState extends State<DateCard> {
   @override
   void initState() {
     super.initState();
-    // Inisialisasi waktu saat ini
-    _currentTime = DateTime.now();
-    // Atur timer untuk memperbarui waktu setiap detik
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    // Inisialisasi data lokal untuk format tanggal Bahasa Indonesia
+    initializeDateFormatting('id_ID', null).then((_) {
       if (mounted) {
+        // Setelah inisialisasi selesai, atur state awal dan mulai timer
         setState(() {
           _currentTime = DateTime.now();
+        });
+        _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+          if (mounted) {
+            setState(() {
+              _currentTime = DateTime.now();
+            });
+          }
         });
       }
     });
