@@ -9,6 +9,7 @@ import '../screens/bottom_mobile/home/home_screen.dart';
 import '../screens/bottom_mobile/sellers/seller_screen.dart';
 import '../screens/bottom_mobile/status/status_screen.dart';
 import '../screens/chat/chat_screen.dart';
+import '../screens/absensi/camera_absen_screen.dart';
 import 'package:seller_sphere/screens/settings/setting_screen.dart';
 import 'app_routes.dart';
 
@@ -79,6 +80,11 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.chat,
       builder: (context, state) => const ChatScreen(),
+    ),
+    GoRoute(
+      path: '/camera-absen', // Rute URL kamera
+      builder: (context, state) =>
+          const CameraAbsenScreen(), // Memanggil layar kamera
     ),
   ],
 );

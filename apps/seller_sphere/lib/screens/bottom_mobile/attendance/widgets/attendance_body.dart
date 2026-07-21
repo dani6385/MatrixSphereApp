@@ -1,6 +1,7 @@
 // lib/screens/Attendance/widgets/Attendance_body.dart
 import 'package:flutter/material.dart';
 import '../crads/date_card.dart';
+import '../crads/absensi_shortcut_card.dart';
 //import '../crads/active_employee_card.dart';
 //import '../content/attendance_actions.dart';
 
@@ -15,7 +16,7 @@ class AttendanceBody extends StatelessWidget {
       child: ListView(
         children: const [
           DateCard(),
-          
+          AbsensiShortcutCard(), 
           
         ],
       ),
