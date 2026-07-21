@@ -71,7 +71,7 @@ final List<StatefulShellBranch> _mobileBranches = [
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.attendance,
-        builder: (context, state) => const AttendanceScreen()),
+        builder: (context, state) => const AttendanScreen()),
   ]),
   // 4: Akun
   StatefulShellBranch(routes: [
@@ -107,11 +107,6 @@ final List<StatefulShellBranch> _webBranches = [
         builder: (context, state) => const SystemScreen()),
   ]),
   // 4: Absensi
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.attendance,
-        builder: (context, state) => const AttendanceScreen()),
-  ]),
   // 5: Kalender
   StatefulShellBranch(routes: [
     GoRoute(

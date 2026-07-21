@@ -48,7 +48,7 @@ final appRouter = GoRouter(
         StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.attendance,
-              builder: (context, state) => const AttendanceScreen()),
+              builder: (context, state) => const AttendanScreen()),
         ]),
         // Branch 5: Calendar (Kalender)
         StatefulShellBranch(routes: [
