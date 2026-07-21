@@ -5,6 +5,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 import 'package:seller_sphere/screens/chat/Providers/chat_provider.dart';
+import '../screens/bottom_mobile/attendance/providers/attendance_provider.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -76,8 +77,11 @@ class _AppNavigatorState extends State<AppNavigator> {
       );
     }
 
-    return ChangeNotifierProvider<ChatProvider>(
-      create: (_) => ChatProvider(), // Secara eksplisit menentukan tipe provider
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(create: (_) => AttendanceProvider()),
+      ],
       child: Scaffold(
         extendBody: true,
         body: widget.navigationShell,

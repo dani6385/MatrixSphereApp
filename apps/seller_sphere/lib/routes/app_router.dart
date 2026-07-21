@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../navigation/app_navigator.dart';
 import '../screens/account/account_screen.dart';
@@ -10,6 +11,7 @@ import '../screens/bottom_mobile/sellers/seller_screen.dart';
 import '../screens/bottom_mobile/status/status_screen.dart';
 import '../screens/chat/chat_screen.dart';
 import '../screens/absensi/camera_absen_screen.dart';
+import '../screens/access/access_screen.dart'; // <-- Impor halaman baru
 import 'package:seller_sphere/screens/settings/setting_screen.dart';
 import 'app_routes.dart';
 
@@ -51,6 +53,11 @@ final appRouter = GoRouter(
               path: AppRoutes.attendance,
               builder: (context, state) => const AttendanScreen()),
         ]),
+        StatefulShellBranch(routes: [
+          GoRoute(
+              path: AppRoutes.attendanceProvider,
+              builder: (context, state) => const AttendanScreen()),
+        ]),
         // Branch 5: Calendar (Kalender)
         StatefulShellBranch(routes: [
           GoRoute(
@@ -86,5 +93,33 @@ final appRouter = GoRouter(
       builder: (context, state) =>
           const CameraAbsenScreen(), // Memanggil layar kamera
     ),
+    GoRoute(
+      path: AppRoutes.access,
+      builder: (context, state) => const AccessScreen(),
+    ),
+    // Placeholder untuk halaman-halaman dari menu akses
+    GoRoute(
+      path: AppRoutes.goodsIn,
+      builder: (context, state) => const _PlaceholderScreen(title: 'Input Barang'),
+    ),
+    GoRoute(
+      path: AppRoutes.manageStock,
+      builder: (context, state) => const _PlaceholderScreen(title: 'Kelola Stok'),
+    ),
+    GoRoute(
+      path: AppRoutes.goodsOut,
+      builder: (context, state) => const _PlaceholderScreen(title: 'Pengeluaran Barang'),
+    ),
   ],
 );
+
+// Widget placeholder sederhana untuk menunjukkan navigasi berhasil
+class _PlaceholderScreen extends StatelessWidget {
+  final String title;
+  const _PlaceholderScreen({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(appBar: AppBar(title: Text(title)));
+  }
+}

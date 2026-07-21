@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../crads/date_card.dart';
 import '../crads/absensi_shortcut_card.dart';
+import '../crads/provider_card.dart';
 //import '../crads/active_employee_card.dart';
 //import '../content/attendance_actions.dart';
 
@@ -18,6 +19,8 @@ class AttendanceBody extends StatelessWidget {
           AbsensiShortcutCard(),
           SizedBox(height: 16),
           DateCard(),
+          SizedBox(height: 16),
+          ProviderCard(),
         ],
       ),
     );

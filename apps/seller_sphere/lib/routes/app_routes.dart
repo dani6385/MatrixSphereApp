@@ -1,6 +1,7 @@
 class AppRoutes {
   static const String home = '/';
   static const String attendance = '/attendance';
+  static const String attendanceProvider = '/attendance/providers';
   static const String sellers = '/sellers';
   static const String calendar = '/calendar';
   static const String aktifitas = '/activity';
@@ -12,4 +13,8 @@ class AppRoutes {
   static const String chat = '/chat';
   static const String chatprovider = 'providers/chat';
   static const String camera= '/camera';
+  static const String access = '/access';
+  static const String goodsIn = '/goods-in'; // Rute untuk input barang
+  static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
+  static const String goodsOut = '/goods-out'; // Rute untuk pengeluaran barang
 }
