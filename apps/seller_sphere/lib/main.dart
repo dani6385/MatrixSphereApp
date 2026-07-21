@@ -7,8 +7,6 @@ import 'package:shared_services/shared_services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'routes/app_router.dart';
-// Pastikan firebase_options diimport jika Anda menggunakannya secara lokal:
-// import 'firebase_options.dart'; 
 
 void main() async {
   // 1. Pastikan binding diinisialisasi terlebih dahulu

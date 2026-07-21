@@ -95,7 +95,7 @@ class _AttendanceContentState extends State<AttendanceContent> {
                     }
                     Navigator.pop(context);
                   },
-                  onControllerCreated: (CameraController? p1) {},
+                  onControllerCreated: (CameraController? p1) {}, controller: null,
                 );
               },
             );
