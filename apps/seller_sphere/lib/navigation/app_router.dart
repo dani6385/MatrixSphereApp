@@ -7,12 +7,12 @@ import 'package:seller_sphere/routes/app_routes.dart';
 // Import semua layar Anda di sini
 import '../screens/home/home_screen.dart';
 import '../screens/sellers/seller_screen.dart';
-import '../screens/approval/approval_screen.dart';
+
 import '../screens/status/status_screen.dart';
 import '../screens/attendance/attendance_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/account/account_screen.dart';
-import '../screens/approval/approval_detail_screen.dart';
+
 
 // Kunci navigator global
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -35,14 +35,7 @@ final appRouter = GoRouter(
 
     // Rute non-shell (yang akan tampil di atas shell, tanpa nav bar)
     // Contoh: Layar detail
-    GoRoute(
-      path: '${AppRoutes.approval}/:id', // Contoh: /approval/some_id
-      name: AppRoutes.approvalDetail,
-      builder: (context, state) {
-        final id = state.pathParameters['id']!;
-        return ApprovalDetailScreen(approvalId: id);
-      },
-    ),
+    
   ],
 );
 
@@ -62,11 +55,7 @@ final List<StatefulShellBranch> _mobileBranches = [
         builder: (context, state) => const SellerScreen()),
   ]),
   // 2: Approval
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.approval,
-        builder: (context, state) => const ApprovalScreen()),
-  ]),
+  
   // 3: Absensi
   StatefulShellBranch(routes: [
     GoRoute(
@@ -95,11 +84,7 @@ final List<StatefulShellBranch> _webBranches = [
         builder: (context, state) => const SellerScreen()),
   ]),
   // 2: Approval
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.approval,
-        builder: (context, state) => const ApprovalScreen()),
-  ]),
+  
   
   StatefulShellBranch(routes: [
     GoRoute(

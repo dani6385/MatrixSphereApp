@@ -5,8 +5,7 @@ import 'package:seller_sphere/viewmodel/app_viewmodel.dart';
 import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/screens/account/account_screen.dart';
 //import 'package:seller_sphere/screens/bottom_mobile/attendance/attendance_screen.dart';
-import 'package:seller_sphere/screens/approval/approval_screen.dart';
-import 'package:seller_sphere/screens/approval/approval_detail_screen.dart';
+
 import 'package:seller_sphere/screens/calendar/calendar_screen.dart';
 import 'package:seller_sphere/screens/home/home_screen.dart';
 import 'package:seller_sphere/screens/streams/streaming_screen.dart';
@@ -41,11 +40,7 @@ final appRouter = GoRouter(
               }),
         ]),
         // Branch 2: Approval
-        StatefulShellBranch(routes: [
-          GoRoute(
-              path: AppRoutes.approval, // Diperbaiki dari AppRoutes.sellers
-              builder: (context, state) => const ApprovalScreen()),
-        ]),
+        
         // Branch 3: Status
         StatefulShellBranch(routes: [
           GoRoute(
@@ -79,13 +74,6 @@ final appRouter = GoRouter(
               builder: (context, state) => const SettingScreen())
         ]),
       ],
-    ),
-    // Rute di luar ShellRoute
-    GoRoute(
-      path: AppRoutes.approvalDetail,
-      builder: (context, state) => const ApprovalDetailScreen(
-        approvalId: '',
-      ),
     ),
     GoRoute(
       path: AppRoutes.chat,
