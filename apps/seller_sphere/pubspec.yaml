@@ -20,6 +20,12 @@ dependencies:
     path: ../../packages/shared_services
   shared_ui:
     path: ../../packages/shared_ui
+  firebase_database: ^12.4.6
+  table_calendar: ^3.2.0
+  camera: ^0.12.0+2
+  logger: ^2.7.0
+  cross_file: ^0.3.5+4
+  intl: ^0.20.3
 
 dev_dependencies:
   flutter_lints: ^2.0.0

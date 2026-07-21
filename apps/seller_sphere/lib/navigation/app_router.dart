@@ -5,14 +5,14 @@ import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/routes/app_routes.dart';
 
 // Import semua layar Anda di sini
-import '../screens/home/home_screen.dart';
-//import '../screens/sellers/seller_screen.dart';
-//import '../screens/approval/approval_screen.dart';
-//import '../screens/system/system_screen.dart';
-//import '../screens/attendance/attendance_screen.dart';
-//import '../screens/calendar/calendar_screen.dart';
-//import '../screens/account/account_screen.dart';
-//import '../screens/approval/approval_detail_screen.dart';
+import '../screens/bottom_mobile/home/home_screen.dart';
+import '../screens/bottom_mobile/sellers/seller_screen.dart';
+import '../screens/approval/approval_screen.dart';
+import '../screens/bottom_mobile/system/system_screen.dart';
+import '../screens/bottom_mobile/attendance/attendance_screen.dart';
+import '../screens/calendar/calendar_screen.dart';
+import '../screens/account/account_screen.dart';
+import '../screens/approval/approval_detail_screen.dart';
 
 // Kunci navigator global
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -38,10 +38,9 @@ final appRouter = GoRouter(
     GoRoute(
       path: '${AppRoutes.approval}/:id', // Contoh: /approval/some_id
       name: AppRoutes.approvalDetail,
-      builder: (context, state) {return const SizedBox();
-      
-        //final id = state.pathParameters['id']!;
-        //return ApprovalDetailScreen(approvalId: id);
+      builder: (context, state) {
+        final id = state.pathParameters['id']!;
+        return ApprovalDetailScreen(approvalId: id);
       },
     ),
   ],
@@ -59,30 +58,26 @@ final List<StatefulShellBranch> _mobileBranches = [
   // 1: Seller
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.streaming,
-        //builder: (context, state) => const SellerScreen()
-        ),
+        path: AppRoutes.sellers,
+        builder: (context, state) => const SellerScreen()),
   ]),
   // 2: Approval
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.approval,
-        //builder: (context, state) => const ApprovalScreen()
-        ),
+        builder: (context, state) => const ApprovalScreen()),
   ]),
   // 3: Absensi
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.attendance,
-        //builder: (context, state) => const AttendanceScreen()
-        ),
+        builder: (context, state) => const AttendanScreen()),
   ]),
   // 4: Akun
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.system,
-        //builder: (context, state) => const AccountScreen()
-        ),
+        builder: (context, state) => const AccountScreen()),
   ]),
 ];
 
@@ -96,43 +91,32 @@ final List<StatefulShellBranch> _webBranches = [
   // 1: Seller
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.streaming,
-        //builder: (context, state) => const SellerScreen()
-        ),
+        path: AppRoutes.sellers,
+        builder: (context, state) => const SellerScreen()),
   ]),
   // 2: Approval
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.approval,
-        //builder: (context, state) => const ApprovalScreen()
-        ),
+        builder: (context, state) => const ApprovalScreen()),
   ]),
   // 3: System
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.system,
-        //builder: (context, state) => const SystemScreen()
-        ),
+        builder: (context, state) => const SystemScreen()),
   ]),
   // 4: Absensi
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.attendance,
-        //builder: (context, state) => const AttendanceScreen()
-        ),
-  ]),
   // 5: Kalender
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.calendar,
-        //builder: (context, state) => const CalendarScreen()
-        ),
+        builder: (context, state) => const CalendarScreen()),
   ]),
   // 6: Akun
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.account,
-        //builder: (context, state) => const AccountScreen()
-        ),
+        builder: (context, state) => const AccountScreen()),
   ]),
 ];

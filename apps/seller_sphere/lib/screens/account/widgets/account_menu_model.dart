@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/routes/app_routes.dart';
 
-/// A Model that displays the menu.
-class MenuModel extends StatelessWidget {
-  /// Creates an [MenuModel] widget.
-  const MenuModel({super.key});
+/// A Model that displays the account menu.
+class AccountMenuModel extends StatelessWidget {
+  /// Creates an [AccountMenuModel] widget.
+  const AccountMenuModel({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +28,8 @@ class MenuModel extends StatelessWidget {
                             ?.copyWith(color: kDarkTextPrimary)),
                     const Spacer(),
                     IconButton(
-                      icon: const Icon(Icons.account_balance,
-                          color: kDarkTextPrimary),
+                      icon:
+                          const Icon(Icons.arrow_back, color: kDarkTextPrimary),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ],
@@ -44,31 +42,13 @@ class MenuModel extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // PERBAIKAN: Mengganti avatar gambar dengan Label Inisial Akun ("MA")
-                      // GANTI BLOK CircleAvatar lama dengan kode ini:
-                      GestureDetector(
-                        onTap: () {
-                          // 1. Tutup Drawer samping terlebih dahulu agar transisi layar bersih
-                          Navigator.of(context).pop();
-
-                          // 2. Navigasi ke halaman akun menggunakan GoRouter
-                          GoRouter.of(context).push(AppRoutes
-                              .account); // Sesuaikan rute dengan nama rute akun Anda
-                        },
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundColor: kBrandPrimary.withValues(alpha: 0.15),
-                          child: Text(
-                            'MA',
-                            style: textTheme.headlineMedium?.copyWith(
-                              color: kBrandPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                      const CircleAvatar(
+                        radius: 40,
+                        backgroundImage:
+                            AssetImage('images/img_profile-avatar.jpg'),
                       ),
                       const SizedBox(height: AppSpacing.md),
-                      Text('Matrix Admin',
+                      Text('seller Admin',
                           style: textTheme.titleLarge
                               ?.copyWith(color: kDarkTextPrimary)),
                       const SizedBox(height: AppSpacing.xs),
@@ -92,55 +72,22 @@ class MenuModel extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: AppSpacing.lg),
-                      _buildMenuItem(
-                        context,
-                        icon: Icons.chat,
-                        title: 'Pesan',
-                        subtitle: 'Pesan dari sistem',
-                        onTap: () {
-                          // 1. Tutup drawer samping agar transisi navigasi rapi
-                          Navigator.of(context).pop();
-
-                          // 2. Navigasi ke halaman chat menggunakan GoRouter
-                          GoRouter.of(context).push(AppRoutes.chat);
-                        },
-                      ),
-                      _buildMenuItem(
-                        context,
-                        icon: Icons.calendar_month,
-                        title: 'kalender',
-                        subtitle: 'Lihat Jadwal Anda',
-                        onTap: () {
-                          // 1. Tutup drawer samping agar transisi navigasi rapi
-                          Navigator.of(context).pop();
-
-                          // 2. Navigasi ke halaman chat menggunakan GoRouter
-                          GoRouter.of(context).push(AppRoutes.calendar);
-                        },
-                      ),
-                      /*_buildMenuItem(
-                        context,
-                        icon: Icons.play_lesson,
-                        title: 'akan datang',
-                        subtitle: 'menu selanjutnya',
-                      ),*/
-                      _buildMenuItem(
-                        context,
-                        icon: Icons.settings,
-                        title: 'Pengaturan',
-                        subtitle: 'Pengaturan Aplikasi',
-                        onTap: () {
-                          // 1. Tutup drawer samping agar transisi navigasi rapi
-                          Navigator.of(context).pop();
-
-                          // 2. Navigasi ke halaman chat menggunakan GoRouter
-                          GoRouter.of(context).push(AppRoutes.settings);
-                        },
-                      ),
+                      _buildMenuItem(context,
+                          icon: Icons.person_outline,
+                          title: 'Profil Pengguna',
+                          subtitle: 'Informasi detail akun'),
+                      _buildMenuItem(context,
+                          icon: Icons.cloud_sync_outlined,
+                          title: 'Sinkronisasi Cloud',
+                          subtitle: 'Status koneksi Firebase'),
+                      _buildMenuItem(context,
+                          icon: Icons.brightness_6_outlined,
+                          title: 'Ubah Tema',
+                          subtitle: 'Mode Gelap Aktif'),
                       const Spacer(),
                       _buildLogoutButton(context),
                       const SizedBox(height: AppSpacing.md),
-                      Text('Matrix Sphere v1.4.2',
+                      Text('seller Sphere v1.4.2',
                           style: textTheme.bodySmall
                               ?.copyWith(color: kDarkTextSecondary)),
                       const SizedBox(height: AppSpacing.md),
@@ -158,8 +105,7 @@ class MenuModel extends StatelessWidget {
   Widget _buildMenuItem(BuildContext context,
       {required IconData icon,
       required String title,
-      required String subtitle,
-      required VoidCallback? onTap}) {
+      required String subtitle}) {
     final textTheme = Theme.of(context).textTheme;
     return ListTile(
       leading: Icon(icon, color: kDarkTextSecondary),
@@ -167,7 +113,7 @@ class MenuModel extends StatelessWidget {
           style: textTheme.bodyLarge?.copyWith(color: kDarkTextPrimary)),
       subtitle: Text(subtitle,
           style: textTheme.bodySmall?.copyWith(color: kDarkTextSecondary)),
-      onTap: onTap,
+      onTap: () {},
     );
   }
 

@@ -1,4 +1,5 @@
 export 'widgets/custom_bottom_navigation_bar.dart';
+export 'widgets/side_menu.dart';
 
 export 'theme/app_spacing.dart';
 export 'theme/app_colors.dart';

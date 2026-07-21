@@ -1,7 +1,7 @@
 class AppRoutes {
   static const String home = '/';
   static const String attendance = '/attendance';
-  static const String streaming = '/streaming';
+  static const String sellers = '/sellers';
   static const String calendar = '/calendar';
   static const String aktifitas = '/activity';
   static const String system = '/system'; // Pastikan rute system ada

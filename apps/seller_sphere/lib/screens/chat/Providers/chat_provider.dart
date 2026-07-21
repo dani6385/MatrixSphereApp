@@ -1,47 +1,39 @@
-// lib/chat/providers/chat_provider.dart
-import 'package:shared_ui/shared_ui.dart';
 import 'package:flutter/material.dart';
+import '../data/chat_data.dart'; // Impor data dari file terpisah
 
 class ChatProvider extends ChangeNotifier {
-  // Contoh daftar pesan yang belum dibaca
-  final List<Map<String, dynamic>> _conversations = [
-      {
-        'name': 'Andi (Pembeli)',
-        'lastMessage': 'Kak, apakah barang ini masih ready stock?',
-        'time': '14:20',
-        'unreadCount': 2,
-        'color': kBrandPrimary,
-      },
-      {
-        'name': 'Santi (Seller Support)',
-        'lastMessage': 'Sama-sama kak, senang bisa membantu Anda!',
-        'time': '11:05',
-        'unreadCount': 0,
-        'color': kSoftTeal,
-      },
-      {
-        'name': 'Budi (Pembeli)',
-        'lastMessage': 'Saya sudah transfer ya kak, tolong segera diproses.',
-        'time': 'Kemarin',
-        'unreadCount': 1,
-        'color': kWarmOrange,
-      },
-      {
-        'name': 'Roni (Kurir)',
-        'lastMessage': 'Paket sedang diantar ke alamat tujuan Anda.',
-        'time': '02 Jul',
-        'unreadCount': 0,
-        'color': kCyanPrimary,
-      },
-  ];
-List<Map<String, dynamic>> get conversations => _conversations;
+  // Gunakan data yang diimpor sebagai status awal
+  late List<Map<String, dynamic>> _conversations;
+  late Map<String, List<Map<String, dynamic>>> _chatDetails;
 
-  // Getter 2: Menghitung TOTAL pesan belum dibaca secara dinamis (untuk Badge merah di App Bar)
+  ChatProvider() {
+    // Inisialisasi state dari data yang diimpor
+    _conversations = List.from(initialConversations);
+    _chatDetails = Map.from(initialChatDetails);
+  }
+
+  List<Map<String, dynamic>> get conversations => _conversations;
+
+  List<Map<String, dynamic>> getChatMessages(String chatId) {
+    return _chatDetails[chatId] ?? [];
+  }
+
+  void addMessage(String chatId, Map<String, dynamic> message) {
+    if (_chatDetails.containsKey(chatId)) {
+      _chatDetails[chatId]?.add(message);
+      final conversationIndex = _conversations.indexWhere((c) => c['id'] == chatId);
+      if (conversationIndex != -1) {
+        _conversations[conversationIndex]['lastMessage'] = message['text'];
+        _conversations[conversationIndex]['time'] = TimeOfDay.now().format(navigatorKey.currentContext!);
+      }
+      notifyListeners();
+    }
+  }
+
   int get unreadCount {
     return _conversations.fold(0, (sum, item) => sum + (item['unreadCount'] as int));
   }
 
-  // Getter 3: Mengambil daftar pesan belum dibaca saja, di-format untuk Dropdown di App Bar
   List<String> get unreadMessagesList {
     return _conversations
         .where((item) => (item['unreadCount'] as int) > 0)
@@ -49,11 +41,12 @@ List<Map<String, dynamic>> get conversations => _conversations;
         .toList();
   }
 
-  // Method: Menandai satu obrolan sudah dibaca saat diklik
   void markAsRead(int index) {
     if (_conversations[index]['unreadCount'] > 0) {
       _conversations[index]['unreadCount'] = 0;
-      notifyListeners(); // Mengabari App Bar dan Chat List untuk merender ulang secara instan!
+      notifyListeners();
     }
   }
 }
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

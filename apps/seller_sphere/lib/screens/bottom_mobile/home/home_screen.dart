@@ -6,7 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_body.dart';
-import 'package:seller_sphere/screens/settings/setting_screen.dart';
+import '../../settings/setting_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

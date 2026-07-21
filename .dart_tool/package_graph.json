@@ -33,14 +33,20 @@
       "name": "seller_sphere",
       "version": "1.0.0+1",
       "dependencies": [
+        "camera",
+        "cross_file",
         "curved_navigation_bar",
         "firebase_core",
         "firebase_crashlytics",
+        "firebase_database",
         "flutter",
         "go_router",
+        "intl",
+        "logger",
         "provider",
         "shared_services",
-        "shared_ui"
+        "shared_ui",
+        "table_calendar"
       ],
       "devDependencies": [
         "flutter_lints",
@@ -253,6 +259,14 @@
       "version": "2.0.3",
       "dependencies": [
         "lints"
+      ]
+    },
+    {
+      "name": "cross_file",
+      "version": "0.3.5+4",
+      "dependencies": [
+        "meta",
+        "web"
       ]
     },
     {
@@ -793,6 +807,11 @@
       "dependencies": []
     },
     {
+      "name": "web",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
       "name": "nested",
       "version": "1.0.0",
       "dependencies": [
@@ -868,11 +887,6 @@
       "dependencies": []
     },
     {
-      "name": "web",
-      "version": "1.1.1",
-      "dependencies": []
-    },
-    {
       "name": "http_parser",
       "version": "4.1.2",
       "dependencies": [
@@ -942,14 +956,6 @@
       "name": "stream_transform",
       "version": "2.1.1",
       "dependencies": []
-    },
-    {
-      "name": "cross_file",
-      "version": "0.3.5+4",
-      "dependencies": [
-        "meta",
-        "web"
-      ]
     },
     {
       "name": "path_provider_windows",

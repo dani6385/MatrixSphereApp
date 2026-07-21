@@ -1,138 +1,109 @@
-import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
+// lib/screens/chat/contents/chat_content.dart
 
-class ChatContent extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Pastikan Provider di-import
+import 'package:shared_ui/shared_ui.dart';
+import '../../chat/providers/chat_provider.dart'; // Impor ChatProvider Anda
+
+class ChatContent extends StatelessWidget {
   const ChatContent({super.key});
 
   @override
-  State<ChatContent> createState() => _ChatContentState();
-}
-
-class _ChatContentState extends State<ChatContent> {
-  final TextEditingController _textController = TextEditingController();
-  final List<Map<String, String>> _messages = [];
-
-  void _handleSubmitted(String text) {
-    if (text.trim().isEmpty) return;
-    _textController.clear();
-    setState(() {
-      _messages.insert(0, {"sender": "me", "text": text});
-      // Simulasi balasan setelah beberapa saat
-      Future.delayed(const Duration(seconds: 1), () {
-        setState(() {
-          _messages.insert(
-              0, {"sender": "other", "text": "Ini adalah balasan otomatis."});
-        });
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
+    // Membaca data secara real-time dari ChatProvider
+    final chatProvider = context.watch<ChatProvider>();
+    final chatList = chatProvider.conversations;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Obrolan', style: textTheme.headlineSmall),
-        centerTitle: true,
-        backgroundColor: theme.appBarTheme.backgroundColor,
+    return ListView.separated(
+      itemCount: chatList.length,
+      separatorBuilder: (context, index) => const Divider(
+        height: 1,
+        indent: 76,
+        endIndent: 16,
+        color: kDarkBackground,
       ),
-      body: Column(
-        children: <Widget>[
-          Flexible(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              reverse: true,
-              itemCount: _messages.length,
-              itemBuilder: (_, int index) {
-                final message = _messages[index];
-                final isMe = message['sender'] == 'me';
-                return _buildMessageItem(message['text']!, isMe, textTheme);
-              },
-            ),
-          ),
-          const Divider(height: 1.0),
-          SafeArea(
-            child: Container(
-              decoration: BoxDecoration(color: theme.cardColor, boxShadow: [
-                BoxShadow(
-                  offset: const Offset(0, -1),
-                  blurRadius: 2.0,
-                  color: theme.shadowColor.withValues(alpha: 0.05),
-                )
-              ]),
-              child: _buildTextComposer(context),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+      itemBuilder: (context, index) {
+        final chat = chatList[index];
+        final int unreadCount = chat['unreadCount'];
 
-  Widget _buildTextComposer(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      child: Row(
-        children: <Widget>[
-          Flexible(
-            child: TextField(
-              controller: _textController,
-              onSubmitted: _handleSubmitted,
-              decoration: const InputDecoration.collapsed(
-                hintText: 'Kirim pesan...',
-              ),
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: () => _handleSubmitted(_textController.text),
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageItem(String message, bool isMe, TextTheme textTheme) {
-    final theme = Theme.of(context);
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-      child: Row(
-        mainAxisAlignment:
-            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg, vertical: AppSpacing.md),
-            constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.75,
-            ),
-            decoration: BoxDecoration(
-                color: isMe
-                    ? theme.colorScheme.primary
-                    : theme.colorScheme.surface,
-                borderRadius: BorderRadius.circular(AppSpacing.md),
-                boxShadow: [
-                  BoxShadow(
-                    offset: const Offset(0, 1),
-                    blurRadius: 1.0,
-                    color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
-                  )
-                ]),
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          leading: CircleAvatar(
+            radius: 24,
+            backgroundColor: chat['color'].withOpacity(0.15),
             child: Text(
-              message,
-              style: textTheme.bodyLarge?.copyWith(
-                color: isMe
-                    ? theme.colorScheme.onPrimary
-                    : theme.colorScheme.onSurface,
+              chat['name'][0],
+              style: TextStyle(
+                color: chat['color'],
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
               ),
             ),
           ),
-        ],
-      ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                chat['name'],
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: kDarkTextPrimary,
+                ),
+              ),
+              Text(
+                chat['time'],
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: kDarkTextSecondary,
+                ),
+              ),
+            ],
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 6.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    chat['lastMessage'],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: unreadCount > 0 ? kDarkTextPrimary : kDarkTextSecondary,
+                      fontWeight: unreadCount > 0 ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ),
+                if (unreadCount > 0) ...[
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: kBrandTertiary,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '$unreadCount',
+                      style: const TextStyle(
+                        color: kDarkTextPrimary,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          onTap: () {
+            // SINKRONISASI AKTIF: Saat diklik, tandai indeks ini sebagai "sudah dibaca"
+            chatProvider.markAsRead(index);
+            debugPrint("Membuka percakapan dengan ${chat['name']} & menandai telah dibaca.");
+          },
+        );
+      },
     );
   }
 }
