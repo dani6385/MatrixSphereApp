@@ -1,15 +1,15 @@
-// lib/screens/System/System_screen.dart
+// lib/screens/Status/Status_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
  
 //import '../../../widgets/side_menu.dart';
-import 'widgets/system_app_bar.dart';
-import 'widgets/System_body.dart';
+import 'widgets/status_app_bar.dart';
+import 'widgets/status_body.dart';
 
 
-class SystemScreen extends StatelessWidget {
-  const SystemScreen({super.key});
+class StatusScreen extends StatelessWidget {
+  const StatusScreen({super.key});
 
   // 1. DEKLARASIKAN GLOBALKEY DI SINI
   static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -19,10 +19,10 @@ class SystemScreen extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
       backgroundColor: kBrandTertiary,
-      appBar: const SystemAppBar(),
-      drawer: const SideMenu(selectedRoute: MenuRoute.system),
+      appBar: const StatusAppBar(),
+      drawer: const SideMenu(selectedRoute: MenuRoute.sellers),
       //endDrawer: const SettingScreen(),
-      body: const SystemBody(),
+      body: const StatusBody(),
     );
   }
 }

@@ -76,8 +76,8 @@ final List<StatefulShellBranch> _mobileBranches = [
   // 4: Akun
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.system,
-        builder: (context, state) => const AccountScreen()),
+        path: AppRoutes.status,
+        builder: (context, state) => const StatusScreen()),
   ]),
 ];
 
@@ -100,11 +100,11 @@ final List<StatefulShellBranch> _webBranches = [
         path: AppRoutes.approval,
         builder: (context, state) => const ApprovalScreen()),
   ]),
-  // 3: System
+  
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.system,
-        builder: (context, state) => const SystemScreen()),
+        path: AppRoutes.status,
+        builder: (context, state) => const StatusScreen()),
   ]),
   // 4: Absensi
   // 5: Kalender

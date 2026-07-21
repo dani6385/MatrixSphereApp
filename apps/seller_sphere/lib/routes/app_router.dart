@@ -38,11 +38,11 @@ final appRouter = GoRouter(
               path: AppRoutes.approval, // Diperbaiki dari AppRoutes.sellers
               builder: (context, state) => const ApprovalScreen()),
         ]),
-        // Branch 3: System
+        // Branch 3: Status
         StatefulShellBranch(routes: [
           GoRoute(
-              path: AppRoutes.system,
-              builder: (context, state) => const SystemScreen()),
+              path: AppRoutes.status,
+              builder: (context, state) => const StatusScreen()),
         ]),
         // Branch 4: Attendance (Absensi)
         StatefulShellBranch(routes: [

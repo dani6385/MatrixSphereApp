@@ -1,11 +1,11 @@
-// lib/screens/System/widgets/System_body.dart
+// lib/screens/Status/widgets/Status_body.dart
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 //import '../contents/featured_card.dart'; // Impor banner biru Anda
 
-class SystemBody extends StatelessWidget {
-  const SystemBody({super.key});
+class StatusBody extends StatelessWidget {
+  const StatusBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,7 @@ class SystemBody extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Ini adalah widget body yang dipisahkan ke file lain agar kode SystemScreen tetap bersih dan mudah dibaca.',
+                    'Ini adalah widget body yang dipisahkan ke file lain agar kode StatusScreen tetap bersih dan mudah dibaca.',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
