@@ -13,7 +13,7 @@ class StreamScreen extends StatelessWidget {
     return const Scaffold(
       backgroundColor: kLightSurface,
       appBar: StreamAppBar(),
-      drawer: const SideMenu(selectedRoute: MenuRoute.sellers),
+      drawer: SideMenu(selectedRoute: MenuRoute.sellers),
       
       // Menggunakan StreamBody murni untuk menghindari crash tata letak
       body: StreamBody(), 
