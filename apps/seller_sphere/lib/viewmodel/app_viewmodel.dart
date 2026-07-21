@@ -1,7 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:seller_sphere/models/product.dart';
 
-class AppViewModel {
+class AppViewModel with ChangeNotifier {
   // BehaviorSubject untuk menampung daftar produk
   final _products = BehaviorSubject<List<Product>>.seeded([]);
 
@@ -58,7 +59,9 @@ class AppViewModel {
     ]);
   }
 
+  @override
   void dispose() {
+    super.dispose();
     _products.close();
   }
 }

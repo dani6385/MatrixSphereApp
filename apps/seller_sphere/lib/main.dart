@@ -7,6 +7,7 @@ import 'package:shared_services/shared_services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'routes/app_router.dart';
+import 'package:seller_sphere/viewmodel/app_viewmodel.dart';
 
 void main() async {
   // 1. Pastikan binding diinisialisasi terlebih dahulu
@@ -45,8 +46,13 @@ class SellerSphere extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    return MultiProvider(
+      providers: [
+        // Menyediakan ThemeProvider untuk tema
+        ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
+        
+        ChangeNotifierProvider<AppViewModel>(create: (_) => AppViewModel()),
+      ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           // Ganti ke MaterialApp.router

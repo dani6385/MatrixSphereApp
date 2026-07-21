@@ -1,7 +1,7 @@
 // lib/screens/Attendan/Attendan_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/screens/bottom_mobile/attendance/widgets/attendance_body.dart';
+import 'package:seller_sphere/screens/attendance/widgets/attendance_body.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 import 'widgets/attendance_app_bar.dart';

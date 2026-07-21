@@ -5,11 +5,11 @@ import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/routes/app_routes.dart';
 
 // Import semua layar Anda di sini
-import '../screens/bottom_mobile/home/home_screen.dart';
-import '../screens/bottom_mobile/sellers/seller_screen.dart';
+import '../screens/home/home_screen.dart';
+import '../screens/sellers/seller_screen.dart';
 import '../screens/approval/approval_screen.dart';
-import '../screens/bottom_mobile/status/status_screen.dart';
-import '../screens/bottom_mobile/attendance/attendance_screen.dart';
+import '../screens/status/status_screen.dart';
+import '../screens/attendance/attendance_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/account/account_screen.dart';
 import '../screens/approval/approval_detail_screen.dart';

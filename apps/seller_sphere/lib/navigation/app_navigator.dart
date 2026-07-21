@@ -5,7 +5,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 import 'package:seller_sphere/screens/chat/Providers/chat_provider.dart';
-import '../screens/bottom_mobile/attendance/providers/attendance_provider.dart';
+import '../screens/attendance/providers/attendance_provider.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;

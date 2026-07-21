@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/screens/bottom_mobile/streams/models/live_chat_message.dart';
+import 'package:seller_sphere/screens/streams/models/live_chat_message.dart';
 // Asumsi file warna tema
 
 /// Widget untuk menampilkan chip informasi di layar live (LIVE, penonton, durasi)

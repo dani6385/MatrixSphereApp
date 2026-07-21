@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import '../../../../models/violation_model.dart';
+import '../../../models/violation_model.dart';
 import 'violation_card.dart';
 
 class ViolationsSection extends StatefulWidget {
