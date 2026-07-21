@@ -1,6 +1,8 @@
 // lib/screens/Attendance/widgets/Attendance_body.dart
 import 'package:flutter/material.dart';
 import '../crads/date_card.dart';
+import '../crads/active_employee_card.dart';
+import '../content/attendance_actions.dart';
 
 
 class AttendanceBody extends StatelessWidget {
@@ -11,14 +13,12 @@ class AttendanceBody extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: ListView(
-        children: const [
-          // 1. BANNER BIRU UNGGULAN
-          //const FeaturedCard(), 
+        children: [
+          const DateCard(),
+          const SizedBox(height: 16),
+          ActiveEmployeeCard(now: DateTime.now(), employeeName: 'John Doe', employeeId: 'EMP001'),
+          const AttendanceActions(),
           
-          SizedBox(height: 16),
-
-          // 2. KARTU INFORMASI PUTIH (Asli Anda, Tanpa Menggunakan Kelas Tidak Dikenal)
-          DateCard(),
         ],
       ),
     );
