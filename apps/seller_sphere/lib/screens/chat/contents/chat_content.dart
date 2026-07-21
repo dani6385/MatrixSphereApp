@@ -3,7 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Pastikan Provider di-import
 import 'package:shared_ui/shared_ui.dart';
-import '../../chat/providers/chat_provider.dart'; // Impor ChatProvider Anda
+import 'package:seller_sphere/screens/chat/Providers/chat_provider.dart';
+
 
 class ChatContent extends StatelessWidget {
   const ChatContent({super.key});
