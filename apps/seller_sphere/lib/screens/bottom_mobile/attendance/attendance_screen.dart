@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:seller_sphere/screens/bottom_mobile/attendance/widgets/attendance_body.dart';
 import 'package:shared_ui/shared_ui.dart';
 
+import 'widgets/attendance_app_bar.dart';
 
 class AttendanScreen extends StatelessWidget {
   const AttendanScreen({super.key});
@@ -16,7 +17,7 @@ class AttendanScreen extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
       backgroundColor: kBrandTertiary,
-      //appBar: const AttendanceAppBar(),
+      appBar: const AttendanceAppBar(),
       drawer: const SideMenu(selectedRoute: MenuRoute.sellers),
       //endDrawer: const SettingScreen(), 
       body: const AttendanceBody(),
