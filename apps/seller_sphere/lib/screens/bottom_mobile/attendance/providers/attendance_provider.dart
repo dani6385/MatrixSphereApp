@@ -17,7 +17,6 @@ class AttendanceProvider extends ChangeNotifier {
 
     // Tambahkan ke Set. Jika sudah ada, tidak akan terjadi apa-apa.
     final isAdded = _attendanceRecords.add(dateOnly);
-
     // Hanya panggil notifyListeners jika ada data baru yang ditambahkan.
     if (isAdded) {
       notifyListeners();

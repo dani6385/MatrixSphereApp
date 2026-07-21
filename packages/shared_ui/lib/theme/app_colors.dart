@@ -60,4 +60,4 @@ const Color kSeaGreen = Color(0xFF2E8B57);
 const Color kTransparent = Colors.transparent;
 const Color kDarkSecondary = Colors.black12;
 const Color kAccentBlue = Color(0xFF2979FF);
-const Color kAccentPurple = Color(0xFF7C4DFF)
+const Color kAccentPurple = Color(0xFF7C4DFF);
