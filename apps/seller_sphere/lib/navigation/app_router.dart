@@ -8,7 +8,7 @@ import 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 import 'package:seller_sphere/screens/home/home_screen.dart';
 import 'package:seller_sphere/screens/inventory/inventory_screen.dart';
 import 'package:seller_sphere/screens/sellers/seller_screen.dart';
-import 'package:seller_sphere/screens/streams/streaming_screen.dart';
+//import 'package:seller_sphere/screens/streams/streaming_screen.dart';
 
 import 'app_routes.dart';
 
@@ -57,7 +57,7 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.stream, // path: '/stream'
-              builder: (context, state) => const StreamingScreen(),
+              //builder: (context, state) => const StreamingScreen(),
             ),
           ],
         ),
