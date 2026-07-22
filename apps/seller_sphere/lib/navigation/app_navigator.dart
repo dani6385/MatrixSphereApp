@@ -17,6 +17,14 @@ class AppNavigator extends StatefulWidget {
 }
 
 class _AppNavigatorState extends State<AppNavigator> {
+  // Fungsi untuk memberitahu GoRouter agar berpindah branch/tab
+  void _onItemTapped(int index) {
+    widget.navigationShell.goBranch(
+      index,
+      initialLocation: index == widget.navigationShell.currentIndex,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -27,10 +35,9 @@ class _AppNavigatorState extends State<AppNavigator> {
       child: Scaffold(
         extendBody: true,
         body: widget.navigationShell,
-        // --- Menggunakan CustomBottomNavigationBar dengan Icon dan warna ---
         bottomNavigationBar: CustomBottomNavigationBar(
-          initialSelectedIndex: widget.navigationShell.currentIndex,
-          screens: widget.navigationShell.indexedStack.children,
+          selectedIndex: widget.navigationShell.currentIndex,
+          onItemTapped: _onItemTapped,
           tabs: const [
             GButton(icon: Icons.home, text: 'Home'),
             GButton(icon: Icons.live_tv, text: 'Stream'),
@@ -42,8 +49,4 @@ class _AppNavigatorState extends State<AppNavigator> {
       ),
     );
   }
-}
-
-extension on StatefulNavigationShell {
-  get indexedStack => null;
 }
