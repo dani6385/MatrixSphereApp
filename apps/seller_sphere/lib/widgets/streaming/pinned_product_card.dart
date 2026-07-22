@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:seller_sphere/screens/inventoris/models/product.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/providers/app_viewmodel.dart';
@@ -46,7 +46,7 @@ class PinnedProductCard extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
-                NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(product.price),
+                NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(product.sellingPrice),
                 style: const TextStyle(fontSize: 9, color: kSoftTeal, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 4),

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:seller_sphere/screens/inventoris/models/product.dart';
 import '../models/attendance_record.dart';
 
 class AppViewModel with ChangeNotifier {
@@ -25,7 +25,7 @@ class AppViewModel with ChangeNotifier {
         description: 'Kemeja formal dan kasual, bahan katun premium.',
         price: 120000,
         imageUrl: 'https://images.unsplash.com/photo-1618763351220-f203521655ad?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        stock: 50,
+        stock: 50, sku: '',
       ),
       Product(
         id: 'p2',
@@ -33,7 +33,7 @@ class AppViewModel with ChangeNotifier {
         description: 'Celana jeans modern dengan potongan high-waist, nyaman dipakai.',
         price: 180000,
         imageUrl: 'https://images.unsplash.com/photo-1541099644-47ae7e96077c?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        stock: 30,
+        stock: 30, sku: '',
       ),
       Product(
         id: 'p3',
@@ -41,7 +41,7 @@ class AppViewModel with ChangeNotifier {
         description: 'Sepatu sneakers ringan dan stylish untuk pria dan wanita.',
         price: 250000,
         imageUrl: 'https://images.unsplash.com/photo-1514989940723-ad4750b5a659?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        stock: 20,
+        stock: 20, sku: '',
       ),
       Product(
         id: 'p4',
@@ -49,7 +49,7 @@ class AppViewModel with ChangeNotifier {
         description: 'Tas selempang elegan dengan bahan kulit sintetis berkualitas tinggi.',
         price: 95000,
         imageUrl: 'https://images.unsplash.com/photo-1566150911716-ad573010b91d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        stock: 40,
+        stock: 40, sku: '',
       ),
       Product(
         id: 'p5',
@@ -57,7 +57,7 @@ class AppViewModel with ChangeNotifier {
         description: 'Jam tangan digital multifungsi, tahan air, cocok untuk aktivitas outdoor.',
         price: 150000,
         imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1999&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-        stock: 35,
+        stock: 35, sku: '',
       ),
     ]);
   }

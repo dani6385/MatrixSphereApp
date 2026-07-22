@@ -6,7 +6,7 @@ import 'package:video_player/video_player.dart';
 
 // Asumsi: Anda memiliki file-file ini di proyek Flutter Anda
 import 'package:seller_sphere/providers/app_viewmodel.dart';
-import 'package:seller_sphere/models/product.dart'; // Asumsi model Product
+import 'package:seller_sphere/screens/inventoris/models/product.dart'; // Asumsi model Product
 // Asumsi file warna tema
 import '../models/live_chat_message.dart';
 import 'package:seller_sphere/widgets/streaming/live_viewer.dart';

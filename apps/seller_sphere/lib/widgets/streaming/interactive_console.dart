@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:seller_sphere/screens/inventoris/models/product.dart';
 import 'package:intl/intl.dart';
 import 'package:seller_sphere/screens/streams/models/live_chat_message.dart';
 import 'package:seller_sphere/providers/app_viewmodel.dart';
@@ -437,8 +437,8 @@ class InteractiveConsole extends StatelessWidget {
                               Text(prod.name, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                               Row(
                                 children: [
-                                  Text(
-                                  NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(prod.price),
+ Text(
+ NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(prod.sellingPrice),
                                   style: const TextStyle(fontSize: 11, color: kSoftTeal, fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(width: 8),

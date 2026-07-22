@@ -7,11 +7,11 @@ import 'package:seller_sphere/routes/app_routes.dart';
 // Import semua layar Anda di sini
 import '../screens/home/home_screen.dart';
 import '../screens/sellers/seller_screen.dart';
-
+import 'package:seller_sphere/screens/inventoris/inventory_screen.dart';
 import '../screens/status/status_screen.dart';
 import '../screens/attendance/attendance_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
-import '../screens/account/account_screen.dart';
+//import '../screens/account/account_screen.dart';
 
 
 // Kunci navigator global
@@ -88,8 +88,8 @@ final List<StatefulShellBranch> _webBranches = [
   
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.status,
-        builder: (context, state) => const StatusScreen()),
+        path: AppRoutes.inventory,
+        builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (product) {})),
   ]),
   // 4: Absensi
   // 5: Kalender
@@ -101,7 +101,7 @@ final List<StatefulShellBranch> _webBranches = [
   // 6: Akun
   StatefulShellBranch(routes: [
     GoRoute(
-        path: AppRoutes.account,
-        builder: (context, state) => const AccountScreen()),
+        path: AppRoutes.attendance,
+        builder: (context, state) => const AttendanceScreen()),
   ]),
 ];
