@@ -8,7 +8,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:media_info/media_info.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'models/product.dart';
+import '../../models/product.dart';
 import 'providers/app_provider.dart';
 import 'widgets/inventory_app_bar.dart';
 

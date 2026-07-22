@@ -11,6 +11,7 @@ class Product {
   int ageRating; // 0: Semua, 13: Remaja, 18: Dewasa
   String? videoUrl;
 
+
   Product({
     required this.id,
     required this.name,
@@ -23,6 +24,7 @@ class Product {
     this.imageUrls = const [],
     this.ageRating = 0,
     this.videoUrl, required String description, required int price, required String imageUrl,
+
   });
 
   bool get isLowStock => stock <= minStockThreshold;
@@ -73,4 +75,20 @@ class Product {
       videoUrl: videoUrl ?? this.videoUrl, description: '', price: 0, imageUrl: '',
     );
   }
+} // Closing brace for Product class
+
+class LiveChatMessage {
+  final String sender;
+  final String message;
+  final bool isSystem;
+  final bool isSeller;
+
+  LiveChatMessage({
+    required this.sender,
+    required this.message,
+    this.isSystem = false,
+    this.isSeller = false,
+  });
 }
+
+

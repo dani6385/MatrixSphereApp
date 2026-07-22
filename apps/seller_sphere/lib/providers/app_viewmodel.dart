@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:seller_sphere/screens/inventoris/models/product.dart';
+import 'package:seller_sphere/models/product.dart';
 import '../models/attendance_record.dart';
 
 class AppViewModel with ChangeNotifier {

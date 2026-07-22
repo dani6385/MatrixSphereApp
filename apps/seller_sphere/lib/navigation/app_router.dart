@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/navigation/routes/app_routes.dart';
-import 'package:seller_sphere/screens/streams/streaming_screen.dart';
+//import 'package:seller_sphere/screens/streams/streaming_screen.dart';
 
 // Import semua layar Anda di sini
 import '../screens/home/home_screen.dart';
@@ -49,12 +49,12 @@ final List<StatefulShellBranch> _mobileBranches = [
     GoRoute(
         path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
   ]),
-  // 1: Seller
-  StatefulShellBranch(routes: [
+  // 1: stream
+  /*StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.stream,
         builder: (context, state) => const StreamingScreen()),
-  ]),
+  ]),*/
   // 2: Approval
   
   // 3: Absensi

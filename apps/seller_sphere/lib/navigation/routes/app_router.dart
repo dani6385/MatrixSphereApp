@@ -7,7 +7,7 @@ import 'package:seller_sphere/screens/account/account_screen.dart';
 import 'package:seller_sphere/screens/calendar/calendar_screen.dart';
 import 'package:seller_sphere/screens/home/home_screen.dart';
 import 'package:seller_sphere/screens/inventoris/inventory_screen.dart';
-import 'package:seller_sphere/screens/streams/streaming_screen.dart';
+//import 'package:seller_sphere/screens/streams/streaming_screen.dart';
 //import 'package:seller_sphere/screens/status/status_screen.dart';
 import 'package:seller_sphere/screens/chat/chat_screen.dart';
 import 'package:seller_sphere/screens/absensi/camera_absen_screen.dart';
@@ -29,12 +29,12 @@ final appRouter = GoRouter(
               path: AppRoutes.home,
               builder: (context, state) => const HomeScreen()),
         ]),
-        // Branch 1: Seller
-        StatefulShellBranch(routes: [
+        // Branch 1: Streams
+        /*StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.stream,
               builder: (context, state) => const StreamingScreen()),
-        ]),
+        ]),*/
         // Branch 2: Status
         StatefulShellBranch(routes: [
           GoRoute(
