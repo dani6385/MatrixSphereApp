@@ -10,6 +10,7 @@ import 'package:media_info/media_info.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'models/product.dart';
 import 'providers/app_provider.dart';
+import 'widgets/inventory_app_bar.dart';
 
 // Definisi warna tema agar mudah diakses
 class InventoryScreen extends StatefulWidget {
@@ -67,16 +68,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
     }
 
     return Scaffold(
-      // AppBar bisa ditambahkan di sini jika perlu
+      appBar: InventoryAppBar(
+        onSearchChanged: (value) => setState(() => _searchQuery = value),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Search Box
-            _buildSearchField(),
-            const SizedBox(height: 12),
-
             // 1b. Safe Mode controls
             _buildSafeModeCard(viewModel),
             const SizedBox(height: 12),
@@ -166,22 +165,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   // --- Builder Methods for UI Sections ---
-
-  Widget _buildSearchField() {
-    return SizedBox(
-      height: 52,
-      child: TextField(
-        onChanged: (value) => setState(() => _searchQuery = value),
-        decoration: const InputDecoration(
-          hintText: "Cari berdasarkan nama atau SKU...",
-          hintStyle: TextStyle(fontSize: 13),
-          prefixIcon: Icon(Icons.search, size: 18),
-          border: OutlineInputBorder(),
-          contentPadding: EdgeInsets.symmetric(horizontal: 12),
-        ),
-      ),
-    );
-  }
 
   Widget _buildSafeModeCard(AppProvider viewModel) {
     final isSafeModeEnabled = viewModel.isSafeModeEnabled;
