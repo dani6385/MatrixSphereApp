@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+//import 'package:flutter/foundation.dart' show kIsWeb;
+//import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 import 'package:seller_sphere/screens/chat/Providers/chat_provider.dart';
@@ -23,60 +23,6 @@ class _AppNavigatorState extends State<AppNavigator> {
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
-      return Scaffold(
-        body: Row(
-          children: [
-            NavigationRail(
-              selectedIndex: widget.navigationShell.currentIndex,
-              onDestinationSelected: _onItemTapped,
-              labelType: NavigationRailLabelType.all,
-              backgroundColor: kDarkSurface,
-              indicatorColor: kBrandPrimary,
-              selectedIconTheme: const IconThemeData(color: kDarkTextPrimary),
-              unselectedIconTheme:
-                  const IconThemeData(color: kDarkTextSecondary),
-              selectedLabelTextStyle: const TextStyle(color: kDarkTextPrimary),
-              unselectedLabelTextStyle:
-                  const TextStyle(color: kDarkTextSecondary),
-              destinations: const [
-                NavigationRailDestination(
-                    icon: Icon(Icons.home_outlined),
-                    selectedIcon: Icon(Icons.home),
-                    label: Text('Home')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.cast_sharp),
-                    selectedIcon: Icon(Icons.cast_connected),
-                    label: Text('Stream')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.point_of_sale),
-                    selectedIcon: Icon(Icons.point_of_sale_sharp),
-                    label: Text('Kasir')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.shopping_bag),
-                    selectedIcon: Icon(Icons.shopping_cart),
-                    label: Text('Inventory')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.fingerprint),
-                    selectedIcon: Icon(Icons.fingerprint),
-                    label: Text('Absensi')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.calendar_month_outlined),
-                    selectedIcon: Icon(Icons.calendar_month),
-                    label: Text('Kalender')),
-                NavigationRailDestination(
-                    icon: Icon(Icons.person_2_outlined),
-                    selectedIcon: Icon(Icons.person),
-                    label: Text('Akun')),
-              ],
-            ),
-            const VerticalDivider(thickness: 1, width: 1),
-            Expanded(child: widget.navigationShell),
-          ],
-        ),
-      );
-    }
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ChatProvider()),
@@ -85,23 +31,43 @@ class _AppNavigatorState extends State<AppNavigator> {
       child: Scaffold(
         extendBody: true,
         body: widget.navigationShell,
-        bottomNavigationBar: CurvedNavigationBar(
-          index: widget.navigationShell.currentIndex,
-          height: 65,
-          // PERBAIKAN: Memberikan warna putih (color: Colors.white) pada setiap ikon agar terlihat kontras di latar belakang gelap
-          items: const <Widget>[
-            Icon(Icons.home, size: 30, color: Colors.white),
-            Icon(Icons.cast_sharp, size: 30, color: Colors.white),
-            Icon(Icons.point_of_sale, size: 30, color: Colors.white),
-            Icon(Icons.shopping_bag, size: 30, color: Colors.white),
-            Icon(Icons.fingerprint, size: 30, color: Colors.white), 
+        // --- PERUBAHAN DARI CurvedNavigationBar KE BottomNavigationBar STANDAR ---
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined),
+              activeIcon: Icon(Icons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.cast),
+              activeIcon: Icon(Icons.cast_connected),
+              label: 'Stream',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.point_of_sale_outlined),
+              activeIcon: Icon(Icons.point_of_sale),
+              label: 'Kasir',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.shopping_bag_outlined),
+              activeIcon: Icon(Icons.shopping_bag),
+              label: 'Inventory',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.fingerprint),
+              label: 'Absensi',
+            ),
           ],
-          onTap: _onItemTapped,
-          color: kDarkBackground,
-          buttonBackgroundColor: kBrandPrimary,
-          backgroundColor: Colors.transparent,
-          animationCurve: Curves.easeInOut,
-          animationDuration: const Duration(milliseconds: 400),
+          currentIndex: widget.navigationShell.currentIndex,
+          onTap: _onItemTapped, // Fungsi ini tetap sama, untuk berpindah branch
+          // --- Styling untuk tema gelap ---
+          type: BottomNavigationBarType.fixed, // Agar semua label terlihat
+          backgroundColor: kDarkSurface, // Warna latar belakang bar
+          selectedItemColor: kBrandPrimary, // Warna ikon & label yang aktif
+          unselectedItemColor:
+              kDarkTextSecondary, // Warna ikon & label yang tidak aktif
+          showUnselectedLabels: true,
         ),
       ),
     );

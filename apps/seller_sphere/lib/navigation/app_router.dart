@@ -1,108 +1,75 @@
-import 'package:flutter/foundation.dart' show kIsWeb;
+// app_router.dart
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/models/product.dart';
 import 'package:seller_sphere/navigation/app_navigator.dart';
-import 'package:seller_sphere/navigation/routes/app_routes.dart';
-//import 'package:seller_sphere/screens/streams/streaming_screen.dart';
 
-// Import semua layar Anda di sini
-import '../screens/home/home_screen.dart';
-import '../screens/sellers/seller_screen.dart';
-import 'package:seller_sphere/screens/inventoris/inventory_screen.dart';
-import '../screens/status/status_screen.dart';
-import '../screens/attendance/attendance_screen.dart';
-import '../screens/calendar/calendar_screen.dart';
-//import '../screens/account/account_screen.dart';
+import 'package:seller_sphere/screens/home/home_screen.dart';
+import 'package:seller_sphere/screens/streams/streaming_screen.dart';
+import 'package:seller_sphere/screens/sellers/seller_screen.dart';
+import 'package:seller_sphere/screens/inventory/inventory_screen.dart';
+import 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 
+import 'app_routes.dart';
 
-// Kunci navigator global
+// Kunci GlobalKey untuk NavigatorShell, diperlukan untuk StatefulShellRoute
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-// --- KONFIGURASI ROUTER --- //
+// Placeholder screen untuk fitur yang belum dibuat
+class PlaceholderScreen extends StatelessWidget {
+  final String title;
+  const PlaceholderScreen({super.key, required this.title});
 
-final appRouter = GoRouter(
-  initialLocation: AppRoutes.home,
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title)),
+      body: Center(child: Text('Layar untuk $title')),
+    );
+  }
+}
+
+/// The main router configuration for the application.
+final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
+  initialLocation: AppRoutes.home, // Lokasi awal aplikasi
+  debugLogDiagnostics: true, // Set to false in production
   routes: [
-    // Rute Shell Utama untuk Navigasi dengan BottomBar/NavRail
+    // Konfigurasi untuk navigasi utama dengan BottomNavigationBar
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        // Widget AppNavigator menjadi UI shell
+        // Widget AppNavigator akan membungkus dan menampilkan layar dari cabang (branch)
         return AppNavigator(navigationShell: navigationShell);
       },
-      // Gunakan cabang yang berbeda berdasarkan platform
-      branches: kIsWeb ? _webBranches : _mobileBranches,
-    ),
-
-    // Rute non-shell (yang akan tampil di atas shell, tanpa nav bar)
-    // Contoh: Layar detail
-    
+      branches: <StatefulShellBranch>[
+        // Setiap branch mewakili satu item di BottomNavigationBar
+        // Branch 0: Home
+        StatefulShellBranch(routes: [
+          GoRoute(path: AppRoutes.home, builder: (context, state) => const PlaceholderScreen(title: 'Home')),
+          GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
+        ]),
+        // Branch 1: Stream
+        StatefulShellBranch(routes: [
+          GoRoute(path: AppRoutes.stream, builder: (context, state) => const PlaceholderScreen(title: 'Stream')),
+          GoRoute(path: AppRoutes.stream, builder: (context, state) => const StreamingScreen()),
+        ]),
+        // Branch 2: Kasir (POS) - Rute ini belum ada di AppRoutes, kita buat placeholder
+        StatefulShellBranch(routes: [
+          GoRoute(path: '/pos', builder: (context, state) => const PlaceholderScreen(title: 'Kasir')),
+          GoRoute(path: AppRoutes.sellers, builder: (context, state) => const SellerScreen()),
+        ]),
+        // Branch 3: Inventory
+        StatefulShellBranch(routes: [
+          GoRoute(path: AppRoutes.inventory, builder: (context, state) => const PlaceholderScreen(title: 'Inventory')),
+          GoRoute(path: AppRoutes.inventory, builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (Product p1) {  },)),
+        ]),
+        // Branch 4: Absensi
+        StatefulShellBranch(routes: [
+          GoRoute(path: AppRoutes.attendance, builder: (context, state) => const PlaceholderScreen(title: 'Absensi')),
+          GoRoute(path: AppRoutes.attendance, builder: (context, state) => const AttendanceScreen()),
+        ]),
+      ],
+    )
   ],
 );
-
-// --- CABANG NAVIGASI (BRANCHES) --- //
-
-// Cabang untuk platform Mobile (Android/iOS) - 5 item
-final List<StatefulShellBranch> _mobileBranches = [
-  // 0: Home
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
-  ]),
-  // 1: stream
-  /*StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.stream,
-        builder: (context, state) => const StreamingScreen()),
-  ]),*/
-  // 2: Approval
-  
-  // 3: Absensi
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.inventory,
-        builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (product) {})),
-  ]),
-  // 4: Akun
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.status,
-        builder: (context, state) => const StatusScreen()),
-  ]),
-];
-
-// Cabang untuk platform Web - 7 item
-final List<StatefulShellBranch> _webBranches = [
-  // 0: Home
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
-  ]),
-  // 1: Seller
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.sellers,
-        builder: (context, state) => const SellerScreen()),
-  ]),
-  // 2: Approval
-  
-  
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.inventory,
-        builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (product) {})),
-  ]),
-  // 4: Absensi
-  // 5: Kalender
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.calendar,
-        builder: (context, state) => const CalendarScreen()),
-  ]),
-  // 6: Akun
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.attendance,
-        builder: (context, state) => const AttendanceScreen()),
-  ]),
-];
