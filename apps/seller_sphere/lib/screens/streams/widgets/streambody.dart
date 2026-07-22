@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide Badge;
-import 'package:seller_sphere/screens/streams/card/CameraStaticLines.dart';
+import 'package:seller_sphere/screens/streams/card/camera_static_lines.dart';
 import 'package:seller_sphere/screens/streams/card/Pinned_Product_Card.dart';
-import 'package:seller_sphere/screens/streams/card/VideoPreset.dart';
+import 'package:seller_sphere/screens/streams/card/video_preset.dart';
 import 'package:seller_sphere/screens/streams/card/broadcast_ready_interface.dart';
 import 'package:seller_sphere/screens/streams/card/tab_label.dart';
 import 'package:video_player/video_player.dart';
