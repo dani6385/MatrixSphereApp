@@ -38,7 +38,7 @@ class _AppNavigatorState extends State<AppNavigator> {
           // Sekarang Anda bisa mengatur warna di sini!
           activeColor: Colors.deepPurple, // Contoh: Ubah warna aktif
           color: Colors.grey[800], // Contoh: Ubah warna tidak aktif
-          tabBackgroundColor: Colors.deepPurple.withValues(alpha: 0.15), // Contoh: Ubah warna latar tab
+          tabBackgroundColor: Colors.deepPurple.withOpacity(0.15), // Contoh: Ubah warna latar tab
           tabs: const [
             GButton(
               icon: Icons.home,
