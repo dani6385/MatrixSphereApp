@@ -7,7 +7,7 @@ import 'package:shared_services/shared_services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'routes/app_router.dart';
-import 'package:seller_sphere/viewmodel/app_viewmodel.dart';
+import 'package:seller_sphere/providers/app_viewmodel.dart';
 
 void main() async {
   // 1. Pastikan binding diinisialisasi terlebih dahulu

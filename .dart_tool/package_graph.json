@@ -43,6 +43,7 @@
         "go_router",
         "intl",
         "logger",
+        "permission_handler",
         "provider",
         "rxdart",
         "shared_services",

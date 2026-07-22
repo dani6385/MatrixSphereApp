@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/viewmodel/app_viewmodel.dart';
+import 'package:seller_sphere/providers/app_viewmodel.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 import 'widgets/stream_body.dart';

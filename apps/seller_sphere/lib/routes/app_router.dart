@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/viewmodel/app_viewmodel.dart';
+import 'package:seller_sphere/providers/app_viewmodel.dart';
 import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/screens/account/account_screen.dart';
 //import 'package:seller_sphere/screens/bottom_mobile/attendance/attendance_screen.dart';

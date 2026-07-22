@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/models/product.dart';
-import 'package:seller_sphere/viewmodel/app_viewmodel.dart';
+import 'package:seller_sphere/providers/app_viewmodel.dart';
 import 'package:video_player/video_player.dart';
 //import 'package:seller_sphere/models/product.dart';
 import 'package:shared_ui/shared_ui.dart';

@@ -1,11 +1,14 @@
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:seller_sphere/models/product.dart';
+import '../models/attendance_record.dart';
 
 class AppViewModel with ChangeNotifier {
   // BehaviorSubject untuk menampung daftar produk
   final _products = BehaviorSubject<List<Product>>.seeded([]);
-
+  final List<AttendanceRecord> _attendanceList = [];
+  final String _ownerName = "Karyawan";
   // Stream getter untuk produk
   Stream<List<Product>> get products => _products.stream;
 
@@ -63,5 +66,42 @@ class AppViewModel with ChangeNotifier {
   void dispose() {
     super.dispose();
     _products.close();
+  }
+  List<AttendanceRecord> get attendanceList => _attendanceList;
+  String get ownerName => _ownerName;
+
+  // Simulates recording attendance. Returns true on success, false on failure.
+  Future<bool> recordAttendance({required bool clockIn}) async {
+    final today = DateTime.now();
+    final todayString = DateFormat('yyyy-MM-dd').format(today);
+
+    final existingRecordIndex = _attendanceList.indexWhere(
+        (rec) => DateFormat('yyyy-MM-dd').format(rec.date) == todayString);
+
+    if (existingRecordIndex != -1) {
+      // Record for today exists
+      var record = _attendanceList[existingRecordIndex];
+      if (clockIn && record.clockInTime != null) return false; // Already clocked in
+      if (!clockIn && record.clockOutTime != null) return false; // Already clocked out
+      if (!clockIn && record.clockInTime == null) return false; // Must clock in first
+
+      _attendanceList[existingRecordIndex] = AttendanceRecord(
+          date: record.date,
+          clockInTime: clockIn ? DateFormat('HH:mm:ss').format(today) : record.clockInTime,
+          clockOutTime: !clockIn ? DateFormat('HH:mm:ss').format(today) : record.clockOutTime,
+          status: record.status);
+    } else {
+      // No record for today, create a new one
+      if (!clockIn) return false; // Must clock in first
+      _attendanceList.add(AttendanceRecord(
+          date: today, clockInTime: DateFormat('HH:mm:ss').format(today), status: 'Hadir'));
+    }
+    notifyListeners();
+    return true;
+  }
+
+  void triggerNotification(String title, String body) {
+    // In a real app, you would use a plugin like flutter_local_notifications
+    debugPrint("NOTIFICATION: $title - $body");
   }
 }

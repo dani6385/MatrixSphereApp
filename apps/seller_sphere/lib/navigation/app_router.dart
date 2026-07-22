@@ -60,7 +60,7 @@ final List<StatefulShellBranch> _mobileBranches = [
   StatefulShellBranch(routes: [
     GoRoute(
         path: AppRoutes.attendance,
-        builder: (context, state) => const AttendanScreen()),
+        builder: (context, state) => const AttendanceScreen()),
   ]),
   // 4: Akun
   StatefulShellBranch(routes: [

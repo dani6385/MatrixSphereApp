@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:seller_sphere/models/product.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:seller_sphere/viewmodel/app_viewmodel.dart';
+import 'package:seller_sphere/providers/app_viewmodel.dart';
 
 class PinnedProductCard extends StatelessWidget {
   final Product product;
