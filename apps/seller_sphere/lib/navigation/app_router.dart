@@ -1,6 +1,7 @@
 // app_router.dart
 
 import 'package:flutter/material.dart';
+import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/models/product.dart';
 import 'package:seller_sphere/navigation/app_navigator.dart';
@@ -8,7 +9,7 @@ import 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 import 'package:seller_sphere/screens/home/home_screen.dart';
 import 'package:seller_sphere/screens/inventory/inventory_screen.dart';
 import 'package:seller_sphere/screens/sellers/seller_screen.dart';
-//import 'package:seller_sphere/screens/streams/streaming_screen.dart';
+import 'package:seller_sphere/screens/streams/streaming_screen.dart';
 
 import 'app_routes.dart';
 
@@ -48,7 +49,9 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.home, // path: '/'
-              builder: (context, state) => const HomeScreen(),
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const HomeScreen(),
+              ),
             ),
           ],
         ),
@@ -57,7 +60,9 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.stream, // path: '/stream'
-              //builder: (context, state) => const StreamingScreen(),
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const StreamingScreen(),
+              ),
             ),
           ],
         ),
@@ -66,7 +71,9 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.sellers, // path: '/sellers'
-              builder: (context, state) => const SellerScreen(),
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const SellerScreen(),
+              ),
             ),
           ],
         ),
@@ -75,7 +82,9 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.inventory, // path: '/inventory'
-              builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (Product p1) {}),
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: InventoryScreen(onNavigateToLabelPrinter: (Product p1) {}),
+              ),
             ),
           ],
         ),
@@ -84,7 +93,9 @@ final GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.attendance, // path: '/attendance'
-              builder: (context, state) => const AttendanceScreen(),
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const AttendanceScreen(),
+              ),
             ),
           ],
         ),
