@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
-//import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 import 'package:seller_sphere/screens/chat/Providers/chat_provider.dart';
@@ -31,43 +31,32 @@ class _AppNavigatorState extends State<AppNavigator> {
       child: Scaffold(
         extendBody: true,
         body: widget.navigationShell,
-        // --- PERUBAHAN DARI CurvedNavigationBar KE BottomNavigationBar STANDAR ---
-        bottomNavigationBar: BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
-              label: 'Home',
+        // --- Implementasi CustomBottomNavigationBar ---
+        bottomNavigationBar: CustomBottomNavigationBar(
+          selectedIndex: widget.navigationShell.currentIndex,
+          onItemTapped: _onItemTapped,
+          tabs: const [
+            GButton(
+              icon: Icons.home,
+              text: 'Beranda',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.cast),
-              activeIcon: Icon(Icons.cast_connected),
-              label: 'Stream',
+            GButton(
+              icon: Icons.live_tv,
+              text: 'Live',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.point_of_sale_outlined),
-              activeIcon: Icon(Icons.point_of_sale),
-              label: 'Kasir',
+            GButton(
+              icon: Icons.point_of_sale,
+              text: 'Kasir',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_bag_outlined),
-              activeIcon: Icon(Icons.shopping_bag),
-              label: 'Inventory',
+            GButton(
+              icon: Icons.inventory_2,
+              text: 'Inventori',
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fingerprint),
-              label: 'Absensi',
+            GButton(
+              icon: Icons.how_to_reg,
+              text: 'Absensi',
             ),
           ],
-          currentIndex: widget.navigationShell.currentIndex,
-          onTap: _onItemTapped, // Fungsi ini tetap sama, untuk berpindah branch
-          // --- Styling untuk tema gelap ---
-          type: BottomNavigationBarType.fixed, // Agar semua label terlihat
-          backgroundColor: kDarkSurface, // Warna latar belakang bar
-          selectedItemColor: kBrandPrimary, // Warna ikon & label yang aktif
-          unselectedItemColor:
-              kDarkTextSecondary, // Warna ikon & label yang tidak aktif
-          showUnselectedLabels: true,
         ),
       ),
     );

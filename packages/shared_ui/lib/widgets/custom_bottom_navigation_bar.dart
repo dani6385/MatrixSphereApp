@@ -3,72 +3,51 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class CustomBottomNavigationBar extends StatefulWidget {
-  final List<Widget> screens;
+/// A custom bottom navigation bar designed to integrate with a router like GoRouter.
+///
+/// This widget is "dumb" or "state-less" in the sense that it does not manage
+/// its own selected index. It receives the [selectedIndex] from its parent
+/// and uses the [onItemTapped] callback to notify the parent when an item is tapped.
+class CustomBottomNavigationBar extends StatelessWidget {
   final List<GButton> tabs;
-  final int initialSelectedIndex;
+  final int selectedIndex;
+  final void Function(int) onItemTapped;
 
   const CustomBottomNavigationBar({
     super.key,
-    required this.screens,
     required this.tabs,
-    this.initialSelectedIndex = 0,
+    required this.selectedIndex,
+    required this.onItemTapped,
   });
 
   @override
-  State<CustomBottomNavigationBar> createState() =>
-      _CustomBottomNavigationBarState();
-}
-
-class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar> {
-  late int _selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedIndex = widget.initialSelectedIndex;
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final items = widget.tabs
+    // Map the GButton tabs to a list of Icon widgets for CurvedNavigationBar
+    final items = tabs
         .map((tab) => Icon(tab.icon, size: 24, color: kDarkTextPrimary))
         .toList();
 
-    return Scaffold(
-      extendBody: true,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: widget.screens,
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: kBrandPrimary.withValues(alpha: 0.3),
+            spreadRadius: 5,
+            blurRadius: 10,
+            offset: const Offset(0, -3), // changes position of shadow
+          ),
+        ],
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: kBrandPrimary.withOpacity(0.3),
-              spreadRadius: 5,
-              blurRadius: 10,
-              offset: const Offset(0, -3), // changes position of shadow
-            ),
-          ],
-        ),
-        child: CurvedNavigationBar(
-          index: _selectedIndex,
-          height: 60,
-          items: items,
-          onTap: _onItemTapped,
-          color: kNeonCyan,
-          buttonBackgroundColor: kTransparent, // Menggunakan kBrandPrimary
-          backgroundColor: kLightBackground,
-          animationCurve: Curves.easeInOut,
-          animationDuration: const Duration(milliseconds: 400),
-        ),
+      child: CurvedNavigationBar(
+        index: selectedIndex,
+        height: 60,
+        items: items,
+        onTap: onItemTapped,
+        color: kNeonCyan,
+        buttonBackgroundColor: kTransparent,
+        backgroundColor: kLightBackground,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 400),
       ),
     );
   }
