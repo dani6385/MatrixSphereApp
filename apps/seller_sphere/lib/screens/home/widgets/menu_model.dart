@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/routes/app_routes.dart';
+import 'package:seller_sphere/navigation/routes/app_routes.dart';
 
 /// A Model that displays the menu.
 class MenuModel extends StatelessWidget {

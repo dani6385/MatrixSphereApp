@@ -45,19 +45,19 @@ class _AppNavigatorState extends State<AppNavigator> {
                     selectedIcon: Icon(Icons.home),
                     label: Text('Home')),
                 NavigationRailDestination(
-                    icon: Icon(Icons.business_outlined),
-                    selectedIcon: Icon(Icons.business),
-                    label: Text('Seller')),
+                    icon: Icon(Icons.cast_sharp),
+                    selectedIcon: Icon(Icons.cast_connected),
+                    label: Text('Stream')),
                 NavigationRailDestination(
-                    icon: Icon(Icons.check_circle_outline),
-                    selectedIcon: Icon(Icons.check_circle),
-                    label: Text('Approval')),
+                    icon: Icon(Icons.point_of_sale),
+                    selectedIcon: Icon(Icons.point_of_sale_sharp),
+                    label: Text('Kasir')),
                 NavigationRailDestination(
-                    icon: Icon(Icons.system_update_outlined),
-                    selectedIcon: Icon(Icons.system_update),
-                    label: Text('System')),
+                    icon: Icon(Icons.shopping_bag),
+                    selectedIcon: Icon(Icons.shopping_cart),
+                    label: Text('Inventory')),
                 NavigationRailDestination(
-                    icon: Icon(Icons.fingerprint_outlined),
+                    icon: Icon(Icons.fingerprint),
                     selectedIcon: Icon(Icons.fingerprint),
                     label: Text('Absensi')),
                 NavigationRailDestination(

@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
-import 'package:seller_sphere/providers/app_viewmodel.dart';
 import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/screens/account/account_screen.dart';
 //import 'package:seller_sphere/screens/bottom_mobile/attendance/attendance_screen.dart';
 
 import 'package:seller_sphere/screens/calendar/calendar_screen.dart';
 import 'package:seller_sphere/screens/home/home_screen.dart';
+import 'package:seller_sphere/screens/inventoris/inventory_screen.dart';
 import 'package:seller_sphere/screens/streams/streaming_screen.dart';
-import 'package:seller_sphere/screens/status/status_screen.dart';
+//import 'package:seller_sphere/screens/status/status_screen.dart';
 import 'package:seller_sphere/screens/chat/chat_screen.dart';
 import 'package:seller_sphere/screens/absensi/camera_absen_screen.dart';
 import 'package:seller_sphere/screens/access/access_screen.dart'; // <-- Impor halaman baru
@@ -34,18 +33,13 @@ final appRouter = GoRouter(
         StatefulShellBranch(routes: [
           GoRoute(
               path: AppRoutes.stream,
-              builder: (context, state) {
-                // Ambil AppViewModel dari Provider dan teruskan ke StreamingScreen
-                return StreamingScreen(viewModel: context.read<AppViewModel>());
-              }),
+              builder: (context, state) => const StreamingScreen()),
         ]),
-        // Branch 2: Approval
-        
-        // Branch 3: Status
+        // Branch 2: Status
         StatefulShellBranch(routes: [
           GoRoute(
-              path: AppRoutes.status,
-              builder: (context, state) => const StatusScreen()),
+              path: AppRoutes.inventory,
+              builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (product) {})),
         ]),
         // Branch 4: Attendance (Absensi)
         /*StatefulShellBranch(routes: [

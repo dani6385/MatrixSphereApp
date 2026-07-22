@@ -6,7 +6,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'routes/app_router.dart';
+import 'navigation/routes/app_router.dart';
 import 'package:seller_sphere/providers/app_viewmodel.dart';
 
 void main() async {

@@ -1,66 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/providers/app_viewmodel.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
-
-import 'widgets/stream_body.dart';
-import 'widgets/streaming_app_bar.dart';
+import 'view_model/streaming_view_model.dart';
 
 class StreamingScreen extends StatelessWidget {
-  final AppViewModel viewModel;
-
-  const StreamingScreen({super.key, required this.viewModel});
+  const StreamingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Contoh implementasi Drawer dan EndDrawer
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: const [
-            DrawerHeader(
-              decoration: BoxDecoration(color: kSoftTeal),
-              child: Text('Menu Utama'),
-            ),
-            ListTile(title: Text('Item 1')),
-            ListTile(title: Text('Item 2')),
-          ],
+    // Gunakan ChangeNotifierProvider untuk membuat dan menyediakan ViewModel
+    return ChangeNotifierProvider(
+      create: (_) => StreamingViewModel(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Live Streaming'),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 1,
         ),
-      ),
-      endDrawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: const [
-            DrawerHeader(
-              decoration: BoxDecoration(color: kVividOrchid),
-              child: Text('Menu Samping'),
-            ),
-            ListTile(title: Text('Profil')),
-            ListTile(title: Text('Pengaturan')),
-          ],
-        ),
-      ),
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      // Gunakan Builder untuk mendapatkan context yang benar untuk AppBar
-      body: Builder(builder: (scaffoldContext) {
-        return Column(
-          children: [
-            StreamingAppBar(
-              title: "Live Console",
-              scaffoldContext: scaffoldContext,
-              actions: [
-                // Tombol untuk membuka EndDrawer (jika ada)
-                if (Scaffold.of(scaffoldContext).hasEndDrawer)
-                  IconButton(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () => Scaffold.of(scaffoldContext).openEndDrawer(),
+        body: Consumer<StreamingViewModel>(
+          builder: (context, viewModel, child) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    viewModel.currentStreamTitle,
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-              ],
-            ),
-            Expanded(child: StreamingBody(viewModel: viewModel)),
-          ],
-        );
-      }),
+                  const SizedBox(height: 20),
+                  ElevatedButton.icon(
+                    onPressed: viewModel.isStreaming ? viewModel.stopStream : viewModel.startStream,
+                    icon: Icon(viewModel.isStreaming ? Icons.stop : Icons.play_arrow),
+                    label: Text(viewModel.isStreaming ? 'Hentikan Stream' : 'Mulai Stream'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: viewModel.isStreaming ? kRadiantRose : kNeonCyan,
+                      foregroundColor: Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }
