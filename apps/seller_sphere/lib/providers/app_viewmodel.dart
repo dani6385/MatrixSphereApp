@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:seller_sphere/models/product.dart';
-import '../models/attendance_record.dart';
+import 'package:seller_sphere/models/attendance_model.dart';
 
 class AppViewModel with ChangeNotifier {
   // BehaviorSubject untuk menampung daftar produk

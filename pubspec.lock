@@ -432,6 +432,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.1"
+  geodesy:
+    dependency: transitive
+    description:
+      name: geodesy
+      sha256: "673da9f1c48cb6816a239eadfad634a11ec82f3b80ee0a5584e380bd04756bec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.0"
   geolocator:
     dependency: transitive
     description:
@@ -664,6 +672,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.12.0"
+  latlong2:
+    dependency: transitive
+    description:
+      name: latlong2
+      sha256: "84b776b100a84a684a0aaa3fa4dc2c9b1931c658de533701ee4e09bfa991f8dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.10.1"
   leak_tracker:
     dependency: transitive
     description:

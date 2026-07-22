@@ -5,7 +5,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 import 'package:seller_sphere/screens/chat/Providers/chat_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
-import '../screens/attendance/providers/attendance_provider.dart';
+import '../providers/app_viewmodel.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -30,7 +30,7 @@ class _AppNavigatorState extends State<AppNavigator> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ChatProvider()),
-        ChangeNotifierProvider(create: (_) => AttendanceProvider()),
+        ChangeNotifierProvider(create: (_) => AppViewModel()),
       ],
       child: Scaffold(
         extendBody: true,
