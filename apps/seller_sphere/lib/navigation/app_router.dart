@@ -46,27 +46,22 @@ final GoRouter appRouter = GoRouter(
         // Setiap branch mewakili satu item di BottomNavigationBar
         // Branch 0: Home
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.home, builder: (context, state) => const PlaceholderScreen(title: 'Home')),
           GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
         ]),
         // Branch 1: Stream
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.stream, builder: (context, state) => const PlaceholderScreen(title: 'Stream')),
           GoRoute(path: AppRoutes.stream, builder: (context, state) => const StreamingScreen()),
         ]),
         // Branch 2: Kasir (POS) - Rute ini belum ada di AppRoutes, kita buat placeholder
         StatefulShellBranch(routes: [
-          GoRoute(path: '/pos', builder: (context, state) => const PlaceholderScreen(title: 'Kasir')),
           GoRoute(path: AppRoutes.sellers, builder: (context, state) => const SellerScreen()),
         ]),
         // Branch 3: Inventory
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.inventory, builder: (context, state) => const PlaceholderScreen(title: 'Inventory')),
           GoRoute(path: AppRoutes.inventory, builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (Product p1) {  },)),
         ]),
         // Branch 4: Absensi
         StatefulShellBranch(routes: [
-          GoRoute(path: AppRoutes.attendance, builder: (context, state) => const PlaceholderScreen(title: 'Absensi')),
           GoRoute(path: AppRoutes.attendance, builder: (context, state) => const AttendanceScreen()),
         ]),
       ],
