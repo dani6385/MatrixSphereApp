@@ -19,4 +19,5 @@ class AppRoutes {
   static const String goodsIn = '/goods-in'; // Rute untuk input barang
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
   static const String goodsOut = '/goods-out'; // Rute untuk pengeluaran barang
+  static const String login = '/login';
 }
