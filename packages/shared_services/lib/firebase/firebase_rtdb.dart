@@ -1,7 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_services/data/shop_realtime_screen.dart';
 
-import 'package:seller_sphere/models/product.dart';
+import 'package:shared_services/src/models/product_model.dart';
 
 /// Sebuah service class untuk berinteraksi dengan Firebase Realtime Database.
 ///
@@ -155,8 +156,8 @@ class FirebaseRtdbService {
         allShopsData.forEach((shopId, shopData) {
           final shop = Shop.fromJson(shopId, shopData as Map<String, dynamic>);
           // 3. Cek apakah toko memiliki produk yang dicari
-          if (shop.products.containsKey(productName)) {
-            matchingShops.add(shop);
+          if (shop?.products.containsKey(productName)) {
+            matchingShops.add(shop!);
           }
         });
       }
@@ -198,11 +199,10 @@ class FirebaseRtdbService {
         final data = Map<String, dynamic>.from(snapshot.value as Map);
         data.forEach((productName, productData) {
           if (productData is Map) {
-            final productMap = Map<String, dynamic>.from(productData);
             products.add(Product(
               name: productName,
-              price: (productMap['price'] as num).toDouble(),
-              stock: productMap['stock'] as int,
+              price:productData['price'].toDouble(),
+              stock: productData['stock'] as int,
               id: '',
               description: '',
               imageUrl: '',
@@ -215,9 +215,10 @@ class FirebaseRtdbService {
               ageRating: 0,
             ));
           } else if (productData is num) {
+            productData.toDouble();
             products.add(Product(
                 name: productName,
-                price: productData.toDouble(),
+                price: 0,
                 stock: 0,
                 id: '',
                 description: '',
@@ -283,7 +284,7 @@ class FirebaseRtdbService {
         orderItems.forEach((productName, quantity) {
           final productData = products[productName] as Map<String, dynamic>;
           productData['stock'] = (productData['stock'] as int) - quantity;
-          totalOrderPrice += (productData['price'] as int) * quantity;
+          totalOrderPrice += (productData['price'] as num).toInt() * quantity;
         });
 
         // 3. Tambahkan pesanan baru

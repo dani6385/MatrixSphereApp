@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shared_services/firebase/firebase_rtdb.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:shared_services/shared_services.dart';
 
 class ShopRealtimeScreen extends StatefulWidget {
   // ID toko yang ingin ditampilkan. Bisa didapat dari halaman sebelumnya.
@@ -84,5 +83,19 @@ class _ShopRealtimeScreenState extends State<ShopRealtimeScreen> {
         },
       ),
     );
+  }
+}
+
+class Shop {
+  get id => null;
+  
+  get products => null;
+
+  Map<String, dynamic> toJson() {
+    return {}; // Placeholder, implement actual serialization if needed
+  }
+
+  static Shop? fromJson(String s, Map<String, dynamic> shopData) {
+    return null;
   }
 }

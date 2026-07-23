@@ -17,7 +17,8 @@ class StreamingScreen extends StatefulWidget {
   State<StreamingScreen> createState() => _StreamingScreenState();
 }
 
-class _StreamingScreenState extends State<StreamingScreen> with TickerProviderStateMixin {
+class _StreamingScreenState extends State<StreamingScreen>
+    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // The TickerProvider is passed to the ViewModel here.
@@ -30,49 +31,49 @@ class _StreamingScreenState extends State<StreamingScreen> with TickerProviderSt
 
 class _StreamingScreenContent extends StatelessWidget {
   const _StreamingScreenContent();
-  
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     // The ViewModel is now accessed via context.watch or context.read
     // throughout the child widgets (LiveVideoPlayer, InteractiveConsole, etc.).
 
+    // Dapatkan tinggi layar untuk menentukan ukuran video yang diperluas
+    final screenHeight = MediaQuery.of(context).size.height;
+    final expandedVideoHeight = screenHeight * 0.4; // Video akan memakan 40% tinggi layar
+
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            const Icon(Icons.live_tv, color: kNeonCyan),
-            const SizedBox(width: 8),
-            Text(
+      // Kita tidak lagi menggunakan AppBar di sini, karena akan digantikan oleh SliverAppBar
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            // Judul yang akan muncul saat app bar diciutkan
+            title: Text(
               "Live Streaming Console",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                color: theme.colorScheme.onSurface,
-              ),
+              style: TextStyle(color: theme.colorScheme.onSurface),
             ),
-          ],
-        ),
-        backgroundColor: theme.scaffoldBackgroundColor,
-        elevation: 0,
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Live Stream Camera View
-            Expanded(
-              flex: 10,
-              child: LiveVideoPlayer(),
+            leading: const Icon(Icons.live_tv, color: kNeonCyan),
+            backgroundColor: theme.scaffoldBackgroundColor,
+            // Membuat AppBar tetap terlihat di atas saat di-scroll
+            pinned: true,
+            // Ketinggian AppBar saat diperluas sepenuhnya
+            expandedHeight: expandedVideoHeight,
+            // Widget yang akan mengisi ruang yang bisa diperluas (video player)
+            flexibleSpace: const FlexibleSpaceBar(
+              background: LiveVideoPlayer(),
+              // Kita tidak memerlukan judul di sini karena sudah ada di SliverAppBar
             ),
-            SizedBox(height: 16),
-            // Interactive Tabs & Console
-            Expanded(
-              flex: 12,
+          ),
+          // Widget ini akan mengisi sisa ruang yang tersedia di layar
+          // dan menjadi konten yang bisa di-scroll.
+          const SliverFillRemaining(
+            hasScrollBody: false, // Penting agar tidak ada double scroll
+            child: Padding(
+              padding: EdgeInsets.all(16.0),
               child: InteractiveConsole(),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

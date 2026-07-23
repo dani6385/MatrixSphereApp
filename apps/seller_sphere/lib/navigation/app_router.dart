@@ -16,7 +16,9 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 // Placeholder screen untuk fitur yang belum dibuat
 class AppRouter extends StatelessWidget {
   final String title;
-  const AppRouter({super.key, required this.title, required AuthBloc authBloc});
+
+  const AppRouter({super.key, required this.title});
+  //const AppRouter({super.key, required this.title, required AuthBloc authBloc});
 
   @override
   Widget build(BuildContext context) {

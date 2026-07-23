@@ -11,7 +11,7 @@ class LoginAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: const Text('Login'),
       centerTitle: true,
-      backgroundColor: kBrandTertiary,
+      backgroundColor: kDarkBorder,
       leading: IconButton(
         icon: const Icon(Icons.menu, color: kBrandBlack),
         onPressed: () {

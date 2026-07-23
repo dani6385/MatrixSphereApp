@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:seller_sphere/auth/auth_bloc.dart';
+import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class RegisterPage extends StatefulWidget {
