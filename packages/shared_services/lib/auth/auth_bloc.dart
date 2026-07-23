@@ -12,13 +12,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({required AuthService authService})
       : _authService = authService,
         super(AuthInitial()) {
-    on<LoginRequested>(_onLoginRequested);
+    on<AuthLoginRequested>(_onLoginRequested);
     on<RegisterRequested>(_onRegisterRequested);
     on<LogoutRequested>(_onLogoutRequested);
   }
 
   Future<void> _onLoginRequested(
-    LoginRequested event,
+    AuthLoginRequested event,
     Emitter<AuthState> emit,
   ) async {
     emit(AuthLoading());

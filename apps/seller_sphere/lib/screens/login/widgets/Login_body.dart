@@ -32,7 +32,7 @@ class _LoginBodyState extends State<LoginBody> {
       final password = _passwordController.text.trim();
 
       context.read<AuthBloc>().add(
-            LoginRequested(email: email, password: password),
+            AuthLoginRequested(email: email, password: password),
           );
     }
   }
