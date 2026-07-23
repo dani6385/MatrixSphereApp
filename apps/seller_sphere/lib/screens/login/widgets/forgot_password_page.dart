@@ -24,9 +24,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   void _sendResetLink() {
     if (_formKey.currentState!.validate()) {
       final email = _emailController.text.trim();
-      context
-          .read<AuthBloc>()
-          .add(PasswordResetRequested(email: email) as AuthEvent);
+      context.read<AuthBloc>().add(AuthPasswordResetRequested(email: email));
 
       // Tampilkan dialog konfirmasi
       showDialog(
@@ -86,10 +84,4 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       ),
     );
   }
-}
-
-class PasswordResetRequested {
-  final String email;
-
-  const PasswordResetRequested({required this.email});
 }
