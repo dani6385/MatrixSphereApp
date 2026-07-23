@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
 
@@ -111,6 +112,26 @@ final GoRouter appRouter = GoRouter(
               path: AppRoutes.register, // path: '/attendance'
               pageBuilder: (context, state) => FadeTransitionPage(
                 child: const RegisterPage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.profile, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const ProfileScreen(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.editprofile, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const EditProfileScreen(),
               ),
             ),
           ],
