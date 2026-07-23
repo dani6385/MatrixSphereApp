@@ -1,6 +1,7 @@
 // app_router.dart
 
 import 'package:flutter/material.dart';
+import 'package:seller_sphere/auth/auth_bloc.dart';
 import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/models/product.dart';
@@ -17,9 +18,9 @@ import 'app_routes.dart';
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 // Placeholder screen untuk fitur yang belum dibuat
-class PlaceholderScreen extends StatelessWidget {
+class AppRouter extends StatelessWidget {
   final String title;
-  const PlaceholderScreen({super.key, required this.title});
+  const AppRouter({super.key, required this.title, required AuthBloc authBloc});
 
   @override
   Widget build(BuildContext context) {
