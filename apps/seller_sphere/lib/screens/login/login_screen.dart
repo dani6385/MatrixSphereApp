@@ -18,11 +18,33 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
-      backgroundColor: kBrandTertiary,
+      backgroundColor: kDarkBackground,
       appBar: const LoginAppBar(),
       //drawer: const SideMenu(selectedRoute: MenuRoute.account),
       //endDrawer: const SettingScreen(), 
       body: const LoginBody(),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          boxShadow: [
+            BoxShadow(
+              color: kDarkOutline.withValues(alpha: 0.2),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: SafeArea(
+          child: Text(
+            '© 2024 MatrixSphere. All rights reserved.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+          ),
+        ),
+      ),
+      
     );
   }
 }

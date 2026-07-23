@@ -7,8 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
+import 'package:seller_sphere/navigation/go_router_refresh_stream.dart';
 import 'package:seller_sphere/screens/login/widgets/forgot_password_page.dart';
-import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
 
 import 'package:shared_services/shared_services.dart';
@@ -48,6 +48,86 @@ void main() async {
   runApp(const SellerSphere());
 }
 
+// Pindahkan GoRouter ke luar kelas agar menjadi top-level variable.
+// Ini adalah praktik terbaik untuk memastikan router tidak dibuat ulang.
+final GoRouter _router = GoRouter(
+  initialLocation: '/login', // Mulai dari halaman login
+  // 1. Redirect logic
+  redirect: (BuildContext context, GoRouterState state) {
+    // Dapatkan status login pengguna saat ini dari AuthBloc
+    final authState = context.read<AuthBloc>().state;
+    final bool isLoggedIn = authState is AuthSuccess;
+
+    // Dapatkan lokasi yang sedang dituju
+    final String location = state.uri.toString();
+
+    // Daftar halaman publik yang bisa diakses tanpa login
+    final bool isPublicPage = location == '/login' ||
+        location == '/register' ||
+        location == '/forgot-password';
+
+    // Skenario:
+    // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
+    //   maka alihkan (redirect) ke halaman login.
+    if (!isLoggedIn && !isPublicPage) {
+      return '/login';
+    }
+
+    // - Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
+    //   maka alihkan ke halaman utama (home).
+    if (isLoggedIn && isPublicPage) {
+      return '/';
+    }
+
+    // - Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
+    return null;
+  },
+  refreshListenable:
+      GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
+  // 2. Daftar semua rute aplikasi Anda
+  routes: <RouteBase>[
+    GoRoute(
+      path: '/',
+      builder: (BuildContext context, GoRouterState state) {
+        // Ini adalah halaman utama (home) Anda
+        return const HomeScreen();
+      },
+    ),
+    GoRoute(
+      path: '/login',
+      builder: (BuildContext context, GoRouterState state) {
+        return const LoginScreen();
+      },
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (BuildContext context, GoRouterState state) {
+        return const RegisterPage();
+      },
+    ),
+    GoRoute(
+      path: '/forgot-password',
+      builder: (BuildContext context, GoRouterState state) {
+        return const ForgotPasswordPage();
+      },
+    ),
+    // Tambahkan rute lain di sini, contoh:
+    GoRoute(
+      path: '/sellers',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SellerScreen();
+      },
+    ),
+  ],
+
+  // 3. Halaman error jika rute tidak ditemukan
+  errorBuilder: (context, state) => Scaffold(
+    body: Center(
+      child: Text('Halaman tidak ditemukan: ${state.error}'),
+    ),
+  ),
+);
+
 class SellerSphere extends StatefulWidget {
   const SellerSphere({super.key});
 
@@ -57,96 +137,11 @@ class SellerSphere extends StatefulWidget {
 
 class _SellerSphereState extends State<SellerSphere> {
   late final AuthBloc _authBloc;
-  late final GoRouter _router;
-// File: d:\MatrixSphereApp\apps\seller_sphere\lib\navigation\app_router.dart
-
-// Dapatkan instance GoRouter
-  final GoRouter appRouter = GoRouter(
-    // 1. Redirect logic
-    redirect: (BuildContext context, GoRouterState state) {
-      // Dapatkan status login pengguna saat ini
-      final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
-
-      // Dapatkan lokasi yang sedang dituju
-      final String location = state.uri.toString();
-
-      // Cek apakah pengguna sedang menuju halaman login
-      final bool isPublicPage =
-          location == '/login' || location == '/register' || location == '/forgot-password';
-
-      // Skenario:
-      // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik
-      //   (login atau register), maka alihkan (redirect) ke halaman login.
-      if (!isLoggedIn && !isPublicPage) {
-        return '/login';
-      }
-
-      // - Jika pengguna SUDAH login dan sedang mencoba mengakses halaman login,
-      //   maka alihkan ke halaman utama (home).
-      if (isLoggedIn && isPublicPage) {
-        return '/';
-      }
-
-      // - Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
-      return null;
-    },
-
-    // 2. Daftar semua rute aplikasi Anda
-    routes: <RouteBase>[
-      // The initial route that displays the splash screen.
-      GoRoute(
-        path: '/splash',
-        builder: (BuildContext context, GoRouterState state) {
-          return const SplashScreen();
-        },
-      ),
-      GoRoute(
-        path: '/',
-        builder: (BuildContext context, GoRouterState state) {
-          // Ini adalah halaman utama (home) Anda
-          return const HomeScreen();
-        },
-      ),
-      GoRoute(
-        path: '/login',
-        builder: (BuildContext context, GoRouterState state) {
-          return const LoginScreen();
-        },
-      ),
-      GoRoute(
-        path: '/register',
-        builder: (BuildContext context, GoRouterState state) {
-          return const RegisterPage();
-        },
-      ),
-      GoRoute(
-        path: '/forgot-password',
-        builder: (BuildContext context, GoRouterState state) {
-          return const ForgotPasswordPage();
-        },
-      ),
-      // Tambahkan rute lain di sini, contoh:
-      GoRoute(
-        path: '/sellers',
-        builder: (BuildContext context, GoRouterState state) {
-          return const SellerScreen();
-        },
-      ),
-    ],
-
-    // 3. Halaman error jika rute tidak ditemukan
-    errorBuilder: (context, state) => Scaffold(
-      body: Center(
-        child: Text('Halaman tidak ditemukan: ${state.error}'),
-      ),
-    ),
-  );
 
   @override
   void initState() {
     super.initState();
     _authBloc = AuthBloc(authService: AuthService());
-    _router = appRouter;
   }
 
   @override
@@ -156,20 +151,18 @@ class _SellerSphereState extends State<SellerSphere> {
         BlocProvider.value(value: _authBloc),
         ChangeNotifierProvider(create: (context) => AppProvider()),
       ],
-      child: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthSuccess) {
-            // Jika login atau registrasi berhasil, arahkan ke halaman utama.
-            // GoRouter akan menangani penggantian stack navigasi.
-            context.go('/');
-          }
+      // BlocListener tidak lagi diperlukan di sini karena GoRouter
+      // akan menangani redirect secara otomatis berdasarkan perubahan state.
+      child: Builder(
+        builder: (context) {
+          // Add return statement here
+          return MaterialApp.router(
+            title: 'Seller Sphere',
+            theme: ThemeData.dark(), // Menggunakan tema dari shared_ui
+            debugShowCheckedModeBanner: false,
+            routerConfig: _router,
+          );
         },
-        child: MaterialApp.router(
-          title: 'Seller Sphere',
-          theme: ThemeData.dark(), // Menggunakan tema dari shared_ui
-          debugShowCheckedModeBanner: false,
-          routerConfig: _router,
-        ),
       ),
     );
   }
