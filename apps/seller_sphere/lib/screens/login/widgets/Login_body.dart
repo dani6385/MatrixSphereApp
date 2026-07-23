@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:logger/logger.dart';
-import '../dialog/login_dialog.dart';
 
 final Logger logger = Logger();
 

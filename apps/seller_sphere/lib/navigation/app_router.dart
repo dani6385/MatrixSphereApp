@@ -1,7 +1,6 @@
 // app_router.dart
 
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/auth/auth_bloc.dart';
 import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:go_router/go_router.dart';

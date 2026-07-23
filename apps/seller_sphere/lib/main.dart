@@ -8,8 +8,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:seller_sphere/auth/auth_bloc.dart';
-import 'package:seller_sphere/auth/auth_service.dart';
 import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
