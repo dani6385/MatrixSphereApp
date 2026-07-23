@@ -20,4 +20,5 @@ class AppRoutes {
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
   static const String goodsOut = '/goods-out'; // Rute untuk pengeluaran barang
   static const String login = '/login';
+  static const String splash = '/splash';
 }

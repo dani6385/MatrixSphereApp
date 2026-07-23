@@ -95,7 +95,7 @@ class _SellerSphereState extends State<SellerSphere> {
     routes: <RouteBase>[
       // The initial route that displays the splash screen.
       GoRoute(
-        path: '/',
+        path: '/splash',
         builder: (BuildContext context, GoRouterState state) {
           return const SplashScreen();
         },
