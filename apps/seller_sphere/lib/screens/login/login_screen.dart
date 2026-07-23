@@ -17,7 +17,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
-      backgroundColor: kBrandTertiary,
+      backgroundColor: kDefaultIconDarkColor,
       appBar: const LoginAppBar(),
       //drawer: const SideMenu(selectedRoute: MenuRoute.account),
       //endDrawer: const SettingScreen(),
@@ -42,7 +42,7 @@ class LoginScreen extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
-                ?.copyWith(color: Colors.grey[600]),
+                ?.copyWith(color: kDarkBorder),
           ),
         ),
       ),

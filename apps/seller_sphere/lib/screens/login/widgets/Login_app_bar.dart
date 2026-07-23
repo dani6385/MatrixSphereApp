@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/screens/login/login_screen.dart'; // Import LoginScreen
 import 'package:shared_ui/shared_ui.dart';
 
 class LoginAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -12,20 +11,6 @@ class LoginAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: const Text('Login'),
       centerTitle: true,
       backgroundColor: kDarkBorder,
-      leading: IconButton(
-        icon: const Icon(Icons.menu, color: kBrandBlack),
-        onPressed: () {
-          LoginScreen.scaffoldKey.currentState?.openDrawer();
-        },
-      ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.settings, color: kBrandBlack),
-          onPressed: () {
-            LoginScreen.scaffoldKey.currentState?.openEndDrawer();
-          },
-        ),
-      ],
     );
   }
 
