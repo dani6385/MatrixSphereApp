@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/auth/auth_bloc.dart';
 import 'package:shared_ui/shared_ui.dart';
+
 import 'package:logger/logger.dart';
 
 final Logger logger = Logger();
@@ -87,7 +90,8 @@ class _LoginBodyState extends State<LoginBody> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {
-                  // Aksi lupa password
+                  // Arahkan ke halaman lupa password
+                  context.push('/forgot-password');
                 },
                 child: const Text('Lupa Password?'),
               ),
@@ -95,9 +99,14 @@ class _LoginBodyState extends State<LoginBody> {
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
-                // Aksi login
-                logger.i('Email: ${_emailController.text}');
-                logger.i('Password: ${_passwordController.text}');
+                // Ambil email dan password dari controller
+                final email = _emailController.text.trim();
+                final password = _passwordController.text.trim();
+
+                // Panggil event login dari AuthBloc
+                context.read<AuthBloc>().add(
+                      LoginRequested(email: email, password: password),
+                    );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: kBrandPrimary,

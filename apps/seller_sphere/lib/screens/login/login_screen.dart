@@ -6,7 +6,7 @@ import 'package:shared_ui/shared_ui.dart';
 
 import 'widgets/Login_app_bar.dart';
 import 'widgets/Login_body.dart';
-import 'package:seller_sphere/screens/settings/setting_screen.dart';
+
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -20,8 +20,8 @@ class LoginScreen extends StatelessWidget {
       key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
       backgroundColor: kBrandTertiary,
       appBar: const LoginAppBar(),
-      drawer: const SideMenu(selectedRoute: MenuRoute.account),
-      endDrawer: const SettingScreen(), 
+      //drawer: const SideMenu(selectedRoute: MenuRoute.account),
+      //endDrawer: const SettingScreen(), 
       body: const LoginBody(),
     );
   }

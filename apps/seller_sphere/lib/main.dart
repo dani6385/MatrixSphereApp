@@ -7,8 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
+import 'package:seller_sphere/screens/login/widgets/forgot_password_page.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
+
 import 'package:shared_services/shared_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -69,18 +71,19 @@ class _SellerSphereState extends State<SellerSphere> {
       final String location = state.uri.toString();
 
       // Cek apakah pengguna sedang menuju halaman login
-      final bool isGoingToLogin = location == '/login';
+      final bool isPublicPage =
+          location == '/login' || location == '/register' || location == '/forgot-password';
 
       // Skenario:
-      // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman login,
-      //   maka alihkan (redirect) ke halaman login.
-      if (!isLoggedIn && !isGoingToLogin) {
+      // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik
+      //   (login atau register), maka alihkan (redirect) ke halaman login.
+      if (!isLoggedIn && !isPublicPage) {
         return '/login';
       }
 
       // - Jika pengguna SUDAH login dan sedang mencoba mengakses halaman login,
       //   maka alihkan ke halaman utama (home).
-      if (isLoggedIn && isGoingToLogin) {
+      if (isLoggedIn && isPublicPage) {
         return '/';
       }
 
@@ -114,6 +117,12 @@ class _SellerSphereState extends State<SellerSphere> {
         path: '/register',
         builder: (BuildContext context, GoRouterState state) {
           return const RegisterPage();
+        },
+      ),
+      GoRoute(
+        path: '/forgot-password',
+        builder: (BuildContext context, GoRouterState state) {
+          return const ForgotPasswordPage();
         },
       ),
       // Tambahkan rute lain di sini, contoh:
