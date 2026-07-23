@@ -19,7 +19,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // Konversi GButton menjadi Icon untuk CurvedNavigationBar
     final items = tabs
-        .map((tab) => Icon(tab.icon, size: 24, color: kDarkTextPrimary))
+        .map((tab) => Icon(tab.icon, size: 20, color: kDarkTextPrimary))
         .toList();
 
     return Container(
@@ -35,12 +35,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ),
       child: CurvedNavigationBar(
         index: selectedIndex,
-        height: 60,
+        height: 65,
         items: items,
         onTap: onItemTapped,
         color: kNeonCyan,
-        buttonBackgroundColor: kTransparent, // Menggunakan kBrandPrimary
-        backgroundColor: kLightBackground,
+        buttonBackgroundColor: Colors.white,, // Menggunakan kBrandPrimary
+        backgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 400),
       ),

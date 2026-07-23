@@ -39,7 +39,7 @@ class _AppNavigatorState extends State<AppNavigator> {
           selectedIndex: widget.navigationShell.currentIndex,
           onItemTapped: _onItemTapped,
           tabs: const [
-            GButton(icon: Icons.home, text: 'Home'),
+            GButton(icon: Icons.home, text: 'Home',),
             GButton(icon: Icons.live_tv, text: 'Stream'),
             GButton(icon: Icons.point_of_sale, text: 'Sellers'),
             GButton(icon: Icons.inventory_2, text: 'Inventory'),
