@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/screens/sellers/seller_screen.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/auth/auth_bloc.dart';
 import 'package:seller_sphere/auth/auth_service.dart';
@@ -116,9 +115,9 @@ class _SellerSphereState extends State<SellerSphere> {
       ),
       // Tambahkan rute lain di sini, contoh:
       GoRoute(
-        path: '/',
+        path: '/sellers',
         builder: (BuildContext context, GoRouterState state) {
-          return const HomeScreen();
+          return const SellerScreen();
         },
       ),
     ],
