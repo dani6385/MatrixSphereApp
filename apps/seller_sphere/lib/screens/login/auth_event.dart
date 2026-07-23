@@ -1,4 +1,6 @@
-part of 'auth_bloc.dart';
+part of '../../auth/auth_bloc.dart';
+
+
 
 abstract class AuthEvent extends Equatable {
   const AuthEvent();
@@ -27,3 +29,5 @@ class RegisterRequested extends AuthEvent {
   @override
   List<Object> get props => [name, email, password];
 }
+
+class LogoutRequested extends AuthEvent {}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -15,23 +16,31 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   Future<void> _sendResetLink() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() => _isLoading = true);
-
-      // --- SIMULASI PENGIRIMAN LINK RESET ---
-      // Di aplikasi nyata, Anda akan memanggil API untuk mengirim email.
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (!mounted) return;
-
-      // Tampilkan pesan umum untuk keamanan (tidak memberitahu apakah email ada atau tidak)
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Jika email terdaftar, link reset akan dikirim.'),
-          backgroundColor: Colors.blue,
-        ),
-      );
-
-      // Kembali ke halaman login
-      Navigator.of(context).pop();
+      try {
+        await FirebaseAuth.instance.sendPasswordResetEmail(
+          email: _emailController.text.trim(),
+        );
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Jika email terdaftar, link reset password telah dikirim.'),
+            backgroundColor: Colors.blue,
+          ),
+        );
+        Navigator.of(context).pop();
+      } on FirebaseAuthException catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.message ?? 'Gagal mengirim link reset.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
+      }
     }
   }
 

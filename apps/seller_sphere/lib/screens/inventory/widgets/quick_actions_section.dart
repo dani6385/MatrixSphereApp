@@ -12,7 +12,7 @@ class QuickActionsSection extends StatelessWidget {
         Expanded(
           flex: 13,
           child: ElevatedButton.icon(
-            onPressed: () => InventoryDialogs.showAddProductDialog(context),
+            onPressed: () => InventoryDialogs.showProductFormDialog(context),
             icon: const Icon(Icons.add),
             label: const Text("Tambah Barang"),
             style: ElevatedButton.styleFrom(

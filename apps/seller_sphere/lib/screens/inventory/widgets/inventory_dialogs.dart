@@ -1,13 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/models/product.dart';
+import 'package:seller_sphere/screens/inventory/widgets/add_product_form.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 /// A utility class for showing dialogs related to the inventory screen.
 class InventoryDialogs {
-  /// Shows a placeholder snackbar for the "Add Product" feature.
-  static void showAddProductDialog(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text("Fungsi 'Tambah Barang' belum diimplementasikan.")));
+  /// Shows a modal bottom sheet with a form to add or edit a product.
+  ///
+  /// If [product] is provided, the form will be in "Edit" mode.
+  /// Otherwise, it will be in "Add" mode.
+  static void showProductFormDialog(BuildContext context, {Product? product}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Important for keyboard to not cover the form
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (_) => AddProductForm(product: product),
+    );
   }
 
   /// Shows a placeholder snackbar for the "Import/Export CSV" feature.
@@ -44,4 +54,6 @@ class InventoryDialogs {
       ),
     );
   }
+
+  static void showAddProductDialog(BuildContext context) {}
 }

@@ -1,69 +1,56 @@
-import 'package:flutter/foundation.dart'; // Tambahkan import ini untuk PlatformDispatcher
-import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-
-import 'package:shared_services/shared_services.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_ui/shared_ui.dart';
-import 'navigation/app_router.dart';
-import 'package:seller_sphere/providers/app_viewmodel.dart';
+import 'package:seller_sphere/auth/auth_bloc.dart';
+import 'package:seller_sphere/auth/auth_service.dart';
+import 'package:seller_sphere/screens/home/home_page.dart';
+import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
+import 'package:seller_sphere/screens/login/login_page.dart';
+
 
 void main() async {
-  // 1. Pastikan binding diinisialisasi terlebih dahulu
+  // Pastikan semua binding Flutter siap sebelum menjalankan aplikasi
   WidgetsFlutterBinding.ensureInitialized();
-
-  try {
-    // 2. Coba inisialisasi Firebase
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-
-    // 3. Set up Crashlytics hanya jika Firebase berhasil diinisialisasi
-    FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    };
-
-    PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-      return true;
-    };
-    
-    debugPrint("Firebase & Crashlytics berhasil dikonfigurasi.");
-  } catch (e, stack) {
-    // Jika Firebase gagal, aplikasi TIDAK AKAN layar hitam, melainkan tetap berjalan
-    // dan menampilkan pesan error ini di konsol debug Anda.
-    debugPrint("Gagal menginisialisasi Firebase: $e");
-    debugPrint(stack.toString());
-  }
-
-  // 4. Selalu panggil runApp di luar blok inisialisasi agar layar hitam terhindari
-  runApp(const SellerSphere());
+  // Inisialisasi Firebase
+  await Firebase.initializeApp();
+  runApp(const MyApp());
 }
 
-class SellerSphere extends StatelessWidget {
-  const SellerSphere({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Menyediakan semua BLoC dan Provider yang dibutuhkan di level atas
     return MultiProvider(
       providers: [
-        // Menyediakan ThemeProvider untuk tema
-        ChangeNotifierProvider<ThemeProvider>(create: (_) => ThemeProvider()),
-        
-        ChangeNotifierProvider<AppViewModel>(create: (_) => AppViewModel()),
+        // Menyediakan AuthService ke AuthBloc
+        RepositoryProvider(create: (context) => AuthService()),
+        // Membuat dan menyediakan AuthBloc
+        BlocProvider(
+          create: (context) => AuthBloc(
+            authService: RepositoryProvider.of<AuthService>(context),
+          ),
+        ),
+        // Menyediakan AppProvider untuk state manajemen produk, dll.
+        ChangeNotifierProvider(create: (context) => AppProvider()),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
-          // Ganti ke MaterialApp.router
-          return MaterialApp.router(
-            title: 'Seller Sphere',
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: themeProvider.themeMode,
-            routerConfig: appRouter, // Gunakan konfigurasi router baru
-          );
-        },
+      child: MaterialApp(
+        title: 'Seller Sphere',
+        theme: ThemeData.dark(), // Menggunakan tema dari shared_ui
+        debugShowCheckedModeBanner: false,
+        // BlocBuilder untuk merespons perubahan state otentikasi
+        home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is AuthSuccess) {
+              // Jika otentikasi berhasil, tampilkan HomePage
+              return const HomePage();
+            }
+            // Jika tidak, tampilkan LoginPage (termasuk state Initial, Failure, Loading)
+            return const LoginPage();
+          },
+        ),
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:seller_sphere/bloc/auth_bloc.dart';
-import 'package:seller_sphere/screens/login/auth_bloc.dart' hide AuthBloc;
+import 'package:seller_sphere/auth/auth_bloc.dart';
+//import 'package:seller_sphere/bloc/auth_bloc.dart' hide AuthBloc;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -143,9 +143,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
                             context.read<AuthBloc>().add(RegisterRequested(
-                                  name: _nameController.text,
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
+                                  name: _nameController.text.trim(),
+                                  email: _emailController.text.trim(),
+                                  password: _passwordController.text.trim(),
                                 ));
                           }
                         },

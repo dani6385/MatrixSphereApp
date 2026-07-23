@@ -1,19 +1,23 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../models/product.dart';
+import 'package:seller_sphere/models/product.dart';
+
+import 'package:seller_sphere/services/product_service.dart';
+
 import 'package:logger/logger.dart';
-import 'package:firebase_database/firebase_database.dart';
+
 // Impor pustaka lain yang diperlukan untuk logika bisnis
 // import 'package:csv/csv.dart';
 // import 'package:http/http.dart' as http;
 final Logger logger = Logger();
 
 class AppProvider with ChangeNotifier {
-  // --- Firebase Realtime Database ---
-  final DatabaseReference _productsRef =
-      FirebaseDatabase.instance.ref().child('products');
-  late StreamSubscription<DatabaseEvent> _productsSubscription;
+  // --- Services ---
+  final ProductService _productService = ProductService();
+  late StreamSubscription<List<Product>> _productsSubscription;
+
+  // --- State ---
   List<Product> _products = [];
 
   AppProvider() {
@@ -42,65 +46,25 @@ class AppProvider with ChangeNotifier {
   // --- Logika Bisnis dengan Firebase ---
 
   void _listenToProducts() {
-    _productsSubscription = _productsRef.onValue.listen((event) {
-      if (event.snapshot.exists && event.snapshot.value != null) {
-        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
-        _products = data.entries.map((entry) {
-          // Menggunakan factory fromMap dengan ID dari key Firebase
-          return Product.fromMap(Map<String, dynamic>.from(entry.value), entry.key);
-        }).toList();
-      } else {
-        _products = [];
-      }
+    _productsSubscription =
+        _productService.getProductsStream().listen((newProducts) {
+      _products = newProducts;
       notifyListeners();
-    }, onError: (error) {
-      logger.e("Error listening to products: $error");
-      _products = [];
-      notifyListeners();
-    });
+    }, onError: (error) => logger.e("Error listening to products: $error"));
   }
 
-  Future<void> addProduct(
-      String name,
-      String sku,
-      int stock,
-      double purchase,
-      double sell,
-      String cat,
-      int threshold,
-      List<String>? images,
-      int age,
-      String? video) {
-    // Dapatkan ID unik baru dari Firebase
-    final newProductRef = _productsRef.push();
-    final newId = newProductRef.key;
-
-    final newProduct = Product(
-      id: newId!, // ID diisi oleh Firebase
-      name: name,
-      sku: sku,
-      stock: stock,
-      purchasePrice: purchase,
-      sellingPrice: sell,
-      category: cat,
-      minStockThreshold: threshold,
-      imageUrls: images ?? [],
-      ageRating: age,
-      videoUrl: video,
-      description: '',
-      price: 0,
-      imageUrl: '',
-    );
-    // Asumsi Product.toMap ada di model Anda
-    return newProductRef.set(newProduct.toMap());
+  /// Menambahkan produk baru dengan meneruskan objek [Product] yang sudah dibuat.
+  /// Pembuatan objek Product sekarang ditangani oleh UI layer.
+  Future<void> addProduct(Product newProduct) {
+    return _productService.addProduct(newProduct);
   }
 
   Future<void> updateProduct(Product updatedProduct) {
-    return _productsRef.child(updatedProduct.id).update(updatedProduct.toMap());
+    return _productService.updateProduct(updatedProduct);
   }
 
   Future<void> deleteProduct(Product product) {
-    return _productsRef.child(product.id).remove();
+    return _productService.deleteProduct(product.id);
   }
 
   @override
@@ -159,3 +123,5 @@ class AppProvider with ChangeNotifier {
     logger.i("NOTIFICATION: $title - $body");
   }
 }
+
+extension on Product {}
