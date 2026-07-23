@@ -1,0 +1,15 @@
+export '../screens/login/login_screen.dart';
+export '../screens/login/register_page.dart';
+export '../screens/access/access_screen.dart';
+export '../screens/home/home_screen.dart';
+export '../screens/inventory/inventory_screen.dart';
+export '../screens/attendance/attendance_screen.dart';
+export '../screens/calendar/calendar_screen.dart';
+export '../screens/chat/chat_screen.dart';
+export '../screens/account/account_screen.dart';
+//export 'profile/profile_screen.dart';
+export '../screens/sellers/seller_screen.dart';
+export '../screens/settings/setting_screen.dart';
+export '../screens/status/status_screen.dart';
+export '../screens/streams/streaming_screen.dart';
+export '../models/product.dart';

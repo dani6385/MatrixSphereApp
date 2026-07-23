@@ -45,7 +45,8 @@ const Color kSlateBorderLight = kLightBorder;
 const Color kTextOnLightPrimary = kLightTextPrimary;
 const Color kTextOnLightSecondary = kLightTextSecondary;
 
-const Color kDarkOutline = Color.fromARGB(57, 17, 16, 16);
+const Color kBrandWhite = Color(0xFFFFFFFF);
+const Color kDarkOutline = Color(0xFF475569); // Slate-600
 const Color kInfoColor = Color(0xFF0288D1); // NeonCyan
 const Color kRadiantRose = Color(0xFFE91E63);
 const Color kNeonCyan = Color(0xFF00E5FF);
@@ -59,6 +60,7 @@ const Color kPurple = Color(0xFF6A5AE0);
 const Color kSeaGreen = Color(0xFF2E8B57);
 const Color kTransparent = Colors.transparent;
 const Color kDarkSecondary = Colors.black12;
+const Color kBrandBlack = Color(0xFF2D3238);
 const Color kAccentBlue = Color(0xFF2979FF);
 const Color kAccentPurple = Color(0xFF7C4DFF);
 

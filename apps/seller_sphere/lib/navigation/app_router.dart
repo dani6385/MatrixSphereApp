@@ -2,16 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/auth/auth_bloc.dart';
+import 'package:seller_sphere/navigation/app_navigator.dart';
 import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:seller_sphere/models/product.dart';
-import 'package:seller_sphere/navigation/app_navigator.dart';
-import 'package:seller_sphere/screens/attendance/attendance_screen.dart';
-import 'package:seller_sphere/screens/home/home_screen.dart';
-import 'package:seller_sphere/screens/inventory/inventory_screen.dart';
-import 'package:seller_sphere/screens/sellers/seller_screen.dart';
-import 'package:seller_sphere/screens/streams/streaming_screen.dart';
+import 'package:seller_sphere/navigation/app_extraktor.dart';
 
 import 'app_routes.dart';
 
@@ -107,6 +102,16 @@ final GoRouter appRouter = GoRouter(
               path: AppRoutes.splash, // path: '/attendance'
               pageBuilder: (context, state) => FadeTransitionPage(
                 child: const SplashScreen(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.register, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const RegisterPage(),
               ),
             ),
           ],

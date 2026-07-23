@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/screens/sellers/seller_screen.dart';
+import 'package:seller_sphere/navigation/app_extraktor.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/auth/auth_bloc.dart';
 import 'package:seller_sphere/auth/auth_service.dart';
@@ -14,8 +14,7 @@ import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:seller_sphere/screens/home/home_screen.dart'; // Ganti dengan path home screen Anda
-import 'package:seller_sphere/screens/login/login_page.dart';
+// Ganti dengan path home screen Anda
 
 void main() async {
   // 1. Pastikan binding diinisialisasi terlebih dahulu
@@ -110,7 +109,13 @@ class _SellerSphereState extends State<SellerSphere> {
       GoRoute(
         path: '/login',
         builder: (BuildContext context, GoRouterState state) {
-          return const LoginPage();
+          return const LoginScreen();
+        },
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (BuildContext context, GoRouterState state) {
+          return const RegisterPage();
         },
       ),
       // Tambahkan rute lain di sini, contoh:
