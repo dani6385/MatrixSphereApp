@@ -1,4 +1,4 @@
-part of '../../auth/auth_bloc.dart';
+part of '../../../auth/auth_bloc.dart';
 
 
 

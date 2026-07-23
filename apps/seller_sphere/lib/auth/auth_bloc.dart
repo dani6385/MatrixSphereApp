@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:seller_sphere/auth/auth_service.dart';
 
-part '../screens/login/auth_event.dart';
-part '../screens/login/auth_state.dart';
+part '../screens/login/data/auth_event.dart';
+part '../screens/login/data/auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService _authService;
