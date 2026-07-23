@@ -14,11 +14,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Inisialisasi Firebase
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(const SellerSphere());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class SellerSphere extends StatelessWidget {
+  const SellerSphere({super.key});
 
   @override
   Widget build(BuildContext context) {

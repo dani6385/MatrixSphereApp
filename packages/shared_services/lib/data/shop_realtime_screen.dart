@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/firebase/firebase_rtdb.dart';
-import 'package:shared_services/data/seller_sphere_models.dart';
+import 'package:seller_sphere/models/product.dart';
 
 class ShopRealtimeScreen extends StatefulWidget {
   // ID toko yang ingin ditampilkan. Bisa didapat dari halaman sebelumnya.

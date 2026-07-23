@@ -66,7 +66,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         // berarti ini halaman terakhir.
         _hasMore = false;
       }
-      _products.addAll(newProducts);
+      _products.addAll(newProducts as Iterable<Product>);
     });
   }
 

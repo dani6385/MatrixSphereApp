@@ -1,7 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_services/models/product_model.dart';
-import 'package:shared_services/data/seller_sphere_models.dart';
+
+import 'package:seller_sphere/models/product.dart';
 
 /// Sebuah service class untuk berinteraksi dengan Firebase Realtime Database.
 ///
@@ -128,7 +128,8 @@ class FirebaseRtdbService {
       });
     } catch (e) {
       debugPrint('Terjadi error saat membuat stream untuk $path: $e');
-      return Stream.value(null); // Kembalikan stream dengan nilai null jika error
+      return Stream.value(
+          null); // Kembalikan stream dengan nilai null jika error
     }
   }
 
@@ -200,11 +201,34 @@ class FirebaseRtdbService {
             final productMap = Map<String, dynamic>.from(productData);
             products.add(Product(
               name: productName,
-              price: productMap['price'] as int,
+              price: (productMap['price'] as num).toDouble(),
               stock: productMap['stock'] as int,
+              id: '',
+              description: '',
+              imageUrl: '',
+              sku: '',
+              purchasePrice: 0,
+              sellingPrice: 0,
+              category: '',
+              minStockThreshold: 0,
+              imageUrls: [],
+              ageRating: 0,
             ));
-          } else if (productData is int) {
-            products.add(Product(name: productName, price: productData, stock: 0));
+          } else if (productData is num) {
+            products.add(Product(
+                name: productName,
+                price: productData.toDouble(),
+                stock: 0,
+                id: '',
+                description: '',
+                imageUrl: '',
+                sku: '',
+                purchasePrice: 0,
+                sellingPrice: 0,
+                category: '',
+                minStockThreshold: 0,
+                imageUrls: [],
+                ageRating: 0));
           }
         });
       }
@@ -231,7 +255,8 @@ class FirebaseRtdbService {
     final shopRef = _database.ref('seller_sphere/$shopUid');
 
     try {
-      final transactionResult = await shopRef.runTransaction((Object? currentData) {
+      final transactionResult =
+          await shopRef.runTransaction((Object? currentData) {
         // Jika node toko tidak ada, batalkan transaksi.
         if (currentData == null) {
           return Transaction.abort();

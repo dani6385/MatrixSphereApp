@@ -39,7 +39,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         items: items,
         onTap: onItemTapped,
         color: kNeonCyan,
-        buttonBackgroundColor: Colors.white,, // Menggunakan kBrandPrimary
+        buttonBackgroundColor: Colors.white,// Menggunakan kBrandPrimary
         backgroundColor: Colors.transparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 400),
