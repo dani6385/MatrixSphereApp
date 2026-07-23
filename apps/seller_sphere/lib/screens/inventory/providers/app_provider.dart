@@ -1,51 +1,25 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../../models/product.dart';
 import 'package:logger/logger.dart';
+import 'package:firebase_database/firebase_database.dart';
 // Impor pustaka lain yang diperlukan untuk logika bisnis
 // import 'package:csv/csv.dart';
 // import 'package:http/http.dart' as http;
 final Logger logger = Logger();
 
 class AppProvider with ChangeNotifier {
-  final List<Product> _products = [
-    // Data contoh awal
-    Product(
-        id: '1',
-        name: 'Kopi Robusta',
-        sku: 'K-001',
-        stock: 5,
-        purchasePrice: 20000,
-        sellingPrice: 25000,
-        category: 'Minuman',
-        minStockThreshold: 10,
-        imageUrls: ['https://i.ibb.co/3kC3NfV/product-coffee.jpg'],
- ageRating: 0, description: '', price: 0, imageUrl: ''),
-    Product(
-        id: '2',
-        name: 'Action Figure Keren',
-        sku: 'AF-002',
-        stock: 15,
-        purchasePrice: 150000,
-        sellingPrice: 250000,
-        category: 'Mainan',
-        minStockThreshold: 5,
-        imageUrls: ['https://i.ibb.co/9vM5zB2/product-figure.jpg'],
-        ageRating: 13,
-        videoUrl:
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', description: '', price: 0, imageUrl: ''),
-    Product(
-        id: '3',
-        name: 'Novel Fiksi Ilmiah',
-        sku: 'NV-003',
-        stock: 30,
-        purchasePrice: 75000,
-        sellingPrice: 95000,
-        category: 'Buku',
-        minStockThreshold: 5,
-        imageUrls: [],
-        ageRating: 18, description: '', price: 0, imageUrl: ''),
-  ];
+  // --- Firebase Realtime Database ---
+  final DatabaseReference _productsRef =
+      FirebaseDatabase.instance.ref().child('products');
+  late StreamSubscription<DatabaseEvent> _productsSubscription;
+  List<Product> _products = [];
+
+  AppProvider() {
+    _listenToProducts();
+  }
+
   List<Product> get products => _products;
 
   bool _isSafeModeEnabled = false;
@@ -65,9 +39,28 @@ class AppProvider with ChangeNotifier {
   );
   String formatRupiah(double value) => _rupiahFormat.format(value);
 
-  // --- Logika Bisnis (disederhanakan) ---
+  // --- Logika Bisnis dengan Firebase ---
 
-  void addProduct(
+  void _listenToProducts() {
+    _productsSubscription = _productsRef.onValue.listen((event) {
+      if (event.snapshot.exists && event.snapshot.value != null) {
+        final data = Map<String, dynamic>.from(event.snapshot.value as Map);
+        _products = data.entries.map((entry) {
+          // Menggunakan factory fromMap dengan ID dari key Firebase
+          return Product.fromMap(Map<String, dynamic>.from(entry.value), entry.key);
+        }).toList();
+      } else {
+        _products = [];
+      }
+      notifyListeners();
+    }, onError: (error) {
+      logger.e("Error listening to products: $error");
+      _products = [];
+      notifyListeners();
+    });
+  }
+
+  Future<void> addProduct(
       String name,
       String sku,
       int stock,
@@ -75,11 +68,15 @@ class AppProvider with ChangeNotifier {
       double sell,
       String cat,
       int threshold,
-      List<String> images,
+      List<String>? images,
       int age,
       String? video) {
+    // Dapatkan ID unik baru dari Firebase
+    final newProductRef = _productsRef.push();
+    final newId = newProductRef.key;
+
     final newProduct = Product(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: newId!, // ID diisi oleh Firebase
       name: name,
       sku: sku,
       stock: stock,
@@ -87,25 +84,29 @@ class AppProvider with ChangeNotifier {
       sellingPrice: sell,
       category: cat,
       minStockThreshold: threshold,
-      imageUrls: images,
+      imageUrls: images ?? [],
       ageRating: age,
-      videoUrl: video, description: '', price: 0, imageUrl: '',
+      videoUrl: video,
+      description: '',
+      price: 0,
+      imageUrl: '',
     );
-    _products.add(newProduct);
-    notifyListeners();
+    // Asumsi Product.toMap ada di model Anda
+    return newProductRef.set(newProduct.toMap());
   }
 
-  void updateProduct(Product updatedProduct) {
-    final index = _products.indexWhere((p) => p.id == updatedProduct.id);
-    if (index != -1) {
-      _products[index] = updatedProduct;
-      notifyListeners();
-    }
+  Future<void> updateProduct(Product updatedProduct) {
+    return _productsRef.child(updatedProduct.id).update(updatedProduct.toMap());
   }
 
-  void deleteProduct(Product product) {
-    _products.removeWhere((p) => p.id == product.id);
-    notifyListeners();
+  Future<void> deleteProduct(Product product) {
+    return _productsRef.child(product.id).remove();
+  }
+
+  @override
+  void dispose() {
+    _productsSubscription.cancel();
+    super.dispose();
   }
 
   void toggleSafeMode(bool isEnabled) {

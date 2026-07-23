@@ -14,7 +14,7 @@ final List<Product> _dummyProducts = [
       ageRating: 0,
       description: '',
       price: 0,
-      imageUrl: ''),
+      imageUrl: '', imageUrls: []),
   Product(
       id: '2',
       name: 'Action Figure Keren',
@@ -24,7 +24,7 @@ final List<Product> _dummyProducts = [
       sellingPrice: 250000,
       category: 'Mainan',
       minStockThreshold: 5,
-      ageRating: 13, description: '', price: 0, imageUrl: ''),
+      ageRating: 13, description: '', price: 0, imageUrl: '', imageUrls: []),
   Product(
       id: '3',
       name: 'Novel Fiksi Ilmiah',
@@ -34,7 +34,7 @@ final List<Product> _dummyProducts = [
       sellingPrice: 95000,
       category: 'Buku',
       minStockThreshold: 5,
-      ageRating: 18, description: '', price: 0, imageUrl: ''),
+      ageRating: 18, description: '', price: 0, imageUrl: '', imageUrls: []),
 ];
 
 class InventoryProvider with ChangeNotifier {
