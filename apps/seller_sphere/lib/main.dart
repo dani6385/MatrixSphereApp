@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/auth/auth_bloc.dart';
 import 'package:seller_sphere/auth/auth_service.dart';
 import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
@@ -92,6 +94,13 @@ class _SellerSphereState extends State<SellerSphere> {
 
     // 2. Daftar semua rute aplikasi Anda
     routes: <RouteBase>[
+      // The initial route that displays the splash screen.
+      GoRoute(
+        path: '/',
+        builder: (BuildContext context, GoRouterState state) {
+          return const SplashScreen();
+        },
+      ),
       GoRoute(
         path: '/',
         builder: (BuildContext context, GoRouterState state) {
