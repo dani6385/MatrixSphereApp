@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
-import 'package:seller_sphere/screens/login/widgets/forgot_password_page.dart';
+import 'package:seller_sphere/navigation/scaffold_with_navbar.dart'; // 1. IMPORT WIDGET SHELL
 import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,6 +48,10 @@ void main() async {
 
 // Pindahkan GoRouter ke luar kelas agar menjadi top-level variable.
 // Ini adalah praktik terbaik untuk memastikan router tidak dibuat ulang.
+// 2. BUAT GLOBAL KEY UNTUK NAVIGATOR
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
 final GoRouter _router = GoRouter(
   initialLocation: '/login', // Mulai dari halaman login
   // 1. Redirect logic
@@ -86,40 +90,63 @@ final GoRouter _router = GoRouter(
   },
   refreshListenable:
       GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
-  // 2. Daftar semua rute aplikasi Anda
+  
+  // 3. UBAH STRUKTUR RUTE
+  navigatorKey: _rootNavigatorKey,
   routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        // Ini adalah halaman utama (home) Anda
-        return const HomeScreen();
+    // Rute yang memiliki BottomNavigationBar (di dalam Shell)
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        // Bungkus halaman dengan ScaffoldWithNavBar
+        return ScaffoldWithNavBar(navigationShell: navigationShell);
       },
+      branches: [
+        // Branch 1: Home
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/',
+              builder: (context, state) => const HomeScreen(),
+            ),
+          ],
+        ),
+        // Branch 2: Inventory (Contoh)
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/inventory',
+              // Ganti dengan widget halaman inventory Anda
+              builder: (context, state) => const Scaffold(body: Center(child: Text('Inventory'))),
+            ),
+          ],
+        ),
+        // Branch 3: Chat (Contoh)
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/chat',
+              builder: (context, state) => const Scaffold(body: Center(child: Text('Chat'))),
+            ),
+          ],
+        ),
+        // Branch 4: Sellers
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/sellers',
+              builder: (context, state) => const SellerScreen(),
+            ),
+          ],
+        ),
+      ],
     ),
+
+    // Rute yang TIDAK memiliki BottomNavigationBar (fullscreen)
     GoRoute(
       path: '/login',
-      builder: (BuildContext context, GoRouterState state) {
-        return const LoginScreen();
-      },
+      builder: (context, state) => const LoginScreen(),
     ),
-    GoRoute(
-      path: '/register',
-      builder: (BuildContext context, GoRouterState state) {
-        return const RegisterPage();
-      },
-    ),
-    GoRoute(
-      path: '/forgot-password',
-      builder: (BuildContext context, GoRouterState state) {
-        return const ForgotPasswordPage();
-      },
-    ),
-    // Tambahkan rute lain di sini, contoh:
-    GoRoute(
-      path: '/sellers',
-      builder: (BuildContext context, GoRouterState state) {
-        return const SellerScreen();
-      },
-    ),
+    // Tambahkan rute fullscreen lain di sini (register, forgot-password, dll.)
   ],
 
   // 3. Halaman error jika rute tidak ditemukan
