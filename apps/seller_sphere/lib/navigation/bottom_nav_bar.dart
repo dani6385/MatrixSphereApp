@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 /// A custom bottom navigation bar widget that is reusable across the app.
@@ -19,28 +20,30 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      // Use fixed type to ensure all labels are always visible.
-      type: BottomNavigationBarType.fixed,
-      // Define colors for selected and unselected items for a consistent theme.
-      backgroundColor: Theme.of(context).bottomAppBarTheme.color,
-      selectedItemColor: kBrandPrimary,
-      unselectedItemColor: Colors.grey[600],
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home),
-          label: 'Home',
+    return SharedBottomNavigationBar(
+      selectedIndex: currentIndex,
+      onItemTapped: onTap,
+      tabs: const [
+        GButton(
+          icon: Icons.home_outlined,
+          text: 'Home',
         ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.inventory_2_outlined),
-          activeIcon: Icon(Icons.inventory_2),
-          label: 'Inventory',
+        GButton(
+          icon: Icons.cast,
+          text: 'Streaming',
         ),
-        BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), activeIcon: Icon(Icons.chat_bubble), label: 'Chat'),
-        BottomNavigationBarItem(icon: Icon(Icons.store_outlined), activeIcon: Icon(Icons.store), label: 'Sellers'),
+        GButton(
+          icon: Icons.inventory_2_outlined,
+          text: 'Inventory',
+        ),
+        GButton(
+          icon: Icons.chat_bubble_outline,
+          text: 'Kios',
+        ),
+        GButton(
+          icon: Icons.store_outlined,
+          text: 'Sellers',
+        ),
       ],
     );
   }

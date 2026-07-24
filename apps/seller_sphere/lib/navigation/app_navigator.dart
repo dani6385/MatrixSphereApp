@@ -35,7 +35,7 @@ class _AppNavigatorState extends State<AppNavigator> {
       child: Scaffold(
         extendBody: true,
         body: widget.navigationShell,
-        bottomNavigationBar: CustomBottomNavigationBar(
+        bottomNavigationBar: SharedBottomNavigationBar(
           selectedIndex: widget.navigationShell.currentIndex,
           onItemTapped: _onItemTapped,
           tabs: const [
