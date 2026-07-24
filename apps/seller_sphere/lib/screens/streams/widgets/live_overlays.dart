@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/streaming_models.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'package:shared_services/shared_services.dart';
 import '../viewmodels/streaming_view_model.dart';
 
 class LiveOverlays extends StatelessWidget {
@@ -109,7 +109,7 @@ class LiveOverlays extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-              viewModel.formatRupiah(product.sellingPrice),
+              viewModel.formatRupiah(product.price as double),
               style: const TextStyle(fontSize: 9, color: kSoftTeal, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),

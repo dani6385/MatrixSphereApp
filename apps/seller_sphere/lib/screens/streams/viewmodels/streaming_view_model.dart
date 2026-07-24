@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:shared_services/shared_services.dart';
 import '../models/streaming_models.dart';
 
 class StreamingViewModel extends ChangeNotifier {
@@ -17,9 +17,12 @@ class StreamingViewModel extends ChangeNotifier {
   // --- Controllers ---
   late TabController _tabController;
   VideoPlayerController? _videoController;
-  final TextEditingController _sellerMessageController = TextEditingController();
-  final ScrollController _chatScrollController = ScrollController(); // Untuk chat list
-  final ScrollController _scrollController = ScrollController(); // Untuk main screen
+  final TextEditingController _sellerMessageController =
+      TextEditingController();
+  final ScrollController _chatScrollController =
+      ScrollController(); // Untuk chat list
+  final ScrollController _scrollController =
+      ScrollController(); // Untuk main screen
 
   // --- State Variables ---
   bool _isLive = false;
@@ -28,25 +31,95 @@ class StreamingViewModel extends ChangeNotifier {
   Timer? _liveTimer;
 
   bool _useAutoPlayVideo = true;
-  final String _selectedVideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-  
+  final String _selectedVideoUrl =
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+
   bool _isFloatingVideo = false;
   List<LiveChatMessage> _chatMessages = [];
   int _pinnedProductIndex = -1;
 
   // --- Mock Data ---
   final List<Product> _products = [
-    Product(id: 'p1', name: 'Kemeja Flanel Pria Lengan Panjang', sellingPrice: 150000, stock: 50),
-    Product(id: 'p2', name: 'Celana Chino Slim Fit', sellingPrice: 225000, stock: 35),
-    Product(id: 'p3', name: 'Sneakers Kanvas Klasik', sellingPrice: 350000, stock: 20),
-    Product(id: 'p4', name: 'Topi Baseball Bordir', sellingPrice: 75000, stock: 100),
+    Product(
+        id: 'p1',
+        name: 'Kemeja Flanel Pria Lengan Panjang',
+        sellingPrice: 150000,
+        stock: 50,
+        price: 0,
+        description: '',
+        imageUrl: '',
+        sku: '',
+        purchasePrice: 0,
+        category: '',
+        minStockThreshold: 0,
+        imageUrls: [],
+        ageRating: 0),
+    Product(
+        id: 'p2',
+        name: 'Celana Chino Slim Fit',
+        sellingPrice: 225000,
+        stock: 35,
+        price: 0,
+        description: '',
+        imageUrl: '',
+        sku: '',
+        purchasePrice: 0,
+        category: '',
+        minStockThreshold: 0,
+        imageUrls: [],
+        ageRating: 0),
+    Product(
+        id: 'p3',
+        name: 'Sneakers Kanvas Klasik',
+        sellingPrice: 350000,
+        stock: 20,
+        price: 0,
+        description: '',
+        imageUrl: '',
+        sku: '',
+        purchasePrice: 0,
+        category: '',
+        minStockThreshold: 0,
+        imageUrls: [],
+        ageRating: 0),
+    Product(
+        id: 'p4',
+        name: 'Topi Baseball Bordir',
+        sellingPrice: 75000,
+        stock: 100,
+        price: 0,
+        description: '',
+        imageUrl: '',
+        sku: '',
+        purchasePrice: 0,
+        category: '',
+        minStockThreshold: 0,
+        imageUrls: [],
+        ageRating: 0),
   ];
-  final List<String> _mockChatUsers = ["Randi", "Siska", "Budi", "Dewi", "Amir", "Vina", "Andi", "Lia", "Aris", "Mega"];
+  final List<String> _mockChatUsers = [
+    "Randi",
+    "Siska",
+    "Budi",
+    "Dewi",
+    "Amir",
+    "Vina",
+    "Andi",
+    "Lia",
+    "Aris",
+    "Mega"
+  ];
   final List<String> _mockChatTexts = [
-    "Kualitasnya bagus banget kak!", "Masih ada diskon promonya?", "Spill keranjang kuning nomor 1 dong",
-    "Sisa warna apa aja ya?", "Bisa bayar COD ga?", "Ukuran XL ready kak?",
-    "Udah aku checkout ya, tolong segera kirim", "Recommended seller mantap!",
-    "Bahan bajunya adem ga kak?", "Ongkir ke Surabaya berapa ya?"
+    "Kualitasnya bagus banget kak!",
+    "Masih ada diskon promonya?",
+    "Spill keranjang kuning nomor 1 dong",
+    "Sisa warna apa aja ya?",
+    "Bisa bayar COD ga?",
+    "Ukuran XL ready kak?",
+    "Udah aku checkout ya, tolong segera kirim",
+    "Recommended seller mantap!",
+    "Bahan bajunya adem ga kak?",
+    "Ongkir ke Surabaya berapa ya?"
   ];
 
   // --- Getters ---
@@ -55,7 +128,7 @@ class StreamingViewModel extends ChangeNotifier {
   TextEditingController get sellerMessageController => _sellerMessageController;
   ScrollController get chatScrollController => _chatScrollController;
   ScrollController get scrollController => _scrollController;
-  
+
   bool get isLive => _isLive;
   int get viewerCount => _viewerCount;
   int get liveDurationSec => _liveDurationSec;
@@ -83,17 +156,18 @@ class StreamingViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-  
+
   void _initializeVideoPlayer() {
     _videoController?.dispose();
-    _videoController = VideoPlayerController.networkUrl(Uri.parse(_selectedVideoUrl))
-      ..initialize().then((_) {
-        _videoController?.setLooping(true);
-        if (_isLive && _useAutoPlayVideo) {
-          _videoController?.play();
-        }
-        notifyListeners();
-      });
+    _videoController =
+        VideoPlayerController.networkUrl(Uri.parse(_selectedVideoUrl))
+          ..initialize().then((_) {
+            _videoController?.setLooping(true);
+            if (_isLive && _useAutoPlayVideo) {
+              _videoController?.play();
+            }
+            notifyListeners();
+          });
   }
 
   void toggleLiveStatus() {
@@ -115,9 +189,12 @@ class StreamingViewModel extends ChangeNotifier {
     _viewerCount = 42;
     _liveDurationSec = 0;
     _chatMessages = [
-      LiveChatMessage(sender: "Sistem Live", message: "Mulai menyiarkan secara langsung! ✨", isSystem: true)
+      LiveChatMessage(
+          sender: "Sistem Live",
+          message: "Mulai menyiarkan secara langsung! ✨",
+          isSystem: true)
     ];
-    
+
     _liveTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!_isLive) {
         timer.cancel();
@@ -193,7 +270,8 @@ class StreamingViewModel extends ChangeNotifier {
   }
 
   String formatRupiah(double price) {
-    final format = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
+    final format =
+        NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0);
     return format.format(price);
   }
 

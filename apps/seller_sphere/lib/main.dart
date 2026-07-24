@@ -89,7 +89,7 @@ final GoRouter _router = GoRouter(
   },
   refreshListenable:
       GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
-  
+
   // 3. UBAH STRUKTUR RUTE
   navigatorKey: _rootNavigatorKey,
   routes: <RouteBase>[
@@ -99,7 +99,8 @@ final GoRouter _router = GoRouter(
         // PERBAIKAN: Bungkus navigationShell (konten halaman) dan BottomNavBar
         // di dalam sebuah Scaffold.
         return Scaffold(
-          body: navigationShell, // navigationShell akan menampilkan halaman aktif
+          body:
+              navigationShell, // navigationShell akan menampilkan halaman aktif
           bottomNavigationBar: BottomNavBar(
             currentIndex: navigationShell.currentIndex,
             onTap: (index) => navigationShell.goBranch(index),
@@ -130,7 +131,8 @@ final GoRouter _router = GoRouter(
           routes: [
             GoRoute(
               path: '/inventory',
-              builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (p) {}),
+              builder: (context, state) =>
+                  InventoryScreen(onNavigateToLabelPrinter: (p) {}),
             ),
           ],
         ),
@@ -139,7 +141,8 @@ final GoRouter _router = GoRouter(
           routes: [
             GoRoute(
               path: '/status',
-              builder: (context, state) => const Scaffold(body: Center(child: Text('Chat'))),
+              builder: (context, state) =>
+                  const Scaffold(body: Center(child: Text('Chat'))),
             ),
           ],
         ),
