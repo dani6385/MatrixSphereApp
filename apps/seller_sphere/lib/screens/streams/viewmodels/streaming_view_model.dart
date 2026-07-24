@@ -11,13 +11,15 @@ class StreamingViewModel extends ChangeNotifier {
   StreamingViewModel(TickerProvider vsync) {
     _tabController = TabController(length: 2, vsync: vsync);
     _initializeVideoPlayer();
+    _scrollController.addListener(_scrollListener);
   }
 
   // --- Controllers ---
   late TabController _tabController;
   VideoPlayerController? _videoController;
   final TextEditingController _sellerMessageController = TextEditingController();
-  final ScrollController _chatScrollController = ScrollController();
+  final ScrollController _chatScrollController = ScrollController(); // Untuk chat list
+  final ScrollController _scrollController = ScrollController(); // Untuk main screen
 
   // --- State Variables ---
   bool _isLive = false;
@@ -28,6 +30,7 @@ class StreamingViewModel extends ChangeNotifier {
   bool _useAutoPlayVideo = true;
   final String _selectedVideoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
   
+  bool _isFloatingVideo = false;
   List<LiveChatMessage> _chatMessages = [];
   int _pinnedProductIndex = -1;
 
@@ -51,6 +54,7 @@ class StreamingViewModel extends ChangeNotifier {
   VideoPlayerController? get videoController => _videoController;
   TextEditingController get sellerMessageController => _sellerMessageController;
   ScrollController get chatScrollController => _chatScrollController;
+  ScrollController get scrollController => _scrollController;
   
   bool get isLive => _isLive;
   int get viewerCount => _viewerCount;
@@ -58,6 +62,7 @@ class StreamingViewModel extends ChangeNotifier {
   bool get useAutoPlayVideo => _useAutoPlayVideo;
   List<LiveChatMessage> get chatMessages => _chatMessages;
   int get pinnedProductIndex => _pinnedProductIndex;
+  bool get isFloatingVideo => _isFloatingVideo;
   List<Product> get products => _products;
   Product? get pinnedProduct {
     return _pinnedProductIndex >= 0 && _pinnedProductIndex < _products.length
@@ -66,6 +71,18 @@ class StreamingViewModel extends ChangeNotifier {
   }
 
   // --- Methods ---
+
+  void _scrollListener() {
+    // Threshold: video menjadi float setelah scroll melebihi 30% tinggi layar dikurangi tinggi appbar
+    const threshold = (300 * 0.4) - kToolbarHeight;
+    if (_scrollController.offset > threshold && !_isFloatingVideo) {
+      _isFloatingVideo = true;
+      notifyListeners();
+    } else if (_scrollController.offset <= threshold && _isFloatingVideo) {
+      _isFloatingVideo = false;
+      notifyListeners();
+    }
+  }
   
   void _initializeVideoPlayer() {
     _videoController?.dispose();
@@ -185,6 +202,8 @@ class StreamingViewModel extends ChangeNotifier {
     _liveTimer?.cancel();
     _sellerMessageController.dispose();
     _chatScrollController.dispose();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     _tabController.dispose();
     _videoController?.dispose();
     super.dispose();

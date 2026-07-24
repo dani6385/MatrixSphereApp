@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shared_ui/shared_ui.dart';
-import 'viewmodels/streaming_view_model.dart';
+import 'package:seller_sphere/screens/streams/viewmodels/streaming_view_model.dart';
 import 'widgets/interactive_console.dart';
 import 'widgets/live_video_player.dart';
 
@@ -29,48 +29,94 @@ class _StreamingScreenState extends State<StreamingScreen>
   }
 }
 
-class _StreamingScreenContent extends StatelessWidget {
+class _StreamingScreenContent extends StatefulWidget {
   const _StreamingScreenContent();
+
+  @override
+  State<_StreamingScreenContent> createState() => _StreamingScreenContentState();
+}
+
+class _StreamingScreenContentState extends State<_StreamingScreenContent> {
+  @override
+  void initState() {
+    super.initState();
+    // Tidak perlu menambahkan listener di sini karena sudah dihandle di ViewModel
+  }
+
+  @override
+  void dispose() {
+    // ViewModel akan menghapus controller-nya sendiri saat di-dispose
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // The ViewModel is now accessed via context.watch or context.read
-    // throughout the child widgets (LiveVideoPlayer, InteractiveConsole, etc.).
+    final viewModel = context.watch<StreamingViewModel>();
 
-    // Dapatkan tinggi layar untuk menentukan ukuran video yang diperluas
     final screenHeight = MediaQuery.of(context).size.height;
-    final expandedVideoHeight = screenHeight * 0.4; // Video akan memakan 40% tinggi layar
+    final expandedVideoHeight = screenHeight * 0.4;
+
+    // Dimensi untuk video melayang
+    const floatingVideoHeight = 100.0;
+    const floatingVideoWidth = floatingVideoHeight * (16 / 9); // Aspect ratio 16:9
+    const floatingMargin = 16.0;
 
     return Scaffold(
-      // Kita tidak lagi menggunakan AppBar di sini, karena akan digantikan oleh SliverAppBar
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            // Judul yang akan muncul saat app bar diciutkan
-            title: Text(
-              "Live Streaming Console",
-              style: TextStyle(color: theme.colorScheme.onSurface),
-            ),
-            leading: const Icon(Icons.live_tv, color: kNeonCyan),
-            backgroundColor: theme.scaffoldBackgroundColor,
-            // Membuat AppBar tetap terlihat di atas saat di-scroll
-            pinned: true,
-            // Ketinggian AppBar saat diperluas sepenuhnya
-            expandedHeight: expandedVideoHeight,
-            // Widget yang akan mengisi ruang yang bisa diperluas (video player)
-            flexibleSpace: const FlexibleSpaceBar(
-              background: LiveVideoPlayer(),
-              // Kita tidak memerlukan judul di sini karena sudah ada di SliverAppBar
-            ),
+      body: Stack(
+        children: [
+          CustomScrollView(
+            controller: viewModel.scrollController,
+            slivers: [
+              SliverAppBar(
+                title: Text(
+                  "Live Streaming Console",
+                  style: TextStyle(color: theme.colorScheme.onSurface),
+                ),
+                leading: const Icon(Icons.live_tv, color: kNeonCyan),
+                backgroundColor: theme.scaffoldBackgroundColor,
+                pinned: true,
+                expandedHeight: expandedVideoHeight,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: viewModel.isFloatingVideo
+                      ? Container(color: Colors.black) // Latar belakang hitam saat video melayang
+                      : const LiveVideoPlayer(),
+                ),
+              ),
+              const SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: InteractiveConsole(),
+                ),
+              ),
+            ],
           ),
-          // Widget ini akan mengisi sisa ruang yang tersedia di layar
-          // dan menjadi konten yang bisa di-scroll.
-          const SliverFillRemaining(
-            hasScrollBody: false, // Penting agar tidak ada double scroll
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: InteractiveConsole(),
+          // Video Player Melayang
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            // Posisi saat melayang vs. saat diperluas
+            top: viewModel.isFloatingVideo ? floatingMargin : 0,
+            left: viewModel.isFloatingVideo ? floatingMargin : 0,
+            right: viewModel.isFloatingVideo ? null : 0,
+            // Ukuran saat melayang vs. saat diperluas
+            height: viewModel.isFloatingVideo ? floatingVideoHeight : expandedVideoHeight,
+            width: viewModel.isFloatingVideo ? floatingVideoWidth : null,
+            child: IgnorePointer(
+              ignoring: !viewModel.isFloatingVideo, // Hanya bisa diklik saat melayang
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: viewModel.isFloatingVideo ? 1.0 : 0.0,
+                child: GestureDetector(
+                  onTap: () {
+                    // Saat video melayang diketuk, scroll kembali ke atas
+                    viewModel.scrollController.animateTo(0,
+                        duration: const Duration(milliseconds: 400), curve: Curves.easeOut);
+                  },
+                  child: const LiveVideoPlayer(),
+                ),
+              ),
             ),
           ),
         ],
