@@ -67,8 +67,8 @@ final GoRouter _router = GoRouter(
 
     // Daftar halaman publik yang bisa diakses tanpa login
     final bool isPublicPage = location == '/login' ||
-        location == '/register' ||
-        location == '/forgot-password';
+        location == '/login/register' ||
+        location == '/login/forgot-password';
 
     // Skenario:
     // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
@@ -116,31 +116,39 @@ final GoRouter _router = GoRouter(
             ),
           ],
         ),
-        // Branch 2: Inventory (Contoh)
+        // Branch 2: Streaming (Sesuai urutan di bottom_nav_bar.dart)
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/stream',
+              builder: (context, state) => const StreamingScreen(),
+            ),
+          ],
+        ),
+        // Branch 3: Inventory
         StatefulShellBranch(
           routes: [
             GoRoute(
               path: '/inventory',
-              // Ganti dengan widget halaman inventory Anda
-              builder: (context, state) => const Scaffold(body: Center(child: Text('Inventory'))),
+              builder: (context, state) => InventoryScreen(onNavigateToLabelPrinter: (p) {}),
             ),
           ],
         ),
-        // Branch 3: Chat (Contoh)
+        // Branch 4: Status (orderan)
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/chat',
+              path: '/status',
               builder: (context, state) => const Scaffold(body: Center(child: Text('Chat'))),
             ),
           ],
         ),
-        // Branch 4: Sellers
+        // Branch 5: Absen (Attendance)
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/sellers',
-              builder: (context, state) => const SellerScreen(),
+              path: '/attendance',
+              builder: (context, state) => const AttendanceScreen(),
             ),
           ],
         ),
@@ -153,11 +161,11 @@ final GoRouter _router = GoRouter(
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
-      path: '/register',
+      path: '/login/register',
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
-      path: '/forgot-password',
+      path: '/login/forgot-password',
       builder: (context, state) => const LoginScreen(),
     ),
     // Tambahkan rute fullscreen lain di sini (register, forgot-password, dll.)

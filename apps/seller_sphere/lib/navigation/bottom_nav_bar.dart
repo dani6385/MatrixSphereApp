@@ -23,10 +23,26 @@ class BottomNavBar extends StatelessWidget {
     // Daftar data untuk setiap tab
     final List<Map<String, dynamic>> tabsData = [
       {'icon': Icons.home_outlined, 'activeIcon': Icons.home, 'text': 'Home'},
-      {'icon': Icons.cast, 'activeIcon': Icons.cast_connected, 'text': 'Streaming'},
-      {'icon': Icons.inventory_2_outlined, 'activeIcon': Icons.inventory_2, 'text': 'Inventory'},
-      {'icon': Icons.chat_bubble_outline, 'activeIcon': Icons.chat_bubble, 'text': 'Kios'},
-      {'icon': Icons.store_outlined, 'activeIcon': Icons.store, 'text': 'Sellers'},
+      {
+        'icon': Icons.cast,
+        'activeIcon': Icons.cast_connected,
+        'text': 'Streaming'
+      },
+      {
+        'icon': Icons.inventory_2_outlined,
+        'activeIcon': Icons.inventory_2,
+        'text': 'Inventory'
+      },
+      {
+        'icon': Icons.chat_bubble_outline,
+        'activeIcon': Icons.chat_bubble,
+        'text': 'Kios'
+      },
+      {
+        'icon': Icons.fingerprint_outlined,
+        'activeIcon': Icons.fingerprint,
+        'text': 'Absen'
+      },
     ];
 
     return SharedBottomNavigationBar(
