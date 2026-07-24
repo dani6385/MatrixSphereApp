@@ -6,6 +6,7 @@ import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shared_ui/shared_ui.dart';
+//import 'package:shared_services/shared_services.dart';
 import 'app_extraktor.dart';
 
 import 'app_routes.dart';
@@ -82,7 +83,7 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: AppRoutes.inventory, // path: '/inventory'
               pageBuilder: (context, state) => FadeTransitionPage(
-                child: InventoryScreen(onNavigateToLabelPrinter: (Product p1) {}),
+                child: InventoryScreen(onNavigateToLabelPrinter: (p1) {  },),
               ),
             ),
           ],

@@ -53,7 +53,7 @@ class _SellerRealtimeScreenState extends State<SellerRealtimeScreen> {
           List<Product> products = [];
           productsData.forEach((key, value) {
             if (value is Map<String, dynamic>) {
-              products.add(Product.fromJson(key, value));
+              products.add(Product.fromMap(value, key));
             }
           });
 

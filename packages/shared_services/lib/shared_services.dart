@@ -11,4 +11,4 @@ export 'data/shop_realtime_screen.dart';
 
 export 'src/models/product_model.dart';
 
-export 'produck/product_list_screen.dart';
+export 'src/models/produck/product_list_screen.dart';

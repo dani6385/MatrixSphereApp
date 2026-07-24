@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/models/product.dart';
 import 'package:seller_sphere/screens/inventory/providers/inventory_provider.dart';
+import 'package:seller_sphere/screens/inventory/widgets/inventory_stats_section.dart';
+import 'package:shared_services/shared_services.dart';
+
 import 'package:seller_sphere/screens/inventory/widgets/inventory_app_bar.dart';
 import 'package:seller_sphere/screens/inventory/widgets/inventory_drawer.dart';
 import 'package:seller_sphere/screens/inventory/widgets/inventory_enddrawer.dart';
 import 'package:seller_sphere/screens/inventory/widgets/inventory_filter_section.dart';
-import 'package:seller_sphere/screens/inventory/widgets/inventory_stats_section.dart';
+//import 'package:seller_sphere/screens/inventory/widgets/inventory_stats_section.dart';
 import 'package:seller_sphere/screens/inventory/widgets/low_stock_warning.dart';
 import 'package:seller_sphere/screens/inventory/widgets/product_list_section.dart';
 import 'package:seller_sphere/screens/inventory/widgets/quick_actions_section.dart';

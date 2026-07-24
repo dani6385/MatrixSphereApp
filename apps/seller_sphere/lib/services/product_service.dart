@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:shared_services/shared_services.dart';
+
 
 /// Layanan untuk mengelola operasi CRUD produk ke Firebase Realtime Database.
 class ProductService {
@@ -50,5 +51,11 @@ class ProductService {
       throw ArgumentError('Product ID tidak boleh kosong untuk delete.');
     }
     return _productsRef.child(productId).remove();
+  }
+
+  getProducts() {}
+
+  Future<String> uploadImageToImgBB({required String imagePath}) async {
+    throw UnimplementedError('uploadImageToImgBB not yet implemented');
   }
 }

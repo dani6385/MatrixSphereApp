@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/screens/inventory/providers/inventory_provider.dart';
 
+
 class InventoryFilterSection extends StatelessWidget {
   const InventoryFilterSection({super.key});
 

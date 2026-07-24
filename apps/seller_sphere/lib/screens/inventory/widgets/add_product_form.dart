@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:shared_services/shared_services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
 
@@ -42,12 +42,12 @@ class _AddProductFormState extends State<AddProductForm> {
     if (_isEditMode) {
       final p = widget.product!;
       _nameController.text = p.name;
-      _skuController.text = p.sku;
-      _descriptionController.text = p.description;
+      _skuController.text = p.sku ?? '';
+      _descriptionController.text = p.description?.toString() ?? '';
       _stockController.text = p.stock.toString();
-      _purchasePriceController.text = p.purchasePrice.toStringAsFixed(0);
-      _sellingPriceController.text = p.sellingPrice.toStringAsFixed(0);
-      _categoryController.text = p.category;
+      _purchasePriceController.text = p.purchasePrice.toString(); // Menggunakan nilai dari constructor
+      _sellingPriceController.text = p.sellingPrice.toString(); // Menggunakan nilai dari constructor
+      _categoryController.text = p.category ?? '';
       _minStockController.text = p.minStockThreshold.toString();
       _ageRatingController.text = p.ageRating.toString();
       _initialImageUrl = p.imageUrl;

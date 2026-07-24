@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:shared_services/shared_services.dart';
 import 'package:seller_sphere/screens/inventory/providers/inventory_provider.dart';
 import 'package:seller_sphere/screens/inventory/widgets/inventory_dialogs.dart';
 import 'package:seller_sphere/screens/inventory/widgets/product_item_card.dart';
@@ -42,7 +42,7 @@ class ProductListSection extends StatelessWidget {
                   final product = products[index];
                   return ProductItemCard(
                     product: product,
-                    formatRupiah: provider.formatRupiah,
+                    formatRupiah: (value) => provider.formatRupiah(value.toDouble()),
                     onEdit: () {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text(

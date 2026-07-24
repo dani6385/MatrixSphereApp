@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:shared_services/shared_services.dart';
 import 'package:seller_sphere/screens/inventory/widgets/add_product_form.dart';
 import 'package:shared_ui/shared_ui.dart';
 

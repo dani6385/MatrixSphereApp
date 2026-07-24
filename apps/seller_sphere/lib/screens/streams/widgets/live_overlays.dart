@@ -109,7 +109,7 @@ class LiveOverlays extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-              viewModel.formatRupiah(product.price as double),
+              viewModel.formatRupiah(product.price),
               style: const TextStyle(fontSize: 9, color: kSoftTeal, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
