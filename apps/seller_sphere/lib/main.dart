@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
-import 'package:seller_sphere/navigation/scaffold_with_navbar.dart'; // 1. IMPORT WIDGET SHELL
+import 'package:seller_sphere/navigation/bottom_nav_bar.dart'; // 1. IMPORT WIDGET SHELL
 import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,7 +50,6 @@ void main() async {
 // Ini adalah praktik terbaik untuk memastikan router tidak dibuat ulang.
 // 2. BUAT GLOBAL KEY UNTUK NAVIGATOR
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter _router = GoRouter(
   initialLocation: '/login', // Mulai dari halaman login
@@ -97,8 +96,11 @@ final GoRouter _router = GoRouter(
     // Rute yang memiliki BottomNavigationBar (di dalam Shell)
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        // Bungkus halaman dengan ScaffoldWithNavBar
-        return ScaffoldWithNavBar(navigationShell: navigationShell);
+        // Bungkus halaman dengan BottomNavBar
+        return BottomNavBar(
+          currentIndex: navigationShell.currentIndex,
+          onTap: (index) => navigationShell.goBranch(index),
+        );
       },
       branches: [
         // Branch 1: Home
