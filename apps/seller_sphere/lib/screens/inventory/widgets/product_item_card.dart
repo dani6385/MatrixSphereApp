@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/models/product.dart';
+import 'package:shared_services/shared_services.dart';
+
 import 'package:shared_ui/shared_ui.dart';
 
 class ProductItemCard extends StatelessWidget {
@@ -75,7 +76,7 @@ class ProductItemCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Chip(
-                        label: Text(product.category),
+                        label: Text(product.category ?? 'Uncategorized'),
                         labelStyle: const TextStyle(fontSize: 10),
                         padding: EdgeInsets.zero,
                         visualDensity: VisualDensity.compact,
