@@ -16,9 +16,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      key: scaffoldKey, // 2. PASANGKAN KEY KE SINI
-      backgroundColor: kBrandTertiary,
+      key: scaffoldKey,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: const HomeAppBar(),
       drawer: const SideMenu(selectedRoute: MenuRoute.account),
       endDrawer: const SettingScreen(), 

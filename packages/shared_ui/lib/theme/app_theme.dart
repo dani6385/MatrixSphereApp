@@ -74,6 +74,7 @@ class AppTheme {
 TextTheme textTheme(BuildContext context) => Theme.of(context).textTheme;
 
 extension AppThemeExtensions on BuildContext {
+  
   TextTheme get textTheme => Theme.of(this).textTheme;
   ColorScheme get colorScheme => Theme.of(this).colorScheme;
   TextStyle? get titleLarge => textTheme.titleLarge;
