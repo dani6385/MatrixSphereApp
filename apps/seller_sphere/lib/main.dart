@@ -52,9 +52,12 @@ final GoRouter _router = GoRouter(
   initialLocation: '/login', // Mulai dari halaman login
   // 1. Redirect logic
   redirect: (BuildContext context, GoRouterState state) {
-    // Dapatkan status login pengguna saat ini dari AuthBloc
-    final authState = context.read<AuthBloc>().state;
-    final bool isLoggedIn = authState is AuthSuccess;
+    // --- PERUBAHAN DIMULAI DI SINI ---
+    // Gunakan status langsung dari FirebaseAuth untuk menghindari race condition
+    // dengan state BLoC. Ini lebih andal untuk redirect.
+    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    // final authState = context.read<AuthBloc>().state; // Baris ini tidak lagi diperlukan
+    // final bool isLoggedIn = authState is AuthSuccess; // Baris ini diganti
 
     // Dapatkan lokasi yang sedang dituju
     final String location = state.uri.toString();
@@ -79,6 +82,7 @@ final GoRouter _router = GoRouter(
 
     // - Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
     return null;
+    // --- PERUBAHAN SELESAI DI SINI ---
   },
   refreshListenable:
       GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
