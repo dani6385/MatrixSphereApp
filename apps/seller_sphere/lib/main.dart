@@ -96,10 +96,14 @@ final GoRouter _router = GoRouter(
     // Rute yang memiliki BottomNavigationBar (di dalam Shell)
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        // Bungkus halaman dengan BottomNavBar
-        return BottomNavBar(
-          currentIndex: navigationShell.currentIndex,
-          onTap: (index) => navigationShell.goBranch(index),
+        // PERBAIKAN: Bungkus navigationShell (konten halaman) dan BottomNavBar
+        // di dalam sebuah Scaffold.
+        return Scaffold(
+          body: navigationShell, // navigationShell akan menampilkan halaman aktif
+          bottomNavigationBar: BottomNavBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: (index) => navigationShell.goBranch(index),
+          ),
         );
       },
       branches: [
@@ -146,6 +150,14 @@ final GoRouter _router = GoRouter(
     // Rute yang TIDAK memiliki BottomNavigationBar (fullscreen)
     GoRoute(
       path: '/login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/forgot-password',
       builder: (context, state) => const LoginScreen(),
     ),
     // Tambahkan rute fullscreen lain di sini (register, forgot-password, dll.)

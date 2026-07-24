@@ -20,31 +20,33 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Daftar data untuk setiap tab
+    final List<Map<String, dynamic>> tabsData = [
+      {'icon': Icons.home_outlined, 'activeIcon': Icons.home, 'text': 'Home'},
+      {'icon': Icons.cast, 'activeIcon': Icons.cast_connected, 'text': 'Streaming'},
+      {'icon': Icons.inventory_2_outlined, 'activeIcon': Icons.inventory_2, 'text': 'Inventory'},
+      {'icon': Icons.chat_bubble_outline, 'activeIcon': Icons.chat_bubble, 'text': 'Kios'},
+      {'icon': Icons.store_outlined, 'activeIcon': Icons.store, 'text': 'Sellers'},
+    ];
+
     return SharedBottomNavigationBar(
       selectedIndex: currentIndex,
       onItemTapped: onTap,
-      tabs: const [
-        GButton(
-          icon: Icons.home_outlined,
-          text: 'Home',
-        ),
-        GButton(
-          icon: Icons.cast,
-          text: 'Streaming',
-        ),
-        GButton(
-          icon: Icons.inventory_2_outlined,
-          text: 'Inventory',
-        ),
-        GButton(
-          icon: Icons.chat_bubble_outline,
-          text: 'Kios',
-        ),
-        GButton(
-          icon: Icons.store_outlined,
-          text: 'Sellers',
-        ),
-      ],
+      // Membuat daftar GButton secara dinamis
+      tabs: List.generate(tabsData.length, (index) {
+        final isSelected = index == currentIndex;
+        final tab = tabsData[index];
+
+        return GButton(
+          // Gunakan ikon 'active' jika terpilih, jika tidak gunakan ikon standar
+          icon: isSelected ? tab['activeIcon'] : tab['icon'],
+          text: tab['text'],
+          // Perbesar ukuran ikon jika terpilih
+          iconSize: isSelected ? 28 : 24,
+          // Anda juga bisa menambahkan efek lain seperti mengubah warna teks
+          // textColor: isSelected ? Theme.of(context).colorScheme.primary : null,
+        );
+      }),
     );
   }
 }

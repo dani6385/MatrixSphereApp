@@ -20,8 +20,10 @@ class AppRoutes {
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
   static const String goodsOut = '/goods-out'; // Rute untuk pengeluaran barang
   static const String login = '/login';
+  static const String forgotPassword = '/forgot-password';
   static const String splash = '/splash';
   static const String register = '/register';
   static const String profile= '/profile';
   static const String editprofile = '/profile/editprofile';
+
 }

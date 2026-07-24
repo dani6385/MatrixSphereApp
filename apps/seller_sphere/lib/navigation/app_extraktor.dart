@@ -1,5 +1,6 @@
-export '../screens/login/login_screen.dart';
-export '../screens/login/register_page.dart';
+export '../screens/auth/login_screen.dart';
+export '../screens/auth/register_page.dart';
+export '../screens/auth/widgets/forgot_password_page.dart';
 export '../screens/access/access_screen.dart';
 export '../screens/home/home_screen.dart';
 export '../screens/inventory/inventory_screen.dart';

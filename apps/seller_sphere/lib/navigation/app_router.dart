@@ -6,7 +6,7 @@ import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:shared_ui/shared_ui.dart';
-import 'package:seller_sphere/navigation/app_extraktor.dart';
+import 'app_extraktor.dart';
 
 import 'app_routes.dart';
 
@@ -138,6 +138,37 @@ final GoRouter appRouter = GoRouter(
             ),
           ],
         ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.login, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const LoginScreen(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.forgotPassword, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const ForgotPasswordPage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.register, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const RegisterPage(),
+              ),
+            ),
+          ],
+        ),
+        
       ],
     )
   ],
