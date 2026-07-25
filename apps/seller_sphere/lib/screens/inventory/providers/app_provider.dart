@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as img;
 import 'package:intl/intl.dart';
 
 
@@ -110,12 +114,62 @@ class AppProvider with ChangeNotifier {
   }
 
   Future<String> uploadImageToImgBB({required String imagePath}) async {
-    // Logika untuk mengunggah gambar ke ImgBB atau layanan lain
-    // Menggunakan package http
-    logger.i("Uploading image from $imagePath...");
-    await Future.delayed(const Duration(seconds: 2)); // Simulasi upload
-    // URL gambar hasil upload palsu
-    return 'https://i.ibb.co/3kC3NfV/product-coffee.jpg';
+    const String apiKey = 'f601727fed32cf7a175833d01d8a10ff';
+    final url = Uri.parse('https://api.imgbb.com/1/upload?key=$apiKey');
+
+    // 1. Baca gambar dari file
+    final imageFile = File(imagePath);
+    if (!await imageFile.exists()) {
+      logger.e('File gambar tidak ditemukan di: $imagePath');
+      throw Exception('File gambar tidak ditemukan.');
+    }
+
+    // 2. Kompres gambar
+    final image = img.decodeImage(await imageFile.readAsBytes());
+    if (image == null) {
+      logger.e('Gagal mendekode gambar.');
+      throw Exception('Gagal memproses gambar.');
+    }
+
+    // Atur kualitas kompresi (0-100)
+    final compressedImage = img.encodeJpg(image, quality: 85);
+
+    // 3. Buat request multipart
+    final request = http.MultipartRequest('POST', url);
+    final multipartFile = http.MultipartFile.fromBytes(
+      'image',
+      compressedImage,
+      filename: 'compressed_image.jpg', // Nama file bisa disesuaikan
+    );
+    request.files.add(multipartFile);
+
+    try {
+      // 4. Kirim request dan dapatkan respons
+      final response = await request.send();
+
+      if (response.statusCode == 200) {
+        final responseBody = await response.stream.bytesToString();
+        final decodedResponse = json.decode(responseBody);
+        final imageUrl = decodedResponse['data']?['url'];
+
+        if (imageUrl != null) {
+          logger.i('Gambar berhasil diunggah: $imageUrl');
+          return imageUrl;
+        } else {
+          logger.e('URL gambar tidak ditemukan di respons ImgBB.');
+          throw Exception('Gagal mengurai respons dari ImgBB.');
+        }
+      } else {
+        logger.e('Gagal mengunggah gambar. Status code: ${response.statusCode}');
+        final errorBody = await response.stream.bytesToString();
+        logger.e('Error response: $errorBody');
+        throw Exception(
+            'Gagal mengunggah gambar. Silakan coba lagi nanti.');
+      }
+    } catch (e) {
+      logger.e('Terjadi kesalahan saat mengunggah gambar: $e');
+      throw Exception('Terjadi kesalahan. Periksa koneksi internet Anda.');
+    }
   }
 
   void triggerNotification(String title, String body) {
