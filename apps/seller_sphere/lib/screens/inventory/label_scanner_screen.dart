@@ -72,6 +72,8 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
                     return const Icon(Icons.flash_off, color: Colors.grey);
                   case TorchState.on:
                     return const Icon(Icons.flash_on, color: kNeonCyan);
+                  default:
+                    return const Icon(Icons.flash_off, color: Colors.grey);
                 }
               },
             ),
@@ -92,12 +94,6 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
           MobileScanner(
             controller: _scannerController,
             onDetect: _onDetect,
-            // The scanner will stop when a barcode is detected
-            onScannerStarted: (args) {
-              setState(() {
-                _isProcessing = false;
-              });
-            },
           ),
           // UI Overlay
           Column(
