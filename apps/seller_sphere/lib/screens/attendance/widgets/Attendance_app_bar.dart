@@ -4,22 +4,22 @@ import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 
 
-import '../../sellers/seller_screen.dart'; // 1. PASTIKAN IMPORT SellerSCREEN
+import '../attendance_screen.dart'; // 1. PASTIKAN IMPORT AttendanceSCREEN
 
-class SellerAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const SellerAppBar({super.key});
+class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
+  const AttendanceAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text('Seller'),
+      title: const Text('Attendance'),
 
       // 2. KODE LEADING MENJADI LEBIH SIMPEL & DIJAMIN AKTIF
       leading: IconButton(
         icon: const Icon(Icons.account_circle),
         onPressed: () {
-          // Membuka laci secara paksa menggunakan GlobalKey milik SellerScreen
-          SellerScreen.scaffoldKey.currentState?.openDrawer();
+          // Membuka laci secara paksa menggunakan GlobalKey milik AttendanceScreen
+          AttendanceScreen.scaffoldKey.currentState?.openDrawer();
         },
       ),
 
@@ -46,8 +46,8 @@ class SellerAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
-            // Membuka laci secara paksa menggunakan GlobalKey milik SellerScreen
-            SellerScreen.scaffoldKey.currentState?.openEndDrawer();
+            // Membuka laci secara paksa menggunakan GlobalKey milik AttendanceScreen
+            AttendanceScreen.scaffoldKey.currentState?.openEndDrawer();
           },
         ),
       ],

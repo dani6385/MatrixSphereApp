@@ -6,7 +6,6 @@ import 'package:shared_ui/shared_ui.dart';
 
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_body.dart';
-import 'package:seller_sphere/features/settings/setting_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -22,7 +21,7 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: const HomeAppBar(),
       drawer: const SideMenu(selectedRoute: MenuRoute.account),
-      endDrawer: const SettingScreen(), 
+      endDrawer: const SideMenu(selectedRoute: MenuRoute.system), 
       body: const HomeBody(),
     );
   }

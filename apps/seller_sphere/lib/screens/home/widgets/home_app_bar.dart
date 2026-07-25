@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-//import 'package:shared_ui/shared_ui.dart';
+
 import 'package:seller_sphere/navigation/app_routes.dart';
-import 'package:provider/provider.dart';
-import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
+
+
 import '../home_screen.dart'; // 1. PASTIKAN IMPORT HOMESCREEN
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -26,36 +26,29 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         // --- AWAL PERUBAHAN ---
         // Menggunakan IconButton untuk navigasi langsung ke halaman chat
-        Builder(
-          builder: (context) {
-            // Dapatkan provider dan daftar pesan yang belum dibaca
-            final chatProvider = context.watch<ChatProvider>();
-            // Asumsi unreadMessagesList adalah List<String> atau bisa di-length
-            final messages = chatProvider.unreadMessagesList;
-
+        Builder(          builder: (context) {
             return IconButton(
-              icon: Badge(
-                label: Text('${messages.length}'),
-                isLabelVisible: messages.isNotEmpty,
-                child: const Icon(Icons.chat),
-              ),
+              icon: const Icon(Icons.chat),
               onPressed: () {
-                // Navigasi ke halaman chat saat ikon ditekan
-                GoRouter.of(context).push(AppRoutes.chat);
+                context.goNamed(AppRoutes.account);
               },
             );
           },
         ),
         // --- AKHIR PERUBAHAN ---
-        Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(
-                Icons.settings), // Menggunakan ikon roda gigi (pengaturan)
-            onPressed: () {
-              // Membuka laci samping sebelah kanan (endDrawer)
-              Scaffold.of(context).openEndDrawer();
-            },
-          ),
+
+        IconButton(
+          icon: const Icon(Icons.notifications),
+          onPressed: () {
+            // Handle notification icon press
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            // Membuka laci secara paksa menggunakan GlobalKey milik HomeScreen
+            HomeScreen.scaffoldKey.currentState?.openEndDrawer();
+          },
         ),
       ],
     );

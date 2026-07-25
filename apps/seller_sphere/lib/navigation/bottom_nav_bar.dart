@@ -34,8 +34,8 @@ class BottomNavBar extends StatelessWidget {
         'text': 'Inventory'
       },
       {
-        'icon': Icons.chat_bubble_outline,
-        'activeIcon': Icons.chat_bubble,
+        'icon': Icons.inventory_2,
+        'activeIcon': Icons.inventory_2_outlined,
         'text': 'Kios'
       },
       {

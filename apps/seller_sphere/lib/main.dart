@@ -127,15 +127,7 @@ final GoRouter _router = GoRouter(
           ],
         ),
         // Branch 3: Inventory
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/inventory',
-              builder: (context, state) =>
-                  InventoryScreen(onNavigateToLabelPrinter: (p) {}),
-            ),
-          ],
-        ),
+        
         // Branch 4: Status (orderan)
         StatefulShellBranch(
           routes: [
@@ -159,18 +151,7 @@ final GoRouter _router = GoRouter(
     ),
 
     // Rute yang TIDAK memiliki BottomNavigationBar (fullscreen)
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/login/register',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/login/forgot-password',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    
     // Tambahkan rute fullscreen lain di sini (register, forgot-password, dll.)
   ],
 
@@ -203,7 +184,7 @@ class _SellerSphereState extends State<SellerSphere> {
     return MultiProvider(
       providers: [
         BlocProvider.value(value: _authBloc),
-        ChangeNotifierProvider(create: (context) => AppProvider()),
+        //ChangeNotifierProvider(create: (context) => AppProvider()),
       ],
       // BlocListener tidak lagi diperlukan di sini karena GoRouter
       // akan menangani redirect secara otomatis berdasarkan perubahan state.

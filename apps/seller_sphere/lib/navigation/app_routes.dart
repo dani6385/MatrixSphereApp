@@ -14,7 +14,7 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String chat = '/chat';
   static const String chatprovider = 'providers/chat';
-  static const String camera= '/camera';
+  static const String camera = '/camera';
   static const String access = '/access';
   static const String goodsIn = '/goods-in'; // Rute untuk input barang
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
@@ -24,8 +24,8 @@ class AppRoutes {
   static const String splash = '/splash';
   static const String register = '/login/register';
   static const String registerShop = '/register-shop';
-  static const String profile= '/profile';
+  static const String profile = '/profile';
   static const String editprofile = '/profile/editprofile';
-
-
+  static const String inventoryAdd = '/inventory/addproduct';
+  static const String inventoryEdit = '/inventory/editproduct';
 }

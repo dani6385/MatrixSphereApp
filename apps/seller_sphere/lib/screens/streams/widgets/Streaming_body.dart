@@ -1,12 +1,12 @@
-// lib/screens/Seller/widgets/Seller_body.dart
+// lib/screens/Streaming/widgets/Streaming_body.dart
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import '../../sellers/contents/featured_card.dart'; // Impor banner biru Anda
+import '../contents/featured_card.dart'; // Impor banner biru Anda
 
-class SellerBody extends StatelessWidget {
-  const SellerBody({super.key});
+class StreamingBody extends StatelessWidget {
+  const StreamingBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class SellerBody extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    'Ini adalah widget body yang dipisahkan ke file lain agar kode SellerScreen tetap bersih dan mudah dibaca.',
+                    'Ini adalah widget body yang dipisahkan ke file lain agar kode StreamingScreen tetap bersih dan mudah dibaca.',
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey,
