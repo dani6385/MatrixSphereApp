@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/providers/app_viewmodel.dart';
 import 'package:seller_sphere/models/attendance_model.dart';
-import 'package:seller_sphere/screens/attendance/widgets/attendance_history_item.dart';
+import 'package:seller_sphere/screens/attendance_bottom/widgets/attendance_history_item.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 /// Body utama untuk layar Absensi.

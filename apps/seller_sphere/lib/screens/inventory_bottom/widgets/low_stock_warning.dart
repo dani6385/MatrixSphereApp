@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/screens/inventory/providers/inventory_provider.dart';
+import 'package:seller_sphere/screens/inventory_bottom/providers/inventory_provider.dart';
 
 import 'package:shared_ui/shared_ui.dart';
 

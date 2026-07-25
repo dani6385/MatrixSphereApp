@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/screens/inventory/bloc/product_bloc.dart';
-import 'package:seller_sphere/screens/inventory/widgets/inventory_app_bar.dart';
-import 'package:seller_sphere/screens/inventory/widgets/inventory_drawer.dart';
-import 'package:seller_sphere/screens/inventory/widgets/inventory_enddrawer.dart';
+import 'package:seller_sphere/screens/inventory_bottom/bloc/product_bloc.dart';
+import 'package:seller_sphere/screens/inventory_bottom/widgets/inventory_app_bar.dart';
+import 'package:seller_sphere/screens/inventory_bottom/widgets/inventory_drawer.dart';
+import 'package:seller_sphere/screens/inventory_bottom/widgets/inventory_enddrawer.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 

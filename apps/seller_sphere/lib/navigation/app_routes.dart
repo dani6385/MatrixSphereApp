@@ -23,7 +23,9 @@ class AppRoutes {
   static const String forgotPassword = '/login/forgot-password';
   static const String splash = '/splash';
   static const String register = '/login/register';
+  static const String registerShop = '/register-shop';
   static const String profile= '/profile';
   static const String editprofile = '/profile/editprofile';
+
 
 }

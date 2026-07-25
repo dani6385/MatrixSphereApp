@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/screens/attendance/providers/attendance_viewmodel.dart';
-import 'package:seller_sphere/screens/attendance/widgets/attendance_appbar.dart';
-import 'package:seller_sphere/screens/attendance/widgets/attendance_body.dart';
+import 'package:seller_sphere/screens/attendance_bottom/providers/attendance_viewmodel.dart';
+import 'package:seller_sphere/screens/attendance_bottom/widgets/attendance_appbar.dart';
+import 'package:seller_sphere/screens/attendance_bottom/widgets/attendance_body.dart';
 import 'package:seller_sphere/screens/settings/setting_screen.dart';
 import 'package:seller_sphere/utils/ui_helper.dart';
 import 'package:shared_ui/shared_ui.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/screens/inventory/widgets/inventory_dialogs.dart';
+import 'package:seller_sphere/screens/inventory_bottom/widgets/inventory_dialogs.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class QuickActionsSection extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/screens/attendance/database_service.dart';
+import 'package:seller_sphere/screens/attendance_bottom/database_service.dart';
 import 'package:seller_sphere/models/attendance_model.dart';
 import 'package:seller_sphere/services/camera_service.dart';
 import 'package:seller_sphere/services/location_service.dart';

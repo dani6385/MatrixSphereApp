@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
+import 'package:seller_sphere/screens/inventory_bottom/providers/app_provider.dart';
 
 /// A form widget for adding or editing a product.
 class AddProductForm extends StatefulWidget {

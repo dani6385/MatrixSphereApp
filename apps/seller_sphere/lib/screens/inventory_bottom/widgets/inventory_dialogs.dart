@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
-import 'package:seller_sphere/screens/inventory/widgets/add_product_form.dart';
+import 'package:seller_sphere/screens/inventory_bottom/widgets/add_product_form.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 /// A utility class for showing dialogs related to the inventory screen.

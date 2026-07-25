@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_services/shared_services.dart';
-import 'package:seller_sphere/screens/inventory/providers/inventory_provider.dart';
-import 'package:seller_sphere/screens/inventory/widgets/inventory_dialogs.dart';
-import 'package:seller_sphere/screens/inventory/widgets/product_item_card.dart';
+import 'package:seller_sphere/screens/inventory_bottom/providers/inventory_provider.dart';
+import 'package:seller_sphere/screens/inventory_bottom/widgets/inventory_dialogs.dart';
+import 'package:seller_sphere/screens/inventory_bottom/widgets/product_item_card.dart';
 
 class ProductListSection extends StatelessWidget {
   final void Function(Product) onNavigateToLabelPrinter;

@@ -169,7 +169,16 @@ final GoRouter appRouter = GoRouter(
             ),
           ],
         ),
-        
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.registerShop, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const RegisterShopScreen(),
+              ),
+            ),
+          ],
+        ),
       ],
     )
   ],
