@@ -22,6 +22,7 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
   );
   final TextEditingController _manualInputController = TextEditingController();
   bool _isProcessing = false;
+  bool _isTorchOn = false;
 
   @override
   void dispose() {
@@ -59,26 +60,21 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pindai Kode Produk'),
-        backgroundColor: Colors.black.withValues(alpha: 0.5),
+        backgroundColor: Colors.black.withAlpha(50),
         elevation: 0,
         actions: [
           IconButton(
             color: Colors.white,
-            icon: ValueListenableBuilder(
-              valueListenable: _scannerController.torchState,
-              builder: (context, state, child) {
-                switch (state) {
-                  case TorchState.off:
-                    return const Icon(Icons.flash_off, color: Colors.grey);
-                  case TorchState.on:
-                    return const Icon(Icons.flash_on, color: kNeonCyan);
-                  default:
-                    return const Icon(Icons.flash_off, color: Colors.grey);
-                }
-              },
-            ),
+            icon: _isTorchOn
+                ? const Icon(Icons.flash_on, color: kNeonCyan)
+                : const Icon(Icons.flash_off, color: Colors.grey),
             iconSize: 24.0,
-            onPressed: () => _scannerController.toggleTorch(),
+            onPressed: () {
+              _scannerController.toggleTorch();
+              setState(() {
+                _isTorchOn = !_isTorchOn;
+              });
+            },
           ),
           IconButton(
             color: Colors.white,
@@ -108,7 +104,7 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
                         width: 250,
                         height: 250,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 2),
+                          border: Border.all(color: Colors.white.withAlpha(80), width: 2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
@@ -117,7 +113,7 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.5),
+                          color: Colors.black.withAlpha(50),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Text(
@@ -133,7 +129,7 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
               // Manual Input Section
               Container(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-                color: Colors.black.withValues(alpha: 0.7),
+                color: Colors.black.withAlpha(70),
                 child: Row(
                   children: [
                     Expanded(
@@ -142,9 +138,9 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'Input SKU Manual',
-                          hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
+                          hintStyle: TextStyle(color: Colors.white.withAlpha(60)),
                           filled: true,
-                          fillColor: Colors.white.withValues(alpha: 0.1),
+                          fillColor: Colors.white.withAlpha(10),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                         ),
@@ -155,8 +151,8 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
                     IconButton.filled(onPressed: _submitManualSku, icon: const Icon(Icons.send), style: IconButton.styleFrom(backgroundColor: kNeonCyan)),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ],
       ),

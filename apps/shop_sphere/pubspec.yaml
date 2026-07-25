@@ -1,4 +1,4 @@
-name: Shop_sphere
+name: shop_sphere
 description: "A new Flutter project."
 publish_to: 'none'
 version: 1.0.0+1
@@ -31,7 +31,8 @@ dependencies:
   permission_handler: ^12.0.3
   qr_flutter: ^4.1.0
   mobile_scanner: ^7.4.0
-  media_info: 0.12.0+2
+  media_info:
+    path: ../seller_sphere/third_party/media_info
   cached_network_image: ^3.4.1
   image_picker: ^1.2.3
   path_provider: ^2.1.6
@@ -52,7 +53,3 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
-dependency_overrides:
-  media_info:
-    path: ./third_party/media_info

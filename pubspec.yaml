@@ -39,4 +39,4 @@ workspace:
   - apps/shop_sphere
   - packages/shared_services
   - packages/shared_ui
-  - third_party/media_info
+  - apps/seller_sphere/third_party/media_info
