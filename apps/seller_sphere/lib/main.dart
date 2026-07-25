@@ -7,9 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
+import 'package:seller_sphere/features/auth/providers/auth_provider.dart';
 import 'package:seller_sphere/services/product_service.dart';
 import 'package:shared_services/shared_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
 import 'package:seller_sphere/navigation/bottom_nav_bar.dart';
 
 
@@ -239,6 +240,7 @@ class _SellerSphereState extends State<SellerSphere> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
         BlocProvider.value(value: _authBloc),
         BlocProvider(
           create: (context) => ProductBloc(productService: ProductService())
