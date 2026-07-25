@@ -11,6 +11,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
@@ -19,6 +20,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
@@ -31,7 +33,8 @@ class _RegisterPageState extends State<RegisterPage> {
         context.read<AuthBloc>().add(
               RegisterRequested(
                 email: _emailController.text,
-                password: _passwordController.text, name: '',
+                password: _passwordController.text,
+                name: _nameController.text,
               ),
             );
       } else {
@@ -66,6 +69,18 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    CustomTextField(
+                      controller: _nameController,
+                      labelText: 'Full Name',
+                      keyboardType: TextInputType.name,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your full name';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
                     CustomTextField(
                       controller: _emailController,
                       labelText: 'Email',

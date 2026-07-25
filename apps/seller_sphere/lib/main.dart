@@ -72,30 +72,24 @@ final GoRouter _router = GoRouter(
     }
 
     // 2. Jika pengguna SUDAH login:
-    if (isLoggedIn && isPublicPage) {
-      // 2a. Jika mencoba mengakses halaman publik (login, register),
-      //     arahkan ke halaman utama.
+    if (isLoggedIn) {
+      // 2a. Jika pengguna sudah login dan mencoba mengakses halaman publik (login/register),
+      //     arahkan mereka ke halaman utama.
       if (isPublicPage) {
         return '/';
       }
 
-      // 2b. Periksa apakah pengguna sudah memiliki toko atau sedang dalam proses approval.
-      //     Ini adalah logika baru yang ditambahkan.
+      // 2b. Periksa apakah pengguna sudah punya toko. Jika belum, arahkan ke pendaftaran toko.
       final rtdbService = FirebaseRtdbService();
       final bool hasShop = await rtdbService.doesShopExistForUser(user.uid);
-
-      // Lokasi halaman pendaftaran toko
       const registerShopLocation = '/register-shop';
       final bool isAtRegisterShopPage = location == registerShopLocation;
 
-      // Jika pengguna tidak punya toko DAN tidak sedang di halaman pendaftaran toko,
-      // paksa arahkan ke halaman pendaftaran toko.
+      // Jika belum punya toko & tidak sedang di halaman pendaftaran toko, paksa ke sana.
       if (!hasShop && !isAtRegisterShopPage) {
         return registerShopLocation;
       }
-
-      // Jika pengguna punya toko TAPI mencoba akses halaman pendaftaran,
-      // kembalikan ke halaman utama.
+      // Jika sudah punya toko & mencoba akses halaman pendaftaran, kembalikan ke home.
       if (hasShop && isAtRegisterShopPage) {
         return '/';
       }
@@ -196,7 +190,7 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/login/register',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) => const RegisterPage(),
     ),
     GoRoute(
       path: '/login/forgot-password',
