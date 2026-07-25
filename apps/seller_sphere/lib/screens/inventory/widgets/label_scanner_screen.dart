@@ -43,7 +43,10 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
       HapticFeedback.mediumImpact();
 
       // Return the scanned code to the previous screen
-      Navigator.of(context).pop(code);
+      // Pastikan widget masih terpasang sebelum memanggil Navigator
+      if (mounted) {
+        Navigator.of(context).pop(code);
+      }
     }
   }
 
@@ -51,7 +54,9 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
     final code = _manualInputController.text.trim();
     if (code.isNotEmpty) {
       // Return the manually entered code
-      Navigator.of(context).pop(code);
+      if (mounted) {
+        Navigator.of(context).pop(code);
+      }
     }
   }
 
@@ -89,7 +94,13 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
         children: [
           MobileScanner(
             controller: _scannerController,
-            onDetect: _onDetect,
+            onDetect: (capture) {
+              // Reset isProcessing jika pengguna kembali ke layar ini
+              if (mounted && _isProcessing) {
+                setState(() => _isProcessing = false);
+              }
+              _onDetect(capture);
+            },
           ),
           // UI Overlay
           Column(

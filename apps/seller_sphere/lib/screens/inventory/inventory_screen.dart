@@ -1,66 +1,129 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:seller_sphere/screens/inventory/providers/inventory_provider.dart';
-import 'package:seller_sphere/screens/inventory/widgets/inventory_stats_section.dart';
-import 'package:shared_services/shared_services.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/screens/inventory/bloc/product_bloc.dart';
 import 'package:seller_sphere/screens/inventory/widgets/inventory_app_bar.dart';
 import 'package:seller_sphere/screens/inventory/widgets/inventory_drawer.dart';
 import 'package:seller_sphere/screens/inventory/widgets/inventory_enddrawer.dart';
-import 'package:seller_sphere/screens/inventory/widgets/inventory_filter_section.dart';
-//import 'package:seller_sphere/screens/inventory/widgets/inventory_stats_section.dart';
-import 'package:seller_sphere/screens/inventory/widgets/low_stock_warning.dart';
-import 'package:seller_sphere/screens/inventory/widgets/product_list_section.dart';
-import 'package:seller_sphere/screens/inventory/widgets/quick_actions_section.dart';
-import 'package:seller_sphere/screens/inventory/widgets/safe_mode_card.dart';
+import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
 
-class InventoryScreen extends StatefulWidget {
-  final void Function(Product) onNavigateToLabelPrinter;
+class InventoryScreen extends StatelessWidget {
+  // Konstruktor sekarang menjadi sederhana dan tidak memerlukan parameter apapun.
+  const InventoryScreen({super.key});
 
-  const InventoryScreen({
-    super.key,
-    required this.onNavigateToLabelPrinter,
-  });
-
-  @override
-  State<InventoryScreen> createState() => _InventoryScreenState();
-}
-
-class _InventoryScreenState extends State<InventoryScreen> {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => InventoryProvider(),
-      child: Consumer<InventoryProvider>(
-        builder: (context, provider, child) {
-          return Scaffold(
-            appBar: InventoryAppBar(
-              onSearchChanged: (query) {
-                provider.updateSearchQuery(query);
-              },
-            ),
-            drawer: const InventoryDrawer(),
-            endDrawer: const InventoryEndDrawer(),
-            body: ListView(
-              padding: const EdgeInsets.all(16.0),
-              children: [
-                const SafeModeCard(),
-                const SizedBox(height: 12),
-                const InventoryFilterSection(),
-                const SizedBox(height: 16),
-                const QuickActionsSection(),
-                const SizedBox(height: 12),
-                const InventoryStatsSection(),
-                const SizedBox(height: 12),
-                const LowStockWarning(),
-                const SizedBox(height: 16),
-                ProductListSection(
-                  onNavigateToLabelPrinter: widget.onNavigateToLabelPrinter,
-                ),
-              ],
-            ),
+    return Scaffold(
+      appBar: InventoryAppBar(onSearchChanged: (String value) {  },),
+      drawer: const InventoryDrawer(),
+      endDrawer: const InventoryEndDrawer(),
+      body: BlocBuilder<ProductBloc, ProductState>(
+        builder: (context, state) {
+          // Tampilkan loading indicator saat data sedang dimuat
+          if (state.status == ProductStatus.loading && state.products.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Tampilkan pesan error jika terjadi kegagalan
+          if (state.status == ProductStatus.failure) {
+            return Center(
+              child: Text('Gagal memuat data: ${state.error}'),
+            );
+          }
+
+          // Tampilkan pesan jika tidak ada produk
+          if (state.products.isEmpty) {
+            return const Center(
+              child: Text(
+                'Belum ada produk.\nTekan tombol + untuk menambah produk baru.',
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+
+          // Tampilkan daftar produk jika berhasil
+          return ListView.builder(
+            itemCount: state.products.length,
+            itemBuilder: (context, index) {
+              final product = state.products[index];
+              return _ProductListItem(product: product);
+            },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigasi ke halaman tambah produk menggunakan GoRouter
+          context.go('/inventory/add');
+        },
+        backgroundColor: kNeonCyan,
+        child: const Icon(Icons.add, color: Colors.black),
+      ),
+    );
+  }
+}
+
+class _ProductListItem extends StatelessWidget {
+  const _ProductListItem({required this.product});
+
+  final Product product;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: ListTile(
+        leading: CircleAvatar(
+          // Tampilkan gambar jika ada, jika tidak tampilkan inisial
+          backgroundImage:
+              product.imageUrl != null ? NetworkImage(product.imageUrl!) : null,
+          child: product.imageUrl == null
+              ? Text(product.name.isNotEmpty ? product.name[0] : '?')
+              : null,
+        ),
+        title: Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text('SKU: ${product.sku}\nStok: ${product.stock}'),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.edit, color: kAccentPurple),
+              onPressed: () {
+                // Navigasi ke halaman edit dengan membawa data produk
+                context.go('/inventory/edit', extra: product);
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: kWarmOrange),
+              onPressed: () {
+                // Tampilkan dialog konfirmasi sebelum menghapus
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: const Text('Konfirmasi Hapus'),
+                    content: Text('Anda yakin ingin menghapus "${product.name}"?'),
+                    actions: [
+                      TextButton(
+                        child: const Text('Batal'),
+                        onPressed: () => Navigator.of(ctx).pop(),
+                      ),
+                      TextButton(
+                        child: const Text('Hapus', style: TextStyle(color: Colors.red)),
+                        onPressed: () {
+                          // Kirim event delete ke BLoC
+                          context.read<ProductBloc>().add(ProductDeleted(product));
+                          Navigator.of(ctx).pop();
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+        isThreeLine: true,
       ),
     );
   }

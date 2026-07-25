@@ -8,7 +8,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
 import 'package:seller_sphere/navigation/bottom_nav_bar.dart'; // 1. IMPORT WIDGET SHELL
+import 'package:seller_sphere/screens/inventory/product/product_form_screen.dart';
 import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
+import 'package:seller_sphere/screens/inventory/bloc/product_bloc.dart';
+import 'package:seller_sphere/services/product_service.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -132,7 +135,20 @@ final GoRouter _router = GoRouter(
             GoRoute(
               path: '/inventory',
               builder: (context, state) =>
-                  InventoryScreen(onNavigateToLabelPrinter: (p) {}),
+                  const InventoryScreen(), // Disederhanakan, logika navigasi dipindah ke dalam
+            ),
+            // Rute untuk form tambah/edit produk, di dalam branch inventory
+            GoRoute(
+              path: '/inventory/add',
+              name: 'addProduct',
+              parentNavigatorKey: _rootNavigatorKey, // Tampil fullscreen
+              builder: (context, state) => const ProductFormScreen(),
+            ),
+            GoRoute(
+              path: '/inventory/edit',
+              name: 'editProduct',
+              parentNavigatorKey: _rootNavigatorKey, // Tampil fullscreen
+              builder: (context, state) => ProductFormScreen(initialProduct: state.extra as Product?),
             ),
           ],
         ),
@@ -203,6 +219,10 @@ class _SellerSphereState extends State<SellerSphere> {
     return MultiProvider(
       providers: [
         BlocProvider.value(value: _authBloc),
+        BlocProvider(
+          create: (context) => ProductBloc(productService: ProductService())
+            ..add(const ProductsSubscriptionRequested()),
+        ),
         ChangeNotifierProvider(create: (context) => AppProvider()),
       ],
       // BlocListener tidak lagi diperlukan di sini karena GoRouter
