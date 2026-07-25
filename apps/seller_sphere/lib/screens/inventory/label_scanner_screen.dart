@@ -59,7 +59,7 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pindai Kode Produk'),
-        backgroundColor: Colors.black.withOpacity(0.5),
+        backgroundColor: Colors.black.withValues(alpha: 0.5),
         elevation: 0,
         actions: [
           IconButton(
@@ -112,7 +112,7 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
                         width: 250,
                         height: 250,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white.withOpacity(0.8), width: 2),
+                          border: Border.all(color: Colors.white.withValues(alpha: 0.8), width: 2),
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
@@ -121,7 +121,7 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                         decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Text(
@@ -137,7 +137,7 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
               // Manual Input Section
               Container(
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
                 child: Row(
                   children: [
                     Expanded(
@@ -146,9 +146,9 @@ class _LabelScannerScreenState extends State<LabelScannerScreen> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'Input SKU Manual',
-                          hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
+                          hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
                           filled: true,
-                          fillColor: Colors.white.withOpacity(0.1),
+                          fillColor: Colors.white.withValues(alpha: 0.1),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                         ),

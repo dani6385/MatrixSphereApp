@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_ui/shared_ui.dart';
-import '../providers/chat_provider.dart';
+import 'package:seller_sphere/screens/chat/Providers/chat_provider.dart';
 
 class ChatInputBar extends StatefulWidget {
   final String chatId;
