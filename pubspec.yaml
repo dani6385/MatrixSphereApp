@@ -36,5 +36,7 @@ flutter:
 
 workspace:
   - apps/seller_sphere
+  - apps/shop_sphere
   - packages/shared_services
   - packages/shared_ui
+  - third_party/media_info
