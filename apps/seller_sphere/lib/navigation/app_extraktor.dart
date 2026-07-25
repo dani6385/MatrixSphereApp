@@ -14,7 +14,7 @@ export '../features/settings/setting_screen.dart';
 export '../features/status/status_screen.dart';
 
 export '../features/profile/edit/edit_profile.dart';
-export 'package:seller_sphere/features/registration/register_shop_screen.dart';
+export 'package:seller_sphere/features/registration/registration_screen.dart';
 
 export 'package:seller_sphere/screens/inventory/product/product_form_screen.dart';
 export 'package:seller_sphere/screens/inventory/providers/app_provider.dart';

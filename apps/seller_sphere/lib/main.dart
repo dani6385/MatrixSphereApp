@@ -7,12 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
-import 'package:seller_sphere/features/auth/providers/auth_provider.dart';
-import 'package:seller_sphere/services/product_service.dart';
-import 'package:shared_services/shared_services.dart';
-import 'package:firebase_auth/firebase_auth.dart' hide AuthProvider;
-import 'package:seller_sphere/navigation/bottom_nav_bar.dart';
+import 'package:seller_sphere/navigation/bottom_nav_bar.dart'; // 1. IMPORT WIDGET SHELL
 
+import 'package:shared_services/shared_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 // Ganti dengan path home screen Anda
 
@@ -55,47 +53,34 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter _router = GoRouter(
   initialLocation: '/login', // Mulai dari halaman login
-  redirect: (BuildContext context, GoRouterState state) async {
-    final user = FirebaseAuth.instance.currentUser;
-    final bool isLoggedIn = user != null;
+  // 1. Redirect logic
+  redirect: (BuildContext context, GoRouterState state) {
+    // --- PERUBAHAN DIMULAI DI SINI ---
+    // Gunakan status langsung dari FirebaseAuth untuk menghindari race condition
+    // dengan state BLoC. Ini lebih andal untuk redirect.
+    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    // final authState = context.read<AuthBloc>().state; // Baris ini tidak lagi diperlukan
+    // final bool isLoggedIn = authState is AuthSuccess; // Baris ini diganti
 
     // Dapatkan lokasi yang sedang dituju
     final String location = state.uri.toString();
 
     // Daftar halaman publik yang bisa diakses tanpa login
-    final publicPages = ['/login', '/login/register', '/login/forgot-password'];
-    final bool isPublicPage = publicPages.contains(location);
+    final bool isPublicPage = location == '/login' ||
+        location == '/login/register' ||
+        location == '/login/forgot-password';
 
-    // --- LOGIKA REDIRECT ---
-
-    // 1. Jika pengguna BELUM login dan mencoba mengakses halaman non-publik,
-    //    arahkan ke halaman login.
+    // Skenario:
+    // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
+    //   maka alihkan (redirect) ke halaman login.
     if (!isLoggedIn && !isPublicPage) {
       return '/login';
     }
 
-    // 2. Jika pengguna SUDAH login:
-    if (isLoggedIn) {
-      // 2a. Jika pengguna sudah login dan mencoba mengakses halaman publik (login/register),
-      //     arahkan mereka ke halaman utama.
-      if (isPublicPage) {
-        return '/';
-      }
-
-      // 2b. Periksa apakah pengguna sudah punya toko. Jika belum, arahkan ke pendaftaran toko.
-      final rtdbService = FirebaseRtdbService();
-      final bool hasShop = await rtdbService.doesShopExistForUser(user.uid);
-      const registerShopLocation = '/register-shop';
-      final bool isAtRegisterShopPage = location == registerShopLocation;
-
-      // Jika belum punya toko & tidak sedang di halaman pendaftaran toko, paksa ke sana.
-      if (!hasShop && !isAtRegisterShopPage) {
-        return registerShopLocation;
-      }
-      // Jika sudah punya toko & mencoba akses halaman pendaftaran, kembalikan ke home.
-      if (hasShop && isAtRegisterShopPage) {
-        return '/';
-      }
+    // - Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
+    //   maka alihkan ke halaman utama (home).
+    if (isLoggedIn && isPublicPage) {
+      return '/';
     }
 
     // - Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
@@ -147,20 +132,7 @@ final GoRouter _router = GoRouter(
             GoRoute(
               path: '/inventory',
               builder: (context, state) =>
-                  const InventoryScreen(), // Disederhanakan, logika navigasi dipindah ke dalam
-            ),
-            // Rute untuk form tambah/edit produk, di dalam branch inventory
-            GoRoute(
-              path: '/inventory/add',
-              name: 'addProduct',
-              parentNavigatorKey: _rootNavigatorKey, // Tampil fullscreen
-              builder: (context, state) => const ProductFormScreen(),
-            ),
-            GoRoute(
-              path: '/inventory/edit',
-              name: 'editProduct',
-              parentNavigatorKey: _rootNavigatorKey, // Tampil fullscreen
-              builder: (context, state) => ProductFormScreen(initialProduct: state.extra as Product?),
+                  InventoryScreen(onNavigateToLabelPrinter: (p) {}),
             ),
           ],
         ),
@@ -193,21 +165,11 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/login/register',
-      builder: (context, state) => const RegisterPage(),
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: '/login/forgot-password',
-      // Perbaikan: Arahkan ke halaman Lupa Password yang benar.
-      // Untuk sementara, kita gunakan Scaffold placeholder.
-      builder: (context, state) => Scaffold(
-        appBar: AppBar(title: const Text('Forgot Password')),
-        body: const Center(child: Text('Forgot Password Page')),
-      ),
-    ),
-    // Rute untuk pendaftaran toko (fullscreen)
-    GoRoute(
-      path: '/register-shop',
-      builder: (context, state) => const RegisterShopScreen(),
+      builder: (context, state) => const LoginScreen(),
     ),
     // Tambahkan rute fullscreen lain di sini (register, forgot-password, dll.)
   ],
@@ -240,12 +202,7 @@ class _SellerSphereState extends State<SellerSphere> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
         BlocProvider.value(value: _authBloc),
-        BlocProvider(
-          create: (context) => ProductBloc(productService: ProductService())
-            ..add(const ProductsSubscriptionRequested()),
-        ),
         ChangeNotifierProvider(create: (context) => AppProvider()),
       ],
       // BlocListener tidak lagi diperlukan di sini karena GoRouter

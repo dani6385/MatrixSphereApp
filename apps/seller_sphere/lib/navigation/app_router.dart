@@ -83,7 +83,7 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: AppRoutes.inventory, // path: '/inventory'
               pageBuilder: (context, state) => FadeTransitionPage(
-                child: const InventoryScreen(),
+                child: InventoryScreen(onNavigateToLabelPrinter: (p1) {  },),
               ),
             ),
           ],
@@ -174,7 +174,7 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: AppRoutes.registerShop, // path: '/attendance'
               pageBuilder: (context, state) => FadeTransitionPage(
-                child: const RegisterShopScreen(),
+                child: const RegistrationScreen(),
               ),
             ),
           ],

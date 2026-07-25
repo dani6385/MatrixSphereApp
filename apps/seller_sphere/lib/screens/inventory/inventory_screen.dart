@@ -9,7 +9,7 @@ import 'package:seller_sphere/screens/inventory/widgets/inventory_body.dart'; //
 import 'package:shared_ui/shared_ui.dart';
 
 class InventoryScreen extends StatelessWidget {
-  const InventoryScreen({super.key});
+  const InventoryScreen({super.key, required Null Function(dynamic p) onNavigateToLabelPrinter});
 
   @override
   Widget build(BuildContext context) {

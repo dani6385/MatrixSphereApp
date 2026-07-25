@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:seller_sphere/models/shop_model.dart';
+import 'package:logger/logger.dart';
+
+final Logger logger = Logger();
 
 class FirebaseRtdbService {
   final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
@@ -24,7 +27,7 @@ class FirebaseRtdbService {
       await _dbRef.child('shops').child(shop.id).set(shop.toMap());
     } catch (e) {
       // Anda bisa menambahkan logging atau error handling yang lebih baik di sini
-      print('Error creating shop: $e');
+      logger.e('Error creating shop: $e');
       rethrow;
     }
   }

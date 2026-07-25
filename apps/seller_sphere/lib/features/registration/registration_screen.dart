@@ -5,14 +5,14 @@ import 'package:seller_sphere/services/location_service.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class RegisterShopScreen extends StatefulWidget {
-  const RegisterShopScreen({super.key});
+class RegistrationScreen extends StatefulWidget {
+  const RegistrationScreen({super.key});
 
   @override
-  State<RegisterShopScreen> createState() => _RegisterShopScreenState();
+  State<RegistrationScreen> createState() => _RegistrationScreenState();
 }
 
-class _RegisterShopScreenState extends State<RegisterShopScreen> {
+class _RegistrationScreenState extends State<RegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _shopNameController = TextEditingController();
   final _rtdbService = FirebaseRtdbService();
