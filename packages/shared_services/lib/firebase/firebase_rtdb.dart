@@ -103,6 +103,29 @@ class FirebaseRtdbService {
     }
   }
 
+  /// Memeriksa apakah toko untuk UID tertentu sudah ada di 'seller_sphere' atau masih dalam 'approval'.
+  ///
+  /// [uid]: UID pengguna yang ingin diperiksa.
+  /// Mengembalikan `true` jika data ditemukan di salah satu path, jika tidak `false`.
+  Future<bool> doesShopExistForUser(String uid) async {
+    try {
+      // 1. Cek di path utama 'seller_sphere'
+      final sellerRef = _database.ref('seller_sphere/$uid');
+      final sellerSnapshot = await sellerRef.get();
+      if (sellerSnapshot.exists) {
+        return true;
+      }
+
+      // 2. Jika tidak ada, cek di path 'approval'
+      final approvalRef = _database.ref('approval/$uid');
+      final approvalSnapshot = await approvalRef.get();
+      return approvalSnapshot.exists;
+    } catch (e) {
+      debugPrint('Error saat memeriksa keberadaan toko untuk UID $uid: $e');
+      return false; // Anggap tidak ada jika terjadi error
+    }
+  }
+
   /// Mendengarkan perubahan data pada path toko secara real-time.
   ///
   /// Method ini mengembalikan sebuah Stream yang akan memancarkan objek [Shop]

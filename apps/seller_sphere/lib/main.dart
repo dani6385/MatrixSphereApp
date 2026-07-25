@@ -7,10 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
-import 'package:seller_sphere/navigation/bottom_nav_bar.dart'; // 1. IMPORT WIDGET SHELL
-import 'package:seller_sphere/screens/inventory/product/product_form_screen.dart';
-import 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
-import 'package:seller_sphere/screens/inventory/bloc/product_bloc.dart';
 import 'package:seller_sphere/services/product_service.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -56,34 +52,53 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter _router = GoRouter(
   initialLocation: '/login', // Mulai dari halaman login
-  // 1. Redirect logic
-  redirect: (BuildContext context, GoRouterState state) {
-    // --- PERUBAHAN DIMULAI DI SINI ---
-    // Gunakan status langsung dari FirebaseAuth untuk menghindari race condition
-    // dengan state BLoC. Ini lebih andal untuk redirect.
-    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
-    // final authState = context.read<AuthBloc>().state; // Baris ini tidak lagi diperlukan
-    // final bool isLoggedIn = authState is AuthSuccess; // Baris ini diganti
+  redirect: (BuildContext context, GoRouterState state) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final bool isLoggedIn = user != null;
 
     // Dapatkan lokasi yang sedang dituju
     final String location = state.uri.toString();
 
     // Daftar halaman publik yang bisa diakses tanpa login
-    final bool isPublicPage = location == '/login' ||
-        location == '/login/register' ||
-        location == '/login/forgot-password';
+    final publicPages = ['/login', '/login/register', '/login/forgot-password'];
+    final bool isPublicPage = publicPages.contains(location);
 
-    // Skenario:
-    // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
-    //   maka alihkan (redirect) ke halaman login.
+    // --- LOGIKA REDIRECT ---
+
+    // 1. Jika pengguna BELUM login dan mencoba mengakses halaman non-publik,
+    //    arahkan ke halaman login.
     if (!isLoggedIn && !isPublicPage) {
       return '/login';
     }
 
-    // - Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
-    //   maka alihkan ke halaman utama (home).
+    // 2. Jika pengguna SUDAH login:
     if (isLoggedIn && isPublicPage) {
-      return '/';
+      // 2a. Jika mencoba mengakses halaman publik (login, register),
+      //     arahkan ke halaman utama.
+      if (isPublicPage) {
+        return '/';
+      }
+
+      // 2b. Periksa apakah pengguna sudah memiliki toko atau sedang dalam proses approval.
+      //     Ini adalah logika baru yang ditambahkan.
+      final rtdbService = FirebaseRtdbService();
+      final bool hasShop = await rtdbService.doesShopExistForUser(user.uid);
+
+      // Lokasi halaman pendaftaran toko
+      const registerShopLocation = '/register-shop';
+      final bool isAtRegisterShopPage = location == registerShopLocation;
+
+      // Jika pengguna tidak punya toko DAN tidak sedang di halaman pendaftaran toko,
+      // paksa arahkan ke halaman pendaftaran toko.
+      if (!hasShop && !isAtRegisterShopPage) {
+        return registerShopLocation;
+      }
+
+      // Jika pengguna punya toko TAPI mencoba akses halaman pendaftaran,
+      // kembalikan ke halaman utama.
+      if (hasShop && isAtRegisterShopPage) {
+        return '/';
+      }
     }
 
     // - Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
@@ -186,6 +201,11 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/login/forgot-password',
       builder: (context, state) => const LoginScreen(),
+    ),
+    // Rute untuk pendaftaran toko (fullscreen)
+    GoRoute(
+      path: '/register-shop',
+      builder: (context, state) => const RegisterShopScreen(),
     ),
     // Tambahkan rute fullscreen lain di sini (register, forgot-password, dll.)
   ],

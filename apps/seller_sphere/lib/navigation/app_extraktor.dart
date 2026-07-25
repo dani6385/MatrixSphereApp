@@ -1,3 +1,4 @@
+export 'package:seller_sphere/navigation/bottom_nav_bar.dart'; // 1. export WIDGET SHELL
 export '../screens/auth/login_screen.dart';
 export '../screens/auth/register_page.dart';
 export '../screens/auth/widgets/forgot_password_page.dart';
@@ -19,3 +20,9 @@ export '../screens/streams/streaming_screen.dart';
 //export '../auth/auth_service.dart';
 //export '../auth/auth_state.dart';
 export '../screens/profile/edit/edit_profile.dart';
+export 'package:seller_sphere/screens/shop_registration/register_shop_screen.dart';
+
+export 'package:seller_sphere/screens/inventory/product/product_form_screen.dart';
+export 'package:seller_sphere/screens/inventory/providers/app_provider.dart';
+export 'package:seller_sphere/screens/inventory/bloc/product_bloc.dart';
+
