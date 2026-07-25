@@ -1,17 +1,20 @@
 import 'dart:async';
 
 import 'package:camera/camera.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geodesy/geodesy.dart';
 import 'package:seller_sphere/screens/attendance_bottom/database_service.dart';
 import 'package:seller_sphere/models/attendance_model.dart';
 import 'package:seller_sphere/services/camera_service.dart';
 import 'package:seller_sphere/services/location_service.dart';
-//import 'package:shared_services/shared_services.dart';
+import 'package:shared_services/shared_services.dart';
 
 class AttendanceViewModel extends ChangeNotifier {
   final CameraService _cameraService = CameraService();
   final LocationService _locationService = LocationService();
   final DatabaseService _databaseService = DatabaseService();
+  final FirebaseRtdbService _rtdbService = FirebaseRtdbService();
 
   // Camera state
   bool _hasCameraPermission = false;
@@ -24,6 +27,7 @@ class AttendanceViewModel extends ChangeNotifier {
   String _scanStatusMessage = 'Menunggu absensi...';
   double _scanProgress = 0.0;
   List<AttendanceRecord> _attendanceList = [];
+  Shop? _currentShop;
 
   // State for one-time events (dialogs)
   LocationErrorEvent? _locationErrorEvent;
@@ -39,6 +43,7 @@ class AttendanceViewModel extends ChangeNotifier {
   List<AttendanceRecord> get attendanceList => _attendanceList;
   LocationErrorEvent? get locationErrorEvent => _locationErrorEvent;
   ScanSuccessEvent? get scanSuccessEvent => _scanSuccessEvent;
+  Shop? get currentShop => _currentShop;
 
   void clearLocationErrorEvent() {
     _locationErrorEvent = null;
@@ -51,11 +56,23 @@ class AttendanceViewModel extends ChangeNotifier {
   }
 
   Future<void> initCamera() async {
+    // Ambil data toko saat kamera diinisialisasi
+    _listenToShopData();
     final result = await _cameraService.initializeCamera();
     _hasCameraPermission = result.permissionGranted;
     _cameraController = result.controller;
     _initializeControllerFuture = result.initializeFuture;
     notifyListeners();
+  }
+
+  void _listenToShopData() {
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId != null) {
+      _rtdbService.getShopStreamByUid(userId).listen((shop) {
+        _currentShop = shop;
+        notifyListeners();
+      });
+    }
   }
 
   Future<void> requestCameraPermission() async {
@@ -72,7 +89,26 @@ class AttendanceViewModel extends ChangeNotifier {
     _isCheckingLocation = true;
     notifyListeners();
 
-    final locationResult = await _locationService.isUserWithinOfficeRadius();
+    if (_currentShop?.latitude == null || _currentShop?.longitude == null) {
+      _isCheckingLocation = false;
+      _locationErrorEvent = LocationErrorEvent(
+        'Lokasi Toko Tidak Ditemukan',
+        'Data lokasi toko Anda belum diatur. Silakan hubungi admin untuk memperbarui data toko.',
+        false,
+      );
+      notifyListeners();
+      return;
+    }
+
+    final shopLocation =
+        LatLng(_currentShop!.latitude!, _currentShop!.longitude!);
+
+    // Menggunakan metode baru dengan lokasi toko yang dinamis
+    final locationResult = await _locationService.isUserWithinShopRadius(
+      shopLocation: shopLocation,
+      radiusMeters: 200, // Anda bisa atur radius di sini
+    );
+
     _isCheckingLocation = false;
 
     if (!locationResult.isWithinRadius) {

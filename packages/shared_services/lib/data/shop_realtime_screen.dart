@@ -87,15 +87,34 @@ class _ShopRealtimeScreenState extends State<ShopRealtimeScreen> {
 }
 
 class Shop {
-  get id => null;
-  
-  get products => null;
+  final String id;
+  final Map<String, dynamic> products;
+  final double? latitude;
+  final double? longitude;
+
+  Shop({
+    required this.id,
+    this.products = const {},
+    this.latitude,
+    this.longitude,
+  });
 
   Map<String, dynamic> toJson() {
-    return {}; // Placeholder, implement actual serialization if needed
+    return {
+      'produk': products,
+      'latitude': latitude,
+      'longitude': longitude,
+    };
   }
 
-  static Shop? fromJson(String s, Map<String, dynamic> shopData) {
-    return null;
+  static Shop? fromJson(String id, Map<String, dynamic> json) {
+    return Shop(
+      id: id,
+      products: json['produk'] != null
+          ? Map<String, dynamic>.from(json['produk'])
+          : {},
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
+    );
   }
 }

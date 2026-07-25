@@ -143,7 +143,9 @@ class FirebaseRtdbService {
       return ref.onValue.map((event) {
         final snapshot = event.snapshot;
         if (snapshot.exists && snapshot.value != null) {
-          final shopData = Map<String, dynamic>.from(snapshot.value as Map);
+          // Pastikan konversi ke Map<String, dynamic> untuk kompatibilitas JSON
+          final shopData = Map<String, dynamic>.from(
+              (snapshot.value as Map).map((key, value) => MapEntry(key.toString(), value)));
           // snapshot.key akan berisi ID toko, misal 'toko_agan'
           return Shop.fromJson(snapshot.key!, shopData);
         } else {
@@ -179,7 +181,7 @@ class FirebaseRtdbService {
         allShopsData.forEach((shopId, shopData) {
           final shop = Shop.fromJson(shopId, shopData as Map<String, dynamic>);
           // 3. Cek apakah toko memiliki produk yang dicari
-          if (shop?.products.containsKey(productName)) {
+          if (shop?.products.containsKey(productName) ?? false) {
             matchingShops.add(shop!);
           }
         });
