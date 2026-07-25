@@ -190,10 +190,11 @@ class LocationService {
     // 3. Jika izin diberikan, dapatkan lokasi pengguna saat ini.
     try {
       Position userPosition = await Geolocator.getCurrentPosition(
-        // ignore: deprecated_member_use
-        desiredAccuracy: LocationAccuracy.high,
-        // ignore: deprecated_member_use
-        timeLimit: const Duration(seconds: 10), // Batas waktu 10 detik
+        // Perbaikan: Menggunakan LocationSettings yang lebih modern
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 10),
+        ),
       );
 
       final userLocation = LatLng(userPosition.latitude, userPosition.longitude);

@@ -194,7 +194,12 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/login/forgot-password',
-      builder: (context, state) => const LoginScreen(),
+      // Perbaikan: Arahkan ke halaman Lupa Password yang benar.
+      // Untuk sementara, kita gunakan Scaffold placeholder.
+      builder: (context, state) => Scaffold(
+        appBar: AppBar(title: const Text('Forgot Password')),
+        body: const Center(child: Text('Forgot Password Page')),
+      ),
     ),
     // Rute untuk pendaftaran toko (fullscreen)
     GoRoute(
