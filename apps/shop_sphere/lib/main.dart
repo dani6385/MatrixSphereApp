@@ -1,122 +1,203 @@
-import 'package:flutter/material.dart';
+import 'dart:ui';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_sphere/navigation/app_extraktor.dart';
+import 'package:shop_sphere/navigation/bottom_nav_bar.dart'; // 1. IMPORT WIDGET SHELL
+
+import 'package:shared_services/shared_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+// Ganti dengan path home screen Anda
+
+void main() async {
+  // 1. Pastikan binding diinisialisasi terlebih dahulu
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    // 2. Coba inisialisasi Firebase
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+
+    // 3. Set up Crashlytics hanya jika Firebase berhasil diinisialisasi
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+
+    debugPrint("Firebase & Crashlytics berhasil dikonfigurasi.");
+  } catch (e, stack) {
+    // Jika Firebase gagal, aplikasi TIDAK AKAN layar hitam, melainkan tetap berjalan
+    // dan menampilkan pesan error ini di konsol debug Anda.
+    debugPrint("Gagal menginisialisasi Firebase: $e");
+    debugPrint(stack.toString());
+  }
+
+  // 4. Selalu panggil runApp di luar blok inisialisasi agar layar hitam terhindari
   runApp(const ShopSphere());
 }
 
-class ShopSphere extends StatelessWidget {
-  const ShopSphere({super.key});
+// Pindahkan GoRouter ke luar kelas agar menjadi top-level variable.
+// Ini adalah praktik terbaik untuk memastikan router tidak dibuat ulang.
+// 2. BUAT GLOBAL KEY UNTUK NAVIGATOR
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        //ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+final GoRouter _router = GoRouter(
+  initialLocation: '/login', // Mulai dari halaman login
+  // 1. Redirect logic
+  redirect: (BuildContext context, GoRouterState state) {
+    // --- PERUBAHAN DIMULAI DI SINI ---
+    // Gunakan status langsung dari FirebaseAuth untuk menghindari race condition
+    // dengan state BLoC. Ini lebih andal untuk redirect.
+    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    // final authState = context.read<AuthBloc>().state; // Baris ini tidak lagi diperlukan
+    // final bool isLoggedIn = authState is AuthSuccess; // Baris ini diganti
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+    // Dapatkan lokasi yang sedang dituju
+    final String location = state.uri.toString();
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+    // Daftar halaman publik yang bisa diakses tanpa login
+    final bool isPublicPage = location == '/login' ||
+        location == '/login/register' ||
+        location == '/login/forgot-password';
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+    // Skenario:
+    // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
+    //   maka alihkan (redirect) ke halaman login.
+    if (!isLoggedIn && !isPublicPage) {
+      return '/login';
+    }
 
-  final String title;
+    // - Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
+    //   maka alihkan ke halaman utama (home).
+    if (isLoggedIn && isPublicPage) {
+      return '/';
+    }
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+    // - Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
+    return null;
+    // --- PERUBAHAN SELESAI DI SINI ---
+  },
+  refreshListenable:
+      GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+  // 3. UBAH STRUKTUR RUTE
+  navigatorKey: _rootNavigatorKey,
+  routes: <RouteBase>[
+    // Rute yang memiliki BottomNavigationBar (di dalam Shell)
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        // PERBAIKAN: Bungkus navigationShell (konten halaman) dan BottomNavBar
+        // di dalam sebuah Scaffold.
+        return Scaffold(
+          body:
+              navigationShell, // navigationShell akan menampilkan halaman aktif
+          bottomNavigationBar: BottomNavBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: (index) => navigationShell.goBranch(index),
+          ),
+        );
+      },
+      branches: [
+        // Branch 1: Home
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/',
+              builder: (context, state) => const HomeScreen(),
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        // Branch 2: Streaming (Sesuai urutan di bottom_nav_bar.dart)
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/stream',
+              builder: (context, state) => const StreamingScreen(),
+            ),
+          ],
+        ),
+        // Branch 3: Inventory
+        
+        // Branch 4: Status (orderan)
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/status',
+              builder: (context, state) =>
+                  const Scaffold(body: Center(child: Text('Chat'))),
+            ),
+          ],
+        ),
+        // Branch 5: Absen (Attendance)
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/attendance',
+              builder: (context, state) => const AttendanceScreen(),
+            ),
+          ],
+        ),
+      ],
+    ),
+
+    // Rute yang TIDAK memiliki BottomNavigationBar (fullscreen)
+    
+    // Tambahkan rute fullscreen lain di sini (register, forgot-password, dll.)
+  ],
+
+  // 3. Halaman error jika rute tidak ditemukan
+  errorBuilder: (context, state) => Scaffold(
+    body: Center(
+      child: Text('Halaman tidak ditemukan: ${state.error}'),
+    ),
+  ),
+);
+
+class ShopSphere extends StatefulWidget {
+  const ShopSphere({super.key});
+
+  @override
+  State<ShopSphere> createState() => _ShopSphereState();
+}
+
+class _ShopSphereState extends State<ShopSphere> {
+  late final AuthBloc _authBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _authBloc = AuthBloc(authService: AuthService());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        BlocProvider.value(value: _authBloc),
+        //ChangeNotifierProvider(create: (context) => AppProvider()),
+      ],
+      // BlocListener tidak lagi diperlukan di sini karena GoRouter
+      // akan menangani redirect secara otomatis berdasarkan perubahan state.
+      child: Builder(
+        builder: (context) {
+          // Add return statement here
+          return MaterialApp.router(
+            title: 'Shop Sphere',
+            theme: ThemeData.dark(), // Menggunakan tema dari shared_ui
+            debugShowCheckedModeBanner: false,
+            routerConfig: _router,
+          );
+        },
       ),
     );
   }
