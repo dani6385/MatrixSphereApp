@@ -33,12 +33,19 @@ class AppNavigation {
   /// It finds the GoRouter and uses `go` on the correct path.
   static void goToTab(BuildContext context, String route) {
     // Ensure the route is a valid main tab route
-    final validTabs = [AppRoutes.home, AppRoutes.stream, AppRoutes.inventory, AppRoutes.sellers, AppRoutes.attendance];
+    final validTabs = [
+      AppRoutes.home,
+      AppRoutes.stream,
+      AppRoutes.inventory,
+      AppRoutes.sellers,
+      AppRoutes.attendance
+    ];
     if (validTabs.contains(route)) {
       GoRouter.of(context).go(route);
     } else {
       // Log an error in debug mode if a non-tab route is passed
-      debugPrint('Error: Attempted to navigate to a non-tab route "$route" using goToTab.');
+      debugPrint(
+          'Error: Attempted to navigate to a non-tab route "$route" using goToTab.');
     }
   }
 
