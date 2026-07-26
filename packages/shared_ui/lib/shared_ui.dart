@@ -9,5 +9,5 @@ export 'theme/app_style.dart';
 export 'theme/app_theme.dart';
 export 'ui/custom_text_Field.dart';
 export 'ui/splash_screen.dart';
-//export 'widgets/custom_bottom_navigation_bar.dart';
+export 'widgets/shared_bottom_nav_bar.dart';
 export 'widgets/side_menu.dart';
