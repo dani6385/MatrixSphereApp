@@ -5,8 +5,8 @@ import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
 import '../providers/app_viewmodel.dart';
 import 'bottom_nav_bar.dart';
-import 'app_navigation.dart'; // <-- 1. Impor helper navigasi Anda
-// <-- 2. Impor rute untuk digunakan
+import 'app_navigation.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -43,7 +43,7 @@ class _AppNavigatorState extends State<AppNavigator> {
             children: [
               const DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: kTransparent,
                 ),
                 child: Text('Menu Utama', style: TextStyle(color: Colors.white, fontSize: 24)),
               ),

@@ -30,8 +30,8 @@ class BottomNavBar extends StatelessWidget {
         'text': 'Streaming'
       },
       {
-        'icon': Icons.inventory_2_outlined,
-        'activeIcon': Icons.inventory_2,
+        'icon': Icons.point_of_sale,
+        'activeIcon': Icons.point_of_sale_outlined,
         'text': 'Inventory'
       },
       {
