@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:seller_sphere/navigation/app_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 /// A custom bottom navigation bar widget that is reusable across the app.
@@ -20,19 +22,28 @@ class BottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Daftar data ikon dan label untuk setiap tab navigasi
-    final List<Map<String, dynamic>> tabsData = [
-      {'icon': Icons.home_outlined, 'activeIcon': Icons.home, 'text': ''},
-      {'icon': Icons.cast, 'activeIcon': Icons.cast_connected, 'text': ''},
-      {'icon': Icons.point_of_sale, 'activeIcon': Icons.point_of_sale_outlined, 'text': ''},
-      {'icon': Icons.inventory_2, 'activeIcon': Icons.inventory_2_outlined, 'text': ''},
-      {'icon': Icons.fingerprint_outlined, 'activeIcon': Icons.fingerprint, 'text': ''},
-    ];
+    // Data untuk ikon, dipetakan berdasarkan rute
+    const Map<String, ({IconData icon, IconData activeIcon})> tabIcons = {
+      AppRoutes.home: (icon: Icons.home_outlined, activeIcon: Icons.home),
+      AppRoutes.stream: (icon: Icons.cast, activeIcon: Icons.cast_connected),
+      AppRoutes.inventory: (
+        icon: Icons.point_of_sale,
+        activeIcon: Icons.point_of_sale_outlined
+      ),
+      AppRoutes.sellers: (
+        icon: Icons.inventory_2,
+        activeIcon: Icons.inventory_2_outlined
+      ),
+      AppRoutes.attendance: (
+        icon: Icons.fingerprint_outlined,
+        activeIcon: Icons.fingerprint
+      ),
+    };
 
     return Container(
       // Memberikan latar belakang melengkung/warna dasar pada area navigasi bawah
       decoration: const BoxDecoration(
-        color: kTransparent, // Sesuaikan dengan warna cyan/biru utama aplikasi
+        color: kDarkDivider, // Memberikan warna latar belakang yang solid
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -43,17 +54,19 @@ class BottomNavBar extends StatelessWidget {
         backgroundColor: kTransparent,
         color: kLightBorder,
         activeColor: kLightTextPrimary,
-        tabBackgroundColor: const Color(0xFF1E1E2C), // Warna latar gelap untuk item aktif melengkung
+        tabBackgroundColor: const Color(
+            0xFF1E1E2C), // Warna latar gelap untuk item aktif melengkung
         gap: 8,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         selectedIndex: currentIndex,
         onTabChange: onTap,
-        tabs: List.generate(tabsData.length, (index) {
+        tabs: List.generate(appShellBranches.length, (index) {
           final isSelected = index == currentIndex;
-          final tab = tabsData[index];
+          final routePath = (appShellBranches[index].routes.first as dynamic).path;
+          final icons = tabIcons[routePath]!;
           return GButton(
-            icon: isSelected ? tab['activeIcon'] : tab['icon'],
-            text: tab['text'],
+            icon: isSelected ? icons.activeIcon : icons.icon,
+            text: '', // Teks dikosongkan sesuai desain
             iconSize: 26,
           );
         }),

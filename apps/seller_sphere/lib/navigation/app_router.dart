@@ -30,6 +30,67 @@ class AppRouter extends StatelessWidget {
   }
 }
 
+/// Daftar branch untuk StatefulShellRoute.
+/// Diekstrak agar bisa diakses oleh widget navigasi (misal: BottomNavBar).
+final List<StatefulShellBranch> appShellBranches = <StatefulShellBranch>[
+  // Setiap branch mewakili satu item di BottomNavigationBar
+  // Branch 0: Home
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.home, // path: '/'
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const HomeScreen(),
+        ),
+      ),
+    ],
+  ),
+  // Branch 1: Stream
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.stream, // path: '/stream'
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const StreamingScreen(),
+        ),
+      ),
+    ],
+  ),
+  // Branch 2: Inventory
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.inventory, // path: '/inventory'
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const InventoryScreen(),
+        ),
+      ),
+    ],
+  ),
+  // Branch 3: Sellers/Kios
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.sellers, // path: '/sellers'
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const SellerScreen(),
+        ),
+      ),
+    ],
+  ),
+  // Branch 4: Absensi
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.attendance, // path: '/attendance'
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const AttendanceScreen(),
+        ),
+      ),
+    ],
+  ),
+];
+
 /// The main router configuration for the application.
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
@@ -42,64 +103,7 @@ final GoRouter appRouter = GoRouter(
         // Widget AppNavigator akan membungkus dan menampilkan layar dari cabang (branch)
         return AppNavigator(navigationShell: navigationShell);
       },
-      branches: <StatefulShellBranch>[
-        // Setiap branch mewakili satu item di BottomNavigationBar
-        // Branch 0: Home
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.home, // path: '/'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const HomeScreen(),
-              ),
-            ),
-          ],
-        ),
-        // Branch 1: Stream
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.stream, // path: '/stream'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const StreamingScreen(),
-              ),
-            ),
-          ],
-        ),
-        // Branch 2: Inventory
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.inventory, // path: '/inventory'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const InventoryScreen(),
-              ),
-            ),
-          ],
-        ),
-        // Branch 3: Sellers/Kios
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.sellers, // path: '/sellers'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const SellerScreen(),
-              ),
-            ),
-          ],
-        ),
-        // Branch 4: Absensi
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.attendance, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const AttendanceScreen(),
-              ),
-            ),
-          ],
-        ),
-      ],
+      branches: appShellBranches,
     ),
     // --- RUTE NON-TAB (seperti login, profile, dll) HARUS DIDAFTARKAN DI SINI ---
     /*GoRoute(
