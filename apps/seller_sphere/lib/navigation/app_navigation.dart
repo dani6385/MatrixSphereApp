@@ -23,6 +23,9 @@ class AppNavigation {
   static void pushToProfile(BuildContext context) {
     context.push(AppRoutes.profile);
   }
+  static void pushTosetting(BuildContext context) {
+    context.push(AppRoutes.settings);
+  }
 
   /// Navigates to the Edit Profile screen from the Profile screen.
   static void pushToEditProfile(BuildContext context) {
