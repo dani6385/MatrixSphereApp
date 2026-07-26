@@ -56,7 +56,7 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
         
-        StatefulShellBranch(
+        /*StatefulShellBranch(
           routes: [
             GoRoute(
               path: AppRoutes.inventoryAdd, // path: '/'
@@ -80,13 +80,13 @@ final GoRouter appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: AppRoutes.stream, // path: '/stream'
+              path: AppRoutes.feeds, // path: '/stream'
               pageBuilder: (context, state) => FadeTransitionPage(
-                child: const StreamingScreen(),
+                child: const FeedScreen(),
               ),
             ),
           ],
-        ),
+        ),*/
         // Branch 2: Kasir (POS) - Rute ini belum ada di AppRoutes, kita buat placeholder
         StatefulShellBranch(
           routes: [
@@ -101,16 +101,7 @@ final GoRouter appRouter = GoRouter(
         // Branch 3: Inventory
         
         // Branch 4: Absensi
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.attendance, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const AttendanceScreen(),
-              ),
-            ),
-          ],
-        ),
+        
         StatefulShellBranch(
           routes: [
             GoRoute(

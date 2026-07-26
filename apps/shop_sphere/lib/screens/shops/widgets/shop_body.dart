@@ -1,9 +1,10 @@
-// lib/screens/Shop/widgets/Shop_body.dart
+
+// ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import '../contents/featured_card.dart'; // Impor banner biru Anda
+import 'package:shop_sphere/screens/shops/contents/featured_card.dart'; // Impor banner biru Anda
 
 class ShopBody extends StatelessWidget {
   const ShopBody({super.key});

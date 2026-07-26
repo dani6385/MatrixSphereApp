@@ -118,35 +118,7 @@ final GoRouter _router = GoRouter(
           ],
         ),
         // Branch 2: Streaming (Sesuai urutan di bottom_nav_bar.dart)
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/stream',
-              builder: (context, state) => const StreamingScreen(),
-            ),
-          ],
-        ),
-        // Branch 3: Inventory
         
-        // Branch 4: Status (orderan)
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/status',
-              builder: (context, state) =>
-                  const Scaffold(body: Center(child: Text('Chat'))),
-            ),
-          ],
-        ),
-        // Branch 5: Absen (Attendance)
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/attendance',
-              builder: (context, state) => const AttendanceScreen(),
-            ),
-          ],
-        ),
       ],
     ),
 

@@ -10,7 +10,7 @@ import 'app_routes.dart';
 class AppNavigation {
   /// Navigates to the Streaming screen.
   static void goToStream(BuildContext context) {
-    context.go(AppRoutes.stream);
+    context.go(AppRoutes.feeds);
   }
 
   /// Goes back to the previous screen in the navigation stack.

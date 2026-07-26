@@ -1,10 +1,9 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:shop_sphere/navigation/app_routes.dart';
-
-
-import '../shop_screen.dart'; // 1. PASTIKAN IMPORT ShopSCREEN
+import 'package:shop_sphere/screens/shops/shop_screen.dart';
 
 class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ShopAppBar({super.key});
@@ -13,20 +12,15 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Shop'),
-
-      // 2. KODE LEADING MENJADI LEBIH SIMPEL & DIJAMIN AKTIF
       leading: IconButton(
         icon: const Icon(Icons.account_circle),
         onPressed: () {
-          // Membuka laci secara paksa menggunakan GlobalKey milik ShopScreen
           ShopScreen.scaffoldKey.currentState?.openDrawer();
         },
       ),
-
       actions: [
-        // --- AWAL PERUBAHAN ---
-        // Menggunakan IconButton untuk navigasi langsung ke halaman chat
-        Builder(          builder: (context) {
+        Builder(
+          builder: (context) {
             return IconButton(
               icon: const Icon(Icons.chat),
               onPressed: () {
@@ -35,8 +29,6 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
             );
           },
         ),
-        // --- AKHIR PERUBAHAN ---
-
         IconButton(
           icon: const Icon(Icons.notifications),
           onPressed: () {
@@ -46,7 +38,6 @@ class ShopAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
-            // Membuka laci secara paksa menggunakan GlobalKey milik ShopScreen
             ShopScreen.scaffoldKey.currentState?.openEndDrawer();
           },
         ),

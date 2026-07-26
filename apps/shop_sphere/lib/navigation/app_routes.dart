@@ -1,6 +1,6 @@
 class AppRoutes {
   static const String home = '/';
-  static const String stream = '/stream'; // Nama rute sudah benar
+  static const String feeds = '/feeds'; // Nama rute sudah benar
   static const String inventory = '/inventory';
   static const String attendance = '/attendance';
   static const String attendanceProvider = '/attendance/providers';

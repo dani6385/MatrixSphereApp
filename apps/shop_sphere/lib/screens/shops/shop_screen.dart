@@ -1,27 +1,21 @@
-// lib/screens/Shop/Shop_screen.dart
-
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
-
-
-import 'widgets/shop_app_bar.dart';
-import 'widgets/shop_body.dart';
+import 'package:shop_sphere/screens/shops/widgets/Shop_app_bar.dart';
+import 'package:shop_sphere/screens/shops/widgets/Shop_body.dart';
+import 'package:shop_sphere/screens/shops/widgets/shop_drawer.dart';
+import 'package:shop_sphere/screens/shops/widgets/shop_end_drawer.dart';
 
 class ShopScreen extends StatelessWidget {
-  const ShopScreen({super.key});
-
-  // 1. DEKLARASIKAN GLOBALKEY DI SINI
   static final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
+  const ShopScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: const ShopAppBar(),
-      drawer: const SideMenu(selectedRoute: MenuRoute.account),
-      endDrawer: const SideMenu(selectedRoute: MenuRoute.system), 
+      drawer: const ShopDrawer(),
+      endDrawer: const ShopEndDrawer(),
       body: const ShopBody(),
     );
   }
