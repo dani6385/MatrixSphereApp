@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
-import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
+//import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../providers/app_viewmodel.dart';
 
@@ -29,7 +29,7 @@ class _AppNavigatorState extends State<AppNavigator> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        //ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(create: (_) => AppViewModel()),
       ],
       child: Scaffold(
