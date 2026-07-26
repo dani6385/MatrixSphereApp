@@ -30,6 +30,7 @@ const Color kLightDivider = Color(0xfff0f1f2); // Divider
 // Jangan gunakan ini untuk pengembangan baru. Ini hanya untuk mencegah error
 // pada kode yang sudah ada.
 
+
 const Color kCyanPrimary = kBrandPrimary;
 //const Color darkBlueBackground = Color(0xFF0D1B2A);
 const Color kBlueSecondary = kBrandSecondary;
