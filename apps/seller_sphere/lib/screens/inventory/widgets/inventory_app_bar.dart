@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../inventory_screen.dart'; // 1. PASTIKAN IMPORT InventorySCREEN
+import '../inventory_screen.dart';
 
 class InventoryAppBar extends StatelessWidget implements PreferredSizeWidget {
   const InventoryAppBar({super.key});

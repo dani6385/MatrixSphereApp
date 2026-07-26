@@ -3,9 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-
-import 'widgets/Inventory_app_bar.dart';
-import 'widgets/Inventory_body.dart';
+import 'widgets/inventory_app_bar.dart';
+import 'widgets/inventory_body.dart';
 
 class InventoryScreen extends StatelessWidget {
   const InventoryScreen({super.key});

@@ -1,9 +1,9 @@
-// lib/screens/Inventory/widgets/Inventory_body.dart
+// lib/screens/inventory/widgets/inventory_body.dart
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import '../contents/featured_card.dart'; // Impor banner biru Anda
+import '../contents/featured_card.dart';
 
 class InventoryBody extends StatelessWidget {
   const InventoryBody({super.key});
