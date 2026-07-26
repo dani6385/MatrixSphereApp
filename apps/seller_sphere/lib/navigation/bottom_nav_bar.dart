@@ -24,8 +24,14 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // Data untuk ikon, dipetakan berdasarkan rute
     const Map<String, ({IconData icon, IconData activeIcon})> tabIcons = {
-      AppRoutes.home: (icon: Icons.home_outlined, activeIcon: Icons.home),
-      AppRoutes.stream: (icon: Icons.cast, activeIcon: Icons.cast_connected),
+      AppRoutes.home: (
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home
+        ),
+      AppRoutes.stream: (
+        icon: Icons.cast,
+        activeIcon: Icons.cast_connected
+        ),
       AppRoutes.inventory: (
         icon: Icons.point_of_sale,
         activeIcon: Icons.point_of_sale_outlined
@@ -40,11 +46,13 @@ class BottomNavBar extends StatelessWidget {
       ),
     };
 
+    final theme = Theme.of(context);
+
     return Container(
       // Memberikan latar belakang melengkung/warna dasar pada area navigasi bawah
-      decoration: const BoxDecoration(
-        color: Color(0xFF1E1E2C), // Memberikan warna latar belakang yang solid
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface, // Menggunakan warna dari tema
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ),
@@ -52,17 +60,18 @@ class BottomNavBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: GNav(
         backgroundColor: kTransparent,
-        color: kLightBorder,
-        activeColor: kLightTextPrimary,
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.6), // Ikon tidak aktif
+        activeColor: theme.colorScheme.onSurface, // Ikon aktif
         // Warna latar item aktif dibuat sedikit lebih terang dari background utama
-        tabBackgroundColor: const Color(0xFF2F2F3D),
+        tabBackgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.08),
         gap: 8,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         selectedIndex: currentIndex,
         onTabChange: onTap,
         tabs: List.generate(appShellBranches.length, (index) {
           final isSelected = index == currentIndex;
-          final routePath = (appShellBranches[index].routes.first as dynamic).path;
+          final routePath =
+              (appShellBranches[index].routes.first as dynamic).path;
           final icons = tabIcons[routePath]!;
           return GButton(
             icon: isSelected ? icons.activeIcon : icons.icon,
