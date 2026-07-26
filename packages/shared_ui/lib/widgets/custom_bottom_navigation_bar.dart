@@ -19,14 +19,14 @@ class SharedBottomNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // Konversi GButton menjadi Icon untuk CurvedNavigationBar
     final items = tabs
-        .map((tab) => Icon(tab.icon, size: 20, color: kDarkTextPrimary))
+        .map((tab) => Icon(tab.icon, size: 24, color: kDarkTextPrimary))
         .toList();
 
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: kBrandPrimary.withOpacity(0.3),
+            
             spreadRadius: 5,
             blurRadius: 10,
             offset: const Offset(0, -3), // changes position of shadow
