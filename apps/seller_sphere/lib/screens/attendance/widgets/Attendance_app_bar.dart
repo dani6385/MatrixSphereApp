@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 
 
-import '../attendance_screen.dart'; // 1. PASTIKAN IMPORT AttendanceSCREEN
+// 1. PASTIKAN IMPORT AttendanceSCREEN
 
 class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AttendanceAppBar({super.key});
@@ -19,7 +19,7 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.account_circle),
         onPressed: () {
           // Membuka laci secara paksa menggunakan GlobalKey milik AttendanceScreen
-          AttendanceScreen.scaffoldKey.currentState?.openDrawer();
+          Scaffold.of(context).openDrawer();
         },
       ),
 
@@ -46,8 +46,8 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () {
-            // Membuka laci secara paksa menggunakan GlobalKey milik AttendanceScreen
-            AttendanceScreen.scaffoldKey.currentState?.openEndDrawer();
+            // Membuka end laci secara paksa
+            Scaffold.of(context).openEndDrawer();
           },
         ),
       ],

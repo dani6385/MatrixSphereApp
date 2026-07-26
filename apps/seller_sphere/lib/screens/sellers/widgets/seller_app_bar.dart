@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-import 'package:seller_sphere/navigation/app_routes.dart';
-
-
-import '../../sellers/seller_screen.dart'; // 1. PASTIKAN IMPORT SellerSCREEN
+//import 'package:go_router/go_router.dart';
+//import 'package:shared_ui/shared_ui.dart';
+//import 'package:matrix_sphere/routes/app_routes.dart';
+//import 'package:provider/provider.dart';
+//import '../../chat/providers/chat_provider.dart';
+import '../seller_screen.dart'; // 1. PASTIKAN IMPORT SellerSCREEN
 
 class SellerAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SellerAppBar({super.key});
@@ -16,7 +16,7 @@ class SellerAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       // 2. KODE LEADING MENJADI LEBIH SIMPEL & DIJAMIN AKTIF
       leading: IconButton(
-        icon: const Icon(Icons.account_circle),
+        icon: const Icon(Icons.group),
         onPressed: () {
           // Membuka laci secara paksa menggunakan GlobalKey milik SellerScreen
           SellerScreen.scaffoldKey.currentState?.openDrawer();
@@ -24,31 +24,15 @@ class SellerAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
 
       actions: [
-        // --- AWAL PERUBAHAN ---
-        // Menggunakan IconButton untuk navigasi langsung ke halaman chat
-        Builder(          builder: (context) {
-            return IconButton(
-              icon: const Icon(Icons.chat),
-              onPressed: () {
-                context.goNamed(AppRoutes.account);
-              },
-            );
-          },
-        ),
-        // --- AKHIR PERUBAHAN ---
-
-        IconButton(
-          icon: const Icon(Icons.notifications),
-          onPressed: () {
-            // Handle notification icon press
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            // Membuka laci secara paksa menggunakan GlobalKey milik SellerScreen
-            SellerScreen.scaffoldKey.currentState?.openEndDrawer();
-          },
+        Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(
+                Icons.calendar_month), // Menggunakan ikon roda gigi (pengaturan)
+            onPressed: () {
+              // Membuka laci samping sebelah kanan (endDrawer)
+              Scaffold.of(context).openEndDrawer();
+            },
+          ),
         ),
       ],
     );

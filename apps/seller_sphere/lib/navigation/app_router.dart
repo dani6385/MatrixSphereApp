@@ -55,7 +55,16 @@ final GoRouter appRouter = GoRouter(
             ),
           ],
         ),
-        
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.inventory, // path: '/'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: InventoryScreen(onNavigateToLabelPrinter: (Map<dynamic, dynamic> p1) {  },),
+              ),
+            ),
+          ],
+        ),
         StatefulShellBranch(
           routes: [
             GoRoute(
@@ -99,7 +108,16 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
         // Branch 3: Inventory
-        
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.inventory, // path: '/inventory'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: InventoryScreen(onNavigateToLabelPrinter: (p1) {  },),
+              ),
+            ),
+          ],
+        ),
         // Branch 4: Absensi
         StatefulShellBranch(
           routes: [
@@ -121,8 +139,76 @@ final GoRouter appRouter = GoRouter(
             ),
           ],
         ),
-        
-        
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.register, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const RegisterPage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.profile, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const ProfileScreen(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.editprofile, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const EditProfileScreen(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.login, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const LoginScreen(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.forgotPassword, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const ForgotPasswordPage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.register, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const RegisterPage(),
+              ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: AppRoutes.registerShop, // path: '/attendance'
+              pageBuilder: (context, state) => FadeTransitionPage(
+                child: const RegistrationScreen(),
+              ),
+            ),
+          ],
+        ),
       ],
     )
   ],

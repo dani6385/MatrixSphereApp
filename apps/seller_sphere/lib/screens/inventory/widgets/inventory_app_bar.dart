@@ -1,63 +1,42 @@
 import 'package:flutter/material.dart';
-import '../inventory_screen.dart';
 
 class InventoryAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const InventoryAppBar({super.key});
+  final ValueChanged<String> onSearchChanged;
 
-  @override  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  const InventoryAppBar({
+    super.key,
+    required this.onSearchChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return AppBar(
-      backgroundColor: theme.appBarTheme.backgroundColor,
-      title: Row(
-        children: [
-          // Burger Menu Icon
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              InventoryScreen.scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-          // Spacer
-          const SizedBox(width: 16),
-          // Search Bar
-          Expanded(
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: theme.inputDecorationTheme.fillColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const TextField(
-                decoration: InputDecoration(
-                  hintText: 'Search...',
-                  prefixIcon: Icon(Icons.search),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(vertical: 8),
-                ),
+      title: const Text('Inventaris'),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 1,
+      shadowColor: Colors.black.withValues(alpha: 0.3),
+      bottom: PreferredSize(
+        preferredSize: const Size.fromHeight(68.0),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+          child: SizedBox(
+            height: 52,
+            child: TextField(
+              onChanged: onSearchChanged,
+              decoration: const InputDecoration(
+                hintText: "Cari berdasarkan nama atau SKU...",
+                hintStyle: TextStyle(fontSize: 13),
+                prefixIcon: Icon(Icons.search, size: 18),
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12),
               ),
             ),
           ),
-        ],
+        ),
       ),
-      actions: [
-        // Notification Icon
-        IconButton(
-          icon: const Icon(Icons.notifications),
-          onPressed: () {
-            // Handle notification icon press
-          },
-        ),
-        // Profile Icon
-        IconButton(
-          icon: const Icon(Icons.account_circle),
-          onPressed: () {
-            InventoryScreen.scaffoldKey.currentState?.openEndDrawer();
-          },
-        ),
-      ],
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 68.0);
 }

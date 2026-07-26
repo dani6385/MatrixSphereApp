@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 
 
-import '../streaming_screen.dart'; // 1. PASTIKAN IMPORT StreamingSCREEN
+// 1. PASTIKAN IMPORT StreamingSCREEN
 
 class StreamingAppBar extends StatelessWidget implements PreferredSizeWidget {
   const StreamingAppBar({super.key});
@@ -19,7 +19,7 @@ class StreamingAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: const Icon(Icons.account_circle),
         onPressed: () {
           // Membuka laci secara paksa menggunakan GlobalKey milik StreamingScreen
-          StreamingScreen.scaffoldKey.currentState?.openDrawer();
+          Scaffold.of(context).openDrawer();
         },
       ),
 
@@ -47,7 +47,7 @@ class StreamingAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.menu),
           onPressed: () {
             // Membuka laci secara paksa menggunakan GlobalKey milik StreamingScreen
-            StreamingScreen.scaffoldKey.currentState?.openEndDrawer();
+            Scaffold.of(context).openEndDrawer();
           },
         ),
       ],

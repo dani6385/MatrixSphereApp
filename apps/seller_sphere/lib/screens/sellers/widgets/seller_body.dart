@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import '../../sellers/contents/featured_card.dart'; // Impor banner biru Anda
+import '../contents/featured_card.dart'; // Impor banner biru Anda
 
 class SellerBody extends StatelessWidget {
   const SellerBody({super.key});
