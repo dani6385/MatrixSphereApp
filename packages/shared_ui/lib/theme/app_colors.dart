@@ -31,12 +31,12 @@ const Color kLightDivider = Color(0xfff0f1f2); // Divider
 // pada kode yang sudah ada.
 
 const Color kCyanPrimary = kBrandPrimary;
-const Color darkBlueBackground = Color(0xFF0D1B2A);
+//const Color darkBlueBackground = Color(0xFF0D1B2A);
 const Color kBlueSecondary = kBrandSecondary;
 const Color kTealTertiary = kBrandTertiary;
 const Color kSlateBackgroundDark = kDarkBackground;
-const Color kSlateSurfaceDark = kDarkSurface;
-const Color kSlateBorderDark = kDarkBorder;
+//const Color kSlateSurfaceDark = kDarkSurface;
+//const Color kSlateBorderDark = kDarkBorder;
 const Color kTextOnDarkPrimary = kDarkTextPrimary;
 const Color kTextOnDarkSecondary = kDarkTextSecondary;
 const Color kSlateBackgroundLight = kLightBackground;

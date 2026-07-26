@@ -40,7 +40,7 @@ class SharedBottomNavigationBar extends StatelessWidget {
         onTap: onItemTapped,
         color: kNeonCyan,
         buttonBackgroundColor: kBrandBlack,// Menggunakan kBrandPrimary
-        backgroundColor: Colors.transparent,
+        backgroundColor: kTransparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 400),
       ),

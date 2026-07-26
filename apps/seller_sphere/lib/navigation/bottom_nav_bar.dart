@@ -29,8 +29,8 @@ class BottomNavBar extends StatelessWidget {
         'text': 'Streaming'
       },
       {
-        'icon': Icons.inventory_2_outlined,
-        'activeIcon': Icons.inventory_2,
+        'icon': Icons.point_of_sale,
+        'activeIcon': Icons.point_of_sale_outlined,
         'text': 'Inventory'
       },
       {
@@ -45,31 +45,24 @@ class BottomNavBar extends StatelessWidget {
       },
     ];
 
-    // --- AWAL PERUBAHAN ---
-    // Bungkus dengan Theme untuk mengontrol properti visual seperti bayangan.
-    return Theme(
-      data: Theme.of(context).copyWith(
-        // Mengatur warna bayangan menjadi transparan untuk menghilangkannya.
-        shadowColor: Colors.transparent,
+    return Container(
+      // Menghilangkan bayangan dengan mengatur dekorasi container
+      decoration: const BoxDecoration(
+        color: kTransparent, // Pastikan container tidak memiliki warna latar
       ),
       child: SharedBottomNavigationBar(
         selectedIndex: currentIndex,
         onItemTapped: onTap,
-        // Membuat daftar GButton secara dinamis
         tabs: List.generate(tabsData.length, (index) {
           final isSelected = index == currentIndex;
           final tab = tabsData[index];
-
           return GButton(
-            // Gunakan ikon 'active' jika terpilih, jika tidak gunakan ikon standar
             icon: isSelected ? tab['activeIcon'] : tab['icon'],
             text: tab['text'],
-            // Perbesar ukuran ikon jika terpilih
             iconSize: isSelected ? 28 : 24,
           );
         }),
       ),
     );
-    // --- AKHIR PERUBAHAN ---
   }
 }
