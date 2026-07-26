@@ -5,6 +5,8 @@ import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 //import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
 import '../providers/app_viewmodel.dart';
 import 'bottom_nav_bar.dart';
+import 'app_navigation.dart'; // <-- 1. Impor helper navigasi Anda
+// <-- 2. Impor rute untuk digunakan
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -34,6 +36,35 @@ class _AppNavigatorState extends State<AppNavigator> {
       child: Scaffold(
         extendBody: true,
         body: widget.navigationShell,
+        // Contoh implementasi Drawer
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text('Menu Utama', style: TextStyle(color: Colors.white, fontSize: 24)),
+              ),
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: const Text('Profil Saya'),
+                onTap: () {
+                  // Tutup drawer terlebih dahulu
+                  Navigator.pop(context);
+                  // Gunakan AppNavigation untuk berpindah halaman
+                  AppNavigation.pushToProfile(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.login),
+                title: const Text('Logout (ke Halaman Login)'),
+                onTap: () => AppNavigation.goToLogin(context),
+              ),
+            ],
+          ),
+        ),
         bottomNavigationBar: BottomNavBar(
           currentIndex: widget.navigationShell.currentIndex,
           onTap: _onItemTapped,
