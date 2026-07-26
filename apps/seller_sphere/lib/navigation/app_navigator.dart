@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
 import '../providers/app_viewmodel.dart';
-import 'bottom_nav_bar.dart';
 import 'app_navigation.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -19,12 +18,6 @@ class AppNavigator extends StatefulWidget {
 
 class _AppNavigatorState extends State<AppNavigator> {
   // Fungsi untuk memberitahu GoRouter agar berpindah branch/tab
-  void _onItemTapped(int index) {
-    widget.navigationShell.goBranch(
-      index,
-      initialLocation: index == widget.navigationShell.currentIndex,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,10 +58,10 @@ class _AppNavigatorState extends State<AppNavigator> {
             ],
           ),
         ),
-        bottomNavigationBar: BottomNavBar(
+        /*bottomNavigationBar: BottomNavBar(
           currentIndex: widget.navigationShell.currentIndex,
           onTap: _onItemTapped,
-        ),
+        ),*/
       ),
     );
   }

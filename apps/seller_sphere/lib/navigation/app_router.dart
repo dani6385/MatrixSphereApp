@@ -56,7 +56,7 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
         // Branch 1: Stream
-        /*StatefulShellBranch(
+        StatefulShellBranch(
           routes: [
             GoRoute(
               path: AppRoutes.stream, // path: '/stream'
@@ -72,7 +72,7 @@ final GoRouter appRouter = GoRouter(
             GoRoute(
               path: AppRoutes.inventory, // path: '/inventory'
               pageBuilder: (context, state) => FadeTransitionPage(
-                child: InventoryScreen(onNavigateToLabelPrinter: (p1) {}),
+                child: const InventoryScreen(),
               ),
             ),
           ],
@@ -87,7 +87,7 @@ final GoRouter appRouter = GoRouter(
               ),
             ),
           ],
-        ),*/
+        ),
         // Branch 4: Absensi
         StatefulShellBranch(
           routes: [

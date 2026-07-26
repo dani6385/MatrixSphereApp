@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 import 'package:shop_sphere/features/chat_provider.dart';
 
-import 'package:shared_ui/shared_ui.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -18,12 +16,6 @@ class AppNavigator extends StatefulWidget {
 
 class _AppNavigatorState extends State<AppNavigator> {
   // Fungsi untuk memberitahu GoRouter agar berpindah branch/tab
-  void _onItemTapped(int index) {
-    widget.navigationShell.goBranch(
-      index,
-      initialLocation: index == widget.navigationShell.currentIndex,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +27,7 @@ class _AppNavigatorState extends State<AppNavigator> {
       child: Scaffold(
         extendBody: true,
         body: widget.navigationShell,
-        bottomNavigationBar: SharedBottomNavigationBar(
+        /*bottomNavigationBar: SharedBottomNavigationBar(
           selectedIndex: widget.navigationShell.currentIndex,
           onItemTapped: _onItemTapped,
           tabs: const [
@@ -48,7 +40,7 @@ class _AppNavigatorState extends State<AppNavigator> {
             GButton(icon: Icons.inventory_2, text: 'Inventory'),
             GButton(icon: Icons.how_to_reg, text: 'Attendance'),
           ],
-        ),
+        ),*/
       ),
     );
   }

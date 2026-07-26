@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_sphere/navigation/app_extraktor.dart';
-import 'package:shop_sphere/navigation/bottom_nav_bar.dart'; // 1. IMPORT WIDGET SHELL
+//import 'package:shop_sphere/navigation/bottom_nav_bar.dart'; // 1. IMPORT WIDGET SHELL
 
 import 'package:shared_services/shared_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -101,10 +101,10 @@ final GoRouter _router = GoRouter(
         return Scaffold(
           body:
               navigationShell, // navigationShell akan menampilkan halaman aktif
-          bottomNavigationBar: BottomNavBar(
+          /*bottomNavigationBar: BottomNavBar(
             currentIndex: navigationShell.currentIndex,
             onTap: (index) => navigationShell.goBranch(index),
-          ),
+          ),*/
         );
       },
       branches: [
