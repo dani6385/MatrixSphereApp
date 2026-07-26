@@ -57,6 +57,7 @@ final GoRouter appRouter = GoRouter(
         // Bungkus navigationShell (konten halaman) dan BottomNavBar
         // di dalam sebuah Scaffold.
         return Scaffold(
+          extendBody: true, // <-- TAMBAHKAN BARIS INI
           body:
               navigationShell, // navigationShell akan menampilkan halaman aktif
           bottomNavigationBar: BottomNavBar(
