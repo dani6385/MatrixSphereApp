@@ -1,12 +1,12 @@
 // app_router.dart
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/navigation/app_navigator.dart';
-import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/bottom_nav_bar.dart';
 
-import 'package:shared_ui/shared_ui.dart';
-//import 'package:shared_services/shared_services.dart';
+
+import 'package:shared_services/shared_services.dart';
 import 'app_extraktor.dart';
 
 import 'app_routes.dart';
@@ -14,202 +14,110 @@ import 'app_routes.dart';
 // Kunci GlobalKey untuk NavigatorShell, diperlukan untuk StatefulShellRoute
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-// Placeholder screen untuk fitur yang belum dibuat
-class AppRouter extends StatelessWidget {
-  final String title;
-
-  const AppRouter({super.key, required this.title});
-  //const AppRouter({super.key, required this.title, required AuthBloc authBloc});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(title)),
-      body: Center(child: Text('Layar untuk $title')),
-    );
-  }
-}
-
 /// The main router configuration for the application.
 final GoRouter appRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutes.home, // Lokasi awal aplikasi
+  initialLocation: AppRoutes.login, // Mulai dari halaman login
   debugLogDiagnostics: true, // Set to false in production
-  routes: [
-    // Konfigurasi untuk navigasi utama dengan BottomNavigationBar
+  redirect: (BuildContext context, GoRouterState state) {
+    // Gunakan status langsung dari FirebaseAuth untuk menghindari race condition
+    // dengan state BLoC. Ini lebih andal untuk redirect.
+    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+
+    // Dapatkan lokasi yang sedang dituju
+    final String location = state.uri.toString();
+
+    // Daftar halaman publik yang bisa diakses tanpa login
+    final bool isPublicPage = location == AppRoutes.login ||
+        location == '/login/register' || // Ganti dengan AppRoutes jika ada
+        location == '/login/forgot-password'; // Ganti dengan AppRoutes jika ada
+
+    // Skenario:
+    // - Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
+    //   maka alihkan (redirect) ke halaman login.
+    if (!isLoggedIn && !isPublicPage) {
+      return AppRoutes.login;
+    }
+
+    // - Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
+    //   maka alihkan ke halaman utama (home).
+    if (isLoggedIn && isPublicPage) {
+      return AppRoutes.home;
+    }
+
+    // - Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
+    return null;
+  },
+  refreshListenable:
+      GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
+  routes: <RouteBase>[
+    // Rute yang memiliki BottomNavigationBar (di dalam Shell)
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        // Widget AppNavigator akan membungkus dan menampilkan layar dari cabang (branch)
-        return AppNavigator(navigationShell: navigationShell);
+        // Bungkus navigationShell (konten halaman) dan BottomNavBar
+        // di dalam sebuah Scaffold.
+        return Scaffold(
+          body:
+              navigationShell, // navigationShell akan menampilkan halaman aktif
+          bottomNavigationBar: BottomNavBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: (index) => navigationShell.goBranch(index),
+          ),
+        );
       },
-      branches: <StatefulShellBranch>[
-        // Setiap branch mewakili satu item di BottomNavigationBar
-        // Branch 0: Home
+      branches: [
+        // Branch 1: Home
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: AppRoutes.home, // path: '/'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const HomeScreen(),
-              ),
+              path: AppRoutes.home,
+              builder: (context, state) => const HomeScreen(),
             ),
           ],
         ),
+        // Branch 2: Streaming (Sesuai urutan di bottom_nav_bar.dart)
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: AppRoutes.inventory, // path: '/'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: InventoryScreen(onNavigateToLabelPrinter: (Map<dynamic, dynamic> p1) {  },),
-              ),
+              path: AppRoutes.stream,
+              builder: (context, state) => const StreamingScreen(),
             ),
           ],
         ),
+        // Branch 3: Status (orderan)
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: AppRoutes.inventoryAdd, // path: '/'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const AddProductForm(),
-              ),
+              path: AppRoutes.status,
+              builder: (context, state) =>
+                  const Scaffold(body: Center(child: Text('Status'))),
             ),
           ],
         ),
+        // Branch 4: Absen (Attendance)
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: AppRoutes.inventoryEdit, // path: '/'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const HomeScreen(),
-              ),
-            ),
-          ],
-        ),
-        // Branch 1: Stream
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.stream, // path: '/stream'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const StreamingScreen(),
-              ),
-            ),
-          ],
-        ),
-        // Branch 2: Kasir (POS) - Rute ini belum ada di AppRoutes, kita buat placeholder
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.sellers, // path: '/sellers'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const SellerScreen(),
-              ),
-            ),
-          ],
-        ),
-        // Branch 3: Inventory
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.inventory, // path: '/inventory'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: InventoryScreen(onNavigateToLabelPrinter: (p1) {  },),
-              ),
-            ),
-          ],
-        ),
-        // Branch 4: Absensi
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.attendance, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const AttendanceScreen(),
-              ),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.splash, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const SplashScreen(),
-              ),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.register, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const RegisterPage(),
-              ),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.profile, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const ProfileScreen(),
-              ),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.editprofile, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const EditProfileScreen(),
-              ),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.login, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const LoginScreen(),
-              ),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.forgotPassword, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const ForgotPasswordPage(),
-              ),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.register, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const RegisterPage(),
-              ),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: AppRoutes.registerShop, // path: '/attendance'
-              pageBuilder: (context, state) => FadeTransitionPage(
-                child: const RegistrationScreen(),
-              ),
+              path: AppRoutes.attendance,
+              builder: (context, state) => const AttendanceScreen(),
             ),
           ],
         ),
       ],
-    )
+    ),
+
+    // Rute yang TIDAK memiliki BottomNavigationBar (fullscreen)
+    GoRoute(
+      path: AppRoutes.login,
+      builder: (context, state) => const LoginScreen(),
+    ),
+    // Tambahkan rute fullscreen lain di sini (register, forgot-password, dll.)
   ],
+
+  // Halaman error jika rute tidak ditemukan
+  errorBuilder: (context, state) => Scaffold(
+    body: Center(
+      child: Text('Halaman tidak ditemukan: ${state.error}'),
+    ),
+  ),
 );
