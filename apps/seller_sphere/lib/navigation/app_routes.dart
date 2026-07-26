@@ -1,10 +1,18 @@
 class AppRoutes {
+// buka aplikasi
+  static const String login = '/login';
+  static const String forgotPassword = '/login/forgot-password';
+  static const String splash = '/splash';
+  static const String register = '/login/register';
+  static const String registerShop = '/register-shop';
+// bottom nav bar
   static const String home = '/';
   static const String stream = '/stream'; // Nama rute sudah benar
   static const String inventory = '/inventory';
   static const String attendance = '/attendance';
-  static const String attendanceProvider = '/attendance/providers';
   static const String sellers = '/sellers';
+
+  static const String attendanceProvider = '/attendance/providers';
   static const String calendar = '/calendar';
   static const String aktifitas = '/activity';
   static const String status = '/Status'; // Pastikan rute Status ada
@@ -19,11 +27,7 @@ class AppRoutes {
   static const String goodsIn = '/goods-in'; // Rute untuk input barang
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
   static const String goodsOut = '/goods-out'; // Rute untuk pengeluaran barang
-  static const String login = '/login';
-  static const String forgotPassword = '/login/forgot-password';
-  static const String splash = '/splash';
-  static const String register = '/login/register';
-  static const String registerShop = '/register-shop';
+
   static const String profile = '/profile';
   static const String editprofile = '/profile/editprofile';
   static const String inventoryAdd = '/inventory/addproduct';

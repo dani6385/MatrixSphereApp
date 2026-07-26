@@ -7,7 +7,7 @@ import 'live_chat_view.dart';
 import 'pin_product_view.dart';
 
 class InteractiveConsole extends StatelessWidget {
-  const InteractiveConsole({super.key});
+  const InteractiveConsole({super.key, required StreamingViewModel viewModel});
 
   @override
   Widget build(BuildContext context) {

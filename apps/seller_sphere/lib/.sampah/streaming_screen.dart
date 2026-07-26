@@ -1,10 +1,11 @@
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/screens/streams/viewmodels/streaming_view_model.dart';
-import 'widgets/interactive_console.dart';
-import 'widgets/live_video_player.dart';
+import '../screens/streams/widgets/interactive_console.dart';
+import '../screens/streams/widgets/live_video_player.dart';
 
 // Note: The original AppViewModel is no longer used here.
 // The new StreamingViewModel now handles all state and business logic.

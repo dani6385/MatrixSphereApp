@@ -9,7 +9,7 @@ import 'pre_live_content.dart';
 import 'radar_painter.dart';
 
 class LiveVideoPlayer extends StatelessWidget {
-  const LiveVideoPlayer({super.key});
+  const LiveVideoPlayer({super.key, required String streamUrl});
 
   @override
   Widget build(BuildContext context) {

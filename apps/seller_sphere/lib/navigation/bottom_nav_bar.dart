@@ -45,24 +45,31 @@ class BottomNavBar extends StatelessWidget {
       },
     ];
 
-    return SharedBottomNavigationBar(
-      selectedIndex: currentIndex,
-      onItemTapped: onTap,
-      // Membuat daftar GButton secara dinamis
-      tabs: List.generate(tabsData.length, (index) {
-        final isSelected = index == currentIndex;
-        final tab = tabsData[index];
+    // --- AWAL PERUBAHAN ---
+    // Bungkus dengan Theme untuk mengontrol properti visual seperti bayangan.
+    return Theme(
+      data: Theme.of(context).copyWith(
+        // Mengatur warna bayangan menjadi transparan untuk menghilangkannya.
+        shadowColor: Colors.transparent,
+      ),
+      child: SharedBottomNavigationBar(
+        selectedIndex: currentIndex,
+        onItemTapped: onTap,
+        // Membuat daftar GButton secara dinamis
+        tabs: List.generate(tabsData.length, (index) {
+          final isSelected = index == currentIndex;
+          final tab = tabsData[index];
 
-        return GButton(
-          // Gunakan ikon 'active' jika terpilih, jika tidak gunakan ikon standar
-          icon: isSelected ? tab['activeIcon'] : tab['icon'],
-          text: tab['text'],
-          // Perbesar ukuran ikon jika terpilih
-          iconSize: isSelected ? 28 : 24,
-          // Anda juga bisa menambahkan efek lain seperti mengubah warna teks
-          // textColor: isSelected ? Theme.of(context).colorScheme.primary : null,
-        );
-      }),
+          return GButton(
+            // Gunakan ikon 'active' jika terpilih, jika tidak gunakan ikon standar
+            icon: isSelected ? tab['activeIcon'] : tab['icon'],
+            text: tab['text'],
+            // Perbesar ukuran ikon jika terpilih
+            iconSize: isSelected ? 28 : 24,
+          );
+        }),
+      ),
     );
+    // --- AKHIR PERUBAHAN ---
   }
 }

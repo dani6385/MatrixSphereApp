@@ -23,5 +23,5 @@ export '../screens/home/home_screen.dart';
 export '../screens/inventory/inventory_screen.dart';
 export '../screens/inventory/widgets/add_product_form.dart';
 export '../screens/attendance/attendance_screen.dart';
-export '../screens/streams/streaming_screen.dart';
+export '../screens/streams/streaming_screens.dart';
 export '../widgets/demo_mode_banner.dart';
