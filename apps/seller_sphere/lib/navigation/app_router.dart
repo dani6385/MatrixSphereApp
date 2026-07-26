@@ -47,7 +47,7 @@ final GoRouter appRouter = GoRouter(
         // Branch 0: Home
         StatefulShellBranch(
           routes: [
-            GoRoute(
+            GoRoute( 
               path: AppRoutes.home, // path: '/'
               pageBuilder: (context, state) => FadeTransitionPage(
                 child: const HomeScreen(),

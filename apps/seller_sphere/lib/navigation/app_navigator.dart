@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
 //import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
-import 'package:shared_ui/shared_ui.dart';
 import '../providers/app_viewmodel.dart';
+import 'bottom_nav_bar.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -35,16 +34,9 @@ class _AppNavigatorState extends State<AppNavigator> {
       child: Scaffold(
         extendBody: true,
         body: widget.navigationShell,
-        bottomNavigationBar: SharedBottomNavigationBar(
-          selectedIndex: widget.navigationShell.currentIndex,
-          onItemTapped: _onItemTapped,
-          tabs: const [
-            GButton(icon: Icons.home, text: 'Home',),
-            GButton(icon: Icons.live_tv, text: 'Stream'),
-            GButton(icon: Icons.point_of_sale, text: 'Sellers'),
-            GButton(icon: Icons.inventory_2, text: 'Inventory'),
-            GButton(icon: Icons.how_to_reg, text: 'Attendance'),
-          ],
+        bottomNavigationBar: BottomNavBar(
+          currentIndex: widget.navigationShell.currentIndex,
+          onTap: _onItemTapped,
         ),
       ),
     );
