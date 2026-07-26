@@ -48,38 +48,72 @@ class BottomNavBar extends StatelessWidget {
 
     final theme = Theme.of(context);
 
-    return Container(
-      // Memberikan latar belakang melengkung/warna dasar pada area navigasi bawah
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface, // Menggunakan warna dari tema
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
+    // Menggunakan ClipPath untuk membuat bentuk melengkung ke bawah.
+    return ClipPath(
+      clipper: _BottomNavClipper(), // Clipper kustom untuk bentuknya
+      child: Container(
+        // Tinggi container perlu didefinisikan agar lengkungan terlihat.
+        // Sesuaikan nilai 80.0 ini jika perlu.
+        height: 80.0,
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface, // Menggunakan warna dari tema
+        ),
+        child: GNav(
+          backgroundColor: kTransparent,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6), // Ikon tidak aktif
+          activeColor: theme.colorScheme.onSurface, // Ikon aktif
+          // Warna latar item aktif dibuat sedikit lebih terang dari background utama
+          tabBackgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.08),
+          gap: 8,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          selectedIndex: currentIndex,
+          onTabChange: onTap,
+          tabs: List.generate(appShellBranches.length, (index) {
+            final isSelected = index == currentIndex;
+            final routePath =
+                (appShellBranches[index].routes.first as dynamic).path;
+            final icons = tabIcons[routePath]!;
+            return GButton(
+              icon: isSelected ? icons.activeIcon : icons.icon,
+              text: '', // Teks dikosongkan sesuai desain
+              iconSize: 26,
+            );
+          }),
         ),
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: GNav(
-        backgroundColor: kTransparent,
-        color: theme.colorScheme.onSurface.withValues(alpha: 0.6), // Ikon tidak aktif
-        activeColor: theme.colorScheme.onSurface, // Ikon aktif
-        // Warna latar item aktif dibuat sedikit lebih terang dari background utama
-        tabBackgroundColor: theme.colorScheme.onSurface.withValues(alpha: 0.08),
-        gap: 8,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        selectedIndex: currentIndex,
-        onTabChange: onTap,
-        tabs: List.generate(appShellBranches.length, (index) {
-          final isSelected = index == currentIndex;
-          final routePath =
-              (appShellBranches[index].routes.first as dynamic).path;
-          final icons = tabIcons[routePath]!;
-          return GButton(
-            icon: isSelected ? icons.activeIcon : icons.icon,
-            text: '', // Teks dikosongkan sesuai desain
-            iconSize: 26,
-          );
-        }),
-      ),
     );
+  }
+}
+
+/// CustomClipper untuk membuat bentuk navigasi bawah yang melengkung ke bawah.
+class _BottomNavClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    // Kedalaman lengkungan, bisa Anda sesuaikan.
+    const double curveDepth = 20.0;
+
+    // 1. Mulai dari kiri atas, tapi sedikit ke bawah untuk awal lengkungan.
+    path.moveTo(0, curveDepth);
+
+    // 2. Buat kurva Bezier kuadratik ke tengah atas, lalu ke kanan atas.
+    // Titik kontrolnya ada di tengah-bawah, yang membuat lengkungan ke bawah.
+    path.quadraticBezierTo(size.width / 2, 0, size.width, curveDepth);
+
+    // 3. Tarik garis lurus ke kanan bawah.
+    path.lineTo(size.width, size.height);
+
+    // 4. Tarik garis lurus ke kiri bawah.
+    path.lineTo(0, size.height);
+
+    // 5. Tutup path kembali ke titik awal.
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return false; // Tidak perlu menggambar ulang jika ukuran tidak berubah.
   }
 }
