@@ -7,7 +7,7 @@ class InstantActionsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ButtonStyle glowButtonStyle = ElevatedButton.styleFrom(
-      shadowColor: kWarmOrange.withOpacity(0.8),
+      shadowColor: kWarmOrange.withValues(alpha: 0.8),
       elevation: 10,
     );
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:go_router/go_router.dart';
-import 'package:matrix_sphere/routes/app_routes.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 
 /// A Model that displays the menu.
 class MenuModel extends StatelessWidget {
@@ -56,7 +56,7 @@ class MenuModel extends StatelessWidget {
                         },
                         child: CircleAvatar(
                           radius: 40,
-                          backgroundColor: kBrandPrimary.withOpacity(0.15),
+                          backgroundColor: kBrandPrimary.withValues(alpha: 0.15),
                           child: Text(
                             'MA',
                             style: context.headlineMedium?.copyWith(
@@ -67,7 +67,7 @@ class MenuModel extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: AppSpacing.md),
-                      Text('Matrix Admin',
+                      Text('seller Admin',
                           style: context.titleLarge
                               ?.copyWith(color: kDarkTextPrimary)),
                       const SizedBox(height: AppSpacing.xs),
@@ -117,12 +117,12 @@ class MenuModel extends StatelessWidget {
                           GoRouter.of(context).push(AppRoutes.calendar);
                         },
                       ),
-                      /*_buildMenuItem(
+                      _buildMenuItem(
                         context,
                         icon: Icons.play_lesson,
                         title: 'akan datang',
-                        subtitle: 'menu selanjutnya',
-                      ),*/
+                        subtitle: 'menu selanjutnya', onTap: () {  },
+                      ),
                       _buildMenuItem(
                         context,
                         icon: Icons.settings,
