@@ -43,7 +43,7 @@ class BottomNavBar extends StatelessWidget {
     return Container(
       // Memberikan latar belakang melengkung/warna dasar pada area navigasi bawah
       decoration: const BoxDecoration(
-        color: kDarkDivider, // Memberikan warna latar belakang yang solid
+        color: Color(0xFF1E1E2C), // Memberikan warna latar belakang yang solid
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -54,8 +54,8 @@ class BottomNavBar extends StatelessWidget {
         backgroundColor: kTransparent,
         color: kLightBorder,
         activeColor: kLightTextPrimary,
-        tabBackgroundColor: const Color(
-            0xFF1E1E2C), // Warna latar gelap untuk item aktif melengkung
+        // Warna latar item aktif dibuat sedikit lebih terang dari background utama
+        tabBackgroundColor: const Color(0xFF2F2F3D),
         gap: 8,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         selectedIndex: currentIndex,

@@ -6,6 +6,7 @@ import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
 import '../providers/app_viewmodel.dart';
 import 'app_navigation.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'bottom_nav_bar.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -18,6 +19,11 @@ class AppNavigator extends StatefulWidget {
 
 class _AppNavigatorState extends State<AppNavigator> {
   // Fungsi untuk memberitahu GoRouter agar berpindah branch/tab
+  void _onItemTapped(int index) {
+    // Menggunakan navigationShell untuk berpindah antar branch (tab)
+    // tanpa kehilangan state di setiap tab.
+    widget.navigationShell.goBranch(index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +64,10 @@ class _AppNavigatorState extends State<AppNavigator> {
             ],
           ),
         ),
-        /*bottomNavigationBar: BottomNavBar(
+        bottomNavigationBar: BottomNavBar(
           currentIndex: widget.navigationShell.currentIndex,
           onTap: _onItemTapped,
-        ),*/
+        ),
       ),
     );
   }
