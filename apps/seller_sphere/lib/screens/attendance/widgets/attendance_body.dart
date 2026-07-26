@@ -1,4 +1,4 @@
-// lib/screens/Attendance/widgets/Attendance_body.dart
+// lib/screens/attendance/widgets/attendance_body.dart
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';

@@ -1,11 +1,11 @@
-// lib/screens/Attendance/Attendance_screen.dart
+// lib/screens/attendance/attendance_screen.dart
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 
-import 'widgets/Attendance_app_bar.dart';
-import 'widgets/Attendance_body.dart';
+import 'widgets/attendance_app_bar.dart';
+import 'widgets/attendance_body.dart';
 
 class AttendanceScreen extends StatelessWidget {
   const AttendanceScreen({super.key});
