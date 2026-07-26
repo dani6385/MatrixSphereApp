@@ -27,7 +27,7 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: kBrandSecondary),
+              decoration: BoxDecoration(color: kTransparent),
               child: Text('Pengaturan',
                   style: TextStyle(color: Colors.white, fontSize: 24)),
             ),
