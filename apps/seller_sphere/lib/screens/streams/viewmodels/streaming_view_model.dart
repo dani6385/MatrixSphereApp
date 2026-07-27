@@ -8,7 +8,7 @@ import 'package:shared_services/shared_services.dart';
 import '../models/streaming_models.dart';
 
 class StreamingViewModel extends ChangeNotifier {
-  StreamingViewModel(TickerProvider vsync) {
+  StreamingViewModel(TickerProvider vsync, {required UniqueKey key}) {
     _tabController = TabController(length: 2, vsync: vsync);
     _initializeVideoPlayer();
     _scrollController.addListener(_scrollListener);

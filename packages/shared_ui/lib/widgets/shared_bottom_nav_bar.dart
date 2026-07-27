@@ -43,7 +43,7 @@ class SharedBottomNavBar extends StatelessWidget {
         ),
         child: CurvedNavigationBar(
           index: selectedIndex,
-          height: 85,
+          height: 55,
           items: items,
           onTap: onTap,
         color: kNeonCyan,
