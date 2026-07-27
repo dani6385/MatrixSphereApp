@@ -1,10 +1,10 @@
-
 import 'package:flutter/material.dart';
 import '../widgets/interactive_console.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../widgets/live_chat_view.dart';
 import '../widgets/live_overlays.dart';
 import '../widgets/live_video_player.dart';
+import '../widgets/pin_product_view.dart';
 
 class StreamingBody extends StatelessWidget {
   const StreamingBody({super.key});
@@ -41,6 +41,10 @@ class StreamingBody extends StatelessWidget {
         const SizedBox(
           width: 360, // Fixed width for the console
           child: LiveVideoPlayer(),
+        ),
+        const SizedBox(
+          width: 360, // Fixed width for the console
+          child: PinProductView(),
         ),
       ],
     );

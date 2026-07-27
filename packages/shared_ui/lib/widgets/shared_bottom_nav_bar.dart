@@ -37,18 +37,18 @@ class SharedBottomNavBar extends StatelessWidget {
     return ClipPath(
       clipper: _BottomNavClipper(), // Custom clipper for the shape
       child: Container(
-        height: 90.0, // Fixed height for the curved shape to be visible
+        height: 75.0, // Fixed height for the curved shape to be visible
         decoration: BoxDecoration(
           color: theme.colorScheme.surface, // Use color from the app's theme
         ),
         child: CurvedNavigationBar(
           index: selectedIndex,
-          height: 55,
+          height: 70,
           items: items,
           onTap: onTap,
         color: kNeonCyan,
-        buttonBackgroundColor: kBrandBlack,// Menggunakan kBrandPrimary
-        backgroundColor: Colors.transparent,
+        buttonBackgroundColor: kDarkDivider,// Menggunakan kBrandPrimary
+        backgroundColor: kTransparent,
         animationCurve: Curves.easeInOut,
         animationDuration: const Duration(milliseconds: 400),
       ),
