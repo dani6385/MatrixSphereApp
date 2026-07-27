@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widgets/interactive_console.dart';
 import '../widgets/live_chat_view.dart';
+import '../widgets/pre_live_content.dart'; // 1. Impor PreLiveContent
 import '../widgets/live_overlays.dart';
-import '../widgets/live_video_player.dart';
+//port '../widgets/live_video_player.dart';
 import '../widgets/pin_product_view.dart';
 
 class StreamingBody extends StatelessWidget {
@@ -17,8 +18,10 @@ class StreamingBody extends StatelessWidget {
       children: [
         // 1. Latar Belakang: Video Player atau Konten Pra-Live
         // Anda bisa menggunakan state management untuk beralih antara keduanya.
-        LiveVideoPlayer(),
-        // const PreLiveContent(), // Tampilkan ini sebelum live dimulai
+        // LiveVideoPlayer(), // Komentari ini untuk sementara
+        
+        // 2. Tampilkan PreLiveContent secara default
+        PreLiveContent(), 
 
         // 2. Lapisan Interaktif di atas video
         // Widget-widget ini akan ditumpuk di atas LiveVideoPlayer.

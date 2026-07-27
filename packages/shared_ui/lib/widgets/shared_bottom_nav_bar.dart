@@ -29,7 +29,7 @@ class SharedBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    Theme.of(context);
     final items = tabs
         .map((tab) => Icon(tab.icon, size: 20, color: kDarkTextPrimary))
         .toList();
