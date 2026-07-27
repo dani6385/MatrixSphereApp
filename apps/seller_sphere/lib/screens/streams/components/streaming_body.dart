@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../widgets/interactive_console.dart';
-import 'package:shared_ui/shared_ui.dart';
 import '../widgets/live_chat_view.dart';
 import '../widgets/live_overlays.dart';
 import '../widgets/live_video_player.dart';
@@ -11,41 +10,25 @@ class StreamingBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    // Ganti Row dengan Stack untuk menumpuk widget di atas satu sama lain.
+    // Ini akan mencegah overflow horizontal dan menyusun UI dengan benar.
+    return const Stack(
+      fit: StackFit.expand, // Membuat semua children mengisi ruang yang tersedia
       children: [
-        // Main content area for the stream preview
-        Expanded(
-          child: Container(
-            color: kDarkOutline, // Placeholder for the video stream
-            child: const Center(
-              child: Text(
-                "AREA PRATINJAU STREAM",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-        // Interactive Console on the right
-        const SizedBox(
-          width: 360, // Fixed width for the console
-          child: InteractiveConsole(),
-        ),
-        const SizedBox(
-          width: 360, // Fixed width for the console
-          child: LiveChatView(),
-        ),
-        const SizedBox(
-          width: 360, // Fixed width for the console
-          child: LiveOverlays(),
-        ),
-        const SizedBox(
-          width: 360, // Fixed width for the console
-          child: LiveVideoPlayer(),
-        ),
-        const SizedBox(
-          width: 360, // Fixed width for the console
-          child: PinProductView(),
-        ),
+        // 1. Latar Belakang: Video Player atau Konten Pra-Live
+        // Anda bisa menggunakan state management untuk beralih antara keduanya.
+        LiveVideoPlayer(),
+        // const PreLiveContent(), // Tampilkan ini sebelum live dimulai
+
+        // 2. Lapisan Interaktif di atas video
+        // Widget-widget ini akan ditumpuk di atas LiveVideoPlayer.
+        // Urutan dalam Stack menentukan lapisan (yang terakhir akan berada di paling atas).
+        LiveOverlays(),
+        LiveChatView(),
+        PinProductView(),
+
+        // 3. Konsol Interaktif (mungkin lebih baik diatur posisinya dengan Align atau Positioned)
+        InteractiveConsole(),
       ],
     );
   }
