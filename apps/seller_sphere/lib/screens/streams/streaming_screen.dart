@@ -12,7 +12,7 @@ class StreamingScreen extends StatelessWidget {
       appBar: AppBar(
         //backgroundColor: primaryColor,
         title: const Text(
-          'Seller Sphere',
+          'Streaming',
           style: TextStyle(color: Colors.white),
         ),
       ),
