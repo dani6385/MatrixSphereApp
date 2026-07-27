@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/interactive_console.dart';
-import '../widgets/live_chat_view.dart';
 import '../widgets/pre_live_content.dart'; // 1. Impor PreLiveContent
 import '../widgets/live_overlays.dart';
 import '../widgets/live_video_player.dart';
-import '../widgets/pin_product_view.dart';
 
 class StreamingBody extends StatefulWidget {
   const StreamingBody({super.key});
@@ -28,21 +26,36 @@ class _StreamingBodyState extends State<StreamingBody> {
       children: [
         // 1. Latar Belakang: Video Player atau Konten Pra-Live
         // Berdasarkan state `_isLive`.
-        // Untuk melihat pratinjau kamera, ubah `_isLive` menjadi `true`.
+        // Saat live, PreLiveContent menjadi latar belakang, dan kamera melayang di atasnya.
+        const PreLiveContent(),
+
+        // Tampilkan pratinjau kamera sebagai jendela melayang jika _isLive adalah true.
         if (_isLive)
-          const LiveVideoPlayer()
-        else
-          const PreLiveContent(),
+          Positioned(
+            top: 16,
+            left: 16,
+            child: SizedBox(
+              width: 120, // Lebar jendela kamera
+              height: 180, // Tinggi jendela kamera (rasio 3:2)
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: const LiveVideoPlayer(),
+              ),
+            ),
+          ),
 
         // 2. Lapisan Interaktif di atas video
         // Widget-widget ini akan ditumpuk di atas LiveVideoPlayer.
-        // Urutan dalam Stack menentukan lapisan (yang terakhir akan berada di paling atas).
+        // LiveChatView dan PinProductView sudah ada di dalam InteractiveConsole.
         const LiveOverlays(),
-        const LiveChatView(),
-        const PinProductView(),
 
-        // 3. Konsol Interaktif (mungkin lebih baik diatur posisinya dengan Align atau Positioned)
-        const InteractiveConsole(),
+        // 3. Atur posisi InteractiveConsole di sisi kanan.
+        // Menggunakan Align untuk menempatkan konsol di kanan-tengah.
+        const Align(
+          alignment: Alignment.centerRight,
+          child:
+              SizedBox(width: 360, child: InteractiveConsole()), // Beri lebar tetap
+        ),
       ],
     );
   }
