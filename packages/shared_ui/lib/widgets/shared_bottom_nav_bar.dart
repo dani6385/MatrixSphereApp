@@ -43,13 +43,13 @@ class SharedBottomNavBar extends StatelessWidget {
         ),
         child: CurvedNavigationBar(
           index: selectedIndex,
-          height: 70,
+          height: 50,
           items: items,
           onTap: onTap,
         color: Colors.transparent, // Membuat CurvedNavigationBar itu sendiri transparan
         buttonBackgroundColor: kDarkDivider,// Menggunakan kBrandPrimary
         backgroundColor: Colors.transparent, // Memastikan area di belakang CurvedNavigationBar juga transparan
-        animationCurve: Curves.easeInOut,
+        animationCurve: Curves.easeIn,
         animationDuration: const Duration(milliseconds: 400),
       ),
       ),

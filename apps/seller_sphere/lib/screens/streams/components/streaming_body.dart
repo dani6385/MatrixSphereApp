@@ -30,7 +30,6 @@ class StreamingBody extends StatelessWidget {
         LiveChatView(),
         PinProductView(),
 
-
         // 3. Konsol Interaktif (mungkin lebih baik diatur posisinya dengan Align atau Positioned)
         InteractiveConsole(),
       ],
