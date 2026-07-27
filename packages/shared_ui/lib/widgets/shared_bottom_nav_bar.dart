@@ -1,6 +1,7 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:shared_ui/theme/app_colors.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// A shared, reusable bottom navigation bar with a custom concave (downward-curving) shape.
 ///
@@ -12,13 +13,16 @@ class SharedBottomNavBar extends StatelessWidget {
     required this.currentIndex,
     required this.onTap,
     required this.tabs,
+    required this.selectedIndex,
   });
 
   /// The index of the currently active tab.
   final int currentIndex;
 
-  /// The callback function when a tab is tapped.
+  /// The callback function when a tab is tapped
+  // final void Function(int) onItemTapped;.
   final void Function(int) onTap;
+  final int selectedIndex;
 
   /// The list of [GButton] widgets to display as tabs.
   final List<GButton> tabs;
@@ -26,6 +30,9 @@ class SharedBottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final items = tabs
+        .map((tab) => Icon(tab.icon, size: 20, color: kDarkTextPrimary))
+        .toList();
 
     return ClipPath(
       clipper: _BottomNavClipper(), // Custom clipper for the shape
@@ -34,17 +41,17 @@ class SharedBottomNavBar extends StatelessWidget {
         decoration: BoxDecoration(
           color: theme.colorScheme.surface, // Use color from the app's theme
         ),
-        child: GNav(
-          backgroundColor: kTransparent,
-          color: theme.colorScheme.onSurface.withOpacity(0.6), // Inactive icon color
-          activeColor: theme.colorScheme.onSurface, // Active icon color
-          tabBackgroundColor: theme.colorScheme.onSurface.withOpacity(0.08), // Tab background on selection
-          gap: 8,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          selectedIndex: currentIndex,
-          onTabChange: onTap,
-          tabs: tabs, // Use the provided tabs
-        ),
+        child: CurvedNavigationBar(
+          index: selectedIndex,
+          height: 65,
+          items: items,
+          onTap: onTap,
+        color: kNeonCyan,
+        buttonBackgroundColor: kBrandBlack,// Menggunakan kBrandPrimary
+        backgroundColor: Colors.transparent,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 400),
+      ),
       ),
     );
   }

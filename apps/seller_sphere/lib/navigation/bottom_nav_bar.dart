@@ -55,8 +55,8 @@ class BottomNavBar extends StatelessWidget {
           icon: isSelected ? icons.activeIcon : icons.icon,
           text: '', // Teks dikosongkan sesuai desain
           iconSize: 26,
-        );
-      }),
+        ); 
+      }), selectedIndex: currentIndex,
     );
   }
 }
