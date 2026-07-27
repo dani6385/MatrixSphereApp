@@ -1,13 +1,35 @@
+// lib/widgets/interactive_console.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:shared_ui/shared_ui.dart';
 import '../viewmodels/streaming_view_model.dart';
 import 'live_chat_view.dart';
 import 'pin_product_view.dart';
 
-class InteractiveConsole extends StatelessWidget {
+class InteractiveConsole extends StatefulWidget {
   const InteractiveConsole({super.key});
+
+  @override
+  State<InteractiveConsole> createState() => _InteractiveConsoleState();
+}
+
+class _InteractiveConsoleState extends State<InteractiveConsole>
+    with SingleTickerProviderStateMixin {
+  late TabController _internalTabController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inisialisasi TabController secara mandiri untuk mencegah error render
+    _internalTabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _internalTabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +87,8 @@ class InteractiveConsole extends StatelessWidget {
 
   Widget _buildTabBar(ThemeData theme, StreamingViewModel viewModel) {
     return TabBar(
-      controller: viewModel.tabController,
+      // Menggunakan _internalTabController yang aman untuk menghindari error null / uninitialized
+      controller: _internalTabController,
       labelColor: kNeonCyan,
       unselectedLabelColor: theme.colorScheme.onSurfaceVariant,
       indicatorColor: kNeonCyan,
@@ -96,7 +119,7 @@ class InteractiveConsole extends StatelessWidget {
 
   Widget _buildTabBarView(ThemeData theme, StreamingViewModel viewModel) {
     return TabBarView(
-      controller: viewModel.tabController,
+      controller: _internalTabController,
       children: [
         // Live Chat Tab
         viewModel.isLive ? const LiveChatView() : _buildPreLiveChatSettings(theme, viewModel),
@@ -107,7 +130,6 @@ class InteractiveConsole extends StatelessWidget {
   }
 
   Widget _buildPreLiveChatSettings(ThemeData theme, StreamingViewModel viewModel) {
-    // This UI is simplified for brevity but can be expanded.
     return ListView(
       padding: const EdgeInsets.all(12),
       children: [
