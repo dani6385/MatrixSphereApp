@@ -1,81 +1,68 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
-import 'package:shared_ui/shared_ui.dart';
-import '../viewmodels/streaming_view_model.dart';
-import 'live_overlays.dart';
-import 'pre_live_content.dart';
-import 'radar_painter.dart';
-
-class LiveVideoPlayer extends StatelessWidget {
+/// Widget untuk menampilkan pratinjau kamera streamer.
+///
+/// Ini adalah StatefulWidget karena perlu mengelola siklus hidup
+/// dari CameraController.
+class LiveVideoPlayer extends StatefulWidget {
   const LiveVideoPlayer({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final viewModel = context.watch<StreamingViewModel>();
-    final theme = Theme.of(context);
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.black,
-          border: Border.all(
-            color: viewModel.isLive ? kAlertRed : theme.colorScheme.outline.withValues(alpha: 0.3),
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Stack(
-          children: [
-            if (viewModel.isLive) 
-              const _LiveContent() 
-            else 
-              const PreLiveContent(),
-          ],
-        ),
-      ),
-    );
-  }
+  State<LiveVideoPlayer> createState() => _LiveVideoPlayerState();
 }
 
-class _LiveContent extends StatelessWidget {
-  const _LiveContent();
+class _LiveVideoPlayerState extends State<LiveVideoPlayer> {
+  CameraController? _controller;
+  List<CameraDescription>? _cameras;
+  bool _isCameraInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeCamera();
+  }
+
+  Future<void> _initializeCamera() async {
+    try {
+      // 1. Dapatkan daftar kamera yang tersedia.
+      _cameras = await availableCameras();
+      if (_cameras == null || _cameras!.isEmpty) {
+        debugPrint("Tidak ada kamera yang ditemukan.");
+        return;
+      }
+
+      // 2. Inisialisasi controller dengan kamera depan (biasanya index 1).
+      // Gunakan _cameras![0] untuk kamera belakang.
+      _controller = CameraController(_cameras![1], ResolutionPreset.high);
+
+      await _controller!.initialize();
+
+      // 3. Perbarui state untuk membangun ulang UI dengan pratinjau kamera.
+      if (mounted) {
+        setState(() {
+          _isCameraInitialized = true;
+        });
+      }
+    } catch (e) {
+      debugPrint("Error saat inisialisasi kamera: $e");
+    }
+  }
+
+  @override
+  void dispose() {
+    // 4. Pastikan untuk melepaskan controller saat widget dihancurkan.
+    _controller?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = context.watch<StreamingViewModel>();
-
-    return Stack(
-      children: [
-        if (viewModel.useAutoPlayVideo && viewModel.videoController != null && viewModel.videoController!.value.isInitialized)
-          Center(
-            child: AspectRatio(
-              aspectRatio: viewModel.videoController!.value.aspectRatio,
-              child: VideoPlayer(viewModel.videoController!),
-            ),
-          )
-        else
-          CustomPaint(
-            painter: RadarPainter(),
-            child: Container(),
-          ),
-        const LiveOverlays(),
-        Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: Text(
-              viewModel.useAutoPlayVideo ? "📺 Putar Video Otomatis Aktif" : "📡 Kamera Aktif Menyiar...",
-              style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 11),
-            ),
-          ),
-        ),
-      ],
-    );
+    if (!_isCameraInitialized || _controller == null) {
+      // Tampilkan loading indicator saat kamera sedang diinisialisasi.
+      return const Center(child: CircularProgressIndicator());
+    }
+    // Tampilkan pratinjau kamera jika sudah siap.
+    return CameraPreview(_controller!);
   }
 }
