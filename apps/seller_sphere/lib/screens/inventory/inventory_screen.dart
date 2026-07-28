@@ -3,6 +3,10 @@ import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+import 'widgets/product_form.dart';
+import 'widgets/product_list_view.dart';
+
+
 class InventoryScreen extends StatefulWidget {
   // Asumsikan shopUid didapat dari user yang sedang login atau dari halaman sebelumnya.
   // Untuk contoh ini, kita akan hardcode. Dalam aplikasi nyata, ini harus dinamis.
@@ -27,149 +31,38 @@ class _InventoryScreenState extends State<InventoryScreen> {
         FirebaseDatabase.instance.ref('seller_sphere/${widget.shopUid}/produk');
   }
 
-  // Menampilkan dialog form untuk menambah atau mengedit produk.
-  // Jika [product] null, maka mode 'Tambah'. Jika tidak, mode 'Edit'.
   void _showProductFormDialog({Product? product}) {
     final bool isEditing = product != null;
-    final nameController = TextEditingController();
-    final priceController = TextEditingController();
-    final stockController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final formKey = GlobalKey<FormState>();
-
-    if (isEditing) {
-      nameController.text = product.name;
-      priceController.text = product.price.toStringAsFixed(0);
-      stockController.text = product.stock.toString();
-      descriptionController.text = product.description!;
-    }
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: kLightBackground,
       builder: (context) => Padding(
-        padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-            top: AppSpacing.lg,
-            left: AppSpacing.md,
-            right: AppSpacing.md),
-        child: Form(
-          key: formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(isEditing ? 'Edit Produk' : 'Tambah Produk Baru',
-                    style: AppStyles.primaryTitle(Theme.of(context).textTheme)),
-                const SizedBox(height: AppSpacing.lg),
-                TextFormField(
-                    controller: nameController,
-                    // Nama produk tidak bisa diubah karena digunakan sebagai key di Firebase
-                    readOnly: isEditing,
-                    decoration: const InputDecoration(labelText: 'Nama Produk'),
-                    validator: (v) => v!.isEmpty ? 'Wajib diisi' : null),
-                const SizedBox(height: AppSpacing.md),
-                TextFormField(
-                    controller: priceController,
-                    decoration: const InputDecoration(labelText: 'Harga'),
-                    keyboardType: TextInputType.number,
-                    validator: (v) => v!.isEmpty ? 'Wajib diisi' : null),
-                const SizedBox(height: AppSpacing.md),
-                TextFormField(
-                    controller: stockController,
-                    decoration: const InputDecoration(labelText: 'Stok'),
-                    keyboardType: TextInputType.number,
-                    validator: (v) => v!.isEmpty ? 'Wajib diisi' : null),
-                const SizedBox(height: AppSpacing.md),
-                TextFormField(
-                    controller: descriptionController,
-                    decoration: const InputDecoration(labelText: 'Deskripsi')),
-                const SizedBox(height: AppSpacing.lg),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 48),
-                    backgroundColor: kLightBackground,
-                    foregroundColor: kLightTextPrimary,
-                  ),
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      final productData = Product(
-                        id: product?.id ?? '',
-                        name: nameController.text,
-                        price: double.tryParse(priceController.text) ?? 0,
-                        stock: int.tryParse(stockController.text) ?? 0,
-                        description: descriptionController.text,
-                        imageUrl: product?.imageUrl ?? '',
-                        purchasePrice: 0.0,
-                        sellingPrice: 0.0,
-                        minStockThreshold: 0,
-                        ageRating: 0,
-                        imageUrls: [],
-                      );
-
-                      // Gunakan service untuk update data.
-                      // Nama produk digunakan sebagai key unik.
-                      await _rtdbService.updateData(
-                        _productsRef.path,
-                        {productData.name: productData.toMap()},
-                      );
-
-                      if (!context.mounted) return;
-
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(
-                                'Produk berhasil ${isEditing ? 'diperbarui' : 'ditambahkan'}!')),
-                      );
-                    }
-                  },
-                  child: const Text('Simpan Produk'),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-              ],
-            ),
-          ),
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.md,
+          AppSpacing.lg,
+          AppSpacing.md,
+          MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
         ),
-      ),
-    );
-  }
+        child: ProductForm(
+          product: product,
+          onSave: (productData) async {
+            await _rtdbService.updateData(
+              _productsRef.path,
+              {productData.name: productData.toMap()},
+            );
 
-  // Widget untuk membangun daftar produk dari data snapshot Firebase
-  Widget _buildProductList(List<Product> products) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      itemCount: products.length,
-      itemBuilder: (context, index) {
-        final product = products[index];
-        return _buildProductTile(product);
-      },
-    );
-  }
+            if (!context.mounted) return;
 
-  // Widget untuk satu item/tile produk dalam daftar
-  Widget _buildProductTile(Product product) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-      child: ListTile(
-        leading: const Icon(Icons.inventory_2_outlined, color: kLightBackground),
-        title: Text(product.name,
-            style: AppStyles.primaryTitle(Theme.of(context).textTheme)),
-        subtitle: Text(
-            'Harga: Rp ${product.price.toStringAsFixed(0)} | Stok: ${product.stock}'),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.edit_outlined, color: kLightTextSecondary),
-              onPressed: () => _showProductFormDialog(product: product),
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete_outline, color: kAlertRed),
-              onPressed: () => _confirmDeleteProduct(product.name),
-            ),
-          ],
+            Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                    'Produk berhasil ${isEditing ? 'diperbarui' : 'ditambahkan'}!'),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -204,7 +97,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 Map<String, dynamic>.from(entry.value), entry.key);
           }).toList();
 
-          return _buildProductList(products);
+          return ProductListView(
+            products: products,
+            onEdit: (product) => _showProductFormDialog(product: product),
+            onDelete: (productName) => _confirmDeleteProduct(productName),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
