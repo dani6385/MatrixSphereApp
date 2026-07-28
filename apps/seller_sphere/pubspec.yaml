@@ -48,6 +48,7 @@ dependencies:
   image: ^4.2.0
   auto_route: ^11.1.0
   cloud_firestore: ^6.7.1
+  apivideo_live_stream: ^1.2.0
 
 
 dev_dependencies:

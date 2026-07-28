@@ -10,7 +10,7 @@ export 'data/shop_realtime_screen.dart';
 
 
 export 'src/models/product_model.dart';
-export 'src/models/chat_model.dart';
+
 
 export 'src/models/produck/product_list_screen.dart';
 export 'src/camera_service.dart';
