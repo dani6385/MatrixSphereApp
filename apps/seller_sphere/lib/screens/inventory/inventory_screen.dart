@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'widgets/inventory_body.dart';
 import 'widgets/inventory_dialogs.dart';
+import 'widgets/scanner_screen.dart';
 
 // New widget for the sales tab content
 class SalesBody extends StatefulWidget {
@@ -208,18 +207,16 @@ class _InventoryScreenState extends State<InventoryScreen>
 
   // Fungsi untuk memulai proses scan barcode
   Future<void> _scanBarcode() async {
-    String barcodeScanRes;
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Batal', true, ScanMode.BARCODE);
-    } on PlatformException {
-      barcodeScanRes = 'Gagal mendapatkan versi platform.';
-    }
+    // Buka halaman scanner dan tunggu hasilnya
+    final barcodeScanRes = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const ScannerScreen()),
+    );
 
     if (!mounted) return;
 
-    // -1 adalah nilai default dari plugin jika user menekan tombol 'Batal'
-    if (barcodeScanRes == '-1') {
+    // Jika pengguna kembali tanpa memindai, hasilnya akan null
+    if (barcodeScanRes == null || barcodeScanRes.isEmpty) {
       return;
     }
 
