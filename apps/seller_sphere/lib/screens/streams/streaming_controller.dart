@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'streaming_service.dart';
-
-import '../models/chat_model.dart';
-import 'package:shared_services/shared_services.dart';
-
 import 'chat_service.dart';
-
-
+import 'models/chat_model.dart';
+import 'package:shared_services/shared_services.dart';
 
 class StreamingController extends ChangeNotifier {
   final StreamingService _streamingService = StreamingService();
@@ -40,7 +36,7 @@ class StreamingController extends ChangeNotifier {
         isStreaming = false;
         notifyListeners();
       },
-    );
+    ); // Perhatikan parameter di Service harus sesuai (onDisconnection)
 
     try {
       await _streamingService.initializeCamera(isFrontCamera);

@@ -54,8 +54,9 @@ class StreamingService {
   Future<void> dispose() async {
     try {
       if (await _controller.isStreaming) {
-        _controller.stopStreaming();
+        await _controller.stopStreaming();
       }
+      _controller.dispose();
     } catch (_) {}
   }
 }

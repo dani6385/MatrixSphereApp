@@ -1,4 +1,4 @@
-import 'package:camera/camera.dart';
+import 'package:apivideo_live_stream/apivideo_live_stream.dart';
 import 'package:flutter/material.dart';
 
 import 'package:shared_ui/shared_ui.dart';
@@ -7,7 +7,7 @@ import 'components/streaming_header.dart';
 import 'components/streaming_chat_view.dart';
 import 'components/streaming_chat_input.dart';
 import 'components/streaming_product_overlay.dart';
-import 'services/streaming_controller.dart';
+import 'streaming_controller.dart';
 //import 'models/product_model.dart';
 
 
@@ -79,22 +79,44 @@ class _StreamingScreenState extends State<StreamingScreen> {
       body: Stack(
         children: [
           _buildCameraPreview(),
-          StreamingHeader(
-            isStreaming: _controller.isStreaming,
-            isMicMuted: _controller.isMicMuted,
-            onToggleMic: _controller.toggleMute,
-            onToggleCamera: _controller.switchCamera,
-            onToggleStreaming: _controller.toggleStreaming,
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: StreamingHeader(
+              isStreaming: _controller.isStreaming,
+              isMicMuted: _controller.isMicMuted,
+              onToggleMic: _controller.toggleMute,
+              onToggleCamera: _controller.switchCamera,
+              onToggleStreaming: _controller.toggleStreaming,
+            ),
           ),
-          StreamingProductOverlay(products: _controller.products),
-          StreamingChatView(
-            streamId: _controller.streamId,
-            currentUserId: _controller.currentUserId,
-            scrollController: _chatScrollController,
+          // Pastikan overlay produk tidak menutupi seluruh layar secara opaque
+          Positioned(
+            top: 100,
+            left: 0,
+            right: 0,
+            child: StreamingProductOverlay(products: _controller.products),
           ),
-          StreamingChatInput(
-            controller: _chatInputController,
-            onSendMessage: _handleSendMessage,
+          Positioned(
+            bottom: 100, // Memberikan ruang agar tidak tertutup input chat
+            left: 0,
+            right: 0,
+            height: 300, // Membatasi tinggi area chat agar tidak menutupi seluruh layar
+            child: StreamingChatView(
+              streamId: _controller.streamId,
+              currentUserId: _controller.currentUserId,
+              scrollController: _chatScrollController,
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: StreamingChatInput(
+              controller: _chatInputController,
+              onSendMessage: _handleSendMessage,
+            ),
           ),
         ],
       ),
@@ -105,13 +127,15 @@ class _StreamingScreenState extends State<StreamingScreen> {
 
   Widget _buildCameraPreview() {
     if (!_controller.isInitialized) {
-      return Container(
-        color: kLightTextPrimary,
-        child: const Center(
-          child: CircularProgressIndicator(color: kLightBackground),
+      return Positioned.fill(
+        child: Container(
+          color: kLightTextPrimary,
+          child: const Center(
+            child: CircularProgressIndicator(color: kLightBackground),
+          ),
         ),
       );
     }
-    return Positioned.fill(child: CameraPreview(_controller.service.controller as CameraController));
+    return Positioned.fill(child: ApiVideoCameraPreview(controller: _controller.service.controller));
   }
 }
