@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop_sphere/screens/shops/widgets/Shop_app_bar.dart';
-import 'package:shop_sphere/screens/shops/widgets/Shop_body.dart';
+import 'package:shop_sphere/screens/shops/widgets/shop_app_bar.dart';
+import 'package:shop_sphere/screens/shops/widgets/shop_body.dart';
 import 'package:shop_sphere/screens/shops/widgets/shop_drawer.dart';
 import 'package:shop_sphere/screens/shops/widgets/shop_end_drawer.dart';
 

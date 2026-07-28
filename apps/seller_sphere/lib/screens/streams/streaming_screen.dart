@@ -1,114 +1,21 @@
-flutter create my_streaming_app
-cd my_streaming_app
-dependencies:
-  flutter:
-    sdk: flutter
-  camera: ^0.10.5+9 # Pastikan versi terbaru
-  firebase_core: ^2.24.2 # Pastikan versi terbaru
-  cloud_firestore: ^4.13.6 # Pastikan versi terbaru
-  intl: ^0.18.1 # Untuk format tanggal/waktu di chat
-  image_picker: ^1.0.4 # Opsional, jika ingin memilih gambar produk dari galeri
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if true; // HANYA UNTUK PENGEMBANGAN!
-    }
-  }
-}
-<uses-permission android:name="android.permission.CAMERA" />
-<uses-permission android:name="android.permission.RECORD_AUDIO" />
-<uses-permission android:name="android.permission.INTERNET" />
-<key>NSCameraUsageDescription</key>
-<string>Aplikasi ini membutuhkan akses kamera untuk live streaming.</string>
-<key>NSMicrophoneUsageDescription</key>
-<string>Aplikasi ini membutuhkan akses mikrofon untuk live streaming.</string>
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart'; // Import Firebase Core
-import 'package:my_streaming_app/streaming_page.dart'; // Import halaman streaming Anda
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(); // Inisialisasi Firebase
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Live Streaming',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: const StreamingPage(),
-    );
-  }
-}
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart'; // Untuk format waktu
+import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 // --- Model Data ---
-class Product {
-  final String id;
-  final String name;
-  final String imageUrl;
-  final double price;
-
-  Product({
-    required this.id,
-    required this.name,
-    required this.imageUrl,
-    required this.price,
-  });
-}
-
-class ChatMessage {
-  final String senderId;
-  final String senderName;
-  final String message;
-  final DateTime timestamp;
-
-  ChatMessage({
-    required this.senderId,
-    required this.senderName,
-    required this.message,
-    required this.timestamp,
-  });
-
-  factory ChatMessage.fromFirestore(Map<String, dynamic> data) {
-    return ChatMessage(
-      senderId: data['senderId'] ?? 'unknown',
-      senderName: data['senderName'] ?? 'Anonim',
-      message: data['message'] ?? '',
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-    );
-  }
-
-  Map<String, dynamic> toFirestore() {
-    return {
-      'senderId': senderId,
-      'senderName': senderName,
-      'message': message,
-      'timestamp': Timestamp.fromDate(timestamp),
-    };
-  }
-}
 
 // --- Halaman Streaming ---
-class StreamingPage extends StatefulWidget {
-  const StreamingPage({super.key});
+class StreamingScreen extends StatefulWidget {
+  const StreamingScreen({super.key});
 
   @override
-  State<StreamingPage> createState() => _StreamingPageState();
+  State<StreamingScreen> createState() => _StreamingScreenState();
 }
 
-class _StreamingPageState extends State<StreamingPage> {
+class _StreamingScreenState extends State<StreamingScreen> {
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   bool _isCameraInitialized = false;
@@ -122,7 +29,8 @@ class _StreamingPageState extends State<StreamingPage> {
   // Placeholder untuk user ID dan stream ID
   final String _currentUserId = 'user_${DateTime.now().millisecondsSinceEpoch}';
   final String _currentUserName = 'Pengguna ${DateTime.now().second}';
-  final String _streamId = 'myLiveStream123'; // ID unik untuk setiap sesi streaming
+  final String _streamId =
+      'myLiveStream123'; // ID unik untuk setiap sesi streaming
 
   // Contoh data produk
   final List<Product> _products = [
@@ -131,18 +39,36 @@ class _StreamingPageState extends State<StreamingPage> {
       name: 'T-Shirt Keren',
       imageUrl: 'https://via.placeholder.com/150/FF0000/FFFFFF?text=T-Shirt',
       price: 125000,
+      stock: 0,
+      purchasePrice: 0,
+      sellingPrice: 0,
+      minStockThreshold: 0,
+      ageRating: 0,
+      imageUrls: [],
     ),
     Product(
       id: 'p2',
       name: 'Celana Jeans',
       imageUrl: 'https://via.placeholder.com/150/0000FF/FFFFFF?text=Jeans',
       price: 250000,
+      stock: 0,
+      purchasePrice: 0,
+      sellingPrice: 0,
+      minStockThreshold: 0,
+      ageRating: 0,
+      imageUrls: [],
     ),
     Product(
       id: 'p3',
       name: 'Topi Gaul',
       imageUrl: 'https://via.placeholder.com/150/00FF00/FFFFFF?text=Topi',
       price: 75000,
+      stock: 0,
+      purchasePrice: 0,
+      sellingPrice: 0,
+      minStockThreshold: 0,
+      ageRating: 0,
+      imageUrls: [],
     ),
   ];
 
@@ -265,13 +191,13 @@ class _StreamingPageState extends State<StreamingPage> {
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
+      SnackBar(content: Text(message), backgroundColor: kAlertRed),
     );
   }
 
   void _showInfoSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.blue),
+      SnackBar(content: Text(message), backgroundColor: kBrandPrimary),
     );
   }
 
@@ -286,9 +212,9 @@ class _StreamingPageState extends State<StreamingPage> {
                   child: CameraPreview(_cameraController!),
                 )
               : Container(
-                  color: Colors.black,
+                  color: kLightTextPrimary,
                   child: const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
+                    child: CircularProgressIndicator(color: kLightBackground),
                   ),
                 ),
 
@@ -303,28 +229,31 @@ class _StreamingPageState extends State<StreamingPage> {
                 // Status LIVE
                 if (_isStreaming)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: kAlertRed,
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: const Text(
                       'LIVE',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          color: kLightBackground, fontWeight: FontWeight.bold),
                     ),
                   ),
                 // Placeholder untuk jumlah penonton
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
+                    color: kLightTextPrimary.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(5),
                   ),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.visibility, color: Colors.white, size: 16),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.visibility, color: kLightBackground, size: 16),
                       SizedBox(width: 4),
-                      Text('123', style: TextStyle(color: Colors.white)),
+                      Text('123', style: TextStyle(color: kLightBackground)),
                     ],
                   ),
                 ),
@@ -334,12 +263,13 @@ class _StreamingPageState extends State<StreamingPage> {
                     IconButton(
                       icon: Icon(
                         _isMicMuted ? Icons.mic_off : Icons.mic,
-                        color: Colors.white,
+                        color: kLightBackground,
                       ),
                       onPressed: _toggleMicMute,
                     ),
                     IconButton(
-                      icon: const Icon(Icons.flip_camera_ios, color: Colors.white),
+                      icon: const Icon(Icons.flip_camera_ios,
+                          color: kLightBackground),
                       onPressed: _toggleCameraLens,
                     ),
                     ElevatedButton.icon(
@@ -347,8 +277,9 @@ class _StreamingPageState extends State<StreamingPage> {
                       icon: Icon(_isStreaming ? Icons.stop : Icons.play_arrow),
                       label: Text(_isStreaming ? 'Stop' : 'Go Live'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: _isStreaming ? Colors.red : Colors.green,
-                        foregroundColor: Colors.white,
+                        backgroundColor:
+                            _isStreaming ? kAlertRed : kSoftTeal,
+                        foregroundColor: kLightBackground,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -385,7 +316,7 @@ class _StreamingPageState extends State<StreamingPage> {
               width: MediaQuery.of(context).size.width * 0.6, // Lebar chat
               height: 250, // Tinggi chat
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.6),
+                color: kLightTextPrimary.withValues(alpha: 0.6),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Column(
@@ -400,18 +331,25 @@ class _StreamingPageState extends State<StreamingPage> {
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
-                          return Center(child: Text('Error: ${snapshot.error}', style: const TextStyle(color: Colors.white)));
+                          return Center(
+                              child: Text('Error: ${snapshot.error}',
+                                  style: const TextStyle(color: kLightBackground)));
                         }
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator(color: Colors.white));
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator(
+                                  color: kLightBackground));
                         }
 
                         final messages = snapshot.data!.docs
-                            .map((doc) => ChatMessage.fromFirestore(doc.data() as Map<String, dynamic>))
+                            .map((doc) => ChatMessage.fromFirestore(
+                                doc.data() as Map<String, dynamic>))
                             .toList();
 
                         // Scroll ke bawah setiap kali ada pesan baru
-                        WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((_) => _scrollToBottom());
 
                         return ListView.builder(
                           controller: _chatScrollController,
@@ -419,7 +357,8 @@ class _StreamingPageState extends State<StreamingPage> {
                           itemBuilder: (context, index) {
                             final message = messages[index];
                             return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
                               child: RichText(
                                 text: TextSpan(
                                   children: [
@@ -427,12 +366,16 @@ class _StreamingPageState extends State<StreamingPage> {
                                       text: '${message.senderName}: ',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: message.senderId == _currentUserId ? Colors.lightBlueAccent : Colors.white,
+                                        color:
+                                            message.senderId == _currentUserId
+                                                ? Colors.lightBlueAccent
+                                                : kLightBackground,
                                       ),
                                     ),
                                     TextSpan(
                                       text: message.message,
-                                      style: const TextStyle(color: Colors.white),
+                                      style:
+                                          const TextStyle(color: kLightBackground),
                                     ),
                                   ],
                                 ),
@@ -460,23 +403,25 @@ class _StreamingPageState extends State<StreamingPage> {
                 right: 8,
                 top: 8,
               ),
-              color: Colors.black.withOpacity(0.7),
+              color: kLightTextPrimary.withValues(alpha: 0.7),
               child: Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _chatInputController,
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(color: kLightBackground),
                       decoration: InputDecoration(
                         hintText: 'Ketik pesan...',
-                        hintStyle: TextStyle(color: Colors.white.withOpacity(0.7)),
+                        hintStyle:
+                            TextStyle(color: kLightBackground.withValues(alpha: 0.7)),
                         filled: true,
-                        fillColor: Colors.white.withOpacity(0.2),
+                        fillColor: kLightBackground.withValues(alpha: 0.2),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25),
                           borderSide: BorderSide.none,
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                       ),
                       onSubmitted: (_) => _sendMessage(),
                     ),
@@ -485,7 +430,7 @@ class _StreamingPageState extends State<StreamingPage> {
                   CircleAvatar(
                     backgroundColor: Theme.of(context).primaryColor,
                     child: IconButton(
-                      icon: const Icon(Icons.send, color: Colors.white),
+                      icon: const Icon(Icons.send, color: kLightBackground),
                       onPressed: _sendMessage,
                     ),
                   ),
@@ -517,11 +462,11 @@ class ProductCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 8),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
+          color: kLightBackground.withValues(alpha: 0.9),
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: kLightTextPrimary.withValues(alpha: 0.2),
               blurRadius: 3,
               offset: const Offset(0, 2),
             ),
@@ -531,16 +476,17 @@ class ProductCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(8)),
               child: Image.network(
-                product.imageUrl,
+                product.imageUrl ?? '',
                 height: 60,
                 width: double.infinity,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
                   height: 60,
                   color: Colors.grey,
-                  child: const Icon(Icons.broken_image, color: Colors.white),
+                  child: const Icon(Icons.broken_image, color: kLightBackground),
                 ),
               ),
             ),
@@ -554,16 +500,17 @@ class ProductCard extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: kLightTextPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ').format(product.price),
+                    NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ')
+                        .format(product.price),
                     style: const TextStyle(
                       fontSize: 10,
-                      color: Colors.green,
+                      color: kLightBackground,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -576,4 +523,3 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
-
