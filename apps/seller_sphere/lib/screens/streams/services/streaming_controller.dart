@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'streaming_service.dart';
 import 'chat_service.dart';
-import 'models/chat_model.dart';
+import '../models/chat_model.dart';
 import 'package:shared_services/shared_services.dart';
 
 class StreamingController extends ChangeNotifier {

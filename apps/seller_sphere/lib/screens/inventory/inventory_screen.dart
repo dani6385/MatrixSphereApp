@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 //import 'package:seller_sphere/consts/const_color.dart';
-//import 'package:seller_sphere/screens/inventory/components/inventory_body.dart';
+import 'package:seller_sphere/screens/inventory/components/inventory_body.dart';
 
 class InventoryScreen extends StatelessWidget {
   const InventoryScreen({super.key});
@@ -16,7 +16,7 @@ class InventoryScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      //body: const InventoryBody(),
+      body: const InventoryBody(),
     );
   }
 }

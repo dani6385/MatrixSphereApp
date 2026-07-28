@@ -7,7 +7,7 @@ import 'components/streaming_header.dart';
 import 'components/streaming_chat_view.dart';
 import 'components/streaming_chat_input.dart';
 import 'components/streaming_product_overlay.dart';
-import 'streaming_controller.dart';
+import 'services/streaming_controller.dart';
 //import 'models/product_model.dart';
 
 
