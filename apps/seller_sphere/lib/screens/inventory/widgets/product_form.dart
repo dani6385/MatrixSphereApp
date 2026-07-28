@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProductForm extends StatefulWidget {
   final Product? product;
@@ -23,6 +25,7 @@ class _ProductFormState extends State<ProductForm> {
   late final TextEditingController _stockController;
   late final TextEditingController _descriptionController;
   late bool _isEditing;
+  File? _selectedImage;
 
   @override
   void initState() {
@@ -47,20 +50,80 @@ class _ProductFormState extends State<ProductForm> {
     super.dispose();
   }
 
-  void _handleSave() {
+  // Menampilkan pilihan untuk mengambil gambar dari Kamera atau Galeri
+  void _showImageSourceActionSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Galeri Foto'),
+                onTap: () {
+                  _pickImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Kamera'),
+                onTap: () {
+                  _pickImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: source);
+    if (image != null) {
+      setState(() {
+        _selectedImage = File(image.path);
+      });
+    }
+  }
+
+  void _handleSave() async {
     if (_formKey.currentState!.validate()) {
+      // Menampilkan loading indicator saat mengunggah
+      // (Implementasi loading indicator yang lebih baik bisa ditambahkan)
+      String? finalImageUrl = widget.product?.imageUrl ?? '';
+
+      if (_selectedImage != null) {
+        final uploadedUrl =
+            await ImageUploadService().uploadImageToImgBB(_selectedImage!);
+
+        if (uploadedUrl == null) {
+          if (!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Gagal mengunggah gambar.')),
+          );
+          return;
+        }
+        finalImageUrl = uploadedUrl;
+      }
+
       final productData = Product(
         id: widget.product?.id ?? '',
         name: _nameController.text,
         price: double.tryParse(_priceController.text) ?? 0,
-        stock: int.tryParse(_stockController.text) ?? 0, // Ensure stock is an int
+        stock: int.tryParse(_stockController.text) ?? 0,
         description: _descriptionController.text,
-        imageUrl: widget.product?.imageUrl ?? '',
-        purchasePrice: widget.product?.purchasePrice ?? 0, // Provide a default value
-        sellingPrice: widget.product?.sellingPrice ?? 0, // Provide a default value
-        minStockThreshold: widget.product!.minStockThreshold, // Keep existing or null
-        ageRating: widget.product!.ageRating, // Keep existing or null
-        imageUrls: [],
+        imageUrl: finalImageUrl,
+        // Gunakan nilai yang ada atau default jika produk baru
+        purchasePrice: widget.product?.purchasePrice ?? 0,
+        sellingPrice: widget.product?.sellingPrice ?? 0,
+        minStockThreshold: widget.product?.minStockThreshold ?? 0,
+        ageRating: widget.product?.ageRating ?? 0,
+        imageUrls: widget.product?.imageUrls ?? [],
       );
       widget.onSave(productData);
     }
@@ -76,6 +139,35 @@ class _ProductFormState extends State<ProductForm> {
           children: [
             Text(_isEditing ? 'Edit Produk' : 'Tambah Produk Baru',
                 style: AppStyles.primaryTitle(Theme.of(context).textTheme)),
+            const SizedBox(height: AppSpacing.lg),
+            // Image Preview and Picker
+            GestureDetector(
+              onTap: _showImageSourceActionSheet,
+              child: Container(
+                height: 150,
+                width: 150,
+                decoration: BoxDecoration(
+                  color: kLightBackground,
+                  border: Border.all(color: kLightBorder),
+                  borderRadius: BorderRadius.circular(AppSpacing.sm),
+                ),
+                child: _selectedImage != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(AppSpacing.sm),
+                        child: Image.file(_selectedImage!, fit: BoxFit.cover),
+                      )
+                    : (widget.product!.imageUrl?.isNotEmpty == true)
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(AppSpacing.sm), 
+                            child: Image.network(widget.product!.imageUrl!,
+                                fit: BoxFit.cover),
+                          )
+                        : const Center(
+                            child: Icon(Icons.add_a_photo_outlined,
+                                size: 40, color: kLightTextSecondary),
+                          ),
+              ),
+            ),
             const SizedBox(height: AppSpacing.lg),
             TextFormField(
                 controller: _nameController,
