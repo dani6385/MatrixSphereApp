@@ -24,6 +24,8 @@ const Color kLightDivider = Color(0xfff0f1f2); // Divider
 const Color kLightSurface = Color(0xFFFFFFFF); // Card, App Bar, Dialog
 const Color kLightTextPrimary = Color(0xFF0F172A); // Teks utama (Dark slate)
 const Color kLightTextSecondary = Color(0xFF475569); // Teks sekunder (Charcoal)
+const Color kLightText = Color(0xFFFFFFFF); // Teks terang (putih)
+const Color kError = Color(0xFFF44336);
 // ==========================================================================
 // == ALIAS LAMA (Untuk Kompatibilitas Mundur) ==
 // ==========================================================================

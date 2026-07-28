@@ -14,7 +14,10 @@ import 'services/streaming_controller.dart';
 
 // --- Halaman Streaming ---
 class StreamingScreen extends StatefulWidget {
-  const StreamingScreen({super.key});
+  // Asumsikan streamId adalah UID dari toko yang sedang live.
+  final String streamId;
+
+  const StreamingScreen({super.key, required this.streamId});
 
   @override
   State<StreamingScreen> createState() => _StreamingScreenState();
@@ -28,7 +31,7 @@ class _StreamingScreenState extends State<StreamingScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = StreamingController();
+    _controller = StreamingController(streamId: widget.streamId);
     _controller.init();
     _controller.addListener(_onControllerUpdate);
   }
@@ -103,7 +106,7 @@ class _StreamingScreenState extends State<StreamingScreen> {
             left: 0,
             right: 0,
             height: 300, // Membatasi tinggi area chat agar tidak menutupi seluruh layar
-            child: StreamingChatView(
+            child: StreamingChatView( // Pastikan streamId di sini juga benar
               streamId: _controller.streamId,
               currentUserId: _controller.currentUserId,
               scrollController: _chatScrollController,
@@ -118,6 +121,14 @@ class _StreamingScreenState extends State<StreamingScreen> {
               onSendMessage: _handleSendMessage,
             ),
           ),
+          // Menampilkan loading indicator saat kamera sibuk
+          if (_controller.isCameraBusy)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withValues(alpha: 0.3),
+                child: const Center(child: CircularProgressIndicator(color: kLightText)),
+              ),
+            ),
         ],
       ),
     );
@@ -129,9 +140,9 @@ class _StreamingScreenState extends State<StreamingScreen> {
     if (!_controller.isInitialized) {
       return Positioned.fill(
         child: Container(
-          color: kLightTextPrimary,
+          color: Colors.black,
           child: const Center(
-            child: CircularProgressIndicator(color: kLightBackground),
+            child: CircularProgressIndicator(color: kLightText),
           ),
         ),
       );
