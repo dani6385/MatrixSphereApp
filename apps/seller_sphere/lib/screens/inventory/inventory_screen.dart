@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:firebase_database/firebase_database.dart';
-
-import 'widgets/product_list_view.dart';
-import 'widgets/inventory_dialogs.dart'; // Import the new dialogs file
+import 'widgets/inventory_body.dart';
+import 'widgets/inventory_dialogs.dart';
 
 
 class InventoryScreen extends StatefulWidget {
@@ -48,19 +47,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     );
   }
 
-  void _showProductFormDialog({Product? product}) {
-    showProductFormModal(context: context, product: product, onSaveCallback: _handleSaveProduct);
-  }
-
-  // Menampilkan dialog konfirmasi sebelum menghapus produk
-  Future<void> _confirmDeleteProduct(String productName) async {
-    showDeleteConfirmationDialog(
-      context: context,
-      productName: productName,
-      onDeleteConfirmed: _deleteProduct, // Pass the actual delete logic
-    );
-  }
-
   // Logika untuk menghapus produk dari Firebase
   Future<void> _deleteProduct(String productName) async {
     try {
@@ -82,6 +68,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
     }
   }
 
+  void _showProductFormDialog({Product? product}) {
+    showProductFormModal(
+        context: context, product: product, onSaveCallback: _handleSaveProduct);
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,30 +87,10 @@ class _InventoryScreenState extends State<InventoryScreen> {
           ),
         ],
       ),
-      body: StreamBuilder(
-        stream: _productsRef.onValue,
-        builder: (context, AsyncSnapshot<DatabaseEvent> snapshot) {
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (!snapshot.hasData || snapshot.data!.snapshot.value == null) {
-            return const Center(child: Text('Belum ada produk.'));
-          }
-
-          final productsMap = Map<String, dynamic>.from(snapshot.data!.snapshot.value as Map);
-          final List<Product> products = productsMap.entries.map((entry) {
-            return Product.fromMap(Map<String, dynamic>.from(entry.value), entry.key);
-          }).toList();
-
-          return ProductListView(
-            products: products,
-            onEdit: (product) => _showProductFormDialog(product: product),
-            onDelete: (productName) => _confirmDeleteProduct(productName),
-          );
-        },
+      body: InventoryBody(
+        productsRef: _productsRef,
+        onSaveProduct: _handleSaveProduct,
+        onDeleteProduct: _deleteProduct,
       ),
     );
   }

@@ -11,3 +11,4 @@ export 'ui/custom_text_Field.dart';
 export 'ui/splash_screen.dart';
 export 'widgets/shared_bottom_nav_bar.dart';
 export 'widgets/side_menu.dart';
+export 'widgets/app_dialogs.dart';
