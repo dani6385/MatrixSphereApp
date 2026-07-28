@@ -10,7 +10,7 @@
 //export 'package:seller_sphere/features/profile/edit/edit_profile.dart';
 //export 'package:seller_sphere/features/profile/profile_screen.dart';
 //export 'package:seller_sphere/features/registration/registration_screen.dart';
-//export 'package:seller_sphere/features/settings/setting_screen.dart';
+export 'package:seller_sphere/features/settings/setting_screen.dart';
 //export 'package:seller_sphere/features/status/status_screen.dart';
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 export 'package:seller_sphere/screens/home/home_screen.dart';

@@ -176,7 +176,6 @@ class _ProductFormState extends State<ProductForm> {
             const SizedBox(height: AppSpacing.lg),
             TextFormField(
                 controller: _nameController,
-                readOnly: _isEditing,
                 decoration: const InputDecoration(labelText: 'Nama Produk'),
                 keyboardType: TextInputType.text,
                 validator: (v) => v!.isEmpty ? 'Wajib diisi' : null),

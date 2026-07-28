@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
+
 import 'package:firebase_database/firebase_database.dart';
+import 'widgets/inventory_app_bar.dart';
 import 'widgets/inventory_body.dart';
 import 'widgets/inventory_dialogs.dart';
 import 'widgets/scanner_screen.dart';
@@ -252,61 +254,13 @@ class _InventoryScreenState extends State<InventoryScreen>
       // Wrap with DefaultTabController
       length: 2, // Two tabs: Inventory and Sales
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Manajemen Toko',
-            style: TextStyle(
-              color: kDarkTextPrimary,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          // Menggunakan warna latar putih bersih agar tidak suram
-          backgroundColor: kDarkAppBar,
-          elevation: 1, // Memberikan sedikit bayangan tipis agar elegan
-          iconTheme: const IconThemeData(color: kDarkBorder),
-          actions: [
-            // Tombol Scan Barcode, selalu terlihat
-            IconButton(
-              icon: const Icon(Icons.qr_code_scanner),
-              onPressed: _scanBarcode,
-              tooltip: 'Scan Barcode',
-            ),
-            // Hanya tampilkan tombol 'Tambah' manual di tab Inventaris
-            if (_tabController.index == 0)
-              IconButton(
-                icon: const Icon(Icons.add),
-                onPressed: () => _showProductFormDialog(
-                  product: Product(
-                    id: '',
-                    name: '',
-                    price: 0,
-                    stock: 0,
-                    sku: '',
-                    purchasePrice: 0,
-                    sellingPrice: 0,
-                    minStockThreshold: 0,
-                    ageRating: 0,
-                    imageUrls: const [],
-                  ),
-                ),
-                tooltip: 'Tambah Produk Manual',
-              ),
-          ],
-          bottom: TabBar(
-            // Add TabBar to the AppBar's bottom
-            controller: _tabController, // Assign the controller
-            tabs: const [
-              Tab(text: 'Inventaris', icon: Icon(Icons.inventory)),
-              Tab(text: 'Penjualan', icon: Icon(Icons.point_of_sale)),
-            ],
-            labelColor: kBrandPrimary, // Customize tab colors
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: kBrandPrimary,
-            indicatorWeight: 3.0, // Ketebalan garis indikator agar lebih tegas
-            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-            indicatorSize: TabBarIndicatorSize.tab,
-          ),
+        appBar: InventoryAppBar(
+          tabController: _tabController,
+          onScanBarcode: _scanBarcode,
+          onAddProduct: _showProductFormDialog,
+          currentTabIndex: _tabController.index,
         ),
+        
         body: TabBarView(
           // Use TabBarView for tab content
           controller: _tabController, // Assign the controller
