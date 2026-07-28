@@ -253,8 +253,17 @@ class _InventoryScreenState extends State<InventoryScreen>
       length: 2, // Two tabs: Inventory and Sales
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Manajemen Toko'), // More generic title
-          backgroundColor: kLightBackground,
+          title: const Text(
+            'Manajemen Toko',
+            style: TextStyle(
+              color: kDarkTextPrimary,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // Menggunakan warna latar putih bersih agar tidak suram
+          backgroundColor: kDarkAppBar,
+          elevation: 1, // Memberikan sedikit bayangan tipis agar elegan
+          iconTheme: const IconThemeData(color: kDarkBorder),
           actions: [
             // Tombol Scan Barcode, selalu terlihat
             IconButton(
@@ -290,9 +299,11 @@ class _InventoryScreenState extends State<InventoryScreen>
               Tab(text: 'Inventaris', icon: Icon(Icons.inventory)),
               Tab(text: 'Penjualan', icon: Icon(Icons.point_of_sale)),
             ],
-            labelColor: kDarkTextPrimary, // Customize tab colors
-            unselectedLabelColor: kDarkTextSecondary,
+            labelColor: kBrandPrimary, // Customize tab colors
+            unselectedLabelColor: Colors.grey,
             indicatorColor: kBrandPrimary,
+            indicatorWeight: 3.0, // Ketebalan garis indikator agar lebih tegas
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
             indicatorSize: TabBarIndicatorSize.tab,
           ),
         ),

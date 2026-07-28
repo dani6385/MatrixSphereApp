@@ -21,6 +21,7 @@ class ProductForm extends StatefulWidget {
 class _ProductFormState extends State<ProductForm> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
+  late final TextEditingController _categoryController;
   late final TextEditingController _priceController;
   late final TextEditingController _stockController;
   late final TextEditingController _descriptionController;
@@ -33,6 +34,8 @@ class _ProductFormState extends State<ProductForm> {
     _isEditing = widget.product != null;
 
     _nameController = TextEditingController(text: widget.product?.name ?? '');
+    _categoryController =
+        TextEditingController(text: widget.product?.category ?? '');
     _priceController = TextEditingController(
         text: _isEditing ? widget.product!.price.toStringAsFixed(0) : '');
     _stockController = TextEditingController(
@@ -44,6 +47,7 @@ class _ProductFormState extends State<ProductForm> {
   @override
   void dispose() {
     _nameController.dispose();
+    _categoryController.dispose();
     _priceController.dispose();
     _stockController.dispose();
     _descriptionController.dispose();
@@ -114,6 +118,7 @@ class _ProductFormState extends State<ProductForm> {
       final productData = Product(
         id: widget.product?.id ?? '',
         name: _nameController.text,
+        category: _categoryController.text,
         price: double.tryParse(_priceController.text) ?? 0,
         stock: int.tryParse(_stockController.text) ?? 0,
         description: _descriptionController.text,
@@ -173,7 +178,13 @@ class _ProductFormState extends State<ProductForm> {
                 controller: _nameController,
                 readOnly: _isEditing,
                 decoration: const InputDecoration(labelText: 'Nama Produk'),
+                keyboardType: TextInputType.text,
                 validator: (v) => v!.isEmpty ? 'Wajib diisi' : null),
+            const SizedBox(height: AppSpacing.md),
+            TextFormField(
+                controller: _categoryController,
+                decoration: const InputDecoration(labelText: 'Kategori'),
+                keyboardType: TextInputType.text),
             const SizedBox(height: AppSpacing.md),
             TextFormField(
                 controller: _priceController,
