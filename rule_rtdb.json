@@ -1,0 +1,30 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "seller_sphere": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "shop_sphere": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "approval": {
+      ".read": "auth.token.isAdmin === true",
+      ".write": "auth.token.isAdmin === true"
+    },
+
+    "system": {
+      ".read": "auth.token.isAdmin === true",
+      ".write": "auth.token.isAdmin === true"
+    }
+  }
+}

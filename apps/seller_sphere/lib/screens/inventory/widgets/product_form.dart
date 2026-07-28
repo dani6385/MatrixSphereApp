@@ -53,14 +53,14 @@ class _ProductFormState extends State<ProductForm> {
         id: widget.product?.id ?? '',
         name: _nameController.text,
         price: double.tryParse(_priceController.text) ?? 0,
-        stock: int.tryParse(_stockController.text) ?? 0,
+        stock: int.tryParse(_stockController.text) ?? 0, // Ensure stock is an int
         description: _descriptionController.text,
         imageUrl: widget.product?.imageUrl ?? '',
-        purchasePrice: 0.0,
-        sellingPrice: 0.0,
-        minStockThreshold: 0,
-        ageRating: 0,
-        imageUrls: const [],
+        purchasePrice: widget.product?.purchasePrice ?? 0, // Provide a default value
+        sellingPrice: widget.product?.sellingPrice ?? 0, // Provide a default value
+        minStockThreshold: widget.product!.minStockThreshold, // Keep existing or null
+        ageRating: widget.product!.ageRating, // Keep existing or null
+        imageUrls: [],
       );
       widget.onSave(productData);
     }
