@@ -269,7 +269,20 @@ class _InventoryScreenState extends State<InventoryScreen>
             if (_tabController.index == 0)
               IconButton(
                 icon: const Icon(Icons.add),
-                onPressed: () => _showProductFormDialog(),
+                onPressed: () => _showProductFormDialog(
+                  product: Product(
+                    id: '',
+                    name: '',
+                    price: 0,
+                    stock: 0,
+                    sku: '',
+                    purchasePrice: 0,
+                    sellingPrice: 0,
+                    minStockThreshold: 0,
+                    ageRating: 0,
+                    imageUrls: const [],
+                  ),
+                ),
                 tooltip: 'Tambah Produk Manual',
               ),
           ],
