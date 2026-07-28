@@ -62,7 +62,7 @@ final List<StatefulShellBranch> appShellBranches = <StatefulShellBranch>[
       GoRoute(
         path: AppRoutes.inventory, // path: '/inventory'
         pageBuilder: (context, state) => FadeTransitionPage(
-          child: const InventoryScreen(),
+          child: const InventoryScreen(shopUid: '',),
         ),
       ),
     ],

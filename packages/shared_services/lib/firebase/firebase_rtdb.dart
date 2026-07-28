@@ -329,13 +329,11 @@ class FirebaseRtdbService {
   }
 }
 
-/*
---- CONTOH PENGGUNAAN ---
 
-Untuk menggunakan service ini, Anda perlu membuat instance-nya terlebih dahulu.
+//--- CONTOH PENGGUNAAN ---
+//Untuk menggunakan service ini, Anda perlu membuat instance-nya terlebih dahulu.
 
 final rtdbService = FirebaseRtdbService();
-
 // 1. Membaca data produk dari 'toko_agan'
 void contohBacaData() async {
   final snapshot = await rtdbService.readData('seller_sphere/toko_agan/produk');
@@ -367,4 +365,3 @@ void contohHapusData() async {
   await rtdbService.deleteData('system/pelanggaran/toko_agan');
 }
 
-*/
