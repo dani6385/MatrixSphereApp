@@ -51,4 +51,5 @@ class AppStyles {
   // Untuk tampilan tanggal di bawah jam
   static TextStyle dateDisplay(TextTheme textTheme) =>
       textTheme.bodyMedium!.copyWith(color: kDarkTextSecondary);
+      
 }
