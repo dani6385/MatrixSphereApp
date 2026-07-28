@@ -49,6 +49,7 @@ dependencies:
   auto_route: ^11.1.0
   cloud_firestore: ^6.7.1
   apivideo_live_stream: ^1.2.0
+  flutter_barcode_scanner: ^2.0.0
 
 
 dev_dependencies:

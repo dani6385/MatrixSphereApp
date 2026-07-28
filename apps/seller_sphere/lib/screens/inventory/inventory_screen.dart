@@ -1,10 +1,125 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'widgets/inventory_body.dart';
 import 'widgets/inventory_dialogs.dart';
 
+// New widget for the sales tab content
+class SalesBody extends StatefulWidget {
+  final DatabaseReference productsRef;
+  final String? scannedBarcode;
+
+  const SalesBody({
+    super.key,
+    required this.productsRef,
+    this.scannedBarcode,
+  });
+
+  @override
+  State<SalesBody> createState() => _SalesBodyState();
+}
+
+class _SalesBodyState extends State<SalesBody> {
+  final Map<String, Product> _cartItems = {};
+  List<Product> _allProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAllProducts();
+  }
+
+  @override
+  void didUpdateWidget(covariant SalesBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.scannedBarcode != null &&
+        widget.scannedBarcode != oldWidget.scannedBarcode) {
+      _addProductToCartByBarcode(widget.scannedBarcode!);
+    }
+  }
+
+  Future<void> _loadAllProducts() async {
+    final snapshot = await widget.productsRef.get();
+    if (snapshot.exists && snapshot.value != null) {
+      final productsMap = Map<String, dynamic>.from(snapshot.value as Map);
+      setState(() {
+        _allProducts = productsMap.entries.map((entry) {
+          return Product.fromMap(
+              Map<String, dynamic>.from(entry.value), entry.key);
+        }).toList();
+      });
+    }
+  }
+
+  void _addProductToCartByBarcode(String barcode) {
+    if (barcode == '-1') return; // Scan dibatalkan
+
+    try {
+      final productToAdd = _allProducts.firstWhere((p) => p.sku == barcode);
+
+      setState(() {
+        if (_cartItems.containsKey(productToAdd.name)) {
+          // Jika sudah ada, bisa tambahkan logika untuk menambah jumlah
+          // Untuk saat ini, kita biarkan saja
+        } else {
+          _cartItems[productToAdd.name] = productToAdd;
+        }
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('${productToAdd.name} ditambahkan ke keranjang.')),
+      );
+    } catch (e) {
+      // firstWhere akan melempar error jika tidak ditemukan
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Produk dengan barcode $barcode tidak ditemukan.')),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_cartItems.isEmpty) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.point_of_sale, size: 80, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'Keranjang Penjualan',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Scan barcode produk untuk menambahkannya ke sini.',
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(8.0),
+      children: _cartItems.values.map((product) {
+        return Card(
+          child: ListTile(
+            title: Text(product.name),
+            subtitle: Text('Stok: ${product.stock}'),
+            trailing: Text('Rp ${product.price.toStringAsFixed(0)}'),
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
 
 class InventoryScreen extends StatefulWidget {
   // Asumsikan shopUid didapat dari user yang sedang login atau dari halaman sebelumnya.
@@ -17,14 +132,26 @@ class InventoryScreen extends StatefulWidget {
   State<InventoryScreen> createState() => _InventoryScreenState();
 }
 
-class _InventoryScreenState extends State<InventoryScreen> {
+class _InventoryScreenState extends State<InventoryScreen>
+    with TickerProviderStateMixin {
+  // Add TickerProviderStateMixin
   // Gunakan service layer untuk interaksi database
   final FirebaseRtdbService _rtdbService = FirebaseRtdbService();
   late final DatabaseReference _productsRef;
+  late TabController _tabController; // Declare TabController
+  String? _lastScannedBarcode;
 
   @override
   void initState() {
     super.initState();
+    // Initialize TabController with 2 tabs
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(() => setState(() {})); // Untuk re-render AppBar
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     // Tentukan path yang benar untuk produk toko ini
     _productsRef =
         FirebaseDatabase.instance.ref('seller_sphere/${widget.shopUid}/produk');
@@ -32,6 +159,12 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   // Callback untuk menyimpan produk (tambah atau edit)
   Future<void> _handleSaveProduct(Product productData) async {
+    // Ensure productData.name is not empty or null before using it as a key
+    if (productData.name.isEmpty) {
+      // Handle error or provide a default name
+      debugPrint('Product name cannot be empty.');
+      return;
+    }
     await _rtdbService.updateData(
       _productsRef.path,
       {productData.name: productData.toMap()},
@@ -73,24 +206,101 @@ class _InventoryScreenState extends State<InventoryScreen> {
         context: context, product: product, onSaveCallback: _handleSaveProduct);
   }
 
+  // Fungsi untuk memulai proses scan barcode
+  Future<void> _scanBarcode() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Batal', true, ScanMode.BARCODE);
+    } on PlatformException {
+      barcodeScanRes = 'Gagal mendapatkan versi platform.';
+    }
+
+    if (!mounted) return;
+
+    // -1 adalah nilai default dari plugin jika user menekan tombol 'Batal'
+    if (barcodeScanRes == '-1') {
+      return;
+    }
+
+    // Logika berdasarkan tab yang aktif
+    if (_tabController.index == 0) {
+      // Tab Inventaris: Buka form dengan SKU terisi
+      _showProductFormDialog(
+        product: Product(
+          id: '',
+          name: '',
+          price: 0,
+          stock: 0,
+          sku: barcodeScanRes,
+          purchasePrice: 0.0,
+          sellingPrice: 0.0,
+          minStockThreshold: 0,
+          ageRating: 0,
+          imageUrls: const [],
+          // Isi field lain dengan nilai default jika diperlukan
+        ),
+      );
+    } else {
+      // Tab Penjualan: Kirim barcode ke SalesBody untuk ditambahkan ke keranjang
+      setState(() {
+        _lastScannedBarcode = barcodeScanRes + DateTime.now().toIso8601String();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inventaris Toko'),
-        backgroundColor: kLightBackground,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showProductFormDialog(),
+    return DefaultTabController(
+      // Wrap with DefaultTabController
+      length: 2, // Two tabs: Inventory and Sales
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Manajemen Toko'), // More generic title
+          backgroundColor: kLightBackground,
+          actions: [
+            // Tombol Scan Barcode, selalu terlihat
+            IconButton(
+              icon: const Icon(Icons.qr_code_scanner),
+              onPressed: _scanBarcode,
+              tooltip: 'Scan Barcode',
+            ),
+            // Hanya tampilkan tombol 'Tambah' manual di tab Inventaris
+            if (_tabController.index == 0)
+              IconButton(
+                icon: const Icon(Icons.add),
+                onPressed: () => _showProductFormDialog(),
+                tooltip: 'Tambah Produk Manual',
+              ),
+          ],
+          bottom: TabBar(
+            // Add TabBar to the AppBar's bottom
+            controller: _tabController, // Assign the controller
+            tabs: const [
+              Tab(text: 'Inventaris', icon: Icon(Icons.inventory)),
+              Tab(text: 'Penjualan', icon: Icon(Icons.point_of_sale)),
+            ],
+            labelColor: kDarkTextPrimary, // Customize tab colors
+            unselectedLabelColor: kDarkTextSecondary,
+            indicatorColor: kBrandPrimary,
+            indicatorSize: TabBarIndicatorSize.tab,
           ),
-        ],
-      ),
-      body: InventoryBody(
-        productsRef: _productsRef,
-        onSaveProduct: _handleSaveProduct,
-        onDeleteProduct: _deleteProduct,
+        ),
+        body: TabBarView(
+          // Use TabBarView for tab content
+          controller: _tabController, // Assign the controller
+          children: [
+            InventoryBody(
+              productsRef: _productsRef,
+              onSaveProduct: _handleSaveProduct,
+              onDeleteProduct: _deleteProduct,
+            ),
+            SalesBody(
+              productsRef: _productsRef,
+              scannedBarcode: _lastScannedBarcode,
+            ),
+          ],
+        ),
       ),
     );
   }
