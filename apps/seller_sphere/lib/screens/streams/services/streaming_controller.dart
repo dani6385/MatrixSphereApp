@@ -3,6 +3,7 @@ import 'streaming_service.dart';
 import 'chat_service.dart';
 import '../models/chat_model.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class StreamingController extends ChangeNotifier {
   final StreamingService _streamingService = StreamingService();
@@ -11,13 +12,23 @@ class StreamingController extends ChangeNotifier {
 
   bool isInitialized = false;
   bool isStreaming = false;
-  bool isFrontCamera = true;
+  bool isFrontCamera = true; // Sudah diatur default kamera depan
   bool isMicMuted = false;
-  bool isCameraBusy = false; // State untuk menandakan kamera sedang sibuk (inisialisasi/beralih)
+  bool isCameraBusy =
+      false; // State untuk menandakan kamera sedang sibuk (inisialisasi/beralih)
   String? errorMessage;
+  String? _dynamicStreamKey;
 
   final String streamId;
-  final String rtmpUrl = "rtmp://your-rtmp-server.com/live";
+
+  // Jika menggunakan api.video, ini adalah URL defaultnya.
+  // Untuk platform lain, ganti dengan URL yang didapat dari dashboard mereka.
+  final String rtmpUrl = "rtmp://broadcast.api.video/s/";
+
+  // API key default (Stream Key) untuk layanan api.video
+  static const String _defaultStreamKey =
+      "ic1LygT4aJtyD9SZazquGMtR9BNGA9t6mzIYHdTEwGY";
+
   final String currentUserId = 'user_${DateTime.now().millisecondsSinceEpoch}';
   final String currentUserName = 'Seller Pro';
 
@@ -28,11 +39,25 @@ class StreamingController extends ChangeNotifier {
   StreamingController({required this.streamId});
 
   Future<void> init() async {
-    // Ambil data produk dari Firebase
-    await _fetchProducts();
+    // Ambil data produk dan konfigurasi stream dari Firebase
+    await Future.wait([_fetchProducts(), _fetchStreamConfig()]);
+
+    // Pastikan izin kamera dan mic sudah diberikan sebelum init controller
+    // Ini memastikan library bisa mendeteksi posisi kamera dengan benar
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+    ].request();
+
+    if (statuses[Permission.camera] != PermissionStatus.granted) {
+      errorMessage = "Izin kamera ditolak";
+      notifyListeners();
+      return;
+    }
 
     _streamingService.initController(
-      // Perhatikan parameter di Service harus sesuai (onDisconnection)
+      // Mengatur kamera depan sebagai kamera awal ('front')
+      initialCamera: isFrontCamera ? 'front' : 'back',
       onConnectionSuccess: () {
         isStreaming = true;
         notifyListeners();
@@ -51,7 +76,7 @@ class StreamingController extends ChangeNotifier {
     try {
       isCameraBusy = true;
       notifyListeners();
-      await _streamingService.initializeCamera(isFrontCamera);
+      await _streamingService.initializeCamera();
       isInitialized = true;
     } catch (e) {
       errorMessage = e.toString();
@@ -84,10 +109,30 @@ class StreamingController extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Mengambil konfigurasi stream (seperti streamKey spesifik toko)
+  Future<void> _fetchStreamConfig() async {
+    try {
+      // Mengambil streamKey dari path: seller_sphere/$streamId/config/streamKey
+      final snapshot = await _rtdbService
+          .readData('seller_sphere/$streamId/config/streamKey');
+
+      if (snapshot != null && snapshot.exists && snapshot.value != null) {
+        _dynamicStreamKey = snapshot.value.toString();
+        debugPrint("Stream Key khusus ditemukan untuk $streamId");
+      }
+    } catch (e) {
+      debugPrint("Gagal mengambil config stream (menggunakan default): $e");
+    }
+  }
+
   Future<void> toggleStreaming() async {
     try {
       if (!isStreaming) {
-        await _streamingService.startStream(rtmpUrl, streamId);
+        // Kita tetap menggunakan streamId untuk identifikasi data di Firebase,
+        // namun untuk proses penyiaran ke api.video, kita gunakan Stream Key yang Anda berikan.
+        // Di masa mendatang, Anda bisa menyimpan streamKey unik per toko di database.
+        final String activeStreamKey = _dynamicStreamKey ?? _defaultStreamKey;
+        await _streamingService.startStream(rtmpUrl, activeStreamKey);
       } else {
         await _streamingService.stopStream();
         isStreaming = false;
@@ -100,7 +145,9 @@ class StreamingController extends ChangeNotifier {
   }
 
   Future<void> switchCamera() async {
-    if (isCameraBusy) return; // Mencegah panggilan ganda saat kamera sedang beralih
+    if (isCameraBusy) {
+      return; // Mencegah panggilan ganda saat kamera sedang beralih
+    }
 
     try {
       isCameraBusy = true;
