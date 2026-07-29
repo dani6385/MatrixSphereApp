@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
-import 'package:seller_sphere/navigation/bottom_nav_bar.dart';
+
 
 import 'app_routes.dart';
 
