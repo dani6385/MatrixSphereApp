@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'components/management_appbar.dart'; // Impor AppBar Anda
 import 'components/management_body.dart';
+import 'package:seller_sphere/navigation/bottom_nav_bar.dart';
 
 class ManagementScreen extends StatelessWidget {
   const ManagementScreen({super.key});
@@ -8,6 +10,11 @@ class ManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Tambahkan BottomNavBar di sini
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _calculateSelectedIndex(context),
+        onTap: (index) => _onItemTapped(index, context),
+      ),
       // 1. Gunakan AppBar yang sudah Anda buat
       appBar: const ManagementAppBar(),
 
@@ -57,5 +64,28 @@ class ManagementScreen extends StatelessWidget {
       // Isi dari halaman Anda
       body: const ManagementBody(),
     );
+  }
+
+  // Helper untuk menentukan index terpilih berdasarkan rute saat ini
+  static int _calculateSelectedIndex(BuildContext context) {
+    final String location = GoRouterState.of(context).uri.toString();
+    if (location.startsWith('/stream')) return 1;
+    if (location.startsWith('/management')) return 2;
+    if (location.startsWith('/sellers')) return 3;
+    if (location.startsWith('/attendance')) return 4;
+    return 0; // Default ke Home
+  }
+
+  // Helper untuk navigasi saat item bar diketuk
+  void _onItemTapped(int index, BuildContext context) {
+    switch (index) {
+      case 0:
+        context.go('/');
+        break;
+      case 1:
+        context.go('/stream');
+        break;
+      // ... tambahkan case untuk index lainnya
+    }
   }
 }

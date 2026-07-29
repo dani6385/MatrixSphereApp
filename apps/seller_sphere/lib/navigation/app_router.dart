@@ -39,15 +39,9 @@ final GoRouter appRouter = GoRouter(
   routes: <RouteBase>[
     // 3. Gunakan StatefulShellRoute untuk halaman dengan BottomNavBar
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) {
-        return Scaffold(
-          body: navigationShell,
-          bottomNavigationBar: BottomNavBar(
-            currentIndex: navigationShell.currentIndex,
-            onTap: (index) => navigationShell.goBranch(index),
-          ),
-        );
-      },
+      // Cukup kembalikan navigationShell. Scaffold akan dibuat oleh halaman itu sendiri.
+      // BottomNavBar akan ditambahkan di dalam Scaffold halaman.
+      builder: (context, state, navigationShell) => navigationShell,
       branches: appShellBranches,
     ),
 
