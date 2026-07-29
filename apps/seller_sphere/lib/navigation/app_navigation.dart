@@ -39,7 +39,7 @@ class AppNavigation {
     final validTabs = [
       AppRoutes.home,
       AppRoutes.stream,
-      AppRoutes.inventory,
+      AppRoutes.management,
       AppRoutes.sellers,
       AppRoutes.attendance
     ];
