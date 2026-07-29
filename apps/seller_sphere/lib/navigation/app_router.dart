@@ -57,16 +57,16 @@ final List<StatefulShellBranch> appShellBranches = <StatefulShellBranch>[
     ],
   ),
   // Branch 2: Inventory
-  /*StatefulShellBranch(
+  StatefulShellBranch(
     routes: [
       GoRoute(
-        path: AppRoutes.inventory, // path: '/inventory'
+        path: AppRoutes.management, // path: '/inventory'
         pageBuilder: (context, state) => FadeTransitionPage(
-          child: const InventoryScreen(shopUid: '',),
+          child: const ManagementScreen(),
         ),
       ),
     ],
-  ),*/
+  ),
   // Branch 3: Sellers/Kios
   StatefulShellBranch(
     routes: [
