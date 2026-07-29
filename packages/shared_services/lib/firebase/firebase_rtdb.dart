@@ -1,6 +1,8 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_services/data/shop_realtime_screen.dart';
+import 'package:shared_services/models/order_model.dart';
+import 'package:shared_services/models/cart_item_model.dart';
 
 import 'package:shared_services/src/models/product_model.dart';
 
@@ -11,6 +13,14 @@ import 'package:shared_services/src/models/product_model.dart';
 class FirebaseRtdbService {
   /// Instance dari FirebaseDatabase untuk berinteraksi dengan RTDB.
   final FirebaseDatabase _database = FirebaseDatabase.instance;
+
+  /// Mendapatkan referensi ke node 'seller-orders'.
+  /// Path ini bisa disesuaikan jika struktur database Anda berbeda.
+  DatabaseReference get ordersRef => _database.ref('seller-orders');
+
+  /// Mendapatkan referensi ke node 'products'.
+  /// Path ini bisa disesuaikan jika struktur database Anda berbeda.
+  DatabaseReference get productsRef => _database.ref('products');
 
   /// Membaca data dari path tertentu di Realtime Database.
   ///
@@ -327,6 +337,53 @@ class FirebaseRtdbService {
       return false;
     }
   }
+
+  /// Membuat pesanan Point-of-Sale (POS) dan mengurangi stok produk secara atomik.
+  ///
+  /// [order]: Objek Order yang akan dibuat.
+  /// [cartItems]: Daftar item di keranjang untuk pembaruan stok.
+  ///
+  /// Mengembalikan `true` jika berhasil, `false` jika gagal.
+  Future<bool> createPosOrderAndUpdateStock({
+    required Order order,
+    required List<CartItem> cartItems,
+  }) async {
+    try {
+      // Dapatkan referensi baru untuk order dengan ID unik
+      final newOrderRef = ordersRef.push();
+      final orderId = newOrderRef.key!;
+
+      // Siapkan data update untuk stok
+      final Map<String, dynamic> stockUpdates = {};
+      for (var item in cartItems) {
+        // Path ke field stok produk dan nilai stok baru
+        stockUpdates['/products/${item.product.id}/stock'] =
+            ServerValue.increment(-item.quantity);
+      }
+
+      // Siapkan data untuk order baru
+      final Map<String, dynamic> orderUpdate = {
+        '/seller-orders/$orderId': order.toMap(),
+      };
+
+      // Gabungkan semua update menjadi satu operasi atomik
+      final Map<String, dynamic> updates = {}
+        ..addAll(stockUpdates)
+        ..addAll(orderUpdate);
+
+      // Jalankan multi-path update
+      await _database.ref().update(updates);
+
+      debugPrint('Transaksi POS berhasil untuk order ID: $orderId');
+      return true;
+    } catch (e) {
+      debugPrint('Error saat menjalankan transaksi POS: $e');
+      // Di dunia nyata, Anda mungkin ingin mencoba membatalkan
+      // sebagian transaksi jika memungkinkan, tapi multi-path update
+      // seharusnya berhasil atau gagal sepenuhnya.
+      return false;
+    }
+  }
 }
 
 
@@ -364,4 +421,3 @@ void contohUpdateData() async {
 void contohHapusData() async {
   await rtdbService.deleteData('system/pelanggaran/toko_agan');
 }
-
