@@ -13,7 +13,7 @@ class InventoryAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(
-        'Manajemen Toko',
+        'Manajemen Seller',
         style: TextStyle(
           color: kDarkTextPrimary,
           fontWeight: FontWeight.bold,

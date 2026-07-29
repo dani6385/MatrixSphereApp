@@ -57,7 +57,7 @@ final List<StatefulShellBranch> appShellBranches = <StatefulShellBranch>[
     ],
   ),
   // Branch 2: Inventory
-  StatefulShellBranch(
+  /*StatefulShellBranch(
     routes: [
       GoRoute(
         path: AppRoutes.inventory, // path: '/inventory'
@@ -66,7 +66,7 @@ final List<StatefulShellBranch> appShellBranches = <StatefulShellBranch>[
         ),
       ),
     ],
-  ),
+  ),*/
   // Branch 3: Sellers/Kios
   StatefulShellBranch(
     routes: [

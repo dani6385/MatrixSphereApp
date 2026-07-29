@@ -1,95 +1,34 @@
+// lib/screens/Inventory/Inventory_screen.dart
+
 import 'package:flutter/material.dart';
-import 'package:firebase_database/firebase_database.dart';
+
+import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 import 'widgets/inventory_app_bar.dart';
-import 'widgets/order_management.dart';
-import 'widgets/sales_body.dart'; // Impor SalesBody yang baru dipisah
+import 'widgets/inventory_body.dart';
+import 'package:seller_sphere/features/settings/setting_screen.dart';
 
-class InventoryScreen extends StatefulWidget {
-  final String shopUid;
+class InventoryScreen extends StatelessWidget {
+  const InventoryScreen({super.key});
 
-  const InventoryScreen({super.key, required this.shopUid});
-
-  @override
-  State<InventoryScreen> createState() => _InventoryScreenState();
-}
-
-class _InventoryScreenState extends State<InventoryScreen>
-    with TickerProviderStateMixin {
-  late final DatabaseReference _productsRef;
-  late TabController _tabController;
-  String? _lastScannedBarcode;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() => setState(() {}));
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _productsRef =
-        FirebaseDatabase.instance.ref('seller_sphere/${widget.shopUid}/produk');
-  }
+  // 1. DEKLARASIKAN GLOBALKEY DI SINI
+  static final GlobalKey<ScaffoldState> scaffoldKey =
+      GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        appBar: const InventoryAppBar(),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(color: Colors.blue),
-                child: Text('Menu',
-                    style: TextStyle(color: Colors.white, fontSize: 18)),
-              ),
-              const ListTile(title: Text('Profil Toko')),
-              const ListTile(title: Text('Pengaturan')),
-              ListTile(
-                leading: const Icon(Icons.inventory_2_outlined),
-                title: const Text('Inventaris Produk'),
-                onTap: () {
-                  _tabController.animateTo(0); // Pindah ke tab Inventaris
-                  Navigator.of(context).pop(); // Tutup laci
-                },
-              ),
-            ],
-          ),
-        ),
-        endDrawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: const [
-              DrawerHeader(
-                decoration: BoxDecoration(color: Colors.teal),
-                child: Text('Panel Samping (Laci Kanan)',
-                    style: TextStyle(color: Colors.white, fontSize: 18)),
-              ),
-              ListTile(title: Text('Filter Produk')),
-              ListTile(title: Text('Bantuan')),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            OrderManagement(
-              ordersRef: FirebaseDatabase.instance
-                  .ref('seller_sphere/${widget.shopUid}/orders'),
-              onScanQrMatch: (String orderId) {},
-            ),
-            SalesBody(
-              productsRef: _productsRef,
-              scannedBarcode: _lastScannedBarcode,
-            ),
-          ],
-        ),
+    final theme = Theme.of(context);
+    return Scaffold(
+      key: scaffoldKey,
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: const InventoryAppBar(),
+      drawer: const SideMenu(selectedRoute: MenuRoute.account),
+      endDrawer: const SettingScreen(),
+      body: InventoryBody(
+        onSaveProduct: (Product productData) async {},
+        onDeleteProduct: (String productName) async {},
+        productsRef: null as dynamic,
       ),
     );
   }
