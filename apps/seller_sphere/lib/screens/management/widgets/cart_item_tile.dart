@@ -3,12 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-/// Representasi item dalam keranjang belanja.
-class CartItem {
-  final Product product;
-  int quantity;
-  CartItem({required this.product, required this.quantity});
-}
 /// Widget untuk menampilkan satu item dalam keranjang belanja kasir.
 class CartItemTile extends StatelessWidget {
   final CartItem cartItem;

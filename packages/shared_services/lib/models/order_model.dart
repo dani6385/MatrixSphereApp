@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -76,6 +75,8 @@ class Order {
     required this.items,
     required this.totalAmount,
     required this.status,
+    required String id,
+    required String paymentMethod,
   });
 
   /// Factory constructor untuk membuat instance Order dari Map (data RTDB).
@@ -91,7 +92,8 @@ class Order {
           .map((item) => OrderItem.fromMap(item as Map<String, dynamic>))
           .toList(),
       totalAmount: (data['totalAmount'] as num).toDouble(),
-      status: OrderStatus.fromString(data['status'] as String),
+      status: OrderStatus.fromString(data['status'] as String), id: '',
+      paymentMethod: '',
     );
   }
 
@@ -101,7 +103,8 @@ class Order {
       'customerName': customerName,
       'customerEmail': customerEmail,
       'customerPhone': customerPhone,
-      'orderDate': orderDate.toIso8601String(), // Menyimpan tanggal sebagai string
+      'orderDate':
+          orderDate.toIso8601String(), // Menyimpan tanggal sebagai string
       'items': items.map((item) => item.toMap()).toList(),
       'totalAmount': totalAmount,
       'status': status.name,

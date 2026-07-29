@@ -15,6 +15,7 @@ class CashierBody extends StatefulWidget {
 }
 
 class _CashierBodyState extends State<CashierBody> {
+  final FirebaseRtdbService _rtdbService = FirebaseRtdbService();
   final List<CartItem> _cartItems = [];
 
   double get _totalAmount => _cartItems.fold(
@@ -27,7 +28,8 @@ class _CashierBodyState extends State<CashierBody> {
 
       // Cek stok sebelum menambahkan
       if (product.stock <= 0) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Stok ${product.name} habis!')));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Stok ${product.name} habis!')));
         return;
       }
       if (index != -1 && _cartItems[index].quantity < product.stock) {
@@ -41,7 +43,8 @@ class _CashierBodyState extends State<CashierBody> {
   void _updateQuantity(int index, int newQuantity) {
     final product = _cartItems[index].product;
     if (newQuantity > product.stock) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Stok ${product.name} tidak mencukupi.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Stok ${product.name} tidak mencukupi.')));
       return;
     }
 
@@ -68,26 +71,69 @@ class _CashierBodyState extends State<CashierBody> {
     }
   }
 
-
-  void _processPayment(String method) {
+  void _processPayment(String paymentMethod) {
     if (_cartItems.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Keranjang masih kosong!')),
       );
       return;
     }
-    // Implementasi logika pembayaran (simpan transaksi, update stok, dll)
+    _executeTransaction(paymentMethod);
+  }
+
+  Future<void> _executeTransaction(String paymentMethod) async {
+    // Tampilkan dialog loading
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => const Center(child: CircularProgressIndicator()),
+    );
+
+    // 1. Buat objek Order
+    final newOrder = Order(
+      id: '', // ID akan digenerate oleh Firebase push()
+      orderDate: DateTime.now(),
+      totalAmount: _totalAmount,
+      paymentMethod: paymentMethod,
+      status: OrderStatus.completed, // Use the enum value
+      items: _cartItems
+          .map((cartItem) => OrderItem(
+                productId: cartItem.product.id,
+                productName: cartItem.product.name,
+                price: cartItem.product.sellingPrice,
+                quantity: cartItem.quantity,
+              ))
+          .toList(),
+      orderId: '', customerName: '', customerEmail: '', customerPhone: '',
+    );
+
+    // 2. Simpan order dan update stok
+    final success = await _rtdbService.createPosOrderAndUpdateStock(
+      order: newOrder,
+      cartItems: _cartItems,
+    );
+
+    if (!mounted) return;
+
+    // Tutup dialog loading
+    Navigator.of(context).pop();
+
+    // 3. Tampilkan hasil transaksi
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Pembayaran Berhasil'),
-        content: Text(
-            'Transaksi dengan metode $method sebesar Rp ${_totalAmount.toStringAsFixed(0)} telah diproses.'),
+        title: Text(success ? 'Pembayaran Berhasil' : 'Transaksi Gagal'),
+        content: Text(success
+            ? 'Transaksi sebesar ${NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ', decimalDigits: 0).format(_totalAmount)} telah diproses.'
+            : 'Gagal memproses transaksi. Stok mungkin tidak mencukupi atau terjadi masalah koneksi.'),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
-              setState(() => _cartItems.clear()); // Kosongkan keranjang
+              if (success) {
+                setState(() =>
+                    _cartItems.clear()); // Kosongkan keranjang jika berhasil
+              }
             },
             child: const Text('OK'),
           ),
