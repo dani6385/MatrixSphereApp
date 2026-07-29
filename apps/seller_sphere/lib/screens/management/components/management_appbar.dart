@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/screens/management/product/product_form_screen.dart';
+
 
 class ManagementAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ManagementAppBar({super.key});
@@ -20,13 +20,6 @@ class ManagementAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       // Tombol untuk membuka laci kanan (endDrawer)
       actions: [
-        IconButton(
-          icon: const Icon(Icons.add_circle_outline),
-          tooltip: 'Tambah Produk Baru',
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductFormScreen()));
-          },
-        ),
         IconButton(
           icon: const Icon(Icons.tune_rounded),
           tooltip: 'Buka Filter atau Pengaturan',

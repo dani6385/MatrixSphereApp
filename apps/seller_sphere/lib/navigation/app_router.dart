@@ -89,6 +89,16 @@ final List<StatefulShellBranch> appShellBranches = <StatefulShellBranch>[
       ),
     ],
   ),
+  StatefulShellBranch(
+    routes: [
+      GoRoute( // path: '/productform'
+        path: AppRoutes.productForm,
+        pageBuilder: (context, state) => FadeTransitionPage(
+          child: const ProductFormScreen(),
+        ),
+      ),
+    ],
+  ),
 ];
 
 /// The main router configuration for the application.

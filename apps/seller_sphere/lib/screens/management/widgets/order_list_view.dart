@@ -11,6 +11,15 @@ class OrderListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Jika tidak ada pesanan, tampilkan pesan di tengah.
+    if (orders.isEmpty) {
+      return const Center(
+        child: Text(
+          'Belum ada pesanan.',
+          style: TextStyle(fontSize: 16, color: Colors.grey),
+        ),
+      );
+    }
     // Mengurutkan pesanan dari yang terbaru secara aman dengan membuat salinan list
     final sortedOrders = List<Order>.from(orders)..sort((a, b) => b.orderDate.compareTo(a.orderDate));
 
