@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:seller_sphere/navigation/app_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+import 'app_routes.dart';
+
 import 'package:shared_ui/shared_ui.dart';
 
 /// A wrapper widget that configures and displays the [SharedBottomNavBar]

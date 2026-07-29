@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 
 class ManagementAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -12,10 +13,11 @@ class ManagementAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       // Tombol untuk membuka laci kiri (drawer)
       leading: IconButton(
-        icon: const Icon(Icons.menu_rounded),
-        tooltip: 'Buka Menu',
+        icon: const Icon(Icons.chat),
+        tooltip: 'Chat',
         onPressed: () {
-          Scaffold.of(context).openDrawer();
+          // Gunakan GoRouter untuk navigasi
+          context.go('/chat');
         },
       ),
       // Tombol untuk membuka laci kanan (endDrawer)
