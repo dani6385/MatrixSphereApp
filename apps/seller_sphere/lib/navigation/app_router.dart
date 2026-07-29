@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
-
+import 'package:seller_sphere/navigation/bottom_nav_bar.dart';
 
 import 'app_routes.dart';
 
@@ -39,9 +39,15 @@ final GoRouter appRouter = GoRouter(
   routes: <RouteBase>[
     // 3. Gunakan StatefulShellRoute untuk halaman dengan BottomNavBar
     StatefulShellRoute.indexedStack(
-      // Cukup kembalikan navigationShell. Scaffold akan dibuat oleh halaman itu sendiri.
-      // BottomNavBar akan ditambahkan di dalam Scaffold halaman.
-      builder: (context, state, navigationShell) => navigationShell,
+      builder: (context, state, navigationShell) {
+        return Scaffold(
+          body: navigationShell,
+          bottomNavigationBar: BottomNavBar(
+            currentIndex: navigationShell.currentIndex,
+            onTap: (index) => navigationShell.goBranch(index),
+          ),
+        );
+      },
       branches: appShellBranches,
     ),
 
