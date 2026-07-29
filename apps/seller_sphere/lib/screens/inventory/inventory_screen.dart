@@ -3,7 +3,7 @@ import 'package:shared_services/shared_services.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'widgets/inventory_app_bar.dart';
-import 'widgets/inventory_body.dart';
+import 'widgets/order_management.dart';
 import 'widgets/inventory_dialogs.dart';
 import 'widgets/scanner_screen.dart';
 import 'widgets/sales_body.dart'; // Impor SalesBody yang baru dipisah
@@ -58,25 +58,6 @@ class _InventoryScreenState extends State<InventoryScreen>
     );
   }
 
-  Future<void> _deleteProduct(String productName) async {
-    try {
-      final success =
-          await _rtdbService.deleteData('${_productsRef.path}/$productName');
-
-      if (!mounted || !success) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Produk berhasil dihapus!')),
-      );
-    } catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Gagal menghapus produk: $e')),
-      );
-    }
-  }
-
   void _showProductFormDialog({Product? product}) {
     showProductFormModal(
         context: context, product: product, onSaveCallback: _handleSaveProduct);
@@ -127,13 +108,41 @@ class _InventoryScreenState extends State<InventoryScreen>
           onAddProduct: _showProductFormDialog,
           currentTabIndex: _tabController.index,
         ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: const [
+              DrawerHeader(
+                decoration: BoxDecoration(color: Colors.blue),
+                child: Text('Menu Utama (Laci Kiri)',
+                    style: TextStyle(color: Colors.white, fontSize: 18)),
+              ),
+              ListTile(title: Text('Profil Toko')),
+              ListTile(title: Text('Pengaturan')),
+            ],
+          ),
+        ),
+        endDrawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: const [
+              DrawerHeader(
+                decoration: BoxDecoration(color: Colors.teal),
+                child: Text('Panel Samping (Laci Kanan)',
+                    style: TextStyle(color: Colors.white, fontSize: 18)),
+              ),
+              ListTile(title: Text('Filter Produk')),
+              ListTile(title: Text('Bantuan')),
+            ],
+          ),
+        ),
         body: TabBarView(
           controller: _tabController,
           children: [
-            InventoryBody(
-              productsRef: _productsRef,
-              onSaveProduct: _handleSaveProduct,
-              onDeleteProduct: _deleteProduct,
+            OrderManagement(
+              ordersRef: FirebaseDatabase.instance
+                  .ref('seller_sphere/${widget.shopUid}/orders'),
+              onScanQrMatch: (String orderId) {},
             ),
             SalesBody(
               productsRef: _productsRef,
