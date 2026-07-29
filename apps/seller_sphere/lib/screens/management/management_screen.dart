@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'components/management_appbar.dart'; // Impor AppBar Anda
+import 'components/management_body.dart';
 
 class ManagementScreen extends StatelessWidget {
   const ManagementScreen({super.key});
@@ -54,9 +55,7 @@ class ManagementScreen extends StatelessWidget {
       ),
 
       // Isi dari halaman Anda
-      body: const Center(
-        child: Text('Konten Halaman Management'),
-      ),
+      body: const ManagementBody(),
     );
   }
 }
