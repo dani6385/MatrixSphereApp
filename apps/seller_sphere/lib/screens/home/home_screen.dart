@@ -16,6 +16,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: const HomeAppBar(actions: [],),
+      drawerEnableOpenDragGesture: false,
       drawer: SideMenu(
         // 1. Definisikan Header kustom untuk Seller Sphere
         header: const DrawerHeader(
@@ -60,6 +61,7 @@ class HomeScreen extends StatelessWidget {
           // ... item menu lainnya
         ], selectedRoute: null,
       ),
+      endDrawerEnableOpenDragGesture: false,
       endDrawer: const SideMenu(
         // 1. Definisikan Header kustom untuk Seller Sphere
         header: DrawerHeader(

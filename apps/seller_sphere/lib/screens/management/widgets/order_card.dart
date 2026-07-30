@@ -51,6 +51,16 @@ class OrderCard extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               Text('Pemesan: ${order.customerName}', style: textTheme.bodyMedium),
               const SizedBox(height: AppSpacing.xs),
+              // PERBAIKAN: Tambahkan informasi jika tidak ada item dalam pesanan.
+              if (order.items.isEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
+                  child: Text(
+                    '(Tidak ada item produk)',
+                    style: textTheme.bodySmall
+                        ?.copyWith(fontStyle: FontStyle.italic, color: kError),
+                  ),
+                ),
               Text(formattedDate, style: textTheme.bodySmall),
               const Divider(height: AppSpacing.lg),
               Row(

@@ -13,15 +13,35 @@ class OrderListView extends StatelessWidget {
   Widget build(BuildContext context) {
     // Jika tidak ada pesanan, tampilkan pesan di tengah.
     if (orders.isEmpty) {
-      return const Center(
-        child: Text(
-          'Belum ada pesanan.',
-          style: TextStyle(fontSize: 16, color: Colors.grey),
+      // PERBAIKAN: Berikan pesan yang lebih informatif dan menarik
+      // saat belum ada pesanan yang masuk.
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.inbox_outlined, size: 64, color: Colors.grey.shade400),
+              const SizedBox(height: 16),
+              Text('Belum ada pesanan masuk',
+                  style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 8),
+              Text(
+                'Semua pesanan baru dari pelanggan akan ditampilkan di sini.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: Colors.grey.shade600),
+              ),
+            ],
+          ),
         ),
       );
     }
     // Mengurutkan pesanan dari yang terbaru secara aman dengan membuat salinan list
-    final sortedOrders = List<Order>.from(orders)..sort((a, b) => b.orderDate.compareTo(a.orderDate));
+    final sortedOrders = List<Order>.from(orders)
+      ..sort((a, b) => b.orderDate.compareTo(a.orderDate));
 
     return ListView.builder(
       itemCount: sortedOrders.length,

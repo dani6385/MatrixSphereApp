@@ -11,6 +11,7 @@ class ManagementScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const ManagementAppBar(),
+      drawerEnableOpenDragGesture: false,
       drawer: SideMenu(
         // 1. Definisikan Header kustom untuk Seller Sphere
         header: const DrawerHeader(
@@ -55,6 +56,7 @@ class ManagementScreen extends StatelessWidget {
           // ... item menu lainnya
         ], selectedRoute: null,
       ),
+      endDrawerEnableOpenDragGesture: false,
       endDrawer: SideMenu(
         // 1. Definisikan Header kustom untuk Seller Sphere
         header: const DrawerHeader(
