@@ -6,6 +6,7 @@ export 'services/image_upload_service.dart';
 export 'models/order_model.dart';
 export 'models/cart_item_model.dart';
 export 'firebase/firebase_rtdb.dart';
+export 'utils/image_compressor.dart';
 
 //export 'data/seller_sphere_models.dart';
 export 'data/shop_realtime_screen.dart';
