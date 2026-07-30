@@ -1,38 +1,80 @@
+// lib/theme/app_colors.dart (atau sesuaikan dengan path projekmu)
+
 import 'package:flutter/material.dart';
 
-// Palet Warna "Sophisticated" berdasarkan Tailwind CSS & desain modern.
+/// Palet Warna Profesional & Modern (Berbasis Design Token)
+class AppColors {
+  // ==========================================
+  // 1. WARNA MEREK UTAMA (Brand Identity)
+  // ==========================================
+  static const Color primary = Color(0xFF6366F1);     // Indigo-500 (Modern & Elegan)
+  static const Color secondary = Color(0xFF3B82F6);   // Blue-500
+  static const Color tertiary = Color(0xFF14B8A6);    // Teal-500
+  static const Color accent = Color(0xFF8B5CF6);      // Purple-500
 
-// --- Warna Merek Utama ---
-const Color kBrandPrimary = Color(0xFF6366F1); // Indigo-500
-const Color kBrandSecondary = Color(0xFF3B82F6); // Blue-500
-const Color kBrandTertiary = Color(0xFF14B8A6); // Teal-500
+  // ==========================================
+  // 2. TEMA GELAP (Professional Dark Mode)
+  // ==========================================
+  static const Color darkBackground = Color(0xFF0B0E14); // Deep slate black (Anti-silau)
+  static const Color darkSurface = Color(0xFF111622);    // Kartu, Dialog, App Bar
+  static const Color darkAppBar = Color(0xFF111622);     // Konsisten dengan surface
+  static const Color darkBorder = Color(0xFF1E293B);     // Garis batas / Divider halus
+  static const Color darkTextPrimary = Color(0xFFFFFFFF); // Teks utama putih bersih
+  static const Color darkTextSecondary = Color(0xFF94A3B8); // Teks abu-abu senada
 
-// --- Palet Tema Gelap (Sophisticated Dark) ---
-const Color kDarkAppBar = Color(0xFF111600); // App Bar
-const Color kDarkBackground = Color(0xFF0B0E14); // Deep slate black
-const Color kDarkBorder = Color(0xFF1E293B); // Divider, Border
-const Color kDarkDivider = Color(0xFF24292E); // Divider
-const Color kDarkSurface = Color(0xFF111622); // Card, App Bar, Dialog
-const Color kDarkTextPrimary = Color(0xFFFFFFFF); // Teks utama
-const Color kDarkTextSecondary = Color(0xFF94A3B8); // Teks sekunder/abu-abu
+  // ==========================================
+  // 3. TEMA TERANG (Clean Light Mode)
+  // ==========================================
+  static const Color lightBackground = Color(0xFFF8FAFC); // Ice white yang bersih
+  static const Color lightSurface = Color(0xFFFFFFFF);    // Kartu, Dialog, App Bar
+  static const Color lightAppBar = Color(0xFFFFFFFF);     // Putih bersih
+  static const Color lightBorder = Color(0xFFE2E8F0);     // Garis batas / Divider halus
+  static const Color lightTextPrimary = Color(0xFF0F172A); // Dark slate (kontras tinggi)
+  static const Color lightTextSecondary = Color(0xFF475569); // Charcoal sekunder
 
-// --- Palet Tema Terang (Bright Slate) ---
-const Color kLightAppBar = Color(0xF0F0F0F0); // App Bar
-const Color kLightBackground = Color(0xFFF8FAFC); // Latar belakang (Ice white)
-const Color kLightBorder = Color(0xFFE2E8F0); // Divider, Border
-const Color kLightDivider = Color(0xfff0f1f2); // Divider
-const Color kLightSurface = Color(0xFFFFFFFF); // Card, App Bar, Dialog
-const Color kLightTextPrimary = Color(0xFF0F172A); // Teks utama (Dark slate)
-const Color kLightTextSecondary = Color(0xFF475569); // Teks sekunder (Charcoal)
-const Color kLightText = Color(0xFFFFFFFF); // Teks terang (putih)
-const Color kError = Color(0xFFF44336);
+  // ==========================================
+  // 4. WARNA STATUS & UMPAN BALIK (Feedback)
+  // ==========================================
+  static const Color success = Color(0xFF10B981); // Emerald Green
+  static const Color warning = Color(0xFFF59E0B); // Amber / Orange
+  static const Color error = Color(0xFFEF4444);   // Red / Danger
+  static const Color info = Color(0xFF0EA5E9);    // Sky Blue
+
+  // ==========================================
+  // 5. WARNA UTILITAS
+  // ==========================================
+  static const Color transparent = Colors.transparent;
+  static const Color black = Color(0xFF000000);
+  static const Color white = Color(0xFFFFFFFF);
+}
+
 // ==========================================================================
-// == ALIAS LAMA (Untuk Kompatibilitas Mundur) ==
+// KODE KOMPATIBILITAS MUNDUR (Alias Lama)
+// Tetap dipertahankan agar tidak ada error pada kode lama yang memanggil nama ini.
 // ==========================================================================
-// Jangan gunakan ini untuk pengembangan baru. Ini hanya untuk mencegah error
-// pada kode yang sudah ada.
+const Color kBrandPrimary = AppColors.primary;
+const Color kBrandSecondary = AppColors.secondary;
+const Color kBrandTertiary = AppColors.tertiary;
 
+const Color kDarkAppBar = AppColors.darkAppBar;
+const Color kDarkBackground = AppColors.darkBackground;
+const Color kDarkBorder = AppColors.darkBorder;
+const Color kDarkDivider = AppColors.darkBorder;
+const Color kDarkSurface = AppColors.darkSurface;
+const Color kDarkTextPrimary = AppColors.darkTextPrimary;
+const Color kDarkTextSecondary = AppColors.darkTextSecondary;
 
+const Color kLightAppBar = AppColors.lightAppBar;
+const Color kLightBackground = AppColors.lightBackground;
+const Color kLightBorder = AppColors.lightBorder;
+const Color kLightDivider = AppColors.lightBorder;
+const Color kLightSurface = AppColors.lightSurface;
+const Color kLightTextPrimary = AppColors.lightTextPrimary;
+const Color kLightTextSecondary = AppColors.lightTextSecondary;
+const Color kLightText = AppColors.white;
+const Color kError = AppColors.error;
+
+// Sisa alias lama pendukung
 const Color darkBlueBackground = Color(0xFF0D1B2A);
 const Color kBlueSecondary = kBrandSecondary;
 const Color kCyanPrimary = kBrandPrimary;
@@ -50,13 +92,13 @@ const Color kTextOnLightSecondary = kLightTextSecondary;
 
 const Color kAccentBlue = Color(0xFF2979FF);
 const Color kAccentPurple = Color(0xFF7C4DFF);
-const Color kAlertRed = Color(0xFFF44336);
+const Color kAlertRed = AppColors.error;
 const Color kBrandBlack = Color(0xFF2D3238);
 const Color kBrandWhite = Color(0xFFFFFFFF);
-const Color kDarkOutline = Color(0xFF475569); // Slate-600
+const Color kDarkOutline = Color(0xFF475569);
 const Color kDarkSecondary = Colors.black12;
 const Color kElectricBlue = Color(0xFF2E5BFF);
-const Color kInfoColor = Color(0xFF0288D1); // NeonCyan
+const Color kInfoColor = AppColors.info;
 const Color kNeonBlue = Color(0xFF007AFF);
 const Color kNeonCyan = Color(0xFF00E5FF);
 const Color kPurple = Color(0xFF6A5AE0);
@@ -66,5 +108,3 @@ const Color kSoftTeal = Color(0xFF388E3C);
 const Color kTransparent = Colors.transparent;
 const Color kVividOrchid = Color(0xFFD000C8);
 const Color kWarmOrange = Color(0xFFF57C00);
-
-
