@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
       // Laci Sisi Kanan (Panel Kalkulasi / Filter Tambahan)
       endDrawer: SideMenu(
         header: const DrawerHeader(
-          decoration: BoxDecoration(color: kDarkAppBar),
+          decoration: BoxDecoration(color: kLightBackground),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
