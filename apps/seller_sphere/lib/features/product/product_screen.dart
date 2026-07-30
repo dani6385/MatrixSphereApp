@@ -108,8 +108,8 @@ class _ProductScreenState extends State<ProductScreen> {
             Text('Deskripsi Produk', style: textTheme.titleMedium),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              widget.product.description?.isNotEmpty == true
-                  ? widget.product.description!
+              widget.product.description.isNotEmpty == true
+                  ? widget.product.description
                   : 'Tidak ada deskripsi untuk produk ini.',
               style: textTheme.bodyMedium?.copyWith(color: Colors.grey.shade700),
             ),

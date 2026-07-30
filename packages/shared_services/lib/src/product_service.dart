@@ -26,7 +26,7 @@ class ProductService {
       }
     });
   }
-
+  
   /// Menambahkan produk baru ke database.
   /// Firebase akan secara otomatis membuat ID unik.
   Future<void> addProduct(Product product) {

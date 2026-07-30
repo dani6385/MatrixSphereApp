@@ -1,3 +1,5 @@
+// lib/screens/home_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
@@ -11,8 +13,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const HomeAppBar(),
+
+      // Menonaktifkan gestur geser layar dari tepi
+      drawerEnableOpenDragGesture: false,
+
+      // Laci Sisi Kiri (Menu Utama Aplikasi Seller Sphere)
       drawer: SideMenu(
-        // 1. Definisikan Header kustom untuk Seller Sphere
         header: const DrawerHeader(
           decoration: BoxDecoration(color: kDarkAppBar),
           child: Column(
@@ -32,38 +38,40 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        // 2. Definisikan item menu dan logikanya
+        // Menambahkan item menu untuk laci kiri
         items: [
           SideMenuItem(
-            title: 'Product',
-            icon: Icons.store,
-            isSelected: true, // Ganti dengan logika state Home Anda
+            title: 'Beranda',
+            icon: Icons.home,
+            isSelected: true,
             onTap: () {
-              Navigator.of(context).pop(); // Tutup drawer
-              context.go('/product'); // Lakukan navigasi
+              Navigator.of(context).pop();
+              context.go('/home');
             },
           ),
           SideMenuItem(
-            title: 'Approval',
-            icon: Icons.playlist_add_check,
+            title: 'Inventaris',
+            icon: Icons.inventory_2,
             isSelected: false,
             onTap: () {
               Navigator.of(context).pop();
-              context.go('/approval');
+              context.go('/inventory');
             },
           ),
-          // ... item menu lainnya
-        ], selectedRoute: null,
+        ],
+        selectedRoute: '/home',
       ),
+
+      endDrawerEnableOpenDragGesture: false,
+      // Laci Sisi Kanan (Panel Kalkulasi / Filter Tambahan)
       endDrawer: SideMenu(
-        // 1. Definisikan Header kustom untuk Seller Sphere
         header: const DrawerHeader(
           decoration: BoxDecoration(color: kDarkAppBar),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.storefront, color: kBrandPrimary, size: 48),
+              Icon(Icons.calculate, color: kBrandPrimary, size: 48),
               SizedBox(height: AppSpacing.sm),
               Text(
                 'Kalkulasi',
@@ -76,15 +84,15 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
         ),
-        // 2. Definisikan item menu dan logikanya
+        // Menambahkan item menu untuk laci kanan
         items: [
           SideMenuItem(
             title: 'Edit',
             icon: Icons.store,
-            isSelected: true, // Ganti dengan logika state Home Anda
+            isSelected: false,
             onTap: () {
-              Navigator.of(context).pop(); // Tutup drawer
-              context.go('/product'); // Lakukan navigasi
+              Navigator.of(context).pop();
+              context.go('/product');
             },
           ),
           SideMenuItem(
@@ -96,10 +104,12 @@ class HomeScreen extends StatelessWidget {
               context.go('/approval');
             },
           ),
-          // ... item menu lainnya
-        ], selectedRoute: null,
+        ],
+        selectedRoute: null,
       ),
-      body: const HomeBody(), // ... body
+
+      // Isi Utama Halaman Beranda
+      body: const HomeBody(),
     );
   }
 }

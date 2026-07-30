@@ -9,6 +9,15 @@ import 'cart_item_tile.dart';
 import 'product_selection_dialog.dart';
 import 'cashier_bottom_panel.dart'; // Impor panel bawah
 
+// Enum untuk opsi pengurutan produk
+enum ProductSortOption {
+  none, // Default, tidak ada pengurutan khusus
+  mostSold, // Terlaris (membutuhkan data penjualan)
+  priceLowToHigh, // Harga Terendah
+  priceHighToLow, // Harga Tertinggi
+  nameAsc, // A-Z
+  nameDesc, // Z-A
+}
 /// Widget untuk fitur kasir penjualan langsung.
 class CashierBody extends StatefulWidget {
   const CashierBody({super.key});
@@ -23,6 +32,7 @@ class _CashierBodyState extends State<CashierBody> {
   List<Product> _allProducts = [];
   List<Product> _filteredProducts = [];
   final TextEditingController _searchController = TextEditingController();
+  ProductSortOption _currentSortOption = ProductSortOption.none; // Opsi pengurutan default
 
   double get _totalAmount => _cartItems.fold(
       0, (sum, item) => sum + (item.product.sellingPrice * item.quantity));
@@ -30,8 +40,8 @@ class _CashierBodyState extends State<CashierBody> {
   @override
   void initState() {
     super.initState();
-    _fetchProducts();
-    _searchController.addListener(_filterProducts);
+    _fetchProducts(); // Memulai pengambilan produk
+    _searchController.addListener(_applyFilterAndSort); // Mendengarkan perubahan pencarian
   }
 
   @override
@@ -44,7 +54,7 @@ class _CashierBodyState extends State<CashierBody> {
     final products = await _productService.getProducts();
     setState(() {
       _allProducts = products;
-      _filteredProducts = products;
+      _applyFilterAndSort(); // Terapkan filter dan pengurutan awal setelah produk diambil
     });
   }
 
@@ -85,15 +95,50 @@ class _CashierBodyState extends State<CashierBody> {
     });
   }
 
-  void _filterProducts() {
+  // Method baru untuk menerapkan filter DAN pengurutan
+  void _applyFilterAndSort() {
     final query = _searchController.text.toLowerCase();
     setState(() {
+      // 1. Terapkan filter berdasarkan query pencarian
       _filteredProducts = _allProducts.where((product) {
         final nameMatch = product.name.toLowerCase().contains(query);
         final skuMatch = product.sku?.toLowerCase().contains(query) ?? false;
         return nameMatch || skuMatch;
       }).toList();
+
+      // 2. Terapkan pengurutan setelah filtering
+      switch (_currentSortOption) {
+        case ProductSortOption.none:
+          // Tidak ada pengurutan khusus, biarkan sesuai hasil filter
+          break;
+        case ProductSortOption.mostSold:
+          // Urutkan berdasarkan soldCount (terbanyak ke terendah)
+          _filteredProducts.sort((a, b) => b.soldCount.compareTo(a.soldCount));
+          break;
+        case ProductSortOption.priceLowToHigh:
+          _filteredProducts.sort((a, b) => a.sellingPrice.compareTo(b.sellingPrice));
+          break;
+        case ProductSortOption.priceHighToLow:
+          _filteredProducts.sort((a, b) => b.sellingPrice.compareTo(a.sellingPrice));
+          break;
+        case ProductSortOption.nameAsc:
+          _filteredProducts.sort((a, b) => a.name.compareTo(b.name));
+          break;
+        case ProductSortOption.nameDesc:
+          _filteredProducts.sort((a, b) => b.name.compareTo(a.name));
+          break;
+      }
     });
+  }
+
+  // Method untuk mengubah opsi pengurutan
+  void _changeSortOption(ProductSortOption? newOption) {
+    if (newOption != null && newOption != _currentSortOption) {
+      setState(() {
+        _currentSortOption = newOption;
+        _applyFilterAndSort(); // Terapkan pengurutan baru
+      });
+    }
   }
 
   Future<void> _showProductSelection() async {
@@ -205,6 +250,42 @@ class _CashierBodyState extends State<CashierBody> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        // Dropdown untuk opsi pengurutan
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          child: DropdownButtonFormField<ProductSortOption>(
+            initialValue: _currentSortOption,
+            decoration: const InputDecoration(
+              labelText: 'Urutkan Berdasarkan',
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+            items: const [
+              DropdownMenuItem(
+                value: ProductSortOption.none,
+                child: Text('Default'),
+              ),
+              DropdownMenuItem(
+                value: ProductSortOption.mostSold,
+                child: Text('Terlaris (Membutuhkan data penjualan)'), // Menandakan placeholder
+              ),
+              DropdownMenuItem(
+                value: ProductSortOption.priceLowToHigh,
+                child: Text('Harga Terendah'),
+              ),
+              DropdownMenuItem(
+                value: ProductSortOption.priceHighToLow,
+                child: Text('Harga Tertinggi'),
+              ),
+              DropdownMenuItem(
+                value: ProductSortOption.nameAsc,
+                child: Text('Nama (A-Z)'),
+              ),
+              DropdownMenuItem(value: ProductSortOption.nameDesc, child: Text('Nama (Z-A)')),
+            ],
+            onChanged: _changeSortOption,
+          ),
+        ),
         // Daftar item di keranjang
         Expanded(
           child: _cartItems.isEmpty

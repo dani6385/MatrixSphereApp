@@ -22,6 +22,19 @@ class FirebaseRtdbService {
   /// Path ini bisa disesuaikan jika struktur database Anda berbeda.
   DatabaseReference get productsRef => _database.ref('products');
 
+  /// Melakukan operasi update multi-path atomik.
+  ///
+  /// [updates]: Map yang berisi path relatif dan nilai yang akan diupdate.
+  Future<bool> performMultiPathUpdate(Map<String, dynamic> updates) async {
+    try {
+      await _database.ref().update(updates);
+      debugPrint('Multi-path update berhasil.');
+      return true;
+    } catch (e) {
+      debugPrint('Error saat melakukan multi-path update: $e');
+      return false;
+    }
+  }
   /// Membaca data dari path tertentu di Realtime Database.
   ///
   /// [path]: Path ke data yang ingin dibaca (contoh: 'seller_sphere/toko_agan').
@@ -234,37 +247,8 @@ class FirebaseRtdbService {
         final data = Map<String, dynamic>.from(snapshot.value as Map);
         data.forEach((productName, productData) {
           if (productData is Map) {
-            products.add(Product(
-              name: productName,
-              price:productData['price'].toDouble(),
-              stock: productData['stock'] as int,
-              id: '',
-              description: '',
-              imageUrl: '',
-              sku: '',
-              purchasePrice: 0,
-              sellingPrice: 0,
-              category: '',
-              minStockThreshold: 0,
-              imageUrls: [],
-              ageRating: 0,
-            ));
-          } else if (productData is num) {
-            productData.toDouble();
-            products.add(Product(
-                name: productName,
-                price: 0,
-                stock: 0,
-                id: '',
-                description: '',
-                imageUrl: '',
-                sku: '',
-                purchasePrice: 0,
-                sellingPrice: 0,
-                category: '',
-                minStockThreshold: 0,
-                imageUrls: [],
-                ageRating: 0));
+            // Use Product.fromMap to correctly parse all fields, including the new soldCount
+            products.add(Product.fromMap(Map<String, dynamic>.from(productData), productName));
           }
         });
       }
@@ -354,10 +338,13 @@ class FirebaseRtdbService {
       final orderId = newOrderRef.key!;
 
       // Siapkan data update untuk stok
-      final Map<String, dynamic> stockUpdates = {};
+      final Map<String, dynamic> productUpdates = {};
       for (var item in cartItems) {
         // Path ke field stok produk dan nilai stok baru
-        stockUpdates['/products/${item.product.id}/stock'] =
+        productUpdates['/products/${item.product.id}/stock'] =
+            ServerValue.increment(-item.quantity);
+        // Path ke field soldCount produk dan nilai soldCount baru
+        productUpdates['/products/${item.product.id}/soldCount'] =
             ServerValue.increment(-item.quantity);
       }
 
@@ -367,8 +354,8 @@ class FirebaseRtdbService {
       };
 
       // Gabungkan semua update menjadi satu operasi atomik
-      final Map<String, dynamic> updates = {}
-        ..addAll(stockUpdates)
+      final Map<String, dynamic> updates = {} // Renamed from stockUpdates to productUpdates
+        ..addAll(productUpdates)
         ..addAll(orderUpdate);
 
       // Jalankan multi-path update
