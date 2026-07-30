@@ -56,7 +56,7 @@ class SharedBottomNavBar extends StatelessWidget {
           color: const Color(0xFF1E1E2C),
           buttonBackgroundColor: const Color(0xFF6C63FF),
           backgroundColor: Colors.transparent, // Latar belakang di balik kurva
-          animationCurve: Curves.easeInOutCubic,
+          animationCurve: Curves.easeIn,
           animationDuration: const Duration(milliseconds: 450),
         ),
       ),
