@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
 
 
-import '../widgets/cashier_body.dart';
+import 'cashier_body.dart';
 import '../widgets/order_list_view.dart';
 
 class ManagementBody extends StatefulWidget {
