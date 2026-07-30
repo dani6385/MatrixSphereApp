@@ -44,7 +44,7 @@ class SharedBottomNavBar extends StatelessWidget {
           items: items,
           onTap: onTap,
           // Sentuhan warna kekinian: Latar bar menggunakan nuansa gelap modern (Dark Slate / Charcoal)
-          color: const Color(0xFF1E1E2C), 
+          //color: const Color(0xFF1E1E2C), 
           // Tombol aktif diberikan aksen warna cerah bernuansa neon modern (Electric Indigo / Vibrant Violet)
           buttonBackgroundColor: const Color(0xFF6C63FF), 
           // Area luar transparan agar lekukan clipper terlihat rapi
