@@ -58,4 +58,60 @@ class ProductService {
   Future<String> uploadImageToImgBB({required String imagePath}) async {
     throw UnimplementedError('uploadImageToImgBB not yet implemented');
   }
+  /// Membuat pesanan baru ke database Firebase pada node 'orders'
+  /// Membuat pesanan baru ke database Firebase pada node 'orders'
+  Future<String?> createOrder(Order order) async {
+    try {
+      final DatabaseReference ordersRef =
+          FirebaseDatabase.instance.ref().child('orders');
+      
+      // 1. Buat referensi key unik baru untuk order
+      final newOrderRef = ordersRef.push();
+      final String newOrderId = newOrderRef.key ?? '';
+
+      // 2. Buat instance Order baru dengan menyertakan ID tanpa memanggil copyWith
+      final orderWithId = Order(
+        id: newOrderId,
+        orderId: newOrderId,
+        orderDate: order.orderDate,
+        totalAmount: order.totalAmount, // Keep totalAmount
+        paymentMethod: order.paymentMethod, // Keep paymentMethod
+        status: order.status,
+        items: order.items,
+        customerName: order.customerName,
+        customerEmail: order.customerEmail,
+        customerPhone: order.customerPhone,
+      );
+
+      // 3. Simpan ke database Firebase
+      await newOrderRef.set(orderWithId.toMap());
+
+      return newOrderId; // Mengembalikan ID pesanan jika berhasil
+    } catch (e) {
+      print('Gagal membuat order: $e');
+      return null;
+    }
+  }
+
+  /// Memperbarui stok produk berdasarkan item yang dibeli di keranjang
+  Future<bool> updateStockForOrder(List<CartItem> cartItems) async {
+    try {
+      for (var cartItem in cartItems) {
+        final productId = cartItem.product.id;
+        final int currentStock = cartItem.product.stock;
+        final int purchasedQty = cartItem.quantity;
+        
+        final int updatedStock = currentStock - purchasedQty;
+
+        // Update stok produk di database
+        await _productsRef.child(productId).update({
+          'stock': updatedStock >= 0 ? updatedStock : 0,
+        });
+      }
+      return true;
+    } catch (e) {
+      print('Gagal memperbarui stok: $e');
+      return false;
+    }
+  }
 }

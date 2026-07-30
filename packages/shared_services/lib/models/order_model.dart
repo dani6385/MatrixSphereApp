@@ -97,6 +97,8 @@ class Order {
     );
   }
 
+  String get paymentMethod => '';
+
   /// Mengonversi instance Order menjadi Map untuk disimpan di RTDB.
   Map<String, dynamic> toMap() {
     return {

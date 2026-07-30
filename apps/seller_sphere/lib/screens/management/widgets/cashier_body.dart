@@ -1,10 +1,13 @@
+// lib/screens/management/cashier_body.dart
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:seller_sphere/screens/management/widgets/scanner_screen.dart';
 import 'package:shared_services/shared_services.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 import 'cart_item_tile.dart';
 import 'product_selection_dialog.dart';
+import 'cashier_bottom_panel.dart'; // Impor panel bawah
 
 /// Widget untuk fitur kasir penjualan langsung.
 class CashierBody extends StatefulWidget {
@@ -15,18 +18,41 @@ class CashierBody extends StatefulWidget {
 }
 
 class _CashierBodyState extends State<CashierBody> {
-  final FirebaseRtdbService _rtdbService = FirebaseRtdbService();
+  final ProductService _productService = ProductService();
   final List<CartItem> _cartItems = [];
+  List<Product> _allProducts = [];
+  List<Product> _filteredProducts = [];
+  final TextEditingController _searchController = TextEditingController();
 
   double get _totalAmount => _cartItems.fold(
       0, (sum, item) => sum + (item.product.sellingPrice * item.quantity));
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProducts();
+    _searchController.addListener(_filterProducts);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchProducts() async {
+    final products = await _productService.getProducts();
+    setState(() {
+      _allProducts = products;
+      _filteredProducts = products;
+    });
+  }
 
   void _addProductToCart(Product product) {
     setState(() {
       final index =
           _cartItems.indexWhere((item) => item.product.id == product.id);
 
-      // Cek stok sebelum menambahkan
       if (product.stock <= 0) {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Stok ${product.name} habis!')));
@@ -34,7 +60,7 @@ class _CashierBodyState extends State<CashierBody> {
       }
       if (index != -1 && _cartItems[index].quantity < product.stock) {
         _cartItems[index].quantity++;
-      } else {
+      } else if (index == -1) {
         _cartItems.add(CartItem(product: product, quantity: 1));
       }
     });
@@ -59,15 +85,47 @@ class _CashierBodyState extends State<CashierBody> {
     });
   }
 
+  void _filterProducts() {
+    final query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredProducts = _allProducts.where((product) {
+        final nameMatch = product.name.toLowerCase().contains(query);
+        final skuMatch = product.sku?.toLowerCase().contains(query) ?? false;
+        return nameMatch || skuMatch;
+      }).toList();
+    });
+  }
+
   Future<void> _showProductSelection() async {
-    // Menampilkan dialog dan menunggu hasilnya (produk yang dipilih)
     final selectedProduct = await showDialog<Product>(
       context: context,
-      builder: (context) => const ProductSelectionDialog(),
+      builder: (context) => ProductSelectionDialog(
+        products: _filteredProducts,
+      ),
     );
 
     if (selectedProduct != null) {
       _addProductToCart(selectedProduct);
+    }
+  }
+
+  Future<void> _scanBarcode() async {
+    final String? barcode = await Navigator.of(context).push<String>(
+      MaterialPageRoute(builder: (context) => const ScannerScreen()),
+    );
+
+    if (!mounted) return;
+
+    if (barcode != null) {
+      final productIndex =
+          _allProducts.indexWhere((p) => p.sku == barcode);
+
+      if (productIndex != -1) {
+        _addProductToCart(_allProducts[productIndex]);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Produk dengan SKU "$barcode" tidak ditemukan.')));
+      }
     }
   }
 
@@ -82,20 +140,18 @@ class _CashierBodyState extends State<CashierBody> {
   }
 
   Future<void> _executeTransaction(String paymentMethod) async {
-    // Tampilkan dialog loading
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => const Center(child: CircularProgressIndicator()),
     );
 
-    // 1. Buat objek Order
     final newOrder = Order(
-      id: '', // ID akan digenerate oleh Firebase push()
+      id: '',
       orderDate: DateTime.now(),
       totalAmount: _totalAmount,
       paymentMethod: paymentMethod,
-      status: OrderStatus.completed, // Use the enum value
+      status: OrderStatus.completed,
       items: _cartItems
           .map((cartItem) => OrderItem(
                 productId: cartItem.product.id,
@@ -107,18 +163,17 @@ class _CashierBodyState extends State<CashierBody> {
       orderId: '', customerName: '', customerEmail: '', customerPhone: '',
     );
 
-    // 2. Simpan order dan update stok
-    final success = await _rtdbService.createPosOrderAndUpdateStock(
-      order: newOrder,
-      cartItems: _cartItems,
-    );
+    final String? newOrderId = await _productService.createOrder(newOrder);
+    bool success = false;
+
+    if (newOrderId != null) {
+      success = await _productService.updateStockForOrder(_cartItems);
+    }
 
     if (!mounted) return;
 
-    // Tutup dialog loading
     Navigator.of(context).pop();
 
-    // 3. Tampilkan hasil transaksi
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -131,8 +186,7 @@ class _CashierBodyState extends State<CashierBody> {
             onPressed: () {
               Navigator.of(ctx).pop();
               if (success) {
-                setState(() =>
-                    _cartItems.clear()); // Kosongkan keranjang jika berhasil
+                setState(() => _cartItems.clear());
               }
             },
             child: const Text('OK'),
@@ -149,13 +203,17 @@ class _CashierBodyState extends State<CashierBody> {
             .format(_totalAmount);
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Daftar item di keranjang
         Expanded(
           child: _cartItems.isEmpty
               ? const Center(
-                  child:
-                      Text('Keranjang kosong. Tambahkan produk untuk memulai.'))
+                  child: Text(
+                    'Keranjang kosong.\nCari atau pindai produk untuk memulai.',
+                    textAlign: TextAlign.center,
+                  ),
+                )
               : ListView.builder(
                   itemCount: _cartItems.length,
                   itemBuilder: (context, index) {
@@ -169,53 +227,13 @@ class _CashierBodyState extends State<CashierBody> {
                   },
                 ),
         ),
-        // Bagian Total dan Pembayaran
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.md),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 5,
-                  offset: const Offset(0, -2)),
-            ],
-          ),
-          child: Column(
-            children: [
-              ElevatedButton.icon(
-                onPressed: _showProductSelection,
-                icon: const Icon(Icons.add_shopping_cart),
-                label: const Text('Tambah Produk'),
-                style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 48)),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Total', style: TextStyle(fontSize: 18)),
-                  Text(formattedTotal,
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Row(
-                children: [
-                  Expanded(
-                      child: ElevatedButton(
-                          onPressed: () => _processPayment('Tunai'),
-                          child: const Text('TUNAI'))),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(
-                      child: ElevatedButton(
-                          onPressed: () => _processPayment('Non-Tunai'),
-                          child: const Text('NON-TUNAI'))),
-                ],
-              ),
-            ],
-          ),
+        // Memanggil widget panel bawah yang telah dipisahkan
+        CashierBottomPanel(
+          searchController: _searchController,
+          onSearchTap: _showProductSelection,
+          onScanBarcode: _scanBarcode,
+          formattedTotal: formattedTotal,
+          onProcessPayment: _processPayment,
         ),
       ],
     );

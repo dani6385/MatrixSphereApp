@@ -4,7 +4,7 @@ import 'package:shared_services/shared_services.dart';
 
 /// Dialog untuk menampilkan dan memilih produk dari Firebase RTDB.
 class ProductSelectionDialog extends StatelessWidget {
-  const ProductSelectionDialog({super.key});
+  const ProductSelectionDialog({super.key, required List<Product> products});
 
   @override
   Widget build(BuildContext context) {
