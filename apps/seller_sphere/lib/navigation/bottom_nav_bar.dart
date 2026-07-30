@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
+//import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:seller_sphere/navigation/app_router.dart';
 import 'app_routes.dart';
 
@@ -48,14 +48,12 @@ class BottomNavBar extends StatelessWidget {
       currentIndex: currentIndex,
       onTap: onTap,
       // Membuat daftar GButton secara dinamis berdasarkan rute aplikasi
-      tabs: List.generate(appShellBranches.length, (index) {
+      tabs: List.generate(appShellBranches.length, (index) { 
         final isSelected = index == currentIndex;
         final routePath = (appShellBranches[index].routes.first as dynamic).path;
         final icons = tabIcons[routePath]!;
-        return GButton(
-          icon: isSelected ? icons.activeIcon : icons.icon,
-          text: '', // Teks dikosongkan sesuai desain
-          iconSize: 26,
+        return BottomNavigationBarItem(
+          icon: Icon(isSelected ? icons.activeIcon : icons.icon),
         ); 
       }), selectedIndex: currentIndex,
     );

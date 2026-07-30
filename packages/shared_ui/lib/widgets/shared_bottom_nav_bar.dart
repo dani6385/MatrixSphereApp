@@ -1,8 +1,7 @@
 // lib/widgets/shared_bottom_nav_bar.dart
 
 import 'package:flutter/material.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:shared_ui/shared_ui.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 /// A shared, reusable bottom navigation bar with a custom concave (downward-curving) shape
 /// and a modern aesthetic color palette.
@@ -23,16 +22,16 @@ class SharedBottomNavBar extends StatelessWidget {
   final int selectedIndex;
 
   /// The list of [GButton] widgets to display as tabs.
-  final List<GButton> tabs;
+  final List<BottomNavigationBarItem> tabs;
 
   @override
   Widget build(BuildContext context) {
     // Mengubah warna ikon agar lebih kontras dan elegan di tema gelap kekinian
     final items = tabs
         .map((tab) => Icon(
-              tab.icon,
-              size: 24,
-              color: Colors.white7Color ?? Colors.white70,
+              tab.icon as IconData?,
+              size: 30,
+              color: Colors.white70,
             ))
         .toList();
 
