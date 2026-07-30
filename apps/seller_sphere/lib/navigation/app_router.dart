@@ -55,12 +55,25 @@ final GoRouter appRouter = GoRouter(
     // 3. Gunakan StatefulShellRoute untuk halaman dengan BottomNavBar
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        return Scaffold(
-          body: navigationShell,
-          bottomNavigationBar: BottomNavBar(
-            currentIndex: navigationShell.currentIndex,
-            onTap: (index) => navigationShell.goBranch(index),
-          ),
+        // PopScope digunakan untuk mengintersep aksi tombol kembali dari sistem.
+        return PopScope(
+          // canPop: false berarti kita akan menangani logika pop secara manual.
+          canPop: false,
+          // onPopInvoked akan dipanggil saat tombol kembali ditekan.
+          // ignore: deprecated_member_use
+          onPopInvoked: (didPop) {
+            // Jika pop tidak terjadi (karena canPop: false), jalankan logika kita.
+            if (!didPop) {
+              // Jika kita tidak sedang di halaman utama (indeks 0), kembali ke halaman utama.
+              if (navigationShell.currentIndex != 0) {
+                navigationShell.goBranch(0);
+              }
+              // Jika kita sudah di halaman utama, tidak melakukan apa-apa,
+              // sehingga back button berikutnya (jika ditekan lagi) akan keluar dari app.
+              // Perilaku ini dikelola oleh sistem operasi.
+            }
+          },
+          child: ScaffoldWithNavBar(navigationShell: navigationShell),
         );
       },
       branches: appShellBranches,
@@ -78,3 +91,25 @@ final GoRouter appRouter = GoRouter(
     ),
   ),
 );
+
+/// Widget terpisah untuk Scaffold yang berisi BottomNavBar.
+/// Ini membantu menjaga kerapian kode di dalam builder StatefulShellRoute.
+class ScaffoldWithNavBar extends StatelessWidget {
+  final StatefulNavigationShell navigationShell;
+
+  const ScaffoldWithNavBar({
+    super.key,
+    required this.navigationShell,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: navigationShell,
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: navigationShell.currentIndex,
+        onTap: (index) => navigationShell.goBranch(index),
+      ),
+    );
+  }
+}
