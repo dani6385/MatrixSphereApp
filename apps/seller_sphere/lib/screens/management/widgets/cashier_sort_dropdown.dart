@@ -27,7 +27,7 @@ class CashierSortDropdown extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: DropdownButtonFormField<ProductSortOption>(
-        value: currentSortOption,
+        initialValue: currentSortOption,
         decoration: const InputDecoration(
           labelText: 'Urutkan Berdasarkan',
           border: OutlineInputBorder(),
