@@ -36,7 +36,7 @@ class _SellerScreenState extends State<SellerScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Laporan Keuangan'),
-        backgroundColor: kDarkAppBar,
+        backgroundColor: kLightBackground,
         elevation: 1,
       ),
       body: ListView(

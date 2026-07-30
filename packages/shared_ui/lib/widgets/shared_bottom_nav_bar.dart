@@ -46,8 +46,7 @@ class SharedBottomNavBar extends StatelessWidget {
       child: Container(
         height: 75.0, // Fixed height for the curved shape to be visible
         decoration: const BoxDecoration(
-          color: Colors
-              .transparent, // Container luar harus transparan untuk efek clip
+          color: Colors.transparent, // Container luar harus transparan untuk efek clip
         ),
         child: CurvedNavigationBar(
           index: selectedIndex,

@@ -48,29 +48,33 @@ class AppColors {
   static const Color white = Color(0xFFFFFFFF);
 }
 
-// ==========================================================================
-// KODE KOMPATIBILITAS MUNDUR (Alias Lama)
-// Tetap dipertahankan agar tidak ada error pada kode lama yang memanggil nama ini.
-// ==========================================================================
+// ==========================================
+  // 1. WARNA MEREK UTAMA (Brand Identity)
+  // ==========================================
 const Color kBrandPrimary = AppColors.primary;
 const Color kBrandSecondary = AppColors.secondary;
 const Color kBrandTertiary = AppColors.tertiary;
+const Color kAccent = AppColors.accent;  
 
-const Color kDarkAppBar = AppColors.darkAppBar;
+// ==========================================
+  // 2. TEMA GELAP (Professional Dark Mode)
+  // ==========================================
 const Color kDarkBackground = AppColors.darkBackground;
-const Color kDarkBorder = AppColors.darkBorder;
-const Color kDarkDivider = AppColors.darkBorder;
 const Color kDarkSurface = AppColors.darkSurface;
+const Color kDarkAppBar = AppColors.darkAppBar;
+const Color kDarkBorder = AppColors.darkBorder;
 const Color kDarkTextPrimary = AppColors.darkTextPrimary;
 const Color kDarkTextSecondary = AppColors.darkTextSecondary;
-
-const Color kLightAppBar = AppColors.lightAppBar;
+// ==========================================
+// 3. TEMA TERANG (Clean Light Mode)
+// ==========================================
 const Color kLightBackground = AppColors.lightBackground;
-const Color kLightBorder = AppColors.lightBorder;
-const Color kLightDivider = AppColors.lightBorder;
 const Color kLightSurface = AppColors.lightSurface;
+const Color kLightAppBar = AppColors.lightAppBar;
+const Color kLightBorder = AppColors.lightBorder;
 const Color kLightTextPrimary = AppColors.lightTextPrimary;
 const Color kLightTextSecondary = AppColors.lightTextSecondary;
+
 const Color kLightText = AppColors.white;
 const Color kError = AppColors.error;
 
@@ -108,3 +112,4 @@ const Color kSoftTeal = Color(0xFF388E3C);
 const Color kTransparent = Colors.transparent;
 const Color kVividOrchid = Color(0xFFD000C8);
 const Color kWarmOrange = Color(0xFFF57C00);
+const Color kDarkDivider = Color(0xFFF57C00);
