@@ -12,29 +12,44 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final List<StatefulShellBranch> appShellBranches = [
   // Branch 1: Home
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.home, builder: (context, state) => const HomeScreen()),
+    GoRoute(
+        path: '/',
+        builder: (context, state) =>
+            const HomeScreen()),
   ]),
   // Branch 2: Stream
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.stream, builder: (context, state) => const StreamingScreen(streamId: 'default_stream')),
+    GoRoute(
+        path: '/stream',
+        builder: (context, state) =>
+            const StreamingScreen(streamId: 'default_stream')),
   ]),
   // Branch 3: Management
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.management, builder: (context, state) => const ManagementScreen()),
+    GoRoute(
+        path: '/management',
+        builder: (context, state) =>
+            const ManagementScreen()),
   ]),
   // Branch 4: Sellers (Inventory)
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.sellers, builder: (context, state) => const SellerScreen()),
+    GoRoute(
+        path: '/sellers',
+        builder: (context, state) =>
+            const SellerScreen()),
   ]),
   // Branch 5: Attendance
   StatefulShellBranch(routes: [
-    GoRoute(path: AppRoutes.attendance, builder: (context, state) => const AttendanceScreen()),
+    GoRoute(
+        path: '/attendance',
+        builder: (context, state) =>
+            const AttendanceScreen()),
   ]),
 ];
 
 // Buat instance GoRouter
 final GoRouter appRouter = GoRouter(
-  initialLocation: AppRoutes.management, // Lokasi awal aplikasi
+  initialLocation: AppRoutes.home, // Lokasi awal aplikasi
   navigatorKey: _rootNavigatorKey,
   routes: <RouteBase>[
     // 3. Gunakan StatefulShellRoute untuk halaman dengan BottomNavBar
@@ -52,7 +67,8 @@ final GoRouter appRouter = GoRouter(
     ),
 
     // 4. Rute fullscreen (tanpa BottomNavBar)
-    GoRoute(path: AppRoutes.chat, builder: (context, state) => const ChatScreen()),
+    GoRoute(
+        path: AppRoutes.chat, builder: (context, state) => const ChatScreen()),
   ],
   // Halaman error jika rute tidak ditemukan
   errorBuilder: (context, state) => Scaffold(

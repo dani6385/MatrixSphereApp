@@ -23,11 +23,13 @@ class AppRoutes {
   static const String inventoryEdit = '/inventory/editproduct';
   static const String login = '/login';
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
+  static const String product = '/product';
+  static const String productForm = '/productForm'; // Pastikan rute Status ada
   static const String profile = '/profile';
   static const String register = '/login/register';
   static const String registerShop = '/register-shop';
+  static const String registerSeller = '/register-seller';
   static const String settings = '/settings';
   static const String splash = '/splash';
   static const String status = '/Status'; // Pastikan rute Status ada
-  static const String productForm = '/productForm'; // Pastikan rute Status ada
 }
