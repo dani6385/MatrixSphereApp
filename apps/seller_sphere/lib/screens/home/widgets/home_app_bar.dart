@@ -22,7 +22,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           HomeScreen.scaffoldKey.currentState?.openDrawer();
         },
       ),
-
       actions: [
         // --- AWAL PERUBAHAN ---
         // Menggunakan IconButton untuk navigasi langsung ke halaman chat

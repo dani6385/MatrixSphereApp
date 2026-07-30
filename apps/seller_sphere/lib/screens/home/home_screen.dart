@@ -1,12 +1,12 @@
 // lib/screens/home/home_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
+//import 'package:shared_ui/shared_ui.dart';
 
 
 import 'widgets/home_app_bar.dart';
 import 'widgets/home_body.dart';
-import 'package:seller_sphere/features/settings/setting_screen.dart';
+//import 'package:seller_sphere/features/settings/setting_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -21,8 +21,8 @@ class HomeScreen extends StatelessWidget {
       key: scaffoldKey,
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: const HomeAppBar(),
-      drawer: const SideMenu(selectedRoute: MenuRoute.account),
-      endDrawer: const SettingScreen(), 
+      //drawer: const SideMenu(selectedRoute: MenuRoute.account),
+      //endDrawer: const SettingScreen(), 
       body: const HomeBody(),
     );
   }

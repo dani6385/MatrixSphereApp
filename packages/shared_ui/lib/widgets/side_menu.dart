@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-/// Enum untuk merepresentasikan setiap item menu yang unik.
-enum MenuRoute {
-  sellers('/sellers'),
-  approval('/approval'),
-  system('/system'),
-  account('/account');
+/// Model data untuk setiap item yang akan ditampilkan di dalam [SideMenu].
+/// Ini membuat menu menjadi dinamis dan dapat dikonfigurasi dari luar.
+class SideMenuItem {
+  final String title;
+  final IconData icon;
+  final VoidCallback onTap;
+  final bool isSelected;
 
-  const MenuRoute(this.path);
-  final String path;
+  const SideMenuItem({
+    required this.title,
+    required this.icon,
+    required this.onTap,
+    this.isSelected = false,
+  });
 }
 
 /// Widget laci navigasi (drawer) yang dapat digunakan kembali di berbagai layar.
 ///
-/// Membutuhkan [selectedRoute] untuk menyorot item menu yang sedang aktif.
+/// Widget ini bersifat generik dan menerima daftar [items] dan sebuah [header]
+/// untuk ditampilkan, sehingga bisa dikonfigurasi oleh setiap aplikasi.
 class SideMenu extends StatelessWidget {
-  final MenuRoute selectedRoute;
+  final Widget header;
+  final List<SideMenuItem> items;
 
   const SideMenu({
     super.key,
-    required this.selectedRoute,
+    required this.header,
+    required this.items, required selectedRoute,
   });
 
   @override
@@ -33,79 +40,28 @@ class SideMenu extends StatelessWidget {
         backgroundColor: kDarkSurface, // Warna latar yang lebih sesuai
         child: ListView(
           padding: EdgeInsets.zero,
-          children: [
-            // Header untuk drawer
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: kDarkAppBar,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.storefront, color: kBrandPrimary, size: 48),
-                  SizedBox(height: AppSpacing.sm),
-                  Text(
-                    'Seller Sphere',
-                    style: TextStyle(
-                      color: kDarkTextPrimary,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Item menu
-            _buildMenuItem(
-              context: context,
-              icon: Icons.store,
-              title: 'Sellers',
-              route: MenuRoute.sellers,
-            ),
-            _buildMenuItem(
-              context: context,
-              icon: Icons.playlist_add_check,
-              title: 'Approval',
-              route: MenuRoute.approval,
-            ),
-            _buildMenuItem(
-              context: context,
-              icon: Icons.display_settings,
-              title: 'System',
-              route: MenuRoute.system,
-            ),
-            _buildMenuItem(
-              context: context,
-              icon: Icons.person,
-              title: 'Account',
-              route: MenuRoute.account,
-            ),
-          ],
+          children: [header, ..._buildMenuItems()],
         ),
       ),
     );
   }
 
-  /// Helper untuk membangun setiap item menu.
-  Widget _buildMenuItem({
-    required BuildContext context,
-    required IconData icon,
-    required String title,
-    required MenuRoute route,
-  }) {
-    final bool isSelected = selectedRoute == route;
-    return ListTile(
-      leading: Icon(icon, color: isSelected ? kBrandPrimary : kDarkTextSecondary),
-      title: Text(title, style: TextStyle(color: isSelected ? kBrandPrimary : kDarkTextPrimary)),
-      selected: isSelected,
-      selectedTileColor: kBrandPrimary.withOpacity(0.1),
-      onTap: () {
-        // Tutup drawer terlebih dahulu
-        Navigator.of(context).pop();
-        // Navigasi ke rute yang dipilih
-        context.go(route.path);
-      },
-    );
+  /// Membangun daftar widget ListTile dari data [items].
+  List<Widget> _buildMenuItems() {
+    return items.map((item) {
+      return ListTile(
+        leading: Icon(
+          item.icon,
+          color: item.isSelected ? kBrandPrimary : kDarkTextSecondary,
+        ),
+        title: Text(
+          item.title,
+          style: TextStyle(color: item.isSelected ? kBrandPrimary : kDarkTextPrimary),
+        ),
+        selected: item.isSelected,
+        selectedTileColor: kBrandPrimary.withOpacity(0.1),
+        onTap: item.onTap,
+      );
+    }).toList();
   }
 }
