@@ -1,7 +1,7 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 /// A shared, reusable bottom navigation bar with a custom concave (downward-curving) shape.
 ///
@@ -29,16 +29,9 @@ class SharedBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Membuat daftar ikon untuk CurvedNavigationBar.
-    // Ikon yang aktif akan menggunakan warna aksen, sedangkan yang lain berwarna netral.
+    Theme.of(context);
     final items = tabs
-        .asMap()
-        .entries
-        .map((entry) => Icon(entry.value.icon,
-            size: 26,
-            color: entry.key == selectedIndex
-                ? kDarkTextPrimary
-                : kDarkTextSecondary.withOpacity(0.8)))
+        .map((tab) => Icon(tab.icon, size: 20, color: kDarkTextPrimary))
         .toList();
 
     return ClipPath(
@@ -46,18 +39,21 @@ class SharedBottomNavBar extends StatelessWidget {
       child: Container(
         height: 75.0, // Fixed height for the curved shape to be visible
         decoration: const BoxDecoration(
-          color: Colors.transparent, // Container luar harus transparan untuk efek clip
-        ),
+            // Menggunakan const karena warna transparan
+            color: kTransparent // Membuat Container terluar transparan
+            ),
         child: CurvedNavigationBar(
           index: selectedIndex,
-          height: 60,
+          height: 50,
           items: items,
           onTap: onTap,
-          color: Colors.transparent,
-          buttonBackgroundColor: const Color(0xFF6C63FF),
-          backgroundColor: Colors.transparent, // Latar belakang di balik kurva
+          color:
+              kNeonCyan, // Membuat CurvedNavigationBar itu sendiri transparan
+          buttonBackgroundColor: kDarkDivider, // Menggunakan kBrandPrimary
+          backgroundColor: Colors
+              .transparent, // Memastikan area di belakang CurvedNavigationBar juga transparan
           animationCurve: Curves.easeIn,
-          animationDuration: const Duration(milliseconds: 450),
+          animationDuration: const Duration(milliseconds: 400),
         ),
       ),
     );

@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -21,15 +20,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.notifications_none_outlined, size: 28),
           onPressed: () => context.push(AppRoutes.notifications),
         ),
-        const Padding(
-          padding: EdgeInsets.only(right: 16.0, left: 8.0),
-          child: CircleAvatar(
-            backgroundColor: kBrandPrimary,
-            child: Text('A',
-              style: TextStyle(color: kDarkTextPrimary),
-            ),
-          ),
-        ),
+        //tambah tombol di appbar
       ],
     );
   }
