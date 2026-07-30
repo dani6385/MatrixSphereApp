@@ -26,14 +26,10 @@ class SharedBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Mengubah warna ikon agar lebih kontras dan elegan di tema gelap kekinian
-    final items = tabs
-        .map((tab) => Icon(
-              tab.icon as IconData?,
-              size: 30,
-              color: Colors.white70,
-            ))
-        .toList();
+    // PERBAIKAN: Langsung gunakan widget ikon dari `tabs`.
+    // Properti `icon` dari BottomNavigationBarItem sudah merupakan sebuah Widget.
+    // Kita tidak perlu membuat ulang Icon atau melakukan casting ke IconData.
+    final items = tabs.map((tab) => tab.icon).toList();
 
     return ClipPath(
       clipper: _BottomNavClipper(),
