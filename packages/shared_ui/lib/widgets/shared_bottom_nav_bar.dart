@@ -1,10 +1,12 @@
-// lib/widgets/shared_bottom_nav_bar.dart
-
 import 'package:flutter/material.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
-/// A shared, reusable bottom navigation bar with a custom concave (downward-curving) shape
-/// and a modern aesthetic color palette.
+/// A shared, reusable bottom navigation bar with a custom concave (downward-curving) shape.
+///
+/// This widget is designed to be generic. It receives a list of [GButton]s
+/// and does not have any knowledge of the app's specific routes.
 class SharedBottomNavBar extends StatelessWidget {
   const SharedBottomNavBar({
     super.key,
@@ -18,37 +20,43 @@ class SharedBottomNavBar extends StatelessWidget {
   final int currentIndex;
 
   /// The callback function when a tab is tapped
+  // final void Function(int) onItemTapped;.
   final void Function(int) onTap;
   final int selectedIndex;
 
   /// The list of [GButton] widgets to display as tabs.
-  final List<BottomNavigationBarItem> tabs;
+  final List<GButton> tabs;
 
   @override
   Widget build(BuildContext context) {
-    // PERBAIKAN: Langsung gunakan widget ikon dari `tabs`.
-    // Properti `icon` dari BottomNavigationBarItem sudah merupakan sebuah Widget.
-    // Kita tidak perlu membuat ulang Icon atau melakukan casting ke IconData.
-    final items = tabs.map((tab) => tab.icon).toList();
+    // Membuat daftar ikon untuk CurvedNavigationBar.
+    // Ikon yang aktif akan menggunakan warna aksen, sedangkan yang lain berwarna netral.
+    final items = tabs
+        .asMap()
+        .entries
+        .map((entry) => Icon(entry.value.icon,
+            size: 26,
+            color: entry.key == selectedIndex
+                ? kDarkTextPrimary
+                : kDarkTextSecondary.withOpacity(0.8)))
+        .toList();
 
     return ClipPath(
-      clipper: _BottomNavClipper(),
+      clipper: _BottomNavClipper(), // Custom clipper for the shape
       child: Container(
-        height: 75.0,
+        height: 75.0, // Fixed height for the curved shape to be visible
         decoration: const BoxDecoration(
-          color: Colors.transparent,
+          color: Colors
+              .transparent, // Container luar harus transparan untuk efek clip
         ),
         child: CurvedNavigationBar(
           index: selectedIndex,
           height: 60,
           items: items,
           onTap: onTap,
-          // Sentuhan warna kekinian: Latar bar menggunakan nuansa gelap modern (Dark Slate / Charcoal)
-          //color: const Color(0xFF1E1E2C), 
-          // Tombol aktif diberikan aksen warna cerah bernuansa neon modern (Electric Indigo / Vibrant Violet)
-          buttonBackgroundColor: const Color(0xFF6C63FF), 
-          // Area luar transparan agar lekukan clipper terlihat rapi
-          backgroundColor: Colors.transparent, 
+          color: const Color(0xFF1E1E2C),
+          buttonBackgroundColor: const Color(0xFF6C63FF),
+          backgroundColor: Colors.transparent, // Latar belakang di balik kurva
           animationCurve: Curves.easeInOutCubic,
           animationDuration: const Duration(milliseconds: 450),
         ),

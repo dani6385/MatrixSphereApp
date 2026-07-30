@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-//import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:seller_sphere/navigation/app_router.dart';
 import 'app_routes.dart';
 
@@ -52,9 +52,11 @@ class BottomNavBar extends StatelessWidget {
         final isSelected = index == currentIndex;
         final routePath = (appShellBranches[index].routes.first as dynamic).path;
         final icons = tabIcons[routePath]!;
-        return BottomNavigationBarItem(
-          icon: Icon(isSelected ? icons.activeIcon : icons.icon),
-        ); 
+        // PERBAIKAN: Ganti BottomNavigationBarItem menjadi GButton
+        // dan berikan IconData ke properti `icon`.
+        return GButton(
+          icon: isSelected ? icons.activeIcon : icons.icon,
+        );
       }), selectedIndex: currentIndex,
     );
   }
