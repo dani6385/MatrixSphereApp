@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_extraktor.dart';
 import 'package:seller_sphere/navigation/bottom_nav_bar.dart';
+import 'package:shared_services/shared_services.dart';
 
 import 'app_routes.dart';
 
@@ -28,8 +29,20 @@ final List<StatefulShellBranch> appShellBranches = [
   StatefulShellBranch(routes: [
     GoRoute(
         path: '/management',
-        builder: (context, state) =>
-            const ManagementScreen()),
+        builder: (context, state) => const ManagementScreen(),
+        // Daftarkan rute untuk produk sebagai sub-rute dari /management
+        routes: [
+          GoRoute(
+            path: 'products', // Path menjadi: /management/products
+            builder: (context, state) => const ProductListScreen(shopUid: 'default_shop'), // Ganti dengan UID toko yang sesuai
+            routes: [
+              GoRoute(
+                path: ':productId', // Path menjadi: /management/products/:productId
+                builder: (context, state) => ProductScreen(product: state.extra as Product),
+              ),
+            ],
+          ),
+        ]),
   ]),
   // Branch 4: Sellers (Inventory)
   StatefulShellBranch(routes: [
