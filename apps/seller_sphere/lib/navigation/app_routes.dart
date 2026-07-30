@@ -32,4 +32,5 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String splash = '/splash';
   static const String status = '/Status'; // Pastikan rute Status ada
+  static const String notifications = '/notifications';
 }

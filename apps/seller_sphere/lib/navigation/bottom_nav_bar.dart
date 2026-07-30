@@ -43,17 +43,13 @@ class BottomNavBar extends StatelessWidget {
       ),
     };
 
-    // Menggunakan widget SharedBottomNavBar dari paket shared_ui
     return SharedBottomNavBar(
       currentIndex: currentIndex,
       onTap: onTap,
-      // Membuat daftar GButton secara dinamis berdasarkan rute aplikasi
       tabs: List.generate(appShellBranches.length, (index) { 
         final isSelected = index == currentIndex;
         final routePath = (appShellBranches[index].routes.first as dynamic).path;
         final icons = tabIcons[routePath]!;
-        // PERBAIKAN: Ganti BottomNavigationBarItem menjadi GButton
-        // dan berikan IconData ke properti `icon`.
         return GButton(
           icon: isSelected ? icons.activeIcon : icons.icon,
         );
