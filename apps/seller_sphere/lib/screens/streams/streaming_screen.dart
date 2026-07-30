@@ -126,7 +126,7 @@ class _StreamingScreenState extends State<StreamingScreen> {
             Positioned.fill(
               child: Container(
                 color: Colors.black.withValues(alpha: 0.3),
-                child: const Center(child: CircularProgressIndicator(color: kLightText)),
+                child: const Center(child: CircularProgressIndicator(color: AppColors.white)),
               ),
             ),
         ],
@@ -142,7 +142,7 @@ class _StreamingScreenState extends State<StreamingScreen> {
         child: Container(
           color: Colors.black,
           child: const Center(
-            child: CircularProgressIndicator(color: kLightText),
+            child: CircularProgressIndicator(color: AppColors.white),
           ),
         ),
       );

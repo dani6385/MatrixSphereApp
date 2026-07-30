@@ -74,9 +74,15 @@ const Color kLightAppBar = AppColors.lightAppBar;
 const Color kLightBorder = AppColors.lightBorder;
 const Color kLightTextPrimary = AppColors.lightTextPrimary;
 const Color kLightTextSecondary = AppColors.lightTextSecondary;
-
-const Color kLightText = AppColors.white;
+// ==========================================
+// 4. WARNA STATUS & UMPAN BALIK (Feedback)
+// ==========================================
+const Color kSuccess = AppColors.success;
+const Color Kwarning = AppColors.warning;
 const Color kError = AppColors.error;
+const Color kInfo = AppColors.info;
+
+
 
 // Sisa alias lama pendukung
 const Color darkBlueBackground = Color(0xFF0D1B2A);
@@ -112,4 +118,4 @@ const Color kSoftTeal = Color(0xFF388E3C);
 const Color kTransparent = Colors.transparent;
 const Color kVividOrchid = Color(0xFFD000C8);
 const Color kWarmOrange = Color(0xFFF57C00);
-const Color kDarkDivider = Color(0xFFF57C00);
+const Color kDarkDivider = Color(0xFF24292E);
