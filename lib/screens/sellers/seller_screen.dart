@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 import 'widgets/menu_model.dart'; // Pastikan class di dalamnya bernama AccountMenuModal atau MenuModel
-import 'widgets/seller_app_bar.dart';
-import 'widgets/seller_body.dart';
-import '../settings/setting_screen.dart';
+import 'components/seller_app_bar.dart';
+import 'components/seller_body.dart';
+//import '../settings/setting_screen.dart';
 
 class SellerScreen extends StatelessWidget {
   const SellerScreen({super.key});
@@ -21,7 +21,7 @@ class SellerScreen extends StatelessWidget {
       backgroundColor: kBrandTertiary,
       appBar: const SellerAppBar(),
       drawer: const MenuModel(), // Sesuaikan nama kelas menu samping Anda (MenuModel atau AccountMenuModal)
-      endDrawer: const SettingScreen(), 
+      //endDrawer: const SettingScreen(), 
       body: const SellerBody(),
     );
   }
