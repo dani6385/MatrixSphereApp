@@ -23,5 +23,5 @@ export 'package:seller_sphere/features/settings/setting_screen.dart';
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 export 'package:seller_sphere/screens/home/home_screen.dart';
 export 'package:seller_sphere/screens/management/management_screen.dart';
-export 'package:seller_sphere/screens/sellers/seller_screen.dart';
+export 'package:seller_sphere/screens/sellers/widgets/seller_screen.dart';
 export 'package:seller_sphere/screens/streams/streaming_screen.dart';
