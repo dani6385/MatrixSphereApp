@@ -25,24 +25,36 @@ class AuthService {
     }
   }
 
-  // Fungsi Register
-  Future<UserCredential> register(String shopName, String email, String password) async {
+  /// Fungsi Register - Hanya membuat akun pengguna di Firebase Authentication.
+  Future<UserCredential> createUserAccount(String email, String password) async {
     try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      final user = userCredential.user;
-      if (user == null) {
-        throw Exception("Gagal membuat pengguna, data pengguna tidak ditemukan.");
-      }
+      final userCredential =
+          await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      throw Exception('Registrasi gagal: ${e.message}');
+    } catch (e) {
+      throw Exception('Terjadi kesalahan saat registrasi.');
+    }
+  }
 
+  /// Mendaftarkan detail toko ke Realtime Database setelah pengguna dibuat.
+  Future<void> registerShop(
+      {required User user, required String shopName}) async {
+    try {
       // 1. Buat entri baru di node 'shops' untuk mendapatkan shopId unik
       final newShopRef = _dbRef.child('shops').push();
       final shopId = newShopRef.key;
+
+      if (shopId == null) {
+        throw Exception("Gagal membuat ID toko unik.");
+      }
 
       // 2. Siapkan data untuk ditulis ke database
       final Map<String, dynamic> shopData = {
         'ownerUid': user.uid,
         'shopName': shopName,
-        'email': email,
+        'email': user.email,
         'createdAt': ServerValue.timestamp,
       };
 
@@ -51,12 +63,10 @@ class AuthService {
         'shops/$shopId': shopData, // Buat data toko baru
         'sellers/${user.uid}': {...shopData, 'shopId': shopId}, // Simpan referensi shopId di data seller
       });
-
-      return userCredential;
-    } on FirebaseAuthException catch (e) {
-      throw Exception('Registrasi gagal: ${e.message}');
     } catch (e) {
-      throw Exception('Terjadi kesalahan saat registrasi.');
+      // Jika pendaftaran toko gagal, hapus pengguna yang baru dibuat untuk konsistensi
+      await user.delete();
+      throw Exception('Gagal mendaftarkan toko: $e');
     }
   }
 

@@ -47,7 +47,7 @@ void showInfoDialog({
   required BuildContext context,
   required String title,
   required String message,
-  String buttonText = 'Mengerti',
+  String buttonText = 'Mengerti', required Null Function() onPressed,
 }) {
   showDialog(
     context: context,

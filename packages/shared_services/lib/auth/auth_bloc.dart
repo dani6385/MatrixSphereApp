@@ -36,7 +36,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(AuthLoading());
     try {
-      await _authService.register(event.name, event.email, event.password);
+      // Langkah 1: Buat akun pengguna di Firebase Auth
+      final userCredential =
+          await _authService.createUserAccount(event.email, event.password);
+      final user = userCredential.user;
+
+      if (user == null) {
+        throw Exception("Gagal membuat akun, data pengguna tidak ditemukan.");
+      }
+
+      // Langkah 2: Daftarkan detail toko di Realtime Database
+      await _authService.registerShop(user: user, shopName: event.name);
       emit(const AuthSuccess('Registrasi berhasil! Silakan login.'));
     } catch (e) {
       emit(AuthFailure(e.toString()));
