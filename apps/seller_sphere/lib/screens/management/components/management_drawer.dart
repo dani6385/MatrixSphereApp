@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
+//import '../../../features/products/product_screen.dart';
 
 class ManagementDrawer extends StatelessWidget {
   const ManagementDrawer({super.key});

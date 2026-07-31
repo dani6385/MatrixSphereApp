@@ -68,28 +68,25 @@ final GoRouter appRouter = GoRouter(
 
     // 4. Rute fullscreen (tanpa BottomNavBar)
     GoRoute(
-        path: AppRoutes.chat, builder: (context, state) => const ChatScreen()),
+        path: AppRoutes.chat,
+        builder: (context, state) => const ChatScreen()),
 
-    // PERBAIKAN FINAL: Rute produk sebagai rute fullscreen dengan path '/products'
+    // Rute untuk menampilkan daftar produk.
+    // Langsung menampilkan ProductListScreen saat '/products' diakses.
     GoRoute(
       path: AppRoutes.products, // Path: '/products'
       builder: (context, state) {
-        final Product? product = state.extra as Product?;
-        if (product != null) {
-          return ProductScreen(product: product, shopUid: '',);
-        } else {
-          return const Scaffold(
-            body:
-                Center(child: Text('Produk tidak ditemukan atau tidak valid.')),
-          );
+        final shopUid = state.uri.queryParameters['shopUid'];
+        final product = state.extra as Product?;
+
+        if (shopUid == null || product == null) {
+          // Handle error: shopUid or product not provided
+          return const Text('Error: shopUid or product not provided for ProductScreen');
         }
+
+        return ProductScreen(shopUid: shopUid, product: product);
       },
-      routes: [
-        GoRoute(
-          path: ':productId',
-          builder: (context, state) => const ProductListScreen(shopUid: ''),
-        ),
-      ],
+      // Extract
     ),
   ],
   // Halaman error jika rute tidak ditemukan

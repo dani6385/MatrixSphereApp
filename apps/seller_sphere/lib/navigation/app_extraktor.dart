@@ -6,7 +6,7 @@
 //export 'package:seller_sphere/features/calendar/calendar_screen.dart';
 export 'package:seller_sphere/features/chat/chat_screen.dart';
 export 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
-export 'package:seller_sphere/features/product/product_screen.dart';
+export 'package:seller_sphere/features/products/product_screen.dart';
 //export 'package:seller_sphere/features/employees/add_edit_employee_screen.dart';
 //export 'package:seller_sphere/features/employees/models/employee_model.dart' hide Employee;
 //export 'package:seller_sphere/features/profile/edit/edit_profile.dart';
