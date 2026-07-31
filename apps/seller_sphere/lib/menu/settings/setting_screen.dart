@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/core/utils/constants.dart';
 //import 'package:seller_sphere/core/utils/size_config.dart';
-import 'package:seller_sphere/features/settings/widgets/setting_menu_tile.dart';
+import 'package:seller_sphere/menu/settings/widgets/setting_menu_tile.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class SettingScreen extends StatelessWidget {

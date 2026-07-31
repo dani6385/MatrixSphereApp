@@ -18,7 +18,7 @@ export 'package:seller_sphere/features/product/product_screen.dart';
 //export 'package:seller_sphere/screens/management/widgets/add_product_form.dart';
 export '../features/product/product_form_screen.dart';
 //export 'package:seller_sphere/widgets/demo_mode_banner.dart';
-export 'package:seller_sphere/features/settings/setting_screen.dart';
+export 'package:seller_sphere/menu/settings/setting_screen.dart';
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 export 'package:seller_sphere/screens/home/home_screen.dart';
 export 'package:seller_sphere/screens/management/management_screen.dart';
