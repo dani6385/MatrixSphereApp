@@ -27,27 +27,25 @@ final List<StatefulShellBranch> appShellBranches = [
   ]),
   // Branch 3: Management
   StatefulShellBranch(routes: [
-    GoRoute(
-        path: '/management',
-        builder: (context, state) => const ManagementScreen(),
-        // Daftarkan rute untuk produk sebagai sub-rute dari /management
-        routes: [
-          GoRoute(
-            path: '/management/products', // Path menjadi: /management/products
-            builder: (context, state) => ProductScreen(product: state.extra as Product), // Ganti dengan UID toko yang sesuai
-            routes: [
-              GoRoute(
-                path: '/management/products/:productId', // Path menjadi: /management/products/:productId
-                builder: (context, state) => const ProductListScreen(shopUid: ''),
-              ),
-            ],
-          ),
-          /*GoRoute(
-            path: 'approval', // Path menjadi: /management/approval
-            builder: (context, state) => const ApprovalScreen(), // Ganti dengan widget layar approval Anda
-          ),*/
-        ]),
-  ]),
+  GoRoute(
+      path: '/management',
+      builder: (context, state) => const ManagementScreen(),
+      routes: [
+        // PERBAIKAN: Ubah path menjadi relatif (cukup 'products', bukan '/management/products')
+        GoRoute(
+          path: 'products', 
+          builder: (context, state) => ProductScreen(product: state.extra as Product),
+          routes: [
+            // PERBAIKAN: Ubah path sub-rute anak menjadi relatif (cukup ':productId')
+            GoRoute(
+              path: ':productId', 
+              builder: (context, state) => const ProductListScreen(shopUid: ''),
+            ),
+          ],
+        ),
+        
+      ]),
+]),
   // Branch 4: Sellers (Inventory)
   StatefulShellBranch(routes: [
     GoRoute(
