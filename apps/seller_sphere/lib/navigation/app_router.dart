@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'app_extraktor.dart';
-import 'bottom_nav_bar.dart';
+import 'package:seller_sphere/features/chat/chat_screen.dart';
+import 'package:seller_sphere/features/product/product_screen.dart';
+import 'package:seller_sphere/screens/attendance/attendance_screen.dart';
+import 'package:seller_sphere/screens/home/home_screen.dart';
+import 'package:seller_sphere/screens/management/management_screen.dart';
+import 'package:seller_sphere/screens/sellers/seller_screen.dart';
+import 'package:seller_sphere/screens/streams/streaming_screen.dart';
 import 'package:shared_services/shared_services.dart';
+//import 'package:shared_services/models/product_model.dart';
+//import 'package:shared_services/services/product_service.dart';
 
 import 'app_routes.dart';
+import 'bottom_nav_bar.dart';
 
 // 1. Definisikan GlobalKey untuk navigator
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -14,51 +22,33 @@ final List<StatefulShellBranch> appShellBranches = [
   // Branch 1: Home
   StatefulShellBranch(routes: [
     GoRoute(
-        path: '/',
-        builder: (context, state) =>
-            const HomeScreen()),
+        path: AppRoutes.home, // Path: '/'
+        builder: (context, state) => const HomeScreen()),
   ]),
   // Branch 2: Stream
   StatefulShellBranch(routes: [
     GoRoute(
-        path: '/stream',
+        path: AppRoutes.stream, // Path: '/stream'
         builder: (context, state) =>
             const StreamingScreen(streamId: 'default_stream')),
   ]),
   // Branch 3: Management
   StatefulShellBranch(routes: [
-  GoRoute(
-      path: '/management',
-      builder: (context, state) => const ManagementScreen(),
-      routes: [
-        // PERBAIKAN: Ubah path menjadi relatif (cukup 'products', bukan '/management/products')
-        GoRoute(
-          path: 'products', 
-          builder: (context, state) => ProductScreen(product: state.extra as Product),
-          routes: [
-            // PERBAIKAN: Ubah path sub-rute anak menjadi relatif (cukup ':productId')
-            GoRoute(
-              path: ':productId', 
-              builder: (context, state) => const ProductListScreen(shopUid: ''),
-            ),
-          ],
-        ),
-        
-      ]),
-]),
+    GoRoute(
+        path: AppRoutes.management, // Path: '/management'
+        builder: (context, state) => const ManagementScreen()),
+  ]),
   // Branch 4: Sellers (Inventory)
   StatefulShellBranch(routes: [
     GoRoute(
-        path: '/sellers',
-        builder: (context, state) =>
-            const SellerScreen()),
+        path: AppRoutes.sellers, // Path: '/sellers'
+        builder: (context, state) => const SellerScreen()),
   ]),
   // Branch 5: Attendance
   StatefulShellBranch(routes: [
     GoRoute(
-        path: '/attendance',
-        builder: (context, state) =>
-            const AttendanceScreen()),
+        path: AppRoutes.attendance, // Path: '/attendance'
+        builder: (context, state) => const AttendanceScreen()),
   ]),
 ];
 
@@ -70,22 +60,12 @@ final GoRouter appRouter = GoRouter(
     // 3. Gunakan StatefulShellRoute untuk halaman dengan BottomNavBar
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        // PopScope digunakan untuk mengintersep aksi tombol kembali dari sistem.
         return PopScope(
-          // canPop: false berarti kita akan menangani logika pop secara manual.
           canPop: false,
-          // onPopInvoked akan dipanggil saat tombol kembali ditekan.
-          // ignore: deprecated_member_use
-          onPopInvoked: (didPop) {
-            // Jika pop tidak terjadi (karena canPop: false), jalankan logika kita.
-            if (!didPop) {
-              // Jika kita tidak sedang di halaman utama (indeks 0), kembali ke halaman utama.
-              if (navigationShell.currentIndex != 0) {
-                navigationShell.goBranch(0);
-              }
-              // Jika kita sudah di halaman utama, tidak melakukan apa-apa,
-              // sehingga back button berikutnya (jika ditekan lagi) akan keluar dari app.
-              // Perilaku ini dikelola oleh sistem operasi.
+          onPopInvokedWithResult: (didPop, result) {
+            if (didPop) return;
+            if (navigationShell.currentIndex != 0) {
+              navigationShell.goBranch(0);
             }
           },
           child: ScaffoldWithNavBar(navigationShell: navigationShell),
@@ -97,18 +77,39 @@ final GoRouter appRouter = GoRouter(
     // 4. Rute fullscreen (tanpa BottomNavBar)
     GoRoute(
         path: AppRoutes.chat, builder: (context, state) => const ChatScreen()),
+
+    // PERBAIKAN FINAL: Rute produk sebagai rute fullscreen dengan path '/products'
+    GoRoute(
+      path: AppRoutes.products, // Path: '/products'
+      builder: (context, state) {
+        final Product? product = state.extra as Product?;
+        if (product != null) {
+          return ProductScreen(product: product);
+        } else {
+          return const Scaffold(
+            body:
+                Center(child: Text('Produk tidak ditemukan atau tidak valid.')),
+          );
+        }
+      },
+      routes: [
+        GoRoute(
+          path: ':productId',
+          builder: (context, state) => const ProductListScreen(shopUid: ''),
+        ),
+      ],
+    ),
   ],
   // Halaman error jika rute tidak ditemukan
   errorBuilder: (context, state) => Scaffold(
     appBar: AppBar(title: const Text('Error')),
     body: Center(
-      child: Text('Halaman tidak ditemukan: ${state.error}'),
+      child: Text('Halaman tidak ditemukan: ${state.error?.message}'),
     ),
   ),
 );
 
 /// Widget terpisah untuk Scaffold yang berisi BottomNavBar.
-/// Ini membantu menjaga kerapian kode di dalam builder StatefulShellRoute.
 class ScaffoldWithNavBar extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
