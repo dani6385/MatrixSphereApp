@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
@@ -51,6 +52,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState?.validate() ?? false) {
+      // Memberitahu sistem untuk menyimpan data autofill, memicu password manager.
+      TextInput.finishAutofillContext();
+
       setState(() {
         _isLoading = true;
         _errorMessage = null;
@@ -72,7 +76,6 @@ class _LoginScreenState extends State<LoginScreen> {
           await prefs.remove('rememberedEmail');
         }
 
-        await _authService.login(email, password);
         // Navigasi akan ditangani oleh AuthWrapper atau redirect GoRouter
       } catch (e) {
         setState(() {
@@ -111,14 +114,24 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 32),
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
+                  // PENAMBAHAN: Memberitahu sistem bahwa ini adalah kolom email
+                  autofillHints: const [AutofillHints.email, AutofillHints.username],
+                  decoration: const InputDecoration(
+                    labelText: 'Email / Username',
+                    prefixIcon: Icon(Icons.email),
+                  ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Email tidak boleh kosong' : null,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
+                  // PENAMBAHAN: Memberitahu sistem bahwa ini adalah kolom kata sandi
+                  autofillHints: const [AutofillHints.password],
+                  decoration: const InputDecoration(
+                    labelText: 'Kata Sandi',
+                    prefixIcon: Icon(Icons.lock),
+                  ),
                   obscureText: true,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Password tidak boleh kosong' : null,
                 ),
@@ -142,13 +155,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () => context.go(AppRoutes.forgotPassword),
-                    child: const Text('Lupa Password?'),
-                  ),
-                ),
                 if (_errorMessage != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
@@ -164,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ? const Center(child: CircularProgressIndicator())
                     : ElevatedButton(
                         onPressed: _login,
-                        child: const Text('Login'),
+                        child: const Text('Masuk'),
                       ),
                 const SizedBox(height: 16),
                 Row(
