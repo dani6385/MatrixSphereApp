@@ -76,7 +76,7 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final Product? product = state.extra as Product?;
         if (product != null) {
-          return ProductScreen(product: product);
+          return ProductScreen(product: product, shopUid: '',);
         } else {
           return const Scaffold(
             body:

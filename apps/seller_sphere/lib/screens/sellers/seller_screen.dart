@@ -1,6 +1,8 @@
 // lib/screens/Seller_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'components/seller_appbar.dart';
 import 'components/seller_body.dart';
 import 'components/Seller_drawer.dart';
@@ -24,6 +26,13 @@ class SellerScreen extends StatelessWidget {
       drawer: const SellerDrawer(),
       endDrawer: const SellerEndDrawer(),
       body: const SellerBody(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigasi ke halaman produk untuk menambah produk baru
+          context.go(AppRoutes.products);
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
