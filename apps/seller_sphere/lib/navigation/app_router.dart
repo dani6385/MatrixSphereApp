@@ -34,11 +34,11 @@ final List<StatefulShellBranch> appShellBranches = [
         routes: [
           GoRoute(
             path: '/management/products', // Path menjadi: /management/products
-            builder: (context, state) => const ProductListScreen(shopUid: 'default_shop'), // Ganti dengan UID toko yang sesuai
+            builder: (context, state) => ProductScreen(product: state.extra as Product), // Ganti dengan UID toko yang sesuai
             routes: [
               GoRoute(
                 path: '/management/products/:productId', // Path menjadi: /management/products/:productId
-                builder: (context, state) => ProductScreen(product: state.extra as Product),
+                builder: (context, state) => const ProductListScreen(shopUid: ''),
               ),
             ],
           ),
