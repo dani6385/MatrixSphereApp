@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:provider/provider.dart'; // <-- 1. IMPORT PROVIDER
-import 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
+import 'package:seller_sphere/navigation/app_extraktor.dart';
 import '../providers/app_viewmodel.dart';
 import 'app_navigation.dart';
 import 'package:shared_ui/shared_ui.dart';

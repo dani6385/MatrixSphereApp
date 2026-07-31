@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/features/chat/chat_screen.dart';
-import 'package:seller_sphere/features/product/product_screen.dart';
-import 'package:seller_sphere/screens/attendance/attendance_screen.dart';
-import 'package:seller_sphere/screens/home/home_screen.dart';
-import 'package:seller_sphere/screens/management/management_screen.dart';
-import 'package:seller_sphere/screens/sellers/seller_screen.dart';
-import 'package:seller_sphere/screens/streams/streaming_screen.dart';
+import 'app_extraktor.dart';
 import 'package:shared_services/shared_services.dart';
-//import 'package:shared_services/models/product_model.dart';
-//import 'package:shared_services/services/product_service.dart';
-
 import 'app_routes.dart';
 import 'bottom_nav_bar.dart';
 
@@ -61,7 +52,8 @@ final GoRouter appRouter = GoRouter(
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         return PopScope(
-          canPop: false,
+          // Allow popping only when on the home tab (index 0)
+          canPop: navigationShell.currentIndex == 0,
           onPopInvokedWithResult: (didPop, result) {
             if (didPop) return;
             if (navigationShell.currentIndex != 0) {
