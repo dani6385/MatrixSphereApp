@@ -16,10 +16,10 @@ class HomeEndDrawer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.storefront, color: kBrandPrimary, size: 48),
+            Icon(Icons.calculate_outlined, color: kBrandPrimary, size: 48),
             SizedBox(height: AppSpacing.sm),
             Text(
-              'Kalkulasi',
+              'Kalkulasi & Alat',
               style: TextStyle(
                 color: kDarkTextPrimary,
                 fontSize: 24,
@@ -31,21 +31,30 @@ class HomeEndDrawer extends StatelessWidget {
       ),
       items: [
         SideMenuItem(
-          title: 'Edit',
-          icon: Icons.store,
+          title: 'Kalkulator Kasir',
+          icon: Icons.point_of_sale,
           isSelected: true,
           onTap: () {
             Navigator.of(context).pop();
-            context.go('/product');
+            context.go('/calculator'); // Sesuaikan dengan route tujuanmu
           },
         ),
         SideMenuItem(
-          title: 'Approval',
-          icon: Icons.playlist_add_check,
+          title: 'Simulasi Diskon',
+          icon: Icons.discount_outlined,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            context.go('/approval');
+            context.go('/discount-simulator');
+          },
+        ),
+        SideMenuItem(
+          title: 'Pengaturan Pajak',
+          icon: Icons.receipt_long_outlined,
+          isSelected: false,
+          onTap: () {
+            Navigator.of(context).pop();
+            context.go('/tax-settings');
           },
         ),
       ],

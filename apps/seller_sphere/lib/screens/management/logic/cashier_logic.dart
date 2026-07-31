@@ -6,7 +6,7 @@ import '../widgets/cashier_sort_dropdown.dart';
 
 class CashierLogic {
   final ProductService _productService = ProductService();
-  
+
   // State data
   final List<CartItem> cartItems = [];
   List<Product> allProducts = [];
@@ -17,6 +17,18 @@ class CashierLogic {
   // Getter total amount
   double get totalAmount => cartItems.fold(
       0, (sum, item) => sum + (item.product.sellingPrice * item.quantity));
+// lib/screens/management/logic/cashier_logic.dart
+
+// Tambahkan variabel di dalam kelas CashierLogic:
+  double cashPaid = 0.0;
+  double get changeAmount =>
+      cashPaid > totalAmount ? cashPaid - totalAmount : 0.0;
+  bool get isCashValid => cashPaid >= totalAmount;
+
+// Fungsi untuk memperbarui jumlah uang tunai yang dimasukkan
+  void updateCashPaid(String value) {
+    cashPaid = double.tryParse(value.replaceAll(RegExp(r'[^0-9]'), '')) ?? 0.0;
+  }
 
   // Inisialisasi data produk & listener pencarian
   Future<void> init(VoidCallback onUpdate) async {
@@ -76,10 +88,12 @@ class CashierLogic {
         filteredProducts.sort((a, b) => b.soldCount.compareTo(a.soldCount));
         break;
       case ProductSortOption.priceLowToHigh:
-        filteredProducts.sort((a, b) => a.sellingPrice.compareTo(b.sellingPrice));
+        filteredProducts
+            .sort((a, b) => a.sellingPrice.compareTo(b.sellingPrice));
         break;
       case ProductSortOption.priceHighToLow:
-        filteredProducts.sort((a, b) => b.sellingPrice.compareTo(a.sellingPrice));
+        filteredProducts
+            .sort((a, b) => b.sellingPrice.compareTo(a.sellingPrice));
         break;
       case ProductSortOption.nameAsc:
         filteredProducts.sort((a, b) => a.name.compareTo(b.name));
@@ -118,7 +132,10 @@ class CashierLogic {
                 quantity: cartItem.quantity,
               ))
           .toList(),
-      orderId: '', customerName: '', customerEmail: '', customerPhone: '',
+      orderId: '',
+      customerName: '',
+      customerEmail: '',
+      customerPhone: '',
     );
 
     final String? newOrderId = await _productService.createOrder(newOrder);
