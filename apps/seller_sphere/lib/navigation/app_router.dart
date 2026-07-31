@@ -68,25 +68,37 @@ final GoRouter appRouter = GoRouter(
 
     // 4. Rute fullscreen (tanpa BottomNavBar)
     GoRoute(
-        path: AppRoutes.chat,
-        builder: (context, state) => const ChatScreen()),
+        path: AppRoutes.chat, builder: (context, state) => const ChatScreen()),
 
     // Rute untuk menampilkan daftar produk.
     // Langsung menampilkan ProductListScreen saat '/products' diakses.
     GoRoute(
-      path: AppRoutes.products, // Path: '/products'
-      builder: (context, state) {
-        final shopUid = state.uri.queryParameters['shopUid'];
-        final product = state.extra as Product?;
+      path: '/management',
+      builder: (context, state) => const ManagementScreen(),
+      routes: [
+        // 1. Rute utama produk
+        GoRoute(
+          path: '/products',
+          builder: (context, state) => ProductScreen(
+            shopUid: state.uri.queryParameters['shopUid'] ?? '',
+            product: state.extra as Product,
+          ),
+          routes: [
+            // 2. TEMPAT MENDEFINISIKAN ID:
+            // Letakkan parameter ID di sini sebagai sub-rute dinamis dengan titik dua (:)
+            GoRoute(
+              path: ':productId', // <-- DI SINILAH KAMU MENDEFINISIKAN ID-NYA
+              builder: (context, state) {
+                // Ambil ID yang dikirimkan melalui URL
+                final String? productId = state.pathParameters['productId'];
 
-        if (shopUid == null || product == null) {
-          // Handle error: shopUid or product not provided
-          return const Text('Error: shopUid or product not provided for ProductScreen');
-        }
-
-        return ProductScreen(shopUid: shopUid, product: product);
-      },
-      // Extract
+                // Kembalikan halaman detail produk dengan ID tersebut
+                return ProductDetailScreen(productId: productId ?? '');
+              },
+            ),
+          ],
+        ),
+      ],
     ),
   ],
   // Halaman error jika rute tidak ditemukan
