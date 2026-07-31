@@ -1,5 +1,8 @@
-// TODO Implement this library.
+
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
+ final logger = Logger();
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({super.key});
@@ -30,9 +33,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
       final double productPrice = double.tryParse(_productPriceController.text) ?? 0.0;
 
       // For now, just print the data
-      print('Product Name: $productName');
-      print('Product Description: $productDescription');
-      print('Product Price: $productPrice');
+      logger.i('Product Name: $productName');
+      logger.i('Product Description: $productDescription');
+      logger.i('Product Price: $productPrice');
 
       // In a real app, you would send this data to a backend service
       // e.g., context.read<ProductProvider>().addProduct(productName, productDescription, productPrice);
