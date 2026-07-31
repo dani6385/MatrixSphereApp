@@ -129,6 +129,7 @@ class _ProductFormState extends State<ProductForm> {
         minStockThreshold: widget.product?.minStockThreshold ?? 0,
         ageRating: widget.product?.ageRating ?? 0,
         imageUrls: widget.product?.imageUrls ?? [],
+        shopId: '',
       );
       widget.onSave(productData);
     }
@@ -163,7 +164,7 @@ class _ProductFormState extends State<ProductForm> {
                       )
                     : (widget.product!.imageUrl?.isNotEmpty == true)
                         ? ClipRRect(
-                            borderRadius: BorderRadius.circular(AppSpacing.sm), 
+                            borderRadius: BorderRadius.circular(AppSpacing.sm),
                             child: Image.network(widget.product!.imageUrl!,
                                 fit: BoxFit.cover),
                           )

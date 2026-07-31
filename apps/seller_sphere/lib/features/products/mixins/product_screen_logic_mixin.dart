@@ -14,7 +14,8 @@ mixin ProductScreenLogicMixin<T extends StatefulWidget> on State<T> {
   String? lastScannedBarcode;
 
   void initLogic(String shopUid, TickerProvider vsync) {
-    productsRef = FirebaseDatabase.instance.ref('seller_sphere/$shopUid/produk');
+    productsRef =
+        FirebaseDatabase.instance.ref('seller_sphere/$shopUid/produk');
     tabController = TabController(length: 2, vsync: vsync);
     tabController.addListener(() => setState(() {}));
   }
@@ -76,6 +77,7 @@ mixin ProductScreenLogicMixin<T extends StatefulWidget> on State<T> {
           minStockThreshold: 0,
           ageRating: 0,
           imageUrls: const [],
+          shopId: '',
         ),
       );
     } else {

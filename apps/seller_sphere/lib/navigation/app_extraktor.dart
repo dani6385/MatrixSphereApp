@@ -1,28 +1,15 @@
-//export 'package:seller_sphere/features/access/access_screen.dart';
-//export 'package:seller_sphere/features/account/account_screen.dart';
-//export 'package:seller_sphere/features/auth/login_screen.dart';
-//export 'package:seller_sphere/features/auth/register_page.dart';
-//export 'package:seller_sphere/features/auth/widgets/forgot_password_page.dart';
-//export 'package:seller_sphere/features/calendar/calendar_screen.dart';
+
 export 'package:seller_sphere/features/chat/chat_screen.dart';
 export 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
 export 'package:seller_sphere/features/products/product_screen.dart';
 export 'package:seller_sphere/features/products/widgets/product_detail_screen.dart';
-//export 'package:seller_sphere/features/employees/add_edit_employee_screen.dart';
-//export 'package:seller_sphere/features/employees/models/employee_model.dart' hide Employee;
-//export 'package:seller_sphere/features/profile/edit/edit_profile.dart';
-//export 'package:seller_sphere/features/profile/profile_screen.dart';
-//export 'package:seller_sphere/features/registration/registration_screen.dart';
-//export 'package:seller_sphere/features/status/status_screen.dart';
-//export 'package:seller_sphere/screens/management/bloc/product_bloc.dart';
-//export 'package:seller_sphere/screens/management/product/product_form_screen.dart';
-//export 'package:seller_sphere/screens/management/providers/app_provider.dart';
-//export 'package:seller_sphere/screens/management/widgets/add_product_form.dart';
 
-//export 'package:seller_sphere/widgets/demo_mode_banner.dart';
+
 export 'package:seller_sphere/menu/settings/setting_screen.dart';
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 export 'package:seller_sphere/screens/home/home_screen.dart';
 export 'package:seller_sphere/screens/management/management_screen.dart';
 export 'package:seller_sphere/screens/sellers/seller_screen.dart';
 export 'package:seller_sphere/screens/streams/streaming_screen.dart';
+
+

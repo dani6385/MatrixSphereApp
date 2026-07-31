@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:seller_sphere/navigation/app_router.dart';
+import 'app_router.dart';
 import 'app_routes.dart';
 
 import 'package:shared_ui/shared_ui.dart';
@@ -21,14 +21,8 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // Data untuk ikon, dipetakan berdasarkan rute
     const Map<String, ({IconData icon, IconData activeIcon})> tabIcons = {
-      AppRoutes.home: (
-        icon: Icons.home_outlined,
-        activeIcon: Icons.home
-        ),
-      AppRoutes.stream: (
-        icon: Icons.cast,
-        activeIcon: Icons.cast_connected
-        ),
+      AppRoutes.home: (icon: Icons.home_outlined, activeIcon: Icons.home),
+      AppRoutes.stream: (icon: Icons.cast, activeIcon: Icons.cast_connected),
       AppRoutes.management: (
         icon: Icons.point_of_sale,
         activeIcon: Icons.point_of_sale_outlined
@@ -46,14 +40,16 @@ class BottomNavBar extends StatelessWidget {
     return SharedBottomNavBar(
       currentIndex: currentIndex,
       onTap: onTap,
-      tabs: List.generate(appShellBranches.length, (index) { 
+      tabs: List.generate(appShellBranches.length, (index) {
         final isSelected = index == currentIndex;
-        final routePath = (appShellBranches[index].routes.first as dynamic).path;
+        final routePath =
+            (appShellBranches[index].routes.first as dynamic).path;
         final icons = tabIcons[routePath]!;
         return GButton(
           icon: isSelected ? icons.activeIcon : icons.icon,
         );
-      }), selectedIndex: currentIndex,
+      }),
+      selectedIndex: currentIndex,
     );
   }
 }

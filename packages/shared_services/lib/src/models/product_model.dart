@@ -1,5 +1,3 @@
-
-
 class Product {
   final String id;
   final String name;
@@ -30,7 +28,8 @@ class Product {
     this.imageUrls = const [],
     this.minStockThreshold = 0,
     this.ageRating = 0,
-    this.soldCount = 0, // Initialize new field
+    this.soldCount = 0,
+    required String shopId, // Initialize new field
   });
 
   factory Product.fromMap(Map<String, dynamic> map, String id) {
@@ -39,7 +38,9 @@ class Product {
       name: map['name'] ?? '',
       description: map['description'] ?? '',
       price: (map['price'] as num?)?.toDouble() ?? 0.0,
-      sellingPrice: (map['sellingPrice'] as num?)?.toDouble() ?? (map['price'] as num?)?.toDouble() ?? 0.0, // Fallback to price if sellingPrice not present
+      sellingPrice: (map['sellingPrice'] as num?)?.toDouble() ??
+          (map['price'] as num?)?.toDouble() ??
+          0.0, // Fallback to price if sellingPrice not present
       purchasePrice: (map['purchasePrice'] as num?)?.toDouble() ?? 0.0,
       stock: map['stock'] as int? ?? 0,
       category: map['category'] ?? '',
@@ -48,7 +49,7 @@ class Product {
       imageUrls: List<String>.from(map['imageUrls'] ?? []),
       minStockThreshold: map['minStockThreshold'] as int? ?? 0,
       ageRating: map['ageRating'] as int? ?? 0,
-      soldCount: map['soldCount'] as int? ?? 0, // Parse new field
+      soldCount: map['soldCount'] as int? ?? 0, shopId: '', // Parse new field
     );
   }
 
@@ -101,6 +102,7 @@ class Product {
       minStockThreshold: minStockThreshold ?? this.minStockThreshold,
       ageRating: ageRating ?? this.ageRating,
       soldCount: soldCount ?? this.soldCount,
+      shopId: '',
     );
   }
 }

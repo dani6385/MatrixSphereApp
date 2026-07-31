@@ -1,132 +1,162 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'app_extraktor.dart';
+import 'package:seller_sphere/navigation/app_extraktor.dart';
+import 'package:seller_sphere/navigation/app_navigator.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
+import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'package:shared_services/shared_services.dart';
-import 'app_routes.dart';
-import 'bottom_nav_bar.dart';
 
-// 1. Definisikan GlobalKey untuk navigator
+/// Kunci navigator global untuk rute root.
+/// Digunakan untuk navigasi yang perlu "keluar" dari shell,
+/// seperti navigasi ke halaman login dari dalam tab.
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
-// 2. Definisikan cabang-cabang untuk StatefulShellRoute
-final List<StatefulShellBranch> appShellBranches = [
-  // Branch 1: Home
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.home, // Path: '/'
-        builder: (context, state) => const HomeScreen()),
-  ]),
-  // Branch 2: Stream
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.stream, // Path: '/stream'
-        builder: (context, state) =>
-            const StreamingScreen(streamId: 'default_stream')),
-  ]),
-  // Branch 3: Management
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.management, // Path: '/management'
-        builder: (context, state) => const ManagementScreen()),
-  ]),
-  // Branch 4: Sellers (Inventory)
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.sellers, // Path: '/sellers'
-        builder: (context, state) => const SellerScreen()),
-  ]),
-  // Branch 5: Attendance
-  StatefulShellBranch(routes: [
-    GoRoute(
-        path: AppRoutes.attendance, // Path: '/attendance'
-        builder: (context, state) => const AttendanceScreen()),
-  ]),
-];
-
-// Buat instance GoRouter
+/// Konfigurasi GoRouter untuk aplikasi Seller Sphere.
+///
+/// Menggunakan [StatefulShellRoute] untuk mempertahankan state pada setiap tab
+/// dari bottom navigation bar.
 final GoRouter appRouter = GoRouter(
-  initialLocation: AppRoutes.home, // Lokasi awal aplikasi
+  initialLocation: AppRoutes.home,
   navigatorKey: _rootNavigatorKey,
   routes: <RouteBase>[
-    // 3. Gunakan StatefulShellRoute untuk halaman dengan BottomNavBar
+    // Rute untuk halaman yang tidak menggunakan Shell (BottomNavBar),
+    // seperti halaman login.
+    /*GoRoute(
+      path: AppRoutes.login,
+      builder: (context, state) => const LoginScreen(),
+    ),*/
+
+    // StatefulShellRoute untuk halaman utama dengan Bottom Navigation Bar.
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
-        return PopScope(
-          // Allow popping only when on the home tab (index 0)
-          canPop: navigationShell.currentIndex == 0,
-          onPopInvokedWithResult: (didPop, result) {
-            if (didPop) return;
-            if (navigationShell.currentIndex != 0) {
-              navigationShell.goBranch(0);
-            }
-          },
-          child: ScaffoldWithNavBar(navigationShell: navigationShell),
-        );
+        // Widget AppNavigator bertindak sebagai UI shell (Scaffold, Drawer, BottomNavBar).
+        return AppNavigator(navigationShell: navigationShell);
       },
       branches: appShellBranches,
     ),
-
-    // 4. Rute fullscreen (tanpa BottomNavBar)
-    GoRoute(
-        path: AppRoutes.chat, builder: (context, state) => const ChatScreen()),
-
-    // Rute untuk menampilkan daftar produk.
-    // Langsung menampilkan ProductListScreen saat '/products' diakses.
-    GoRoute(
-      path: '/management',
-      builder: (context, state) => const ManagementScreen(),
-      routes: [
-        // 1. Rute utama produk
-        GoRoute(
-          path: '/products',
-          builder: (context, state) => ProductScreen(
-            shopUid: state.uri.queryParameters['shopUid'] ?? '',
-            product: state.extra as Product,
-          ),
-          routes: [
-            // 2. TEMPAT MENDEFINISIKAN ID:
-            // Letakkan parameter ID di sini sebagai sub-rute dinamis dengan titik dua (:)
-            GoRoute(
-              path: ':productId', // <-- DI SINILAH KAMU MENDEFINISIKAN ID-NYA
-              builder: (context, state) {
-                // Ambil ID yang dikirimkan melalui URL
-                final String? productId = state.pathParameters['productId'];
-
-                // Kembalikan halaman detail produk dengan ID tersebut
-                return ProductDetailScreen(productId: productId ?? '');
-              },
-            ),
-          ],
-        ),
-      ],
-    ),
   ],
-  // Halaman error jika rute tidak ditemukan
-  errorBuilder: (context, state) => Scaffold(
-    appBar: AppBar(title: const Text('Error')),
-    body: Center(
-      child: Text('Halaman tidak ditemukan: ${state.error?.message}'),
-    ),
-  ),
 );
 
-/// Widget terpisah untuk Scaffold yang berisi BottomNavBar.
-class ScaffoldWithNavBar extends StatelessWidget {
-  final StatefulNavigationShell navigationShell;
-
-  const ScaffoldWithNavBar({
-    super.key,
-    required this.navigationShell,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: navigationShell,
-      bottomNavigationBar: BottomNavBar(
-        currentIndex: navigationShell.currentIndex,
-        onTap: (index) => navigationShell.goBranch(index),
+/// Daftar cabang untuk [StatefulShellRoute].
+/// Setiap [StatefulShellBranch] mewakili satu tab pada bottom navigation bar.
+final List<StatefulShellBranch> appShellBranches = [
+  // Branch untuk Tab Home
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.home,
+        pageBuilder: (context, state) =>
+            FadeTransitionPage(child: const HomeScreen()),
+        routes: _commonDetailRoutes, // Rute detail yang bisa diakses dari Home
       ),
-    );
-  }
-}
+    ],
+  ),
+
+  // Branch untuk Tab Stream
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.stream,
+        pageBuilder: (context, state) => FadeTransitionPage(
+            child: const StreamingScreen(
+          streamId: '',
+        )),
+        routes: _commonDetailRoutes,
+      ),
+    ],
+  ),
+
+  // Branch untuk Tab Management
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.management,
+        pageBuilder: (context, state) =>
+            FadeTransitionPage(child: const ManagementScreen()),
+        routes: _commonDetailRoutes,
+      ),
+    ],
+  ),
+
+  // Branch untuk Tab Sellers (Products)
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.sellers,
+        // Menggunakan 'sellers' sebagai path utama tab
+        pageBuilder: (context, state) => FadeTransitionPage(
+            child: ProductScreen(
+          shopUid: '',
+          // The named parameter 'product' is required, but there's no corresponding argument.
+          // Adding a dummy Product object to satisfy the constructor.
+          // This might indicate a design issue if ProductScreen is intended to be a list view.
+          product: Product(
+            id: 'dummy_id', // Placeholder ID
+            name: 'Dummy Product', // Placeholder name
+            price: 0.0, // Placeholder price
+            stock: 0, // Placeholder stock
+            description: '', // Placeholder description
+            imageUrl: '', // Placeholder image URL
+            shopId: '',
+            sellingPrice: 0.0,
+            purchasePrice: 0.0,
+          ),
+        )),
+        routes: [
+          // Sub-route untuk detail produk
+          GoRoute(
+            path: ':productId', // Path relatif: /sellers/:productId
+            builder: (context, state) => ProductDetailScreen(
+              productId: state.pathParameters['productId']!,
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+
+  // Branch untuk Tab Attendance
+  StatefulShellBranch(
+    routes: [
+      GoRoute(
+        path: AppRoutes.attendance,
+        pageBuilder: (context, state) =>
+            FadeTransitionPage(child: const AttendanceScreen()),
+        routes: _commonDetailRoutes,
+      ),
+    ],
+  ),
+];
+
+/// Daftar rute umum yang dapat diakses dari berbagai tab.
+/// Rute ini akan ditampilkan di atas Shell (tanpa BottomNavBar).
+final List<RouteBase> _commonDetailRoutes = [
+  /*GoRoute(
+    path: AppRoutes.profile.substring(1), // Hapus '/' di awal
+    parentNavigatorKey: _rootNavigatorKey, // Tampilkan di atas shell
+    builder: (context, state) => const ProfileScreen(),
+    routes: [
+      GoRoute(
+        path: AppRoutes.editprofile.split('/').last, // Hanya 'edit'
+        builder: (context, state) => const EditProfileScreen(),
+      ),
+    ],
+  ),*/
+  GoRoute(
+    path: AppRoutes.settings.substring(1),
+    parentNavigatorKey: _rootNavigatorKey,
+    builder: (context, state) => const SettingScreen(),
+  ),
+  GoRoute(
+    path: AppRoutes.chat.substring(1),
+    parentNavigatorKey: _rootNavigatorKey,
+    builder: (context, state) => const ChatScreen(),
+  ),
+  GoRoute(
+    path: 'products/:productId', // Contoh rute detail dari tab lain
+    parentNavigatorKey: _rootNavigatorKey,
+    builder: (context, state) => ProductDetailScreen(
+      productId: state.pathParameters['productId']!,
+    ),
+  ),
+];

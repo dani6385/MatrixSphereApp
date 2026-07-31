@@ -44,7 +44,7 @@ class ManagementDrawer extends StatelessWidget {
             context.go(AppRoutes.products);
           },
         ),
-        SideMenuItem(
+        /*SideMenuItem(
           title: 'Approval',
           icon: Icons.playlist_add_check,
           isSelected: currentRoute.startsWith(AppRoutes.approval),
@@ -52,7 +52,7 @@ class ManagementDrawer extends StatelessWidget {
             Navigator.of(context).pop();
             context.go(AppRoutes.approval);
           },
-        ),
+        ),*/
       ],
       selectedRoute: currentRoute,
     );
