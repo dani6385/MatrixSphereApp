@@ -16,7 +16,7 @@ class HomeDrawer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.storefront, color: kBrandPrimary, size: 48),
+            Icon(Icons.settings, color: kBrandPrimary, size: 48),
             SizedBox(height: AppSpacing.sm),
             Text(
               'Seller Sphere',

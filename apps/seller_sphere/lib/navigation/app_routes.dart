@@ -24,7 +24,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
   static const String product = '/management/products';
-  static const String productForm = '/productForm'; // Pastikan rute Status ada
+  
   static const String profile = '/profile';
   static const String register = '/login/register';
   static const String registerShop = '/register-shop';

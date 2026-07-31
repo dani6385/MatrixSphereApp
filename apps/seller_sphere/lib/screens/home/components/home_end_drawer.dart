@@ -16,10 +16,10 @@ class HomeEndDrawer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.calculate_outlined, color: kBrandPrimary, size: 48),
+            Icon(Icons.settings, color: kBrandPrimary, size: 48),
             SizedBox(height: AppSpacing.sm),
             Text(
-              'Kalkulasi & Alat',
+              'Ringkasan Cepat',
               style: TextStyle(
                 color: kDarkTextPrimary,
                 fontSize: 24,
@@ -31,7 +31,7 @@ class HomeEndDrawer extends StatelessWidget {
       ),
       items: [
         SideMenuItem(
-          title: 'Kalkulator Kasir',
+          title: 'Status Sistem',
           icon: Icons.point_of_sale,
           isSelected: true,
           onTap: () {
