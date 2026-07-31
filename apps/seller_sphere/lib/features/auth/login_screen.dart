@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,14 +18,35 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _authService = AuthService();
 
+  bool _rememberMe = false;
   bool _isLoading = false;
   String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberMe();
+  }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  /// Memuat status "Remember Me" dan email yang tersimpan dari SharedPreferences.
+  Future<void> _loadRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool rememberMe = prefs.getBool('rememberMe') ?? false;
+
+    if (rememberMe) {
+      final String? email = prefs.getString('rememberedEmail');
+      setState(() {
+        _emailController.text = email ?? '';
+        _rememberMe = true;
+      });
+    }
   }
 
   Future<void> _login() async {
@@ -35,11 +57,23 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        await _authService.login(
-          _emailController.text.trim(),
-          _passwordController.text.trim(),
-        );
-        // Navigasi akan ditangani secara otomatis oleh redirect GoRouter
+        final email = _emailController.text.trim();
+        final password = _passwordController.text.trim();
+
+        await _authService.login(email, password);
+
+        // Simpan atau hapus preferensi "Remember Me"
+        final prefs = await SharedPreferences.getInstance();
+        if (_rememberMe) {
+          await prefs.setBool('rememberMe', true);
+          await prefs.setString('rememberedEmail', email);
+        } else {
+          await prefs.remove('rememberMe');
+          await prefs.remove('rememberedEmail');
+        }
+
+        await _authService.login(email, password);
+        // Navigasi akan ditangani oleh AuthWrapper atau redirect GoRouter
       } catch (e) {
         setState(() {
           _errorMessage = e.toString().replaceFirst('Exception: ', '');
@@ -88,6 +122,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: true,
                   validator: (value) => (value?.isEmpty ?? true) ? 'Password tidak boleh kosong' : null,
                 ),
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _rememberMe,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _rememberMe = value ?? false;
+                        });
+                      },
+                      activeColor: kBrandPrimary,
+                      checkColor: kDarkBackground,
+                    ),
+                    const Text('Remember Me', style: TextStyle(color: kLightTextSecondary)),
+                    const Spacer(),
+                    TextButton(
+                      onPressed: () => context.go(AppRoutes.forgotPassword),
+                      child: const Text('Lupa Password?'),
+                    ),
+                  ],
+                ),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -95,7 +149,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: const Text('Lupa Password?'),
                   ),
                 ),
-                const SizedBox(height: 16),
                 if (_errorMessage != null)
                   Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),

@@ -19,4 +19,6 @@ class AppRoutes {
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
   static const String settings = '/settings';
+  static const String shopRegistration = '/shop-registration';
+  
 }

@@ -1,3 +1,4 @@
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,7 +19,6 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
   final _authService = AuthService();
   final _rtdbService = FirebaseRtdbService();
 
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -31,7 +31,6 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
 
     final currentUser = _authService.currentUser;
     if (currentUser == null) {
@@ -54,7 +53,6 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
     // Menggunakan FirebaseRtdbService untuk menulis data
     final success = await _rtdbService.writeData('approval/$uid', approvalData);
 
-    setState(() => _isLoading = false);
 
     if (success && mounted) {
       showInfoDialog(
@@ -82,33 +80,85 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Daftarkan Toko Anda'),
-      ),
-      body: Center(
-        child: SingleChildScrollView(
+      appBar: AppBar(title: const Text('Registrasi Toko')),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Satu Langkah Lagi!',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Text('Masukkan nama toko Anda untuk menyelesaikan pendaftaran.'),
-                const SizedBox(height: 32),
-                TextFormField(
-                  controller: _shopNameController,
-                  decoration: const InputDecoration(labelText: 'Nama Toko'),
-                  validator: (value) => (value == null || value.isEmpty) ? 'Nama toko tidak boleh kosong' : null,
+                  'Daftarkan toko Anda untuk menunggu persetujuan admin.',
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-                _isLoading ? const CircularProgressIndicator() : ElevatedButton(onPressed: _submitForApproval, child: const Text('Kirim untuk Persetujuan')),
+                TextFormField(
+                  controller: _shopNameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Nama Toko',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Nama toko wajib diisi.';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: _submitForApproval,
+                  child: const Text('Ajukan Pendaftaran'),
+                ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Widget yang menampilkan pesan "Menunggu Persetujuan"
+class WaitingForApprovalScreen extends StatelessWidget {
+  const WaitingForApprovalScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Status Pendaftaran")),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.hourglass_top_rounded, size: 60, color: Colors.blue),
+              const SizedBox(height: 20),
+              Text(
+                'Menunggu Persetujuan',
+                style: Theme.of(context).textTheme.headlineSmall,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'Pendaftaran toko Anda sedang kami tinjau. Anda akan dapat mengakses dashboard setelah disetujui oleh admin.',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () async {
+                  await AuthService().logout();
+                  if (context.mounted) {
+                    context.go(AppRoutes.login);
+                  }
+                },
+                child: const Text('Logout'),
+              )
+            ],
           ),
         ),
       ),
