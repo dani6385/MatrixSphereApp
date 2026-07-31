@@ -19,8 +19,7 @@ class AppRoutes {
   static const String forgotPassword = '/login/forgot-password';
   static const String goodsIn = '/goods-in'; // Rute untuk input barang
   static const String goodsOut = '/goods-out'; // Rute untuk pengeluaran barang
-  static const String inventoryAdd = '/inventory/addproduct';
-  static const String inventoryEdit = '/inventory/editproduct';
+  
   static const String login = '/login';
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
   static const String products = '/products';
