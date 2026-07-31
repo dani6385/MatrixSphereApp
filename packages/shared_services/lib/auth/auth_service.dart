@@ -26,15 +26,32 @@ class AuthService {
   }
 
   // Fungsi Register
-  Future<UserCredential> register(String name, String email, String password) async {
+  Future<UserCredential> register(String shopName, String email, String password) async {
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      // Simpan data tambahan pengguna (seperti nama) ke Realtime Database
-      await _dbRef.child('sellers/${userCredential.user!.uid}').set({
-        'name': name,
+      final user = userCredential.user;
+      if (user == null) {
+        throw Exception("Gagal membuat pengguna, data pengguna tidak ditemukan.");
+      }
+
+      // 1. Buat entri baru di node 'shops' untuk mendapatkan shopId unik
+      final newShopRef = _dbRef.child('shops').push();
+      final shopId = newShopRef.key;
+
+      // 2. Siapkan data untuk ditulis ke database
+      final Map<String, dynamic> shopData = {
+        'ownerUid': user.uid,
+        'shopName': shopName,
         'email': email,
         'createdAt': ServerValue.timestamp,
+      };
+
+      // 3. Lakukan multi-path update untuk konsistensi data
+      await _dbRef.update({
+        'shops/$shopId': shopData, // Buat data toko baru
+        'sellers/${user.uid}': {...shopData, 'shopId': shopId}, // Simpan referensi shopId di data seller
       });
+
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw Exception('Registrasi gagal: ${e.message}');

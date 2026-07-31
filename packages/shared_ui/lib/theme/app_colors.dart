@@ -119,3 +119,5 @@ const Color kTransparent = Colors.transparent;
 const Color kVividOrchid = Color(0xFFD000C8);
 const Color kWarmOrange = Color(0xFFF57C00);
 const Color kDarkDivider = Color(0xFF24292E);
+const Color kSemanticError = AppColors.error;
+const Color kSemanticSuccess = AppColors.success;

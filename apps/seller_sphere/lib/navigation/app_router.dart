@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'app_navigator.dart';
 
 import 'app_shell_branches.dart';
@@ -13,6 +14,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../features/auth/login_screen.dart';
 import '../features/auth/register_screen.dart';
 import '../features/auth/forgot_password_screen.dart';
+import '../features/products/product_detail_screen.dart';
+import '../features/products/add_product_screen.dart';
 import '../screens/home/home_screen.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
@@ -100,6 +103,23 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const HomeScreen(), // Ganti dengan halaman utama Anda
+    ),
+    // Rute baru untuk detail produk
+    GoRoute(
+      path: AppRoutes.publicProductDetail, // '/shops/:shopId/products/:productId'
+      builder: (context, state) {
+        // Ekstrak parameter dari path URL
+        final shopId = state.pathParameters['shopId'] ?? 'ID Toko tidak ditemukan';
+        final productId = state.pathParameters['productId'] ?? 'ID Produk tidak ditemukan';
+        return ProductDetailScreen(
+          shopId: shopId,
+          productId: productId,
+        );
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.productAdd, // Path: '/products/add'
+      builder: (context, state) => const AddProductScreen(),
     ),
     
   ],

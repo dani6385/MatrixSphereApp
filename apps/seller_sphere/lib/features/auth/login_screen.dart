@@ -102,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       _errorMessage!,
                       style: const TextStyle(
-                          color: kError, // Menggunakan kSemanticError
+                          color: kSemanticError,
                           fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
