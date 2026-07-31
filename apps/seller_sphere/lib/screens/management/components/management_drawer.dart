@@ -37,10 +37,10 @@ class ManagementDrawer extends StatelessWidget {
         SideMenuItem(
           title: 'Product',
           icon: Icons.store,
-          isSelected: currentRoute.startsWith(AppRoutes.product),
+          isSelected: currentRoute.startsWith(AppRoutes.products),
           onTap: () {
             Navigator.of(context).pop();
-            context.go(AppRoutes.product);
+            context.go(AppRoutes.products);
           },
         ),
         SideMenuItem(

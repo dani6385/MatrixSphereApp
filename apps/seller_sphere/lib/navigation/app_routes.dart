@@ -23,7 +23,7 @@ class AppRoutes {
   static const String inventoryEdit = '/inventory/editproduct';
   static const String login = '/login';
   static const String manageStock = '/manage-stock'; // Rute untuk kelola stok
-  static const String product = '/management/products';
+  static const String products = '/management/products';
   
   static const String profile = '/profile';
   static const String register = '/login/register';
