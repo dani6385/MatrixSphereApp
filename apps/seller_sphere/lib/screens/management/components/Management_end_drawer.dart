@@ -1,11 +1,11 @@
-// lib/screens/widgets/Management_drawer.dart
+// lib/screens/widgets/Management_end_drawer.dart
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class ManagementDrawer extends StatelessWidget {
-  const ManagementDrawer({super.key});
+class ManagementEndDrawer extends StatelessWidget {
+  const ManagementEndDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class ManagementDrawer extends StatelessWidget {
             Icon(Icons.storefront, color: kBrandPrimary, size: 48),
             SizedBox(height: AppSpacing.sm),
             Text(
-              'Seller Sphere',
+              'Kalkulasi',
               style: TextStyle(
                 color: kDarkTextPrimary,
                 fontSize: 24,
@@ -31,7 +31,7 @@ class ManagementDrawer extends StatelessWidget {
       ),
       items: [
         SideMenuItem(
-          title: 'Product',
+          title: 'Edit',
           icon: Icons.store,
           isSelected: true,
           onTap: () {

@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'components/seller_appbar.dart';
 import 'components/seller_body.dart';
+import 'components/Seller_drawer.dart';
+import 'components/Seller_end_drawer.dart';
 
 class SellerScreen extends StatelessWidget {
   const SellerScreen({super.key});
@@ -17,6 +19,10 @@ class SellerScreen extends StatelessWidget {
       key: scaffoldKey, // 2. PASANG GLOBALKEY KE SCAFFOLD
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: const SellerAppBar(),
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
+      drawer: const SellerDrawer(),
+      endDrawer: const SellerEndDrawer(),
       body: const SellerBody(),
     );
   }

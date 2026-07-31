@@ -1,11 +1,11 @@
-// lib/screens/widgets/Management_drawer.dart
+// lib/screens/widgets/Seller_drawer.dart
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class ManagementDrawer extends StatelessWidget {
-  const ManagementDrawer({super.key});
+class SellerDrawer extends StatelessWidget {
+  const SellerDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {

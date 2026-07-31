@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'components/home_appbar.dart';
 import 'components/home_body.dart';
-import 'widgets/home_drawer.dart';
-import 'widgets/home_end_drawer.dart';
+import 'components/home_drawer.dart';
+import 'components/home_end_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
