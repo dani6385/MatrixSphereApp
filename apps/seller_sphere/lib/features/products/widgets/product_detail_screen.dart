@@ -11,7 +11,7 @@ class ProductDetailScreen extends StatelessWidget {
 
   const ProductDetailScreen({
     super.key,
-    required this.productId,
+    required this.productId, required String shopId,
   });
 
   @override

@@ -73,7 +73,7 @@ final List<StatefulShellBranch> appShellBranches = [
           GoRoute(
             path: ':productId',
             builder: (context, state) => ProductDetailScreen(
-              productId: state.pathParameters['productId']!,
+              productId: state.pathParameters['productId']!, shopId: '',
             ),
           ),
         ],

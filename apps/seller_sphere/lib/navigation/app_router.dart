@@ -14,9 +14,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../features/auth/login_screen.dart';
 import '../features/auth/register_screen.dart';
 import '../features/auth/forgot_password_screen.dart';
-import '../features/products/product_detail_screen.dart';
+//import '../features/products/product_detail_screen.dart';
 import '../features/products/add_product_screen.dart';
-import '../screens/home/home_screen.dart';
+import 'app_extraktor.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -120,6 +120,13 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.productAdd, // Path: '/products/add'
       builder: (context, state) => const AddProductScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.productEdit, // Path: '/products/:productId/edit'
+      builder: (context, state) {
+        final productId = state.pathParameters['productId'];
+        return AddProductScreen(productId: productId);
+      },
     ),
     
   ],

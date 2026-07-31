@@ -22,7 +22,7 @@ final List<RouteBase> commonDetailRoutes = [
   GoRoute(
     path: 'products/:productId',
     builder: (context, state) => ProductDetailScreen(
-      productId: state.pathParameters['productId']!,
+      productId: state.pathParameters['productId']!, shopId: '',
     ),
   ),
 ];

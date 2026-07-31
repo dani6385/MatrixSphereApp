@@ -5,7 +5,7 @@ import 'package:logger/logger.dart';
  final logger = Logger();
 
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key});
+  const AddProductScreen({super.key, String? productId});
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
