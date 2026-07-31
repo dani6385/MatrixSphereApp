@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/screens/home/home_screen.dart';
@@ -12,38 +11,41 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leadingWidth: 100, // 1. Beri ruang lebih untuk dua tombol
-      leading: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.menu), // Tombol menu kiri yang sudah ada
-            onPressed: () {
+      // Ganti Row dengan satu PopupMenuButton
+      leading: PopupMenuButton<String>(
+        icon: const Icon(Icons.menu), // Ikon utama untuk membuka dropdown
+        onSelected: (String value) {
+          // Logika ketika sebuah item menu dipilih
+          switch (value) {
+            case 'open_drawer':
               // Membuka drawer (menu kiri)
               HomeScreen.scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-          // 2. Tambahkan IconButton baru di sini
-          IconButton(
-            icon: const Icon(Icons.search), // Contoh: Ikon pencarian
-            onPressed: () {
-              // Tambahkan aksi untuk tombol ini, misalnya navigasi ke halaman pencarian
+              break;
+            case 'search':
+              // Navigasi ke halaman pencarian
               // context.push(AppRoutes.search);
-            },
+              break;
+            case 'settings':
+              // Navigasi ke halaman pengaturan
+              context.push(AppRoutes.settings);
+              break;
+            case 'edit':
+              // Navigasi ke halaman edit
+              // context.push(AppRoutes.editDashboard);
+              break;
+          }
+        },
+        itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+          const PopupMenuItem<String>(
+            value: 'open_drawer',
+            child: Text('Buka Menu Navigasi'),
           ),
-          IconButton(
-            icon: const Icon(Icons.settings), // Contoh: Ikon pencarian
-            onPressed: () {
-              // Tambahkan aksi untuk tombol ini, misalnya navigasi ke halaman pencarian
-              // context.push(AppRoutes.search);
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.edit), // Contoh: Ikon pencarian
-            onPressed: () {
-              // Tambahkan aksi untuk tombol ini, misalnya navigasi ke halaman pencarian
-              // context.push(AppRoutes.search);
-            },
-          ),
+          const PopupMenuItem<String>(
+              value: 'search', child: Text('Pencarian')),
+          const PopupMenuItem<String>(
+              value: 'settings', child: Text('Pengaturan')),
+          const PopupMenuItem<String>(
+              value: 'edit', child: Text('Edit Dasbor')),
         ],
       ),
       title: const Text('Dasbor Penjual'),
