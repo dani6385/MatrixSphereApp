@@ -43,6 +43,18 @@ class AuthService {
     }
   }
 
+  // Fungsi Kirim Email Reset Password
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      // Menangani error spesifik dari Firebase Auth
+      throw Exception('Gagal mengirim email: ${e.message}');
+    } catch (e) {
+      throw Exception('Terjadi kesalahan.');
+    }
+  }
+
   // Fungsi Logout
   Future<void> logout() async {
     await _auth.signOut();

@@ -7,13 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'app_navigator.dart';
 
 import 'app_shell_branches.dart';
-// d:\MatrixSphereApp\apps\seller_sphere\lib\navigation\app_router.dart
+
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'app_extraktor.dart';
-// Import halaman-halaman Anda di sini
-// import 'package:seller_sphere/features/auth/login_screen.dart'; // Contoh
-// import 'package:seller_sphere/features/home/home_screen.dart'; // Contoh
+import '../features/auth/login_screen.dart';
+import '../features/auth/register_screen.dart';
+import '../features/auth/forgot_password_screen.dart';
+import '../screens/home/home_screen.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -46,7 +46,9 @@ final GoRouter appRouter = GoRouter(
     final String location = state.uri.toString();
 
     // Daftar halaman publik yang bisa diakses tanpa login
-    final bool isPublicPage = location == '/login' || location == '/register'; // Sesuaikan dengan rute publik Anda
+    final bool isPublicPage = location == '/login' ||
+        location == '/register' ||
+        location == '/forgot-password'; // Sesuaikan dengan rute publik Anda
 
     // Skenario:
     // 1. Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
@@ -83,14 +85,18 @@ final GoRouter appRouter = GoRouter(
 
     // Rute-rute di luar Shell (misalnya, halaman login, register, dll.)
     // Ini penting agar redirect berfungsi dengan benar.
-    /*GoRoute(
+    GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: '/register',
       builder: (context, state) => const RegisterScreen(),
-    ),*/
+    ),
+    GoRoute(
+      path: '/forgot-password',
+      builder: (context, state) => const ForgotPasswordScreen(),
+    ),
     GoRoute(
       path: '/',
       builder: (context, state) => const HomeScreen(), // Ganti dengan halaman utama Anda
