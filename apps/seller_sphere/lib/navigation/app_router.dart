@@ -42,6 +42,10 @@ final List<StatefulShellBranch> appShellBranches = [
               ),
             ],
           ),
+          /*GoRoute(
+            path: 'approval', // Path menjadi: /management/approval
+            builder: (context, state) => const ApprovalScreen(), // Ganti dengan widget layar approval Anda
+          ),*/
         ]),
   ]),
   // Branch 4: Sellers (Inventory)

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class ManagementDrawer extends StatelessWidget {
@@ -9,6 +10,9 @@ class ManagementDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Dapatkan path rute saat ini dari GoRouter
+    final String currentRoute = GoRouterState.of(context).uri.toString();
+
     return SideMenu(
       header: const DrawerHeader(
         decoration: BoxDecoration(color: kDarkAppBar),
@@ -33,23 +37,23 @@ class ManagementDrawer extends StatelessWidget {
         SideMenuItem(
           title: 'Product',
           icon: Icons.store,
-          isSelected: true,
+          isSelected: currentRoute.startsWith(AppRoutes.product),
           onTap: () {
             Navigator.of(context).pop();
-            context.go('/product');
+            context.go(AppRoutes.product);
           },
         ),
         SideMenuItem(
           title: 'Approval',
           icon: Icons.playlist_add_check,
-          isSelected: false,
+          isSelected: currentRoute.startsWith(AppRoutes.approval),
           onTap: () {
             Navigator.of(context).pop();
-            context.go('/approval');
+            context.go(AppRoutes.approval);
           },
         ),
       ],
-      selectedRoute: null,
+      selectedRoute: currentRoute,
     );
   }
 }

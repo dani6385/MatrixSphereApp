@@ -8,8 +8,8 @@ class AppRoutes {
   //static const String attendanceProvider = '/attendance/providers';
   static const String access = '/access';
   static const String account = '/account'; // Rute baru untuk Akun
-  static const String aktifitas = '/activity';
-  static const String approval = '/approval';
+  static const String activity = '/activity';
+  static const String approval = '/management/approval';
   static const String approvalDetail = '/approval/approval-detail';
   static const String calendar = '/calendar';
   static const String camera = '/camera';
