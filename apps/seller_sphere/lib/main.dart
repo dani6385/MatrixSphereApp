@@ -5,10 +5,9 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'package:seller_sphere/navigation/app_router.dart';
-
+import 'navigation/app_router.dart';
 import 'package:shared_services/shared_services.dart';
-
+import 'package:shared_ui/shared_ui.dart';
 
 void main() async {
   // 1. Pastikan binding diinisialisasi terlebih dahulu
@@ -72,9 +71,19 @@ class _SellerSphereState extends State<SellerSphere> {
           // Add return statement here
           return MaterialApp.router(
             title: 'Seller Sphere',
-            theme: ThemeData.dark(), // Menggunakan tema dari shared_ui
             debugShowCheckedModeBanner: false,
-            routerConfig: appRouter, // Gunakan router dari app_router.dart
+            // --- KONFIGURASI TEMA ---
+            // Tema yang digunakan saat sistem dalam mode terang (light mode)
+            theme: AppTheme.light,
+
+            // Tema yang digunakan saat sistem dalam mode gelap (dark mode)
+            darkTheme: AppTheme.dark,
+
+            // Ini adalah kuncinya: aplikasi akan mengikuti pengaturan sistem
+            themeMode: ThemeMode.system,
+
+            // Konfigurasi router dari GoRouter
+            routerConfig: appRouter,
           );
         },
       ),

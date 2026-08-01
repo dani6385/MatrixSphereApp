@@ -28,7 +28,8 @@ class SideMenu extends StatelessWidget {
   const SideMenu({
     super.key,
     required this.header,
-    required this.items, required selectedRoute,
+    required this.items,
+    required selectedRoute,
   });
 
   @override
@@ -56,7 +57,8 @@ class SideMenu extends StatelessWidget {
         ),
         title: Text(
           item.title,
-          style: TextStyle(color: item.isSelected ? kBrandPrimary : kDarkTextPrimary),
+          style: TextStyle(
+              color: item.isSelected ? kBrandPrimary : kDarkTextPrimary),
         ),
         selected: item.isSelected,
         selectedTileColor: kBrandPrimary.withOpacity(0.1),
