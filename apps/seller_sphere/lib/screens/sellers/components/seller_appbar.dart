@@ -20,6 +20,7 @@ class _SellerAppBarState extends State<SellerAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.transparent,
       title: const Text('Seller'),
     );
   }

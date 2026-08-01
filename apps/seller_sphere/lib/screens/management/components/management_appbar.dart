@@ -22,6 +22,7 @@ class _ManagementAppBarState extends State<ManagementAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      backgroundColor: Colors.transparent,
       title: const Text('Management'),
     );
   }
