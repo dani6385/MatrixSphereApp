@@ -1,7 +1,7 @@
 
 export 'package:seller_sphere/features/chat/chat_screen.dart';
 export 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
-export 'package:seller_sphere/features/products/public_product.dart';
+export 'package:seller_sphere/features/products/public_product_screen.dart';
 export 'package:seller_sphere/features/products/product_screen.dart';
 export 'package:seller_sphere/features/products/widgets/product_detail_screen.dart';
 
