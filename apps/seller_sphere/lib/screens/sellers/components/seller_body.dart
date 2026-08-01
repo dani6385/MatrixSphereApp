@@ -1,5 +1,7 @@
+// lib/screens/sellers/components/seller_body.dart
 
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart'; // Impor AppStyles
 //import '../widgets/seller_welcome_header.dart';
 //import '../widgets/seller_summary_section.dart';
 //import '../widgets/seller_quick_actions_grid.dart';
@@ -12,7 +14,8 @@ class SellerBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(16.0),
+      // Menerapkan padding standar terpusat dari AppStyles
+      padding: AppStyles.defaultScreenPadding,
       children: const [
         //SellerWelcomeHeader(sellerName: 'Andi'),
         SizedBox(height: 24),

@@ -20,6 +20,7 @@ class SellerDrawer extends StatelessWidget {
             SizedBox(height: AppSpacing.sm),
             Text(
               'Seller Sphere',
+              // Menggunakan gaya teks konsisten jika diinginkan
               style: TextStyle(
                 color: kDarkTextPrimary,
                 fontSize: 24,

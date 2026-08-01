@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 import 'components/seller_appbar.dart';
 import 'components/seller_body.dart';
@@ -19,7 +20,8 @@ class SellerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey, // 2. PASANG GLOBALKEY KE SCAFFOLD
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      // Menerapkan warna latar belakang dari AppStyles (Tema Gelap/Terang)
+      backgroundColor: AppStyles.darkScaffoldBackgroundColor, 
       appBar: const SellerAppBar(),
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,

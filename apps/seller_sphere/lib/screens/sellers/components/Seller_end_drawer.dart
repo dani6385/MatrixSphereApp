@@ -11,6 +11,7 @@ class SellerEndDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SideMenu(
       header: const DrawerHeader(
+        // Menggunakan warna latar belakang AppBar dari konstanta yang konsisten
         decoration: BoxDecoration(color: kDarkAppBar),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -20,6 +21,7 @@ class SellerEndDrawer extends StatelessWidget {
             SizedBox(height: AppSpacing.sm),
             Text(
               'Kalkulasi',
+              // Menggunakan gaya teks dengan warna primer terang
               style: TextStyle(
                 color: kDarkTextPrimary,
                 fontSize: 24,
