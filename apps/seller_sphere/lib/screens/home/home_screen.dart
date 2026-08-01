@@ -12,14 +12,26 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: AppStyles.darkScaffoldBackgroundColor,
-      appBar: HomeAppBar(),
+      appBar: const HomeAppBar(),
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
-      drawer: HomeDrawer(),
-      endDrawer: HomeEndDrawer(),
-      body: HomeBody(),
+      drawer: const HomeDrawer(),
+      endDrawer: const HomeEndDrawer(),
+      body: HomeBody(
+        isScanning: false,
+        hasCameraPermission: false,
+        isCheckingLocation: false,
+        laserAnimation: const AlwaysStoppedAnimation(0.0), // Placeholder for Animation<double>
+        scanStatusMessage: '',
+        scanProgress: 0.0,
+        onCancelScan: () {},
+        onRequestPermission: () {},
+        onClockIn: () {},
+        onClockOut: () {},
+        onSync: () {},
+      ),
     );
   }
 }

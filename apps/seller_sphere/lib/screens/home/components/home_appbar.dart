@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
-//import 'package:go_router/go_router.dart';
 
-class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
+class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
 
   @override
-  State<HomeAppBar> createState() => _HomeAppBarState();
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return AppBar(
+      // Latar belakang transparan agar gradient dari body terlihat.
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      // Judul AppBar.
+      title: Text(
+        'Home',
+        style: TextStyle(
+          color: colorScheme.onSurface,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      centerTitle: true,
+      // Tombol di sebelah kanan (actions).
+    );
+  }
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class _HomeAppBarState extends State<HomeAppBar> {
-  // Nilai awal yang terpilih di dropdown
-
-  // Daftar opsi menu yang diminta
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: const Text('Home'),
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      elevation: Theme.of(context).appBarTheme.elevation,
-    );
-  }
 }
