@@ -19,10 +19,9 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    AppStyles.scaffoldBackgroundColor;
     return AppBar(
       title: const Text('Home'),
-      backgroundColor: AppStyles.appBarTheme.backgroundColor,
+      backgroundColor: AppStyles.scaffoldBackgroundColor,
         elevation: AppStyles.appBarTheme.elevation,
     );
   }

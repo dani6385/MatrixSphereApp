@@ -21,17 +21,6 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       // Tombol di sebelah kanan (actions).
-      actions: [
-        // IconButton untuk membuka endDrawer (menu pengaturan).
-        IconButton(
-          icon: Icon(
-            Icons.settings_outlined,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Scaffold.of(context).openEndDrawer(),
-          tooltip: 'Buka Pengaturan',
-        ),
-      ],
     );
   }
 
