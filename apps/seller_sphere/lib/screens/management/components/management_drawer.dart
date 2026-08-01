@@ -44,10 +44,10 @@ class ManagementDrawer extends StatelessWidget {
         SideMenuItem(
           title: 'Produk',
           icon: Icons.shopping_bag_outlined,
-          isSelected: selectedRoute == AppRoutes.products,
+          isSelected: selectedRoute == AppRoutes.publicProductDetail,
           onTap: () {
             Navigator.of(context).pop();
-            context.go(AppRoutes.products);
+            context.go(AppRoutes.publicProductDetail);
           },
         ),
         // Anda bisa menambahkan item menu lain di sini,
