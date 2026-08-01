@@ -1,19 +1,15 @@
-// lib/screens/widgets/Management_drawer.dart
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
-//import '../../../features/products/product_screen.dart';
 
 class ManagementDrawer extends StatelessWidget {
-  const ManagementDrawer({super.key});
+  final String? selectedRoute;
+
+  const ManagementDrawer({super.key, this.selectedRoute});
 
   @override
   Widget build(BuildContext context) {
-    // Dapatkan path rute saat ini dari GoRouter
-    final String currentRoute = GoRouterState.of(context).uri.toString();
-
     return SideMenu(
       header: const DrawerHeader(
         decoration: BoxDecoration(color: kDarkAppBar),
@@ -21,12 +17,12 @@ class ManagementDrawer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.storefront, color: kBrandPrimary, size: 48),
+            Icon(Icons.business_center, color: kBrandPrimary, size: 48),
             SizedBox(height: AppSpacing.sm),
             Text(
-              'Seller Sphere',
+              'Manajemen Toko',
               style: TextStyle(
-                color: kDarkTextPrimary,
+                color: kLightTextPrimary,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -36,25 +32,28 @@ class ManagementDrawer extends StatelessWidget {
       ),
       items: [
         SideMenuItem(
-          title: 'Product',
-          icon: Icons.store,
-          isSelected: currentRoute.startsWith(AppRoutes.products),
+          title: 'Dashboard',
+          icon: Icons.dashboard_outlined,
+          isSelected: selectedRoute == AppRoutes.management,
+          onTap: () {
+            Navigator.of(context).pop();
+            context.go(AppRoutes.management);
+          },
+        ),
+        // PENAMBAHAN: Item menu untuk halaman produk
+        SideMenuItem(
+          title: 'Produk',
+          icon: Icons.shopping_bag_outlined,
+          isSelected: selectedRoute == AppRoutes.products,
           onTap: () {
             Navigator.of(context).pop();
             context.go(AppRoutes.products);
           },
         ),
-        /*SideMenuItem(
-          title: 'Approval',
-          icon: Icons.playlist_add_check,
-          isSelected: currentRoute.startsWith(AppRoutes.approval),
-          onTap: () {
-            Navigator.of(context).pop();
-            context.go(AppRoutes.approval);
-          },
-        ),*/
+        // Anda bisa menambahkan item menu lain di sini,
+        // seperti Pesanan, Keuangan, dll.
       ],
-      selectedRoute: currentRoute,
+      selectedRoute: selectedRoute,
     );
   }
 }
