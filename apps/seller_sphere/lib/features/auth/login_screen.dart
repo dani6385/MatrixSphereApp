@@ -1,3 +1,5 @@
+// lib/screens/auth/login_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -36,15 +38,19 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  /// Memuat status "Remember Me" dan email yang tersimpan dari SharedPreferences.
+  /// Memuat status "Remember Me", email, dan password yang tersimpan.
   Future<void> _loadRememberMe() async {
     final prefs = await SharedPreferences.getInstance();
     final bool rememberMe = prefs.getBool('rememberMe') ?? false;
 
     if (rememberMe) {
       final String? email = prefs.getString('rememberedEmail');
+      // Membaca password terenkripsi dari secure storage
+      final credentials = await LocalAuthStorage.getCredentials();
+      
       setState(() {
         _emailController.text = email ?? '';
+        _passwordController.text = credentials['password'] ?? '';
         _rememberMe = true;
       });
     }
@@ -66,14 +72,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
         await _authService.login(email, password);
 
-        // Simpan atau hapus preferensi "Remember Me"
+        // Simpan atau hapus preferensi "Remember Me" dan Secure Credentials
         final prefs = await SharedPreferences.getInstance();
         if (_rememberMe) {
           await prefs.setBool('rememberMe', true);
           await prefs.setString('rememberedEmail', email);
+          // Simpan password secara aman menggunakan LocalAuthStorage
+          await LocalAuthStorage.saveCredentials(email, password);
         } else {
           await prefs.remove('rememberMe');
           await prefs.remove('rememberedEmail');
+          // Hapus kredensial tersimpan jika opsi dimatikan
+          await LocalAuthStorage.clearCredentials();
         }
 
         // Navigasi akan ditangani oleh AuthWrapper atau redirect GoRouter
@@ -94,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kDarkBackground,
+      backgroundColor: AppStyles.darkScaffoldBackgroundColor,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),
@@ -114,7 +124,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 32),
                 TextFormField(
                   controller: _emailController,
-                  // PENAMBAHAN: Memberitahu sistem bahwa ini adalah kolom email
                   autofillHints: const [AutofillHints.email, AutofillHints.username],
                   decoration: const InputDecoration(
                     labelText: 'Email / Username',
@@ -126,7 +135,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
-                  // PENAMBAHAN: Memberitahu sistem bahwa ini adalah kolom kata sandi
                   autofillHints: const [AutofillHints.password],
                   decoration: const InputDecoration(
                     labelText: 'Kata Sandi',
