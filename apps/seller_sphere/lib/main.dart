@@ -74,10 +74,10 @@ class _SellerSphereState extends State<SellerSphere> {
             debugShowCheckedModeBanner: false,
             // --- KONFIGURASI TEMA ---
             // Tema yang digunakan saat sistem dalam mode terang (light mode)
-            theme: AppTheme.light,
+            theme: AppTheme.lightTheme,
 
             // Tema yang digunakan saat sistem dalam mode gelap (dark mode)
-            darkTheme: AppTheme.dark,
+            darkTheme: AppTheme.darkTheme,
 
             // Ini adalah kuncinya: aplikasi akan mengikuti pengaturan sistem
             themeMode: ThemeMode.system,

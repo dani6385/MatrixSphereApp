@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 //import 'package:go_router/go_router.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -21,8 +20,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Home'),
-      backgroundColor: AppStyles.scaffoldBackgroundColor,
-        elevation: AppStyles.appBarTheme.elevation,
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      elevation: Theme.of(context).appBarTheme.elevation,
     );
   }
 }

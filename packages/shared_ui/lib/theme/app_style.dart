@@ -40,17 +40,39 @@ class AppStyles {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
   );
 
-  // --- Gaya Baru untuk Konsistensi Layar ---
+  // --- Gaya Tema Gelap (Dark Theme) ---
 
   /// Warna latar belakang default untuk Scaffold di sebagian besar layar utama.
-  static const Color scaffoldBackgroundColor = kBrandTertiary;
+  static const Color darkScaffoldBackgroundColor = kBrandTertiary;
 
   /// Gaya AppBar default untuk konsistensi di seluruh aplikasi.
-  static final AppBarTheme appBarTheme = AppBarTheme(
+  static final AppBarTheme darkAppBarTheme = AppBarTheme(
     backgroundColor: kDarkSecondary,
     elevation: 2,
     iconTheme: const IconThemeData(color: kLightTextPrimary), // Warna ikon (misal: hamburger menu)
     titleTextStyle: const TextStyle(color: kLightTextPrimary, fontSize: 20, fontWeight: FontWeight.w500),
+  );
+
+  // --- Gaya Tema Terang (Light Theme) ---
+
+  /// Warna latar belakang default untuk Scaffold pada tema terang.
+  static const Color lightScaffoldBackgroundColor = kLightBackground;
+
+  /// Gaya AppBar untuk tema terang.
+  static final AppBarTheme lightAppBarTheme = AppBarTheme(
+    backgroundColor: kLightAppBar,
+    elevation: 1,
+    iconTheme: const IconThemeData(color: kLightTextPrimary),
+    titleTextStyle: const TextStyle(color: kLightTextPrimary, fontSize: 20, fontWeight: FontWeight.w500),
+  );
+
+  /// Gaya untuk OutlinedButton pada tema terang.
+  static final ButtonStyle lightOutlinedButtonStyle = OutlinedButton.styleFrom(
+    foregroundColor: kLightTextPrimary,
+    side: const BorderSide(color: kLightBorder),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
   );
 
   // Metode untuk mendapatkan gaya teks, bergantung pada TextTheme

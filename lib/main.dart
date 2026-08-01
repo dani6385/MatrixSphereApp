@@ -58,8 +58,8 @@ class MatrixSphere extends StatelessWidget {
           // Ganti ke MaterialApp.router
           return MaterialApp.router(
             title: 'Matrix Sphere',
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
             themeMode: themeProvider.themeMode,
             routerConfig: appRouter, // Gunakan konfigurasi router baru
           );
