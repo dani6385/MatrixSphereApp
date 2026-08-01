@@ -1,11 +1,15 @@
-
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
+import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
 
- final logger = Logger();
-
+/// A screen for adding a new product or editing an existing one.
 class AddProductScreen extends StatefulWidget {
-  const AddProductScreen({super.key, String? productId});
+  /// The ID of the product to edit. If null, the screen is in "add" mode.
+  final String? productId;
+
+  const AddProductScreen({super.key, this.productId});
 
   @override
   State<AddProductScreen> createState() => _AddProductScreenState();
@@ -13,39 +17,107 @@ class AddProductScreen extends StatefulWidget {
 
 class _AddProductScreenState extends State<AddProductScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _productNameController = TextEditingController();
-  final TextEditingController _productDescriptionController = TextEditingController();
-  final TextEditingController _productPriceController = TextEditingController();
+  final _productService = ProductService();
+
+  late final TextEditingController _nameController;
+  late final TextEditingController _descriptionController;
+  late final TextEditingController _priceController;
+  late final TextEditingController _stockController;
+
+  bool _isLoading = false;
+  bool get _isEditMode => widget.productId != null;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController();
+    _descriptionController = TextEditingController();
+    _priceController = TextEditingController();
+    _stockController = TextEditingController();
+
+    if (_isEditMode) {
+      _loadProductData();
+    }
+  }
 
   @override
   void dispose() {
-    _productNameController.dispose();
-    _productDescriptionController.dispose();
-    _productPriceController.dispose();
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _priceController.dispose();
+    _stockController.dispose();
     super.dispose();
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      // Process data
-      final String productName = _productNameController.text;
-      final String productDescription = _productDescriptionController.text;
-      final double productPrice = double.tryParse(_productPriceController.text) ?? 0.0;
+  Future<void> _loadProductData() async {
+    setState(() => _isLoading = true);
+    try {
+      // Mengambil data produk dari stream untuk mode edit
+      final product = await _productService
+          .getProductsStream()
+          .expand((products) => products)
+          .firstWhere((product) => product.id == widget.productId);
 
-      // For now, just print the data
-      logger.i('Product Name: $productName');
-      logger.i('Product Description: $productDescription');
-      logger.i('Product Price: $productPrice');
+      _nameController.text = product.name;
+      _descriptionController.text = product.description;
+      _priceController.text = product.price.toStringAsFixed(0);
+      _stockController.text = product.stock.toString();
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal memuat data produk: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
 
-      // In a real app, you would send this data to a backend service
-      // e.g., context.read<ProductProvider>().addProduct(productName, productDescription, productPrice);
+  Future<void> _saveProduct() async {
+    if (!_formKey.currentState!.validate()) {
+      return; // Jika form tidak valid, jangan lanjutkan
+    }
 
-      // Optionally, navigate back or show a success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Produk berhasil ditambahkan!')),
-      );      // Navigator.of(context).pop(); // Use this if not using GoRouter
-      // Using GoRouter to navigate back
-      Navigator.of(context).pop();
+    setState(() => _isLoading = true);
+
+    try {
+      final product = Product(
+        id: _isEditMode
+            ? widget.productId!
+            : '', // ID akan digenerate oleh Firebase jika baru
+        name: _nameController.text,
+        description: _descriptionController.text,
+        price: double.tryParse(_priceController.text) ?? 0.0,
+        stock: int.tryParse(_stockController.text) ?? 0,
+        sellingPrice: null,
+        purchasePrice: null,
+        shopId: '',
+      );
+
+      if (_isEditMode) {
+        await _productService.updateProduct(product);
+      } else {
+        await _productService.addProduct(product);
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Produk berhasil disimpan!')),
+        );
+        context.pop(); // Kembali ke layar sebelumnya setelah berhasil
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal menyimpan produk: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -53,81 +125,77 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Produk Baru'),
+        title: Text(_isEditMode ? 'Edit Produk' : 'Tambah Produk Baru'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              TextFormField(
-                controller: _productNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Nama Produk',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Nama produk tidak boleh kosong';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _productDescriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Deskripsi Produk',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Deskripsi produk tidak boleh kosong';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _productPriceController,
-                decoration: const InputDecoration(
-                  labelText: 'Harga Produk',
-                  border: OutlineInputBorder(),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Harga produk tidak boleh kosong';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'Harga harus berupa angka';
-                  }
-                  if (double.parse(value) <= 0) {
-                    return 'Harga harus lebih besar dari 0';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 24.0),
-              ElevatedButton(
-                onPressed: _submitForm,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-                child: const Text(
-                  'Tambah Produk',
-                  style: TextStyle(fontSize: 18.0),
+      body: _isLoading && !_isEditMode
+          ? const Center(child: CircularProgressIndicator())
+          : Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                padding: AppStyles.defaultScreenPadding,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      decoration:
+                          const InputDecoration(labelText: 'Nama Produk'),
+                      validator: (value) => (value == null || value.isEmpty)
+                          ? 'Nama produk tidak boleh kosong'
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _descriptionController,
+                      decoration: const InputDecoration(labelText: 'Deskripsi'),
+                      maxLines: 3,
+                      validator: (value) => (value == null || value.isEmpty)
+                          ? 'Deskripsi tidak boleh kosong'
+                          : null,
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _priceController,
+                      decoration: const InputDecoration(
+                          labelText: 'Harga', prefixText: 'Rp '),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Harga tidak boleh kosong';
+                        if (double.tryParse(value) == null)
+                          return 'Format harga tidak valid';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _stockController,
+                      decoration:
+                          const InputDecoration(labelText: 'Jumlah Stok'),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      validator: (value) {
+                        if (value == null || value.isEmpty)
+                          return 'Stok tidak boleh kosong';
+                        if (int.tryParse(value) == null)
+                          return 'Format stok tidak valid';
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _isLoading ? null : _saveProduct,
+        label: _isLoading
+            ? const CircularProgressIndicator(color: Colors.white)
+            : Text(_isEditMode ? 'Simpan Perubahan' : 'Tambah Produk'),
+        icon: _isLoading ? null : const Icon(Icons.save),
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

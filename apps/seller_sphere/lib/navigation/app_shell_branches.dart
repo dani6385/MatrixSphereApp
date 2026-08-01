@@ -4,7 +4,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:seller_sphere/navigation/custom_transition_page.dart';
-import 'package:shared_services/shared_services.dart';
 import 'app_extraktor.dart';
 import 'app_common_routes.dart'; // Mengimpor rute umum
 
@@ -55,28 +54,8 @@ final List<StatefulShellBranch> appShellBranches = [
       GoRoute(
         path: AppRoutes.sellers,
         pageBuilder: (context, state) => FadeTransitionPage(
-            child: ProductScreen(
-          shopUid: '',
-          product: Product(
-            id: 'dummy_id',
-            name: 'Dummy Product',
-            price: 0.0,
-            stock: 0,
-            description: '',
-            imageUrl: '',
-            shopId: '',
-            sellingPrice: 0.0,
-            purchasePrice: 0.0,
-          ),
-        )),
-        routes: [
-          GoRoute(
-            path: ':productId',
-            builder: (context, state) => ProductDetailScreen(
-              productId: state.pathParameters['productId']!, shopId: '',
-            ),
-          ),
-        ],
+            child: const SellerScreen()),
+        routes: commonDetailRoutes,
       ),
     ],
   ),

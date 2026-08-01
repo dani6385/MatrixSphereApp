@@ -20,15 +20,19 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // Data untuk ikon, dipetakan berdasarkan rute
     const Map<String, ({IconData icon, IconData activeIcon})> tabIcons = {
-      AppRoutes.home: (icon: Icons.home_outlined, activeIcon: Icons.home),
-      AppRoutes.stream: (icon: Icons.cast, activeIcon: Icons.cast_connected),
+      AppRoutes.home: (
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home),
+      AppRoutes.stream: (
+        icon: Icons.cast,
+        activeIcon: Icons.cast_connected),
       AppRoutes.management: (
         icon: Icons.point_of_sale,
         activeIcon: Icons.point_of_sale_outlined
       ),
       AppRoutes.sellers: (
-        icon: Icons.inventory_2,
-        activeIcon: Icons.inventory_2_outlined
+        icon: Icons.person,
+        activeIcon: Icons.person_2_outlined
       ),
       AppRoutes.attendance: (
         icon: Icons.fingerprint_outlined,

@@ -94,7 +94,7 @@ class _AttendanceViewState extends State<AttendanceView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kBrandTertiary,
+      backgroundColor: AppStyles.darkScaffoldBackgroundColor,
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
       appBar: const AttendanceAppBar(),
