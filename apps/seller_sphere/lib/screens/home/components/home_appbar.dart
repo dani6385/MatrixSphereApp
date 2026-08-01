@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 //import 'package:go_router/go_router.dart';
-//import 'package:shared_ui/shared_ui.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -19,9 +19,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    AppStyles.scaffoldBackgroundColor;
     return AppBar(
-      backgroundColor: Colors.transparent,
       title: const Text('Home'),
+      backgroundColor: AppStyles.appBarTheme.backgroundColor,
+        elevation: AppStyles.appBarTheme.elevation,
     );
   }
 }

@@ -63,7 +63,7 @@ class _ProductScreenState extends State<ProductScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kDarkBackground,
+      backgroundColor: kBrandTertiary, // Menyamakan background dengan Attendance
       appBar: AppBar(
         title: const Text('Manajemen Produk'),
         backgroundColor: kDarkSecondary,

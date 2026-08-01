@@ -100,7 +100,6 @@ class _AttendanceViewState extends State<AttendanceView>
       appBar: const AttendanceAppBar(),
       drawer: const AttendanceDrawer(),
       endDrawer: const AttendanceEndDrawer(),
-      //endDrawer: const SettingScreen(),
       body: Consumer<AttendanceViewModel>(
         builder: (context, viewModel, child) {
           return AttendanceBody(
