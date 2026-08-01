@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../features/auth/login_screen.dart';
 import '../features/auth/register_screen.dart';
 import '../features/auth/forgot_password_screen.dart';
+import 'package:shared_services/shared_services.dart'; // Import Product model
 //import '../features/products/product_detail_screen.dart';
 import '../features/products/add_product_screen.dart';
 import 'app_extraktor.dart';
@@ -70,7 +71,8 @@ final GoRouter appRouter = GoRouter(
     return null;
   },
   // Ini adalah bagian KRUSIAL untuk persistensi sesi dengan GoRouter
-  refreshListenable: GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
+  refreshListenable:
+      GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
   errorBuilder: (context, state) => Scaffold(
     body: Center(
       child: Text('Halaman tidak ditemukan: ${state.error}'),
@@ -102,18 +104,31 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: '/',
-      builder: (context, state) => const HomeScreen(), // Ganti dengan halaman utama Anda
+      builder: (context, state) =>
+          const HomeScreen(), // Ganti dengan halaman utama Anda
     ),
     // Rute baru untuk detail produk
     GoRoute(
-      path: AppRoutes.publicProductDetail, // '/shops/:shopId/products/:productId'
+      path: AppRoutes.products, // '/shops/:shopId/products/:productId'
       builder: (context, state) {
-        // Ekstrak parameter dari path URL
-        final shopId = state.pathParameters['shopId'] ?? 'ID Toko tidak ditemukan';
-        final productId = state.pathParameters['productId'] ?? 'ID Produk tidak ditemukan';
-        return ProductDetailScreen(
-          shopId: shopId,
-          productId: productId,
+        // The ProductScreen constructor requires a Product object.
+        // Since this route likely displays a list of products and not a single one,
+        // a dummy Product object is passed to satisfy the constructor,
+        // similar to how it's handled in app_shell_branches.dart.
+        return ProductScreen(
+          shopUid:
+              '', // Pass an empty string or null if shopUid is not relevant for this route
+          product: Product(
+            id: 'dummy_id_from_router', // Placeholder ID
+            name: 'Dummy Product', // Placeholder name
+            price: 0.0,
+            stock: 0,
+            description: '',
+            imageUrl: '',
+            shopId: '',
+            sellingPrice: 0.0,
+            purchasePrice: 0.0,
+          ),
         );
       },
     ),
@@ -128,6 +143,5 @@ final GoRouter appRouter = GoRouter(
         return AddProductScreen(productId: productId);
       },
     ),
-    
   ],
 );
