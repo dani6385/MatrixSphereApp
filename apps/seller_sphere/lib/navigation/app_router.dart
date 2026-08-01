@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/features/auth/shop_registration_screen.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 import 'app_navigator.dart';
 
@@ -14,8 +15,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../features/auth/login_screen.dart';
 import '../features/auth/register_screen.dart';
 import '../features/auth/forgot_password_screen.dart';
-import 'package:shared_services/shared_services.dart'; // Import Product model
-//import '../features/products/product_detail_screen.dart';
+
+
 import '../features/products/add_product_screen.dart';
 import 'app_extraktor.dart';
 
@@ -107,29 +108,19 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) =>
           const HomeScreen(), // Ganti dengan halaman utama Anda
     ),
+    GoRoute(
+      path: '/shop-registration',
+      builder: (context, state) => const ShopRegistrationScreen(),
+    ),
     // Rute baru untuk detail produk
     GoRoute(
-      path: AppRoutes.products, // '/shops/:shopId/products/:productId'
+      path: AppRoutes.publicProduct, // '/shops/:shopId/products/:productId'
       builder: (context, state) {
         // The ProductScreen constructor requires a Product object.
         // Since this route likely displays a list of products and not a single one,
         // a dummy Product object is passed to satisfy the constructor,
         // similar to how it's handled in app_shell_branches.dart.
-        return ProductScreen(
-          shopUid:
-              '', // Pass an empty string or null if shopUid is not relevant for this route
-          product: Product(
-            id: 'dummy_id_from_router', // Placeholder ID
-            name: 'Dummy Product', // Placeholder name
-            price: 0.0,
-            stock: 0,
-            description: '',
-            imageUrl: '',
-            shopId: '',
-            sellingPrice: 0.0,
-            purchasePrice: 0.0,
-          ),
-        );
+        return const PublicProductScreen();
       },
     ),
     GoRoute(
