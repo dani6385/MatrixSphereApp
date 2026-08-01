@@ -84,6 +84,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
     try {
       final product = Product(
+        shopId: '',
         id: _isEditMode
             ? widget.productId!
             : '', // ID akan digenerate oleh Firebase jika baru
@@ -91,9 +92,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         description: _descriptionController.text,
         price: double.tryParse(_priceController.text) ?? 0.0,
         stock: int.tryParse(_stockController.text) ?? 0,
-        sellingPrice: null,
-        purchasePrice: null,
-        shopId: '',
+        sellingPrice: 0.0,
+        purchasePrice: 0.0,
       );
 
       if (_isEditMode) {
@@ -104,7 +104,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Produk berhasil disimpan!')),
+          const SnackBar(content: Text('Produk berhasil disimpan!')),
         );
         context.pop(); // Kembali ke layar sebelumnya setelah berhasil
       }
@@ -161,10 +161,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (value) {
-                        if (value == null || value.isEmpty)
+                        if (value == null || value.isEmpty) {
                           return 'Harga tidak boleh kosong';
-                        if (double.tryParse(value) == null)
+                        }
+                        if (double.tryParse(value) == null) {
                           return 'Format harga tidak valid';
+                        }
                         return null;
                       },
                     ),
@@ -176,10 +178,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (value) {
-                        if (value == null || value.isEmpty)
+                        if (value == null || value.isEmpty) {
                           return 'Stok tidak boleh kosong';
-                        if (int.tryParse(value) == null)
+                        }
+                        if (int.tryParse(value) == null) {
                           return 'Format stok tidak valid';
+                        }
                         return null;
                       },
                     ),
