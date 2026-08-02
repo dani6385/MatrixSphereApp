@@ -11,7 +11,7 @@ class ManagementEndDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SideMenu(
       header: const DrawerHeader(
-        decoration: BoxDecoration(color: kDarkAppBar),
+        decoration: BoxDecoration(color: kAccentBlue),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,

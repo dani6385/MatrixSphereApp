@@ -100,5 +100,13 @@ final GoRouter appRouter = GoRouter(
       path: '/shop-registration',
       builder: (context, state) => const ShopRegistrationScreen(),
     ),
+    GoRoute(
+      path: '/products',
+      builder: (context, state) => const PublicProductScreen(),
+    ),
+    GoRoute(
+      path: '/addproducts',
+      builder: (context, state) => const AddProductScreen(),
+    ),
   ],
 );

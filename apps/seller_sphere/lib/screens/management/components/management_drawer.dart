@@ -12,7 +12,7 @@ class ManagementDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SideMenu(
       header: const DrawerHeader(
-        decoration: BoxDecoration(color: kDarkAppBar),
+        decoration: BoxDecoration(color: kAccent),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,11 +45,11 @@ class ManagementDrawer extends StatelessWidget {
           title: 'Produk',
           icon: Icons.shopping_bag_outlined,
           // Ganti dengan rute produk Anda yang sebenarnya
-          route: '/management/products', onTap: () {},
+          route: '/products', onTap: () {},
         ),
       ],
       selectedRoute: selectedRoute ?? '',
-      footer: const Text('Management Sphere v1.0.0'),
+      footer: const Text('Seller Sphere v1.0.0'),
       onItemSelected: (SideMenuItem item) {
         Navigator.of(context).pop(); // 1. Tutup drawer
         item.onTap.call(); // 2. Panggil onTap dari item
