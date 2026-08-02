@@ -1,29 +1,37 @@
-// lib/screens/widgets/management_app_bar.dart
-
 import 'package:flutter/material.dart';
-//import 'package:go_router/go_router.dart';
-//import 'package:shared_ui/shared_ui.dart';
 
-class ManagementAppBar extends StatefulWidget implements PreferredSizeWidget {
+class ManagementAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ManagementAppBar({super.key});
-
-  @override
-  State<ManagementAppBar> createState() => _ManagementAppBarState();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
-class _ManagementAppBarState extends State<ManagementAppBar> {
-  // Nilai awal yang terpilih di dropdown
-
-  // Daftar opsi menu yang diminta
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.transparent,
-      title: const Text('Management'),
+      // Menghapus ikon default dan menggantinya dengan IconButton kustom
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        // Inilah ikon yang Anda ingin ganti.
+        // Saya akan menggantinya dari Icons.menu menjadi Icons.dashboard_customize_outlined
+        icon: const Icon(Icons.dashboard_customize_outlined),
+        tooltip: 'Open Menu',
+        onPressed: () {
+          // Logika untuk membuka drawer utama (kiri)
+          Scaffold.of(context).openDrawer();
+        },
+      ),
+      title: const Text('Management Dashboard'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.filter_list),
+          tooltip: 'Open Filters',
+          onPressed: () {
+            // Logika untuk membuka endDrawer (kanan)
+            Scaffold.of(context).openEndDrawer();
+          },
+        ),
+      ],
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

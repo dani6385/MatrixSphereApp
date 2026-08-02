@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/screens/management/components/Management_end_drawer.dart';
-import 'package:seller_sphere/screens/management/components/management_appbar.dart';
-import 'package:seller_sphere/screens/management/components/management_drawer.dart';
+
+import 'components/management_appbar.dart';
+import 'components/management_drawer.dart';
+import 'components/Management_end_drawer.dart';
 
 class ManagementScreen extends StatelessWidget {
   const ManagementScreen({super.key});
@@ -10,7 +11,10 @@ class ManagementScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: ManagementAppBar(),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: ManagementAppBar(),
+      ),
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
       drawer: ManagementDrawer(),

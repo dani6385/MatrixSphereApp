@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class ManagementDrawer extends StatelessWidget {
@@ -29,15 +31,15 @@ class ManagementDrawer extends StatelessWidget {
         ),
       ),
       items: [
-        /*SideMenuItem(
+        SideMenuItem(
           title: 'Dashboard',
           icon: Icons.dashboard_outlined,
           isSelected: selectedRoute == AppRoutes.management,
           onTap: () {
             Navigator.of(context).pop();
             context.go(AppRoutes.management);
-          },
-        ),*/
+          }, route: '',
+        ),
         // PENAMBAHAN: Item menu untuk halaman produk
         SideMenuItem(
           title: 'Produk',
