@@ -5,7 +5,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'screens/home/home_screen.dart';
+import 'navigation/bottom_nav_bar.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -49,12 +49,26 @@ class SellerSphere extends StatefulWidget {
 }
 
 class _SellerSphereState extends State<SellerSphere> {
-  late final AuthBloc _authBloc;
+  late final AuthBloc _authBloc; // Keep existing bloc initialization
+  int _selectedIndex = 0; // Add state to manage the current index of the bottom nav bar
 
   @override
   void initState() {
     super.initState();
     _authBloc = AuthBloc(authService: AuthService());
+    // Initialize _selectedIndex if needed, e.g., from saved preferences
+  }
+
+  // Callback function for when a bottom navigation bar item is tapped
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    // TODO: Implement navigation logic here based on the selected index.
+    // This might involve using GoRouter to navigate to different routes
+    // or updating the body of the Scaffold.
+    debugPrint('Tapped on index: $index');
+
   }
 
   @override
@@ -83,7 +97,17 @@ class _SellerSphereState extends State<SellerSphere> {
             themeMode: ThemeMode.system,
 
             // Konfigurasi router dari GoRouter
-            home: const HomeScreen(),
+            // The 'bottom_nav_bar' parameter is not a valid property for MaterialApp.
+            // Instead, the BottomNavBar should be placed within a Scaffold's bottomNavigationBar property.
+            home: Scaffold(
+              appBar: AppBar(
+                title: const Text('Seller Sphere'), // Placeholder AppBar title
+              ),
+              body: Center(
+                child: Text('Content for tab $_selectedIndex'), // Placeholder body content
+              ),
+              bottomNavigationBar: BottomNavBar(currentIndex: _selectedIndex, onTap: _onItemTapped),
+            ),
           );
         },
       ),
