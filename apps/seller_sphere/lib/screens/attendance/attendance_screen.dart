@@ -10,6 +10,8 @@ class AttendanceScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Attendance'),
       ),
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
       body: const Center(
         child: Text('Attendance Screen Content'),
       ),

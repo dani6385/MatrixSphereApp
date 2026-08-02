@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 //import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_services/shared_services.dart';
-import 'login_screen.dart';
+import '../auth/logins/login_screen.dart';
 
 /// Enum untuk merepresentasikan status toko pengguna.
 enum ShopStatus { none, pending, approved }

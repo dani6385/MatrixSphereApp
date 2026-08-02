@@ -10,6 +10,8 @@ class ManagementScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Management'),
       ),
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
       body: const Center(
         child: Text('Management Screen Content'),
       ),

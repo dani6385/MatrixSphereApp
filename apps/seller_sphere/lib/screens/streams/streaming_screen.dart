@@ -17,6 +17,8 @@ class _StreamingScreenState extends State<StreamingScreen> {
       appBar: AppBar(
         title: const Text('Streaming Screen'),
       ),
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
       body: Center(
         child: Text('Welcome to the Streaming Screen! Stream ID: ${widget.streamId}'),
       ),

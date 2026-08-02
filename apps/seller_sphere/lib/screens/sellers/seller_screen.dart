@@ -10,6 +10,8 @@ class SellerScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Sellers'),
       ),
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
       body: const Center(
         child: Text('Welcome to the Seller Screen!'),
       ),
