@@ -42,7 +42,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             icon: const Icon(Icons.edit_outlined),
             tooltip: 'Edit Produk',
             onPressed: () {
-              context.go(AppRoutes.productEdit.replaceFirst(':productId', widget.productId));
+              context.go(AppRoutes.editProduct.replaceFirst(':productId', widget.productId));
             },
           ),
         ],

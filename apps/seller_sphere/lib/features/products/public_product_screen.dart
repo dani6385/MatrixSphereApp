@@ -32,7 +32,7 @@ class _PublicProductScreenState extends State<PublicProductScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Navigasi ke halaman tambah produk (menggunakan rute addProduct)
-          context.go(AppRoutes.addProduct); 
+          context.push(AppRoutes.addProduct); 
         },
         child: const Icon(Icons.add),
       ),

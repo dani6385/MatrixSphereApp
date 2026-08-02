@@ -13,13 +13,33 @@ final List<StatefulShellBranch> appShellBranches = [
   // Branch untuk Tab Home
   StatefulShellBranch(
     routes: [
-      GoRoute(
-        path: AppRoutes.home,
-        pageBuilder: (context, state) =>
-            FadeTransitionPage(child: const HomeScreen()),
-        routes: commonDetailRoutes,
-      ),
-    ],
+        GoRoute(
+          path: '/',
+          name: AppRoutes.home,
+          builder: (context, state) => const HomeScreen(),
+          routes: [
+            // Sub-rute dari Home
+            GoRoute(
+              path: 'products', // Path relatif: /products
+              name: AppRoutes.products,
+              builder: (context, state) => const PublicProductScreen(),
+              routes: [
+                GoRoute(
+                  path: 'add', // Path relatif: /products/add
+                  name: AppRoutes.addProduct,
+                  builder: (context, state) => const AddProductScreen(),
+                ),
+                GoRoute(
+                  path: 'edit', // Path relatif: /products/add
+                  name: AppRoutes.editProduct,
+                  builder: (context, state) => const AddProductScreen(),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+
   ),
 
   // Branch untuk Tab Stream
@@ -43,9 +63,24 @@ final List<StatefulShellBranch> appShellBranches = [
         path: AppRoutes.management,
         pageBuilder: (context, state) =>
             FadeTransitionPage(child: const ManagementScreen()),
-        routes: commonDetailRoutes,
-      ),
-    ],
+        routes: [
+            // Sub-rute dari Home
+            GoRoute(
+              path: 'products', // Path relatif: /products
+              name: AppRoutes.products,
+              builder: (context, state) => const PublicProductScreen(),
+              routes: [
+                GoRoute(
+                  path: 'add', // Path relatif: /products/add
+                  name: AppRoutes.addProduct,
+                  builder: (context, state) => const AddProductScreen(),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+
   ),
 
   // Branch untuk Tab Sellers (Products)

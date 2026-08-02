@@ -5,7 +5,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/features/auth/shop_registration_screen.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
 import 'app_navigator.dart';
 
 import 'app_shell_branches.dart';
@@ -17,7 +16,6 @@ import '../features/auth/register_screen.dart';
 import '../features/auth/forgot_password_screen.dart';
 
 
-import '../features/products/add_product_screen.dart';
 import 'app_extraktor.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
@@ -111,28 +109,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/shop-registration',
       builder: (context, state) => const ShopRegistrationScreen(),
-    ),
-    // Rute baru untuk detail produk
-    GoRoute(
-      path: AppRoutes.publicProduct, // '/shops/:shopId/products/:productId'
-      builder: (context, state) {
-        // The ProductScreen constructor requires a Product object.
-        // Since this route likely displays a list of products and not a single one,
-        // a dummy Product object is passed to satisfy the constructor,
-        // similar to how it's handled in app_shell_branches.dart.
-        return const PublicProductScreen();
-      },
-    ),
-    GoRoute(
-      path: AppRoutes.addProduct, // Path: '/products/add'
-      builder: (context, state) => const AddProductScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.productEdit, // Path: '/products/:productId/edit'
-      builder: (context, state) {
-        final productId = state.pathParameters['productId'];
-        return AddProductScreen(productId: productId);
-      },
     ),
   ],
 );
