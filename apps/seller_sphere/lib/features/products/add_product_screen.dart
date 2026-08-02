@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'widgets/product_form_fields.dart';
 
 /// A screen for adding a new product or editing an existing one.
 class AddProductScreen extends StatefulWidget {
@@ -52,7 +52,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Future<void> _loadProductData() async {
     setState(() => _isLoading = true);
     try {
-      // Mengambil data produk dari stream untuk mode edit
       final product = await _productService
           .getProductsStream()
           .expand((products) => products)
@@ -77,7 +76,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   Future<void> _saveProduct() async {
     if (!_formKey.currentState!.validate()) {
-      return; // Jika form tidak valid, jangan lanjutkan
+      return;
     }
 
     setState(() => _isLoading = true);
@@ -85,9 +84,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     try {
       final product = Product(
         shopId: '',
-        id: _isEditMode
-            ? widget.productId!
-            : '', // ID akan digenerate oleh Firebase jika baru
+        id: _isEditMode ? widget.productId! : '',
         name: _nameController.text,
         description: _descriptionController.text,
         price: double.tryParse(_priceController.text) ?? 0.0,
@@ -106,7 +103,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Produk berhasil disimpan!')),
         );
-        context.pop(); // Kembali ke layar sebelumnya setelah berhasil
+        context.pop();
       }
     } catch (e) {
       if (mounted) {
@@ -129,67 +126,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
       ),
       body: _isLoading && !_isEditMode
           ? const Center(child: CircularProgressIndicator())
-          : Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                padding: AppStyles.defaultScreenPadding,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextFormField(
-                      controller: _nameController,
-                      decoration:
-                          const InputDecoration(labelText: 'Nama Produk'),
-                      validator: (value) => (value == null || value.isEmpty)
-                          ? 'Nama produk tidak boleh kosong'
-                          : null,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _descriptionController,
-                      decoration: const InputDecoration(labelText: 'Deskripsi'),
-                      maxLines: 3,
-                      validator: (value) => (value == null || value.isEmpty)
-                          ? 'Deskripsi tidak boleh kosong'
-                          : null,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _priceController,
-                      decoration: const InputDecoration(
-                          labelText: 'Harga', prefixText: 'Rp '),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Harga tidak boleh kosong';
-                        }
-                        if (double.tryParse(value) == null) {
-                          return 'Format harga tidak valid';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _stockController,
-                      decoration:
-                          const InputDecoration(labelText: 'Jumlah Stok'),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Stok tidak boleh kosong';
-                        }
-                        if (int.tryParse(value) == null) {
-                          return 'Format stok tidak valid';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 32),
-                  ],
-                ),
+          : SingleChildScrollView(
+              padding: AppStyles.defaultScreenPadding,
+              child: ProductFormFields(
+                formKey: _formKey,
+                nameController: _nameController,
+                descriptionController: _descriptionController,
+                priceController: _priceController,
+                stockController: _stockController,
               ),
             ),
       floatingActionButton: FloatingActionButton.extended(

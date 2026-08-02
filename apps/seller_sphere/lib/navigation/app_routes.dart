@@ -13,7 +13,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String editprofile = '/profile/edit';
   static const String publicProduct = '/products';
-  static const String productAdd = '/products/add';
+  static const String addProduct = '/products/add';
   static const String productEdit = '/products/:productId/edit';
   static const String login = '/login';
   static const String productDetailEdit = '/products/:productId/edit';

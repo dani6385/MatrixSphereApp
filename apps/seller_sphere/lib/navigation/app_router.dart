@@ -124,7 +124,7 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRoutes.productAdd, // Path: '/products/add'
+      path: AppRoutes.addProduct, // Path: '/products/add'
       builder: (context, state) => const AddProductScreen(),
     ),
     GoRoute(

@@ -16,30 +16,18 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: ListView(
+    return ListView(
         padding: const EdgeInsets.all(16.0),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: const [
           //const HomeHeaderCard(),
-          HomeSummarySection(),
+          HomeWelcomeHeader(sellerName: '',),
           SizedBox(height: 24),
-          HomeQuickActionsGrid(),
+          HomeSummarySection(),
           SizedBox(height: 24),
           HomeSectionHeader(title: 'Aktivitas Terbaru'),
           SizedBox(height: 16),
-          HomeWelcomeHeader(sellerName: '',),
+          HomeQuickActionsGrid(),
           SizedBox(height: 24),
           HomeRecentActivityList(),
           /*isScanning
@@ -64,7 +52,6 @@ class HomeBody extends StatelessWidget {
           SizedBox(height: 8),
           //HomeHistorySection(HomeHistory: HomeHistory),
         ],
-      ),
-    );
+      );
   }
 }

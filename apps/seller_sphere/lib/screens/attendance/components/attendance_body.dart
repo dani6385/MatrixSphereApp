@@ -58,6 +58,7 @@ class AttendanceBody extends StatelessWidget {
       ),
       child: ListView(
         padding: const EdgeInsets.all(16.0),
+        physics: const AlwaysScrollableScrollPhysics(),
         children: [
           const AttendanceHeaderCard(),
           const SizedBox(height: 16),

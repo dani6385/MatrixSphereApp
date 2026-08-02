@@ -1,5 +1,7 @@
 // lib/screens/home/widgets/home_quick_actions_grid.dart
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class HomeQuickActionsGrid extends StatelessWidget {
@@ -11,11 +13,14 @@ class HomeQuickActionsGrid extends StatelessWidget {
       crossAxisCount: 4,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      children: const [
-        QuickActionChip(icon: Icons.add_box_outlined, label: 'Produk'),
-        QuickActionChip(icon: Icons.qr_code_scanner, label: 'Scan'),
-        QuickActionChip(icon: Icons.bar_chart_outlined, label: 'Laporan'),
-        QuickActionChip(icon: Icons.chat_bubble_outline, label: 'Chat'),
+      children: [
+        QuickActionChip(
+            icon: Icons.add_box_outlined,
+            label: 'Produk',
+            onTap: () => context.go(AppRoutes.products)),
+        const QuickActionChip(icon: Icons.qr_code_scanner, label: 'Scan'),
+        const QuickActionChip(icon: Icons.bar_chart_outlined, label: 'Laporan'),
+        const QuickActionChip(icon: Icons.chat_bubble_outline, label: 'Chat'),
       ],
     );
   }

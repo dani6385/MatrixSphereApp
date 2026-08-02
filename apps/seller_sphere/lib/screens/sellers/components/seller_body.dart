@@ -16,6 +16,7 @@ class SellerBody extends StatelessWidget {
     return ListView(
       // Menerapkan padding standar terpusat dari AppStyles
       padding: AppStyles.defaultScreenPadding,
+      physics: const AlwaysScrollableScrollPhysics(),
       children: const [
         //SellerWelcomeHeader(sellerName: 'Andi'),
         SizedBox(height: 24),
