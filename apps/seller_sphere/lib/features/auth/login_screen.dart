@@ -1,7 +1,12 @@
+// lib/screens/auth/login_screen.dart
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
+
+import 'package:seller_sphere/navigation/app_extractor.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -11,9 +16,20 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _obscureText = true;
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _authService = AuthService();
+
+  bool _rememberMe = false;
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberMe();
+  }
 
   @override
   void dispose() {
@@ -22,117 +38,171 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _toggleObscureText() {
-    setState(() {
-      _obscureText = !_obscureText;
-    });
+  /// Memuat status "Remember Me", email, dan password yang tersimpan.
+  Future<void> _loadRememberMe() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool rememberMe = prefs.getBool('rememberMe') ?? false;
+
+    if (rememberMe) {
+      final String? email = prefs.getString('rememberedEmail');
+      // Membaca password terenkripsi dari secure storage
+      final credentials = await LocalAuthStorage.getCredentials();
+      
+      setState(() {
+        _emailController.text = email ?? '';
+        _passwordController.text = credentials['password'] ?? '';
+        _rememberMe = true;
+      });
+    }
+  }
+
+  Future<void> _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      // Memberitahu sistem untuk menyimpan data autofill, memicu password manager.
+      TextInput.finishAutofillContext();
+
+      setState(() {
+        _isLoading = true;
+        _errorMessage = null;
+      });
+
+      try {
+        final email = _emailController.text.trim();
+        final password = _passwordController.text.trim();
+
+        await _authService.login(email, password);
+
+        // Simpan atau hapus preferensi "Remember Me" dan Secure Credentials
+        final prefs = await SharedPreferences.getInstance();
+        if (_rememberMe) {
+          await prefs.setBool('rememberMe', true);
+          await prefs.setString('rememberedEmail', email);
+          // Simpan password secara aman menggunakan LocalAuthStorage
+          await LocalAuthStorage.saveCredentials(email, password);
+        } else {
+          await prefs.remove('rememberMe');
+          await prefs.remove('rememberedEmail');
+          // Hapus kredensial tersimpan jika opsi dimatikan
+          await LocalAuthStorage.clearCredentials();
+        }
+
+        // Navigasi akan ditangani oleh AuthWrapper atau redirect GoRouter
+      } catch (e) {
+        setState(() {
+          _errorMessage = e.toString().replaceFirst('Exception: ', '');
+        });
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-            context.go('/home'); // Redirect to home on successful login
-          } else if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Login Failed: ${state.error}')),
-            );
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16.0),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: _obscureText,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: const OutlineInputBorder(),
-                  prefixIcon: const Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscureText ? Icons.visibility : Icons.visibility_off,
-                    ),
-                    onPressed: _toggleObscureText,
+    return Scaffold( // Scaffold itself will have a transparent background by default
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: AppStyles.darkScaffoldBackgroundColor(context),
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Icon(Icons.storefront, size: 80, color: kBrandPrimary),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Selamat Datang di Seller Sphere',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: kLightTextPrimary),
                   ),
-                ),
+                  const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _emailController,
+                    autofillHints: const [AutofillHints.email, AutofillHints.username],
+                    decoration: const InputDecoration(
+                      labelText: 'Email / Username',
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) => (value?.isEmpty ?? true) ? 'Email tidak boleh kosong' : null,
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _passwordController,
+                    autofillHints: const [AutofillHints.password],
+                    decoration: const InputDecoration(
+                      labelText: 'Kata Sandi',
+                      prefixIcon: Icon(Icons.lock),
+                    ),
+                    obscureText: true,
+                    validator: (value) => (value?.isEmpty ?? true) ? 'Password tidak boleh kosong' : null,
+                  ),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _rememberMe = value ?? false;
+                          });
+                        },
+                        activeColor: kBrandPrimary,
+                        checkColor: kDarkBackground,
+                      ),
+                      const Text('Remember Me', style: TextStyle(color: kLightTextSecondary)),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () => ForgotPasswordScreen,
+                        child: const Text('Lupa Password?'),
+                      ),
+                    ],
+                  ),
+                  if (_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        _errorMessage!,
+                        style: const TextStyle(
+                            color: kSemanticError,
+                            fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: _login,
+                          child: const Text('Masuk'),
+                        ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Belum punya akun?', style: TextStyle(color: kLightTextSecondary)),
+                      TextButton(
+                        onPressed: () => RegisterScreen,
+                        child: const Text('Daftar di sini'),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(height: 24.0),
-              BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, state) {
-                  return state is AuthLoading
-                      ? const CircularProgressIndicator()
-                      : SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              context.read<AuthBloc>().add(
-                                    AuthLoginRequested(
-                                      _emailController.text,
-                                      _passwordController.text,
-                                      email: '',
-                                      password: '',
-                                    ),
-                                  );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                          ),
-                        );
-                },
-              ),
-              const SizedBox(height: 16.0),
-              TextButton(
-                onPressed: () {
-                  context.go('/forgot-password');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content:
-                            Text('Forgot Password functionality coming soon!')),
-                  );
-                },
-                child: const Text('Forgot Password?'),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.go('/register');
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Register functionality coming soon!')),
-                  );
-                },
-                child: const Text('Don\'t have an account? Register'),
-              ),
-            ],
+            ),
           ),
         ),
       ),
