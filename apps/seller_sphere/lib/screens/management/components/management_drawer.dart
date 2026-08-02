@@ -47,12 +47,11 @@ class ManagementDrawer extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pop();
             PublicProductScreen;
-          },
+          }, route: '',
         ),
-        // Anda bisa menambahkan item menu lain di sini,
-        // seperti Pesanan, Keuangan, dll.
       ],
       selectedRoute: selectedRoute,
+      footer: const Text('Management Sphere v1.0.0'), // Placeholder footer
     );
   }
 }

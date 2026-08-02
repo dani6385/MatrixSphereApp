@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
         onTap: () {
           Navigator.of(context).pop(); // Tutup drawer
           context.go('/sellers');     // Lakukan navigasi
-        },
+        }, route: '',
       ),
       SideMenuItem(
         title: 'Approval',
@@ -57,10 +57,10 @@ class HomeScreen extends StatelessWidget {
         onTap: () {
           Navigator.of(context).pop();
           context.go('/approval');
-        },
+        }, route: '',
       ),
       // ... item menu lainnya
-    ], selectedRoute: null,
+    ], selectedRoute: null, footer: const Text('Seller Sphere v1.0.0'),
   ),
 
       //endDrawer: const SideMenu(selectedRoute: MenuRoute.system),

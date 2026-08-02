@@ -13,7 +13,7 @@ class SideMenuItem {
     required this.title,
     required this.icon,
     required this.onTap,
-    this.isSelected = false,
+    this.isSelected = false, required String route,
   });
 }
 
@@ -29,7 +29,7 @@ class SideMenu extends StatelessWidget {
     super.key,
     required this.header,
     required this.items,
-    required selectedRoute,
+    required selectedRoute, required Text footer,
   });
 
   @override

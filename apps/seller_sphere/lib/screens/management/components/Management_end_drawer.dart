@@ -37,7 +37,7 @@ class ManagementEndDrawer extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pop();
             context.go('/product');
-          },
+          }, route: '',
         ),
         SideMenuItem(
           title: 'Approval',
@@ -46,10 +46,10 @@ class ManagementEndDrawer extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pop();
             context.go('/approval');
-          },
+          }, route: '',
         ),
       ],
-      selectedRoute: null,
+      selectedRoute: null, footer: const Text('Kalkulasi v1.0.0'),
     );
   }
 }
