@@ -5,22 +5,30 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
     return AppBar(
-      // Latar belakang transparan agar gradient dari body terlihat.
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      // Judul AppBar.
-      title: Text(
-        'Home',
-        style: TextStyle(
-          color: colorScheme.onSurface,
-          fontWeight: FontWeight.bold,
-        ),
+      // Menghapus ikon default dan menggantinya dengan IconButton kustom
+      automaticallyImplyLeading: false,
+      leading: IconButton(
+        // Inilah ikon yang Anda ingin ganti.
+        // Saya akan menggantinya dari Icons.menu menjadi Icons.dashboard_customize_outlined
+        icon: const Icon(Icons.dashboard_customize_outlined),
+        tooltip: 'Open Menu',
+        onPressed: () {
+          // Logika untuk membuka drawer utama (kiri)
+          Scaffold.of(context).openDrawer();
+        },
       ),
-      centerTitle: true,
-      // Tombol di sebelah kanan (actions).
+      title: const Text('Home'),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.settings),
+          tooltip: 'Pengaturan',
+          onPressed: () {
+            // Logika untuk membuka endDrawer (kanan)
+            Scaffold.of(context).openEndDrawer();
+          },
+        ),
+      ],
     );
   }
 
