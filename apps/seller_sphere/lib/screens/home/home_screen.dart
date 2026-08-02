@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/screens/home/components/home_appbar.dart';
+import 'package:seller_sphere/screens/home/components/home_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,6 +12,7 @@ class HomeScreen extends StatelessWidget {
       appBar: HomeAppBar(),
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
+      drawer: HomeDrawer(),
       body: Center(
         child: Text('Welcome to the Home Screen!'),
       ),
