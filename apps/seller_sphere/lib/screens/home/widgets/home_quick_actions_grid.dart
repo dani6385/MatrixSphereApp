@@ -17,7 +17,7 @@ class HomeQuickActionsGrid extends StatelessWidget {
         QuickActionChip(
             icon: Icons.add_box_outlined,
             label: 'Produk',
-            onTap: () => context.go(AppRoutes.products)),
+            onTap: () => context.go(AppRoutes.addProduct)),
         const QuickActionChip(icon: Icons.qr_code_scanner, label: 'Scan'),
         const QuickActionChip(icon: Icons.bar_chart_outlined, label: 'Laporan'),
         const QuickActionChip(icon: Icons.chat_bubble_outline, label: 'Chat'),

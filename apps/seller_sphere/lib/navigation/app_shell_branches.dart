@@ -30,7 +30,7 @@ final List<StatefulShellBranch> appShellBranches = [
           // Sub-rute dari Home
           GoRoute(
             path: 'products', // Path relatif: /products
-            name: AppRoutes.products,
+            name: AppRoutes.publicProduct,
             builder: (context, state) => const PublicProductScreen(),
             routes: [
               // Rute ini sekarang akan menggunakan navigator dari branch Home
@@ -76,7 +76,7 @@ final List<StatefulShellBranch> appShellBranches = [
           // Sub-rute dari Home
           GoRoute(
             path: 'products', // Path relatif: /products
-            name: AppRoutes.products,
+            name: AppRoutes.publicProduct,
             builder: (context, state) => const PublicProductScreen(),
             routes: [
               // Rute ini sekarang akan menggunakan navigator dari branch Home
@@ -104,7 +104,7 @@ final List<StatefulShellBranch> appShellBranches = [
         path: AppRoutes.sellers,
         pageBuilder: (context, state) =>
             FadeTransitionPage(child: const SellerScreen()),
-        routes: commonDetailRoutes,
+        //routes: commonDetailRoutes,
       ),
     ],
   ),

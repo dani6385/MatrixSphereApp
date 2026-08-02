@@ -27,7 +27,7 @@ class AppNavigatorDrawer extends StatelessWidget {
             title: const Text('Profil Saya'),
             onTap: () {
               Navigator.pop(context);
-              AppNavigation.pushToProfile(context);
+              //AppNavigation.pushToProfile(context);
             },
           ),
           ListTile(

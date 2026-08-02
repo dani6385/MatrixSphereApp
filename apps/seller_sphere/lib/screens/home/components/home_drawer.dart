@@ -50,7 +50,7 @@ class HomeDrawer extends StatelessWidget {
             leading: const Icon(Icons.shopping_bag, color: kLightTextPrimary),
             title: const Text('Produk', style: TextStyle(color: kLightTextPrimary)),
             onTap: () {
-              context.go(AppRoutes.products);
+              context.go(AppRoutes.publicProduct);
             },
           ),
           ListTile(
@@ -64,7 +64,7 @@ class HomeDrawer extends StatelessWidget {
             leading: const Icon(Icons.person, color: kLightTextPrimary),
             title: const Text('Profil', style: TextStyle(color: kLightTextPrimary)),
             onTap: () {
-              context.go(AppRoutes.profile);
+              //context.go(AppRoutes.profile);
             },
           ),
         ],
