@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:seller_sphere/navigation/app_extractor.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class ManagementDrawer extends StatelessWidget {
@@ -43,15 +42,16 @@ class ManagementDrawer extends StatelessWidget {
         SideMenuItem(
           title: 'Produk',
           icon: Icons.shopping_bag_outlined,
-          //isSelected: selectedRoute == AppRoutes.publicProduct,
-          onTap: () {
-            Navigator.of(context).pop();
-            PublicProductScreen;
-          }, route: '',
+          // Ganti dengan rute produk Anda yang sebenarnya
+          route: '/management/products', onTap: () {},
         ),
       ],
-      selectedRoute: selectedRoute,
-      footer: const Text('Management Sphere v1.0.0'), // Placeholder footer
+      selectedRoute: selectedRoute ?? '',
+      footer: const Text('Management Sphere v1.0.0'),
+      onItemSelected: (SideMenuItem item) {
+        Navigator.of(context).pop(); // 1. Tutup drawer
+        item.onTap.call(); // 2. Panggil onTap dari item
+      },
     );
   }
 }

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_sphere/navigation/app_extraktor.dart';
+//import 'package:shop_sphere/navigation/app_extraktor.dart';
 //import 'package:shop_sphere/navigation/bottom_nav_bar.dart'; // 1. IMPORT WIDGET SHELL
 
 import 'package:shared_services/shared_services.dart';
@@ -113,7 +113,7 @@ final GoRouter _router = GoRouter(
           routes: [
             GoRoute(
               path: '/',
-              builder: (context, state) => const HomeScreen(),
+              //builder: (context, state) => const HomeScreen(),
             ),
           ],
         ),

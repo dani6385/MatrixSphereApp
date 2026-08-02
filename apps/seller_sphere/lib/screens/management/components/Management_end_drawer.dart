@@ -49,7 +49,7 @@ class ManagementEndDrawer extends StatelessWidget {
           }, route: '',
         ),
       ],
-      selectedRoute: null, footer: const Text('Kalkulasi v1.0.0'),
+      selectedRoute: '', footer: const Text('Kalkulasi v1.0.0'),
     );
   }
 }

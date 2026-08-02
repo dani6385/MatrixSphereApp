@@ -1,23 +1,22 @@
+
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class SellerDrawer extends StatelessWidget {
-  const SellerDrawer({super.key});
+class AttendanceEndDrawer extends StatelessWidget {  const AttendanceEndDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SideMenu(
-      header: header,
+    return SideMenu(      header: header,
       items: items,
       selectedRoute: selectedRoute,
-      footer: const Text('Seller Sphere v1.0.0'),
+      footer: const Text('Attendance v1.0.0'),
       onItemSelected: (SideMenuItem item) {},
     );
   }
 
   Widget get header => const DrawerHeader(
         decoration: BoxDecoration(
-          color: Colors.blue, // A distinct color for the seller drawer
+          color: Colors.green, // A distinct color for the attendance drawer
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,11 +24,11 @@ class SellerDrawer extends StatelessWidget {
             CircleAvatar(
               radius: 30,
               backgroundColor: Colors.white,
-              child: Icon(Icons.store, size: 40, color: Colors.blue),
+              child: Icon(Icons.check_circle_outline, size: 40, color: Colors.green),
             ),
             SizedBox(height: 8),
             Text(
-              'Seller Dashboard',
+              'Attendance Dashboard',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -42,37 +41,37 @@ class SellerDrawer extends StatelessWidget {
 
   List<SideMenuItem> get items => [
         SideMenuItem(
-          title: 'Dashboard',
+          title: 'Overview',
           icon: Icons.dashboard,
-          route: '/seller_dashboard',
+          route: '/attendance_overview',
           onTap: () {},
         ),
         SideMenuItem(
-          title: 'Products',
-          icon: Icons.inventory_2,
-          route: '/seller_products',
+          title: 'Punch In/Out',
+          icon: Icons.fingerprint,
+          route: '/attendance_punch',
           onTap: () {},
         ),
         SideMenuItem(
-          title: 'Orders',
-          icon: Icons.shopping_cart,
-          route: '/seller_orders',
+          title: 'History',
+          icon: Icons.history,
+          route: '/attendance_history',
           onTap: () {},
         ),
         SideMenuItem(
-          title: 'Analytics',
-          icon: Icons.analytics,
-          route: '/seller_analytics',
+          title: 'Reports',
+          icon: Icons.bar_chart,
+          route: '/attendance_reports',
           onTap: () {},
         ),
         SideMenuItem(
           title: 'Settings',
           icon: Icons.settings,
-          route: '/seller_settings',
+          route: '/attendance_settings',
           onTap: () {},
         ),
       ];
 
   String get selectedRoute =>
-      '/seller_dashboard'; // This should be dynamic based on current route
+      '/attendance_overview'; // This should be dynamic based on current route
 }

@@ -13,7 +13,8 @@ class SideMenuItem {
     required this.title,
     required this.icon,
     required this.onTap,
-    this.isSelected = false, required String route,
+    this.isSelected = false,
+    required String route,
   });
 }
 
@@ -24,12 +25,15 @@ class SideMenuItem {
 class SideMenu extends StatelessWidget {
   final Widget header;
   final List<SideMenuItem> items;
+  final Widget? footer;
+  final void Function(SideMenuItem item)? onItemSelected;
 
   const SideMenu({
     super.key,
     required this.header,
     required this.items,
-    required selectedRoute, required Text footer,
+    this.footer,
+    this.onItemSelected, required String selectedRoute,
   });
 
   @override
@@ -41,7 +45,11 @@ class SideMenu extends StatelessWidget {
         backgroundColor: kDarkSurface, // Warna latar yang lebih sesuai
         child: ListView(
           padding: EdgeInsets.zero,
-          children: [header, ..._buildMenuItems()],
+          children: [
+            header,
+            ..._buildMenuItems(),
+            if (footer != null) footer!,
+          ],
         ),
       ),
     );
@@ -62,7 +70,10 @@ class SideMenu extends StatelessWidget {
         ),
         selected: item.isSelected,
         selectedTileColor: kBrandPrimary.withOpacity(0.1),
-        onTap: item.onTap,
+        onTap: () {
+          item.onTap();
+          onItemSelected?.call(item);
+        },
       );
     }).toList();
   }
