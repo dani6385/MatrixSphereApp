@@ -13,17 +13,19 @@ class AppRoutes {
   static const String attendance = '/attendance';
   //feature
   static const String chat = '/chat';
+  //static const String chatDetail = '/chat/:chatId';
+  //static const String addChat = '/chat/add';
   //static const String products = '/products';
-  static const String productDetail =
-      '/products/:productId'; // Route with parameter
+  // Route with parameter
   // Rute baru untuk detail produk publik berdasarkan toko dan produk
-  
+
   //static const String profile = '/profile';
   //static const String editprofile = '/profile/edit';
   static const String publicProduct = '/products';
+  static const String productDetail = '/products/:productId';
   static const String addProduct = '/products/add';
   static const String editProduct = '/products/edit';
 
-
   static const String settings = '/settings';
+//static const String profile = '/profile';
 }
