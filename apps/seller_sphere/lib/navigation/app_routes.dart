@@ -19,12 +19,12 @@ class AppRoutes {
   // Route with parameter
   // Rute baru untuk detail produk publik berdasarkan toko dan produk
 
-  //static const String profile = '/profile';
-  //static const String editprofile = '/profile/edit';
+  static const String profile = '/profile';
+  static const String editprofile = '/profile/edit';
   static const String publicProduct = '/products';
   static const String addProduct = '/products/add';
   static const String editProduct = '/products/edit';
 
   static const String settings = '/settings';
-//static const String profile = '/profile';
+
 }

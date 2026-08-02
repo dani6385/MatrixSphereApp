@@ -28,9 +28,9 @@ class AppNavigation {
   }
 
   /// Navigates to the Edit Profile screen from the Profile screen.
-  /*static void pushToEditProfile(BuildContext context) {
+  static void pushToEditProfile(BuildContext context) {
     context.push(AppRoutes.editprofile);
-  }*/
+  }
 
   /// A more robust way to navigate to a specific tab in the BottomNavBar.
   /// It finds the GoRouter and uses `go` on the correct path.
