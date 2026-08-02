@@ -1,8 +1,7 @@
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+import 'package:seller_sphere/navigation/app_extractor.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -35,7 +34,7 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
     final currentUser = _authService.currentUser;
     if (currentUser == null) {
       _showError("Sesi Anda telah berakhir. Silakan login kembali.");
-      context.go(AppRoutes.login);
+      LoginScreen;
       return;
     }
 
@@ -63,7 +62,7 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
         buttonText: 'Mengerti',
         onPressed: () {
           // Arahkan ke halaman login atau halaman tunggu
-          context.go(AppRoutes.login);
+          LoginScreen;
         },
       );
     } else {
@@ -153,7 +152,7 @@ class WaitingForApprovalScreen extends StatelessWidget {
                 onPressed: () async {
                   await AuthService().logout();
                   if (context.mounted) {
-                    context.go(AppRoutes.login);
+                    LoginScreen;
                   }
                 },
                 child: const Text('Logout'),

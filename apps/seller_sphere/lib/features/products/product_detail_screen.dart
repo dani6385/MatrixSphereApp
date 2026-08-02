@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:collection/collection.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+import 'add_product_screen.dart';
 import 'package:shared_services/shared_services.dart';
 import 'widgets/product_detail_body.dart';
 
@@ -42,7 +41,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             icon: const Icon(Icons.edit_outlined),
             tooltip: 'Edit Produk',
             onPressed: () {
-              context.go(AppRoutes.editProduct.replaceFirst(':productId', widget.productId));
+              AddProductScreen;
             },
           ),
         ],

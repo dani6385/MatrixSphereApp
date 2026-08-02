@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+
+import 'package:seller_sphere/navigation/app_extractor.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const Text('Remember Me', style: TextStyle(color: kLightTextSecondary)),
                       const Spacer(),
                       TextButton(
-                        onPressed: () => context.go(AppRoutes.forgotPassword),
+                        onPressed: () => ForgotPasswordScreen,
                         child: const Text('Lupa Password?'),
                       ),
                     ],
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const Text('Belum punya akun?', style: TextStyle(color: kLightTextSecondary)),
                       TextButton(
-                        onPressed: () => context.go(AppRoutes.register),
+                        onPressed: () => RegisterScreen,
                         child: const Text('Daftar di sini'),
                       ),
                     ],

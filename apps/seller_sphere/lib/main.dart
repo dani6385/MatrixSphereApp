@@ -5,7 +5,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
-import 'navigation/app_router.dart';
+//import 'navigation/app_router.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -83,7 +83,7 @@ class _SellerSphereState extends State<SellerSphere> {
             themeMode: ThemeMode.system,
 
             // Konfigurasi router dari GoRouter
-            routerConfig: appRouter,
+            //routerConfig: appRouter,
           );
         },
       ),

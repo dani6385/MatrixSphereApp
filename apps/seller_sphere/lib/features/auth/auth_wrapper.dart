@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+//import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_services/shared_services.dart';
 import 'login_screen.dart';
 
@@ -62,10 +61,10 @@ class _AuthWrapperState extends State<AuthWrapper> {
               // Arahkan berdasarkan status
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (status == ShopStatus.approved) {
-                  context.go(AppRoutes.home); // Ke dashboard utama
+                  //context.go(AppRoutes.home); // Ke dashboard utama
                 } else {
                   // Jika belum punya toko atau masih pending, arahkan ke halaman pendaftaran/tunggu
-                  context.go(AppRoutes.shopRegistration);
+                  //context.go(AppRoutes.shopRegistration);
                 }
               });
               return const Scaffold(body: Center(child: CircularProgressIndicator()));

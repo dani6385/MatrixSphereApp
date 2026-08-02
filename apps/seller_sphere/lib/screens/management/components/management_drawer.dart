@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+import 'package:seller_sphere/navigation/app_extractor.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class ManagementDrawer extends StatelessWidget {
@@ -31,7 +30,7 @@ class ManagementDrawer extends StatelessWidget {
         ),
       ),
       items: [
-        SideMenuItem(
+        /*SideMenuItem(
           title: 'Dashboard',
           icon: Icons.dashboard_outlined,
           isSelected: selectedRoute == AppRoutes.management,
@@ -39,15 +38,15 @@ class ManagementDrawer extends StatelessWidget {
             Navigator.of(context).pop();
             context.go(AppRoutes.management);
           },
-        ),
+        ),*/
         // PENAMBAHAN: Item menu untuk halaman produk
         SideMenuItem(
           title: 'Produk',
           icon: Icons.shopping_bag_outlined,
-          isSelected: selectedRoute == AppRoutes.publicProduct,
+          //isSelected: selectedRoute == AppRoutes.publicProduct,
           onTap: () {
             Navigator.of(context).pop();
-            context.go(AppRoutes.publicProduct);
+            PublicProductScreen;
           },
         ),
         // Anda bisa menambahkan item menu lain di sini,

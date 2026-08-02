@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+import 'package:seller_sphere/navigation/app_extractor.dart';
+//import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             buttonText: 'Login', onPressed: () {  },
           );
           // Arahkan ke halaman login setelah dialog ditutup
-          context.go(AppRoutes.login);
+          const LoginScreen();
         }
       } catch (e) {
         _showError(e.toString());

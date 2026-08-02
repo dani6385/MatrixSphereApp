@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+import 'package:seller_sphere/navigation/app_extractor.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -43,21 +42,21 @@ class HomeDrawer extends StatelessWidget {
             leading: const Icon(Icons.home, color: kLightTextPrimary),
             title: const Text('Home', style: TextStyle(color: kLightTextPrimary)),
             onTap: () {
-              context.go(AppRoutes.home);
+              HomeScreen;
             },
           ),
           ListTile(
             leading: const Icon(Icons.shopping_bag, color: kLightTextPrimary),
             title: const Text('Produk', style: TextStyle(color: kLightTextPrimary)),
             onTap: () {
-              context.go(AppRoutes.publicProduct);
+              PublicProductScreen;
             },
           ),
           ListTile(
             leading: const Icon(Icons.settings, color: kLightTextPrimary),
             title: const Text('Pengaturan', style: TextStyle(color: kLightTextPrimary)),
             onTap: () {
-              context.go(AppRoutes.settings);
+              SettingScreen;
             },
           ),
           ListTile(

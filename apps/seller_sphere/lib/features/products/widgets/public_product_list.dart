@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart'; // <-- IMPORT RUTE
+// <-- IMPORT RUTE
 import 'package:shared_services/shared_services.dart';
 import 'public_product_card.dart';
 
@@ -40,8 +39,6 @@ class PublicProductList extends StatelessWidget {
               onTap: () {
                 // Navigasi ke ProductDetailScreen menggunakan GoRouter
                 // Sesuaikan string rute dengan konfigurasi app_routes.dart milikmu
-                final route = AppRoutes.productDetail.replaceFirst(':productId', product.id);
-                context.go(route);
               },
             );
           },

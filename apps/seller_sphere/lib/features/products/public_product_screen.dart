@@ -1,8 +1,7 @@
 // lib/screens/products/public_product_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+import 'add_product_screen.dart';
 import 'package:shared_services/shared_services.dart';
 import 'widgets/public_product_list.dart';
 
@@ -33,7 +32,7 @@ class _PublicProductScreenState extends State<PublicProductScreen> {
         onPressed: () {
           // Navigasi ke halaman tambah produk (menggunakan rute addProduct)
           // Gunakan pushNamed agar lebih deklaratif dan aman
-          context.pushNamed(AppRoutes.addProduct);
+          AddProductScreen;
         },
         child: const Icon(Icons.add),
       ),
