@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 
@@ -11,40 +10,69 @@ class AttendanceDrawer extends StatelessWidget {
       header: header,
       items: items,
       selectedRoute: selectedRoute,
-      footer: footer,
-      onItemSelected: (item) {
-        // Close the drawer
-        Navigator.pop(context);
-        // Handle navigation based on the selected item
-        // For example:
-        // if (item.route != null) {
-        //   Navigator.pushNamed(context, item.route!);
-        // }
-      },
+      footer: const Text('Attendance Sphere v1.0.0'),
+      onItemSelected: (SideMenuItem item) {},
     );
   }
-  
-  Text get header =>
-      const Text('Attendance Menu Header'); // Replace with actual header widget
+
+  Widget get header => const DrawerHeader(
+        decoration: BoxDecoration(
+          color: Colors.blue, // A distinct color for the Attendance drawer
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.store, size: 40, color: Colors.blue),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Attendance Dashboard',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      );
+
   List<SideMenuItem> get items => [
         SideMenuItem(
           title: 'Dashboard',
           icon: Icons.dashboard,
-          route: '/attendance_dashboard', onTap: () {  },
+          route: '/Attendance_dashboard',
+          onTap: () {},
         ),
         SideMenuItem(
-          title: 'Reports',
-          icon: Icons.bar_chart,
-          route: '/attendance_reports', onTap: () {  },
+          title: 'Products',
+          icon: Icons.inventory_2,
+          route: '/Attendance_products',
+          onTap: () {},
+        ),
+        SideMenuItem(
+          title: 'Orders',
+          icon: Icons.shopping_cart,
+          route: '/Attendance_orders',
+          onTap: () {},
+        ),
+        SideMenuItem(
+          title: 'Analytics',
+          icon: Icons.analytics,
+          route: '/Attendance_analytics',
+          onTap: () {},
         ),
         SideMenuItem(
           title: 'Settings',
           icon: Icons.settings,
-          route: '/attendance_settings', onTap: () {  },
+          route: '/Attendance_settings',
+          onTap: () {},
         ),
-      ]; // Replace with actual menu items
+      ];
+
   String get selectedRoute =>
-      '/attendance_dashboard'; // Replace with actual selected route logic
-  Text get footer =>
-      const Text('Attendance Menu Footer'); // Replace with actual footer widget
+      '/Attendance_dashboard'; // This should be dynamic based on current route
 }
