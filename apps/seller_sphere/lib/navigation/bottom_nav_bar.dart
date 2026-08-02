@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 //import 'app_routes.dart';
-import 'app_extractor.dart';
+//import 'app_extractor.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 /// A wrapper widget that configures and displays the [SharedBottomNavBar]
