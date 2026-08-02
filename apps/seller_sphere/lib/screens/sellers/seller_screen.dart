@@ -1,7 +1,6 @@
 // lib/screens/Seller_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
 import 'components/seller_appbar.dart';
 import 'components/seller_body.dart';
 import 'components/Seller_drawer.dart';
@@ -24,18 +23,7 @@ class SellerScreen extends StatelessWidget {
       endDrawerEnableOpenDragGesture: false,
       drawer: const SellerDrawer(),
       endDrawer: const SellerEndDrawer(),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: AppStyles.darkScaffoldBackgroundColor(context),
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: const SellerBody(),
-      ),
+      body: const SellerBody(),
     );
   }
 }

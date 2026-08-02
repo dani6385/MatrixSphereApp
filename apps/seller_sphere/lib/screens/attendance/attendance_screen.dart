@@ -7,7 +7,6 @@ import 'package:seller_sphere/screens/attendance/components/attendance_appbar.da
 import 'package:seller_sphere/screens/attendance/components/attendance_body.dart';
 //import 'package:seller_sphere/features/settings/setting_screen.dart';
 import 'package:seller_sphere/core/utils/ui_helper.dart';
-import 'package:shared_ui/shared_ui.dart';
 
 /// The main screen for the Attendance feature.
 ///
@@ -94,8 +93,6 @@ class _AttendanceViewState extends State<AttendanceView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Scaffold itself will have a transparent background by default
-      // The gradient background is applied to the body's container.
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
       appBar: const AttendanceAppBar(),
@@ -103,31 +100,20 @@ class _AttendanceViewState extends State<AttendanceView>
       endDrawer: const AttendanceEndDrawer(),
       body: Consumer<AttendanceViewModel>(
         builder: (context, viewModel, child) {
-          return Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: AppStyles.darkScaffoldBackgroundColor(context),
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            child: AttendanceBody(
-              isScanning: viewModel.isScanning,
-              hasCameraPermission: viewModel.hasCameraPermission,
-              isCheckingLocation: viewModel.isCheckingLocation,
-              cameraController: viewModel.cameraController,
-              laserAnimation: _laserAnimation,
-              scanStatusMessage: viewModel.scanStatusMessage,
-              scanProgress: viewModel.scanProgress,
-              onCancelScan: viewModel.cancelScan,
-              onRequestPermission: viewModel.requestCameraPermission,
-              onClockIn: () => viewModel.startScan(isClockIn: true),
-              onClockOut: () => viewModel.startScan(isClockIn: false),
-              attendanceHistory: viewModel.attendanceList,
-              onSync: viewModel.pullAttendanceFromRtdb,
-            ),
+          return AttendanceBody(
+            isScanning: viewModel.isScanning,
+            hasCameraPermission: viewModel.hasCameraPermission,
+            isCheckingLocation: viewModel.isCheckingLocation,
+            cameraController: viewModel.cameraController,
+            laserAnimation: _laserAnimation,
+            scanStatusMessage: viewModel.scanStatusMessage,
+            scanProgress: viewModel.scanProgress,
+            onCancelScan: viewModel.cancelScan,
+            onRequestPermission: viewModel.requestCameraPermission,
+            onClockIn: () => viewModel.startScan(isClockIn: true),
+            onClockOut: () => viewModel.startScan(isClockIn: false),
+            attendanceHistory: viewModel.attendanceList,
+            onSync: viewModel.pullAttendanceFromRtdb,
           );
         },
       ),
