@@ -63,22 +63,8 @@ final List<StatefulShellBranch> appShellBranches = [
         path: AppRoutes.management,
         pageBuilder: (context, state) =>
             FadeTransitionPage(child: const ManagementScreen()),
-        routes: [
-            // Sub-rute dari Home
-            GoRoute(
-              path: 'products', // Path relatif: /products
-              name: AppRoutes.products,
-              builder: (context, state) => const PublicProductScreen(),
-              routes: [
-                GoRoute(
-                  path: 'add', // Path relatif: /products/add
-                  name: AppRoutes.addProduct,
-                  builder: (context, state) => const AddProductScreen(),
-                ),
-              ],
-            ),
-          ],
-        ),
+        routes: commonDetailRoutes, // Gunakan rute umum jika diperlukan
+      ),
       ],
 
   ),
