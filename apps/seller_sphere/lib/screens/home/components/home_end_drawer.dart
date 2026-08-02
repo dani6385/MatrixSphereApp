@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
+
 import 'package:shared_ui/shared_ui.dart';
 import 'package:logger/logger.dart';
 
@@ -46,7 +49,7 @@ class HomeEndDrawer extends StatelessWidget {
           onTap: () {
             _logger.i('Profil tapped');
             Navigator.of(context).pop();
-            // Implement navigation to profile page
+            context.go(AppRoutes.profile);
           },
           route: '/profile',
         ),
