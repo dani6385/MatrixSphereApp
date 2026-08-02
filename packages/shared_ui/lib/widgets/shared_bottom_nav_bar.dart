@@ -12,8 +12,8 @@ class SharedBottomNavBar extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.onTap,
-    required this.tabs,
-    required this.selectedIndex, required List<BottomNavigationBarItem> items,
+    required this.tabs, // Changed from 'items' to 'tabs'
+    required this.selectedIndex,
   });
 
   /// The index of the currently active tab.

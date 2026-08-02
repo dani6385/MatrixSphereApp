@@ -24,3 +24,14 @@ class AuthFailure extends AuthState {
   @override
   List<Object> get props => [error];
 }
+class AuthAuthenticated extends AuthState {
+  const AuthAuthenticated();
+  @override
+  List<Object> get props => [];
+}
+
+class AuthUnauthenticated extends AuthState {
+  const AuthUnauthenticated();
+  @override
+  List<Object> get props => [];
+}
