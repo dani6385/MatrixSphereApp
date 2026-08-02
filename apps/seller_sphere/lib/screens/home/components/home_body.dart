@@ -1,6 +1,6 @@
 // lib/screens/Home/widgets/Home_body.dart
 
-import 'package:camera/camera.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:seller_sphere/screens/home/widgets/home_quick_actions_grid.dart';
@@ -10,35 +10,8 @@ import 'package:seller_sphere/screens/home/widgets/home_summary_section.dart';
 import 'package:seller_sphere/screens/home/widgets/home_welcome_header.dart';
 
 class HomeBody extends StatelessWidget {
-  final bool isScanning;
-  final bool hasCameraPermission;
-  final bool isCheckingLocation;
-  final CameraController? cameraController;
-  final Animation<double> laserAnimation;
-  final String scanStatusMessage;
-  final double scanProgress;
-  final VoidCallback onCancelScan;
-  final VoidCallback onRequestPermission;
-  final VoidCallback onClockIn;
-  final VoidCallback onClockOut;
-  //final List<HomeRecord> HomeHistory;
-  final VoidCallback onSync;
-
   const HomeBody({
     super.key,
-    required this.isScanning,
-    required this.hasCameraPermission,
-    required this.isCheckingLocation,
-    this.cameraController,
-    required this.laserAnimation,
-    required this.scanStatusMessage,
-    required this.scanProgress,
-    required this.onCancelScan,
-    required this.onRequestPermission,
-    required this.onClockIn,
-    required this.onClockOut,
-    //required this.HomeHistory,
-    required this.onSync,
   });
 
   @override

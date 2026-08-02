@@ -103,95 +103,105 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppStyles.darkScaffoldBackgroundColor,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Icon(Icons.storefront, size: 80, color: kBrandPrimary),
-                const SizedBox(height: 16),
-                const Text(
-                  'Selamat Datang di Seller Sphere',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: kLightTextPrimary),
-                ),
-                const SizedBox(height: 32),
-                TextFormField(
-                  controller: _emailController,
-                  autofillHints: const [AutofillHints.email, AutofillHints.username],
-                  decoration: const InputDecoration(
-                    labelText: 'Email / Username',
-                    prefixIcon: Icon(Icons.email),
+    return Scaffold( // Scaffold itself will have a transparent background by default
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: AppStyles.darkScaffoldBackgroundColor(context),
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Icon(Icons.storefront, size: 80, color: kBrandPrimary),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Selamat Datang di Seller Sphere',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: kLightTextPrimary),
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Email tidak boleh kosong' : null,
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _passwordController,
-                  autofillHints: const [AutofillHints.password],
-                  decoration: const InputDecoration(
-                    labelText: 'Kata Sandi',
-                    prefixIcon: Icon(Icons.lock),
+                  const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _emailController,
+                    autofillHints: const [AutofillHints.email, AutofillHints.username],
+                    decoration: const InputDecoration(
+                      labelText: 'Email / Username',
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) => (value?.isEmpty ?? true) ? 'Email tidak boleh kosong' : null,
                   ),
-                  obscureText: true,
-                  validator: (value) => (value?.isEmpty ?? true) ? 'Password tidak boleh kosong' : null,
-                ),
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _rememberMe,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          _rememberMe = value ?? false;
-                        });
-                      },
-                      activeColor: kBrandPrimary,
-                      checkColor: kDarkBackground,
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _passwordController,
+                    autofillHints: const [AutofillHints.password],
+                    decoration: const InputDecoration(
+                      labelText: 'Kata Sandi',
+                      prefixIcon: Icon(Icons.lock),
                     ),
-                    const Text('Remember Me', style: TextStyle(color: kLightTextSecondary)),
-                    const Spacer(),
-                    TextButton(
-                      onPressed: () => context.go(AppRoutes.forgotPassword),
-                      child: const Text('Lupa Password?'),
-                    ),
-                  ],
-                ),
-                if (_errorMessage != null)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Text(
-                      _errorMessage!,
-                      style: const TextStyle(
-                          color: kSemanticError,
-                          fontSize: 14),
-                      textAlign: TextAlign.center,
-                    ),
+                    obscureText: true,
+                    validator: (value) => (value?.isEmpty ?? true) ? 'Password tidak boleh kosong' : null,
                   ),
-                _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : ElevatedButton(
-                        onPressed: _login,
-                        child: const Text('Masuk'),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (bool? value) {
+                          setState(() {
+                            _rememberMe = value ?? false;
+                          });
+                        },
+                        activeColor: kBrandPrimary,
+                        checkColor: kDarkBackground,
                       ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Belum punya akun?', style: TextStyle(color: kLightTextSecondary)),
-                    TextButton(
-                      onPressed: () => context.go(AppRoutes.register),
-                      child: const Text('Daftar di sini'),
+                      const Text('Remember Me', style: TextStyle(color: kLightTextSecondary)),
+                      const Spacer(),
+                      TextButton(
+                        onPressed: () => context.go(AppRoutes.forgotPassword),
+                        child: const Text('Lupa Password?'),
+                      ),
+                    ],
+                  ),
+                  if (_errorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: Text(
+                        _errorMessage!,
+                        style: const TextStyle(
+                            color: kSemanticError,
+                            fontSize: 14),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                  ],
-                ),
-              ],
+                  _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : ElevatedButton(
+                          onPressed: _login,
+                          child: const Text('Masuk'),
+                        ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Belum punya akun?', style: TextStyle(color: kLightTextSecondary)),
+                      TextButton(
+                        onPressed: () => context.go(AppRoutes.register),
+                        child: const Text('Daftar di sini'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

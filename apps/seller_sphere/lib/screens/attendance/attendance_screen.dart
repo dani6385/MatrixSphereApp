@@ -94,7 +94,8 @@ class _AttendanceViewState extends State<AttendanceView>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppStyles.darkScaffoldBackgroundColor,
+      // Scaffold itself will have a transparent background by default
+      // The gradient background is applied to the body's container.
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
       appBar: const AttendanceAppBar(),
@@ -102,20 +103,31 @@ class _AttendanceViewState extends State<AttendanceView>
       endDrawer: const AttendanceEndDrawer(),
       body: Consumer<AttendanceViewModel>(
         builder: (context, viewModel, child) {
-          return AttendanceBody(
-            isScanning: viewModel.isScanning,
-            hasCameraPermission: viewModel.hasCameraPermission,
-            isCheckingLocation: viewModel.isCheckingLocation,
-            cameraController: viewModel.cameraController,
-            laserAnimation: _laserAnimation,
-            scanStatusMessage: viewModel.scanStatusMessage,
-            scanProgress: viewModel.scanProgress,
-            onCancelScan: viewModel.cancelScan,
-            onRequestPermission: viewModel.requestCameraPermission,
-            onClockIn: () => viewModel.startScan(isClockIn: true),
-            onClockOut: () => viewModel.startScan(isClockIn: false),
-            attendanceHistory: viewModel.attendanceList,
-            onSync: viewModel.pullAttendanceFromRtdb,
+          return Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: AppStyles.darkScaffoldBackgroundColor(context),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: AttendanceBody(
+              isScanning: viewModel.isScanning,
+              hasCameraPermission: viewModel.hasCameraPermission,
+              isCheckingLocation: viewModel.isCheckingLocation,
+              cameraController: viewModel.cameraController,
+              laserAnimation: _laserAnimation,
+              scanStatusMessage: viewModel.scanStatusMessage,
+              scanProgress: viewModel.scanProgress,
+              onCancelScan: viewModel.cancelScan,
+              onRequestPermission: viewModel.requestCameraPermission,
+              onClockIn: () => viewModel.startScan(isClockIn: true),
+              onClockOut: () => viewModel.startScan(isClockIn: false),
+              attendanceHistory: viewModel.attendanceList,
+              onSync: viewModel.pullAttendanceFromRtdb,
+            ),
           );
         },
       ),

@@ -43,7 +43,10 @@ static const EdgeInsets defaultScreenPadding = EdgeInsets.all(16.0);
   // --- Gaya Tema Gelap (Dark Theme) ---
 
   /// Warna latar belakang default untuk Scaffold pada tema gelap.
-  static const Color darkScaffoldBackgroundColor = kBrandTertiary;
+  static List<Color> darkScaffoldBackgroundColor(BuildContext context) => [
+        Theme.of(context).colorScheme.surface,
+        Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      ];
 
   /// Gaya AppBar default untuk tema gelap.
   static AppBarTheme get darkAppBarTheme => AppBarTheme(

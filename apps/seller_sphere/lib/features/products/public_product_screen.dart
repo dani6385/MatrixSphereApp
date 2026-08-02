@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:shared_services/shared_services.dart';
 
@@ -92,6 +94,13 @@ class _PublicProductScreenState extends State<PublicProductScreen> {
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigasi ke halaman produk untuk menambah produk baru
+          context.go(AppRoutes.products);
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
