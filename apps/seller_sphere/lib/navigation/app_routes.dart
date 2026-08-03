@@ -23,7 +23,7 @@ class AppRoutes {
   static const String editprofile = '/profile/edit';
   static const String publicProduct = '/products';
   static const String addProduct = '/products/add';
-  static const String editProduct = '/products/edit';
+  static const String editProduct = '/products/:productId/edit';
 
   static const String settings = '/settings';
 

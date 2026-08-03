@@ -13,7 +13,7 @@ export 'package:seller_sphere/menu/drawer/managements/products/product_detail_sc
 
 
 
-export 'package:seller_sphere/menu/drawer/home/settings/setting_screen.dart';
+export 'package:seller_sphere/menu/drawer/home/settings/settings_screen.dart';
 
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 export 'package:seller_sphere/screens/home/home_screen.dart';

@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'app_navigator.dart';
 import 'app_shell_branches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
+
 import 'app_extractor.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
@@ -29,7 +31,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/login', // Atau halaman splash screen jika ada
+  initialLocation: AppRoutes.login, // Atau halaman splash screen jika ada
   navigatorKey: _rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
     // Periksa status login dari Firebase Auth
@@ -39,21 +41,21 @@ final GoRouter appRouter = GoRouter(
     final String location = state.uri.toString();
 
     // Daftar halaman publik yang bisa diakses tanpa login
-    final bool isPublicPage = location == '/login' ||
-        location == '/register' ||
-        location == '/forgot-password'; // Sesuaikan dengan rute publik Anda
+    final bool isPublicPage = location == AppRoutes.login ||
+        location == AppRoutes.register ||
+        location == AppRoutes.forgotPassword; // Sesuaikan dengan rute publik Anda
 
     // Skenario:
     // 1. Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
     //    maka alihkan (redirect) ke halaman login.
     if (!isLoggedIn && !isPublicPage) {
-      return '/login';
+      return AppRoutes.login;
     }
 
     // 2. Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
     //    maka alihkan ke halaman utama (home).
     if (isLoggedIn && isPublicPage) {
-      return '/';
+      return AppRoutes.home;
     }
 
     // 3. Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
@@ -80,71 +82,75 @@ final GoRouter appRouter = GoRouter(
     // Rute-rute di luar Shell (misalnya, halaman login, register, dll.)
     // Ini penting agar redirect berfungsi dengan benar.
     GoRoute(
-      path: '/login',
+      path: AppRoutes.login,
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
-      path: '/register',
+      path: AppRoutes.register,
       builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
-      path: '/forgot-password',
+      path: AppRoutes.forgotPassword,
       builder: (context, state) => const ForgotPasswordScreen(),
     ),
     GoRoute(
-      path: '/',
+      path: AppRoutes.home,
       builder: (context, state) =>
           const HomeScreen(), // Ganti dengan halaman utama Anda
     ),
     GoRoute(
-      path: '/shop-registration',
+      path: AppRoutes.shopRegistration,
       builder: (context, state) => const ShopRegistrationScreen(),
     ),
     GoRoute(
-      path: '/profile',
+      path: AppRoutes.profile,
       builder: (context, state) => const ProfileScreen(),
     ),
     GoRoute(
-      path: '/products',
+      path: AppRoutes.publicProduct,
       builder: (context, state) => const PublicProductScreen(),
     ),
     GoRoute(
-      path: '/addproducts',
+      path: '/addproducts', // Catatan: Rute ini tidak ada di AppRoutes, mungkin rute lama?
       builder: (context, state) => const AddProductScreen(),
     ),
     GoRoute(
-      path: '/product-detail/:id',
+      path: '/product-detail/:id', // Catatan: Rute ini tidak ada di AppRoutes
       builder: (context, state) {
         final String productId = state.pathParameters['id']!;
         return ProductDetailScreen(productId: productId);
       },
     ),
     GoRoute(
-      path: '/edit-product/:id',
+      path: AppRoutes.productDetailEdit, // Menggunakan '/products/:productId/edit'
       builder: (context, state) {
-        state.pathParameters['id']!;
+        state.pathParameters['productId']!;
         return const AddProductScreen();
       },
     ),
     GoRoute(
-      path: '/chat',
+      path: AppRoutes.chat,
       builder: (context, state) => const ChatScreen(),
     ),
     GoRoute(
-      path: '/attendance',
+      path: AppRoutes.attendance,
       builder: (context, state) => const AttendanceScreen(),
     ),
     GoRoute(
-      path: '/management',
+      path: AppRoutes.management,
       builder: (context, state) => const ManagementScreen(),
     ),
     GoRoute(
-      path: '/sellers',
+      path: AppRoutes.sellers,
       builder: (context, state) => const SellerScreen(),
     ),
     GoRoute(
-      path: '/streaming',
+      path: '/streaming', // Catatan: '/streaming' berbeda dari AppRoutes.stream ('/stream')
       builder: (context, state) => const StreamingScreen(streamId: '',),
+    ),
+    GoRoute(
+      path: AppRoutes.settings,
+      builder: (context, state) => const SettingsScreen(),
     ),
     
   ],

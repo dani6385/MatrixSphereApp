@@ -36,7 +36,7 @@ class ManagementEndDrawer extends StatelessWidget {
           isSelected: true,
           onTap: () {
             Navigator.of(context).pop();
-            context.go('/product');
+            context.push('/product');
           }, route: '',
         ),
         SideMenuItem(
@@ -45,7 +45,7 @@ class ManagementEndDrawer extends StatelessWidget {
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            context.go('/approval');
+            context.push('/approval');
           }, route: '',
         ),
       ],

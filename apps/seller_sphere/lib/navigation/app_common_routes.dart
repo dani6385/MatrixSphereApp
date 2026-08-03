@@ -13,7 +13,7 @@ late final GlobalKey<NavigatorState> commonRootNavigatorKey;
 final List<RouteBase> commonDetailRoutes = [
   GoRoute(
     path: AppRoutes.settings.substring(1),
-    builder: (context, state) => const SettingScreen(),
+    builder: (context, state) => const SettingsScreen(),
   ),
   GoRoute(
     path: AppRoutes.chat.substring(1),

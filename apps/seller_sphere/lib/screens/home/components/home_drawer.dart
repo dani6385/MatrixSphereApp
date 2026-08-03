@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_router.dart';
-//import 'package:seller_sphere/navigation/app_routes.dart';
+import 'package:seller_sphere/navigation/app_router.dart'; // Bisa dihapus jika tidak digunakan langsung
+import 'package:seller_sphere/navigation/app_routes.dart';
 
 import 'package:shared_ui/shared_ui.dart';
 import 'package:logger/logger.dart';
@@ -35,46 +35,48 @@ class HomeDrawer extends StatelessWidget {
         SideMenuItem(
           title: 'Dashboard',
           icon: Icons.dashboard_rounded,
-          route: '/', // Assuming AppRoutes.home maps to '/'
+          route: AppRoutes.home,
           onTap: () {
             _logger.d('Navigating to Dashboard');
-            GoRouter.of(context).go('/'); // Assuming AppRoutes.home maps to '/'
+            GoRouter.of(context).push(AppRoutes.home);
           },
         ),
         SideMenuItem(
           title: 'Products',
           icon: Icons.inventory_2_rounded,
-          route: '/products',
+          route: AppRoutes.publicProduct,
           onTap: () {
             _logger.d('Navigating to Products');
-            GoRouter.of(context).go('/products');
+            GoRouter.of(context).push(AppRoutes.publicProduct);
           },
         ),
-        SideMenuItem(
-          title: 'Orders',
-          icon: Icons.receipt_long_rounded,
-          route: '/orders',
-          onTap: () {
-            _logger.d('Navigating to Orders');
-            GoRouter.of(context).go('/orders');
-          },
-        ),
-        SideMenuItem(
-          title: 'Customers',
-          icon: Icons.people_alt_rounded,
-          route: '/customers',
-          onTap: () {
-            _logger.d('Navigating to Customers');
-            GoRouter.of(context).go('/customers');
-          },
-        ),
+        // TODO: Aktifkan kembali setelah rute '/orders' dibuat di app_router.dart
+        // SideMenuItem(
+        //   title: 'Orders',
+        //   icon: Icons.receipt_long_rounded,
+        //   route: '/orders', // Ganti dengan AppRoutes.orders jika sudah dibuat
+        //   onTap: () {
+        //     _logger.d('Navigating to Orders');
+        //     GoRouter.of(context).push('/orders');
+        //   },
+        // ),
+        // TODO: Aktifkan kembali setelah rute '/customers' dibuat di app_router.dart
+        // SideMenuItem(
+        //   title: 'Customers',
+        //   icon: Icons.people_alt_rounded,
+        //   route: '/customers', // Ganti dengan AppRoutes.customers jika sudah dibuat
+        //   onTap: () {
+        //     _logger.d('Navigating to Customers');
+        //     GoRouter.of(context).push('/customers');
+        //   },
+        // ),
         SideMenuItem(
           title: 'Settings',
           icon: Icons.settings_rounded,
-          route: '/settings',
+          route: AppRoutes.settings,
           onTap: () {
             _logger.d('Navigating to Settings');
-            GoRouter.of(context).go('/settings');
+            GoRouter.of(context).push(AppRoutes.settings);
           },
         ),
       ];

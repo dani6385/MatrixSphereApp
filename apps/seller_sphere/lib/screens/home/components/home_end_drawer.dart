@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 
 import 'package:shared_ui/shared_ui.dart';
@@ -15,7 +17,7 @@ class HomeEndDrawer extends StatelessWidget {
     return SideMenu(
       header: header,
       items: items(context), // Pass context to the items method
-      selectedRoute: selectedRoute,
+      selectedRoute: selectedRoute(context), // Perbaikan: Panggil metode selectedRoute dengan context
       footer: const Text('Pengaturan v1.0.0'),
     );
   }
@@ -40,53 +42,58 @@ class HomeEndDrawer extends StatelessWidget {
         ),
       );
 
+  // Perbaikan: selectedRoute sekarang adalah metode yang mengambil BuildContext
+  String selectedRoute(BuildContext context) {
+    final GoRouter router = GoRouter.of(context);
+    return router.location;
+  }
+
   List<SideMenuItem> items(BuildContext context) => [
         // Make items a method that accepts BuildContext
         SideMenuItem(
           title: 'Profil',
           icon: Icons.person_outline,
-          isSelected: false,
           onTap: () {
             _logger.i('Profil tapped');
             Navigator.of(context).pop();
-            context.go(AppRoutes.profile);
+            context.push(AppRoutes.profile);
           },
-          route: '/profile',
+          route: AppRoutes.profile, // Perbaikan: Gunakan konstanta dari AppRoutes
         ),
-        SideMenuItem(
-          title: 'Notifikasi',
-          icon: Icons.notifications_outlined,
-          isSelected: false,
-          onTap: () {
-            _logger.i('Notifikasi tapped');
-            Navigator.of(context).pop();
-            // Implement navigation to notifications page
-          },
-          route: '/notifications',
-        ),
-        SideMenuItem(
-          title: 'Bantuan & Dukungan',
-          icon: Icons.help_outline,
-          isSelected: false,
-          onTap: () {
-            _logger.i('Bantuan & Dukungan tapped');
-            Navigator.of(context).pop();
-            // Implement navigation to help and support page
-          },
-          route: '/help',
-        ),
+        // TODO: Aktifkan kembali setelah rute '/notifications' dibuat di app_router.dart dan AppRoutes
+        // SideMenuItem(
+        //   title: 'Notifikasi',
+        //   icon: Icons.notifications_outlined,
+        //   onTap: () {
+        //     _logger.i('Notifikasi tapped');
+        //     Navigator.of(context).pop();
+        //     // context.push(AppRoutes.notifications); // Ganti jika sudah ada
+        //   },
+        //   route: '/notifications', // Ganti dengan AppRoutes.notifications jika sudah dibuat
+        // ),
+        // TODO: Aktifkan kembali setelah rute '/help' dibuat di app_router.dart dan AppRoutes
+        // SideMenuItem(
+        //   title: 'Bantuan & Dukungan',
+        //   icon: Icons.help_outline,
+        //   onTap: () {
+        //     _logger.i('Bantuan & Dukungan tapped');
+        //     Navigator.of(context).pop();
+        //     // context.push(AppRoutes.help); // Ganti jika sudah ada
+        //   },
+        //   route: '/help', // Ganti dengan AppRoutes.help jika sudah dibuat
+        // ),
         SideMenuItem(
           title: 'Keluar',
           icon: Icons.logout,
-          isSelected: false,
           onTap: () {
             _logger.i('Keluar tapped');
             Navigator.of(context).pop();
-            // Implement logout logic
+            // Implementasi logika logout
+            FirebaseAuth.instance.signOut().then((_) {
+              context.push(AppRoutes.login); // Arahkan ke halaman login setelah logout
+            });
           },
-          route: '/logout',
+          route: AppRoutes.login, // Rute ini akan menjadi aktif setelah logout
         ),
       ];
-
-  String get selectedRoute => '';
 }

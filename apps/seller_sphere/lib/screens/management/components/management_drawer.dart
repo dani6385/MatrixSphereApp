@@ -37,7 +37,7 @@ class ManagementDrawer extends StatelessWidget {
           isSelected: selectedRoute == AppRoutes.management,
           onTap: () {
             Navigator.of(context).pop();
-            context.go(AppRoutes.management);
+            context.push(AppRoutes.management);
           }, route: '',
         ),
         // PENAMBAHAN: Item menu untuk halaman produk
