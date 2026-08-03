@@ -44,8 +44,11 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // Mengganti FlutterLogo dengan logo aplikasi Anda dari assets.
+            // Tambahkan 'packages/seller_sphere/' untuk memberitahu Flutter
+            // agar mencari aset di dalam package 'seller_sphere'.
             Image.asset(
               'assets/images/logo.png',
+              package: 'seller_sphere', // <-- KUNCI UTAMA DI SINI
               width: 150, // Anda bisa menyesuaikan ukurannya di sini
             ),
             const SizedBox(height: 20),
@@ -70,4 +73,3 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
         
-

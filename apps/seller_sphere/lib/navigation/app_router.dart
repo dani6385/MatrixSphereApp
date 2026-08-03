@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/features/auth/shop_registration_screen.dart';
-import 'app_navigator.dart';
+import 'package:seller_sphere/navigation/app_shell.dart';
 
 import 'app_shell_branches.dart';
 import 'package:shared_ui/shared_ui.dart'; // Import SplashScreen
@@ -36,38 +36,33 @@ class GoRouterRefreshStream extends ChangeNotifier {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/', // Mengubah initialLocation ke root
+  initialLocation: '/',
   navigatorKey: _rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
-    // Periksa status login dari Firebase Auth
     final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    final String location = state.fullPath ?? state.uri.toString();
 
-    // Dapatkan lokasi yang sedang dituju
-    final String location = state.fullPath ?? state.uri.toString(); // Menggunakan fullPath untuk rute yang lebih akurat
-
-    // Daftar halaman publik yang bisa diakses tanpa login
-    final bool isPublicPage = location == '/' || // Menambahkan '/' sebagai halaman publik
+    final bool isPublicPage =
         location == '/login' ||
         location == '/register' ||
-        location == '/forgot-password'; // Sesuaikan dengan rute publik Anda
+        location == '/forgot-password';
 
-    // Skenario:
-    // 1. Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
-    //    maka alihkan (redirect) ke halaman login.
-    if (!isLoggedIn && !isPublicPage) {
-      return '/login';
+    final bool isOnSplashScreen = location == '/';
+
+    if (!isLoggedIn) {
+      if (isOnSplashScreen || !isPublicPage) {
+        return '/login';
+      }
     }
 
-    // 2. Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
-    //    maka alihkan ke halaman utama (home).
-    if (isLoggedIn && isPublicPage) {
-      return '/';
+    if (isLoggedIn) {
+      if (isOnSplashScreen || isPublicPage) {
+        return '/home';
+      }
     }
 
-    // 3. Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
     return null;
   },
-  // Ini adalah bagian KRUSIAL untuk persistensi sesi dengan GoRouter
   refreshListenable:
       GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
   errorBuilder: (context, state) => Scaffold(
@@ -76,22 +71,16 @@ final GoRouter appRouter = GoRouter(
     ),
   ),
   routes: <RouteBase>[
-    // Rute untuk Splash Screen (akan ditampilkan pertama kali)
     GoRoute(
       path: '/',
       builder: (context, state) => const SplashScreen(),
     ),
-    // StatefulShellRoute untuk halaman utama dengan Bottom Navigation Bar.
     StatefulShellRoute.indexedStack(
-      // Rute-rute di dalam 'branches' akan ditampilkan di dalam AppNavigator
       builder: (context, state, navigationShell) {
-        return AppNavigator(navigationShell: navigationShell);
+        return AppShell(navigationShell: navigationShell);
       },
       branches: appShellBranches,
     ),
-
-    // Rute-rute di luar Shell (misalnya, halaman login, register, dll.)
-    // Ini penting agar redirect berfungsi dengan benar.
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),

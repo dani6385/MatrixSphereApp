@@ -31,8 +31,10 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  # Deklarasikan path aset secara eksplisit.
+  # Ini akan membuat aset tersedia untuk semua aplikasi di dalam workspace.
   assets:
-    - images/
+    - apps/seller_sphere/assets/images/
 
 workspace:
   - apps/seller_sphere
