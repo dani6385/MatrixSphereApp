@@ -8,7 +8,6 @@ import 'app_shell_branches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 
-
 import 'app_extractor.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
@@ -30,7 +29,8 @@ class GoRouterRefreshStream extends ChangeNotifier {
 }
 
 // Buat key untuk root navigator
-final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
+final GlobalKey<NavigatorState> rootNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'root');
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.login, // Atau halaman splash screen jika ada
@@ -45,7 +45,8 @@ final GoRouter appRouter = GoRouter(
     // Daftar halaman publik yang bisa diakses tanpa login
     final bool isPublicPage = location == AppRoutes.login ||
         location == AppRoutes.register ||
-        location == AppRoutes.forgotPassword; // Sesuaikan dengan rute publik Anda
+        location ==
+            AppRoutes.forgotPassword; // Sesuaikan dengan rute publik Anda
 
     // Skenario:
     // 1. Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
@@ -104,16 +105,7 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.shopRegistration,
       builder: (context, state) => const ShopRegistrationScreen(),
     ),
-    GoRoute(
-      path: AppRoutes.profile,
-      parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const ProfileScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.publicProduct,
-      parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const PublicProductScreen(),
-    ),
+
     GoRoute(
       path: AppRoutes.productDetail,
       parentNavigatorKey: rootNavigatorKey,
@@ -123,7 +115,8 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: AppRoutes.productDetailEdit, // Menggunakan '/products/:productId/edit'
+      path: AppRoutes
+          .productDetailEdit, // Menggunakan '/products/:productId/edit'
       parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) {
         state.pathParameters['productId']!;
@@ -142,10 +135,64 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.management,
       builder: (context, state) => const ManagementScreen(),
+      routes: [
+        GoRoute(
+          path: AppRoutes.publicProduct,
+          parentNavigatorKey: rootNavigatorKey,
+          builder: (context, state) => const PublicProductScreen(),
+          routes: [
+            GoRoute(
+              path: AppRoutes.addProduct,
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (context, state) => const AddProductScreen(),
+            ),
+            GoRoute(
+              path: AppRoutes.productDetail,
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (context, state) => const ProductDetailScreen(
+                productId: '',
+              ),
+            ),
+          ],
+        ),
+      ],
     ),
     GoRoute(
       path: AppRoutes.sellers,
       builder: (context, state) => const SellerScreen(),
+      routes: [
+        GoRoute(
+          path: AppRoutes.status,
+          parentNavigatorKey: rootNavigatorKey,
+          builder: (context, state) => const PublicProductScreen(),
+          routes: [
+            GoRoute(
+              path: AppRoutes.addProduct,
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (context, state) => const AddProductScreen(),
+            ),
+            GoRoute(
+              path: AppRoutes.productDetail,
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (context, state) => const ProductDetailScreen(
+                productId: '',
+              ),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: AppRoutes.profile,
+          parentNavigatorKey: rootNavigatorKey,
+          builder: (context, state) => const ProfileScreen(),
+          routes: [
+            GoRoute(
+              path: AppRoutes.editProfile,
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (context, state) => const ProfileScreen(),
+            ),
+          ],
+        ),
+      ],
     ),
     GoRoute(
       path: AppRoutes.stream,
@@ -156,6 +203,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.settings,
       builder: (context, state) => const SettingsScreen(),
+      parentNavigatorKey: rootNavigatorKey,
     ),
   ],
 );

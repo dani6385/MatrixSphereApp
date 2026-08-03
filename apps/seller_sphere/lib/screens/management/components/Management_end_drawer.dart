@@ -47,10 +47,10 @@ class ManagementEndDrawer extends StatelessWidget {
         SideMenuItem(
           title: 'Edit',
           icon: Icons.store,
-          route: AppRoutes.managementEdit,
+          route: AppRoutes.productDetailEdit,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.managementEdit);
+            context.push(AppRoutes.productDetailEdit);
           },
         ),
         SideMenuItem(

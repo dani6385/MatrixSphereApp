@@ -18,7 +18,7 @@ class AppRoutes {
 
   // Top-Level Routes (Fullscreen)
   static const String profile = '/profile';
-  static const String aditProfile = '/profile/edit';
+  static const String editProfile = '/profile/edit';
   static const String settings = '/settings';
   static const String chat = '/chat';
   static const String shopRegistration = '/shop-registration';
@@ -30,6 +30,7 @@ class AppRoutes {
   static const String productDetailEdit = '/products/:productId/edit';
 
   // Sub-routes untuk Management
-  static const String managementEdit = '/management/edit';
+  static const String status = '/seller/status';
   static const String managementApproval = '/management/approval';
+
 }
