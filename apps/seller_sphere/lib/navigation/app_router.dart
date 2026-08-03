@@ -6,8 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'app_navigator.dart';
 import 'app_shell_branches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
-
 import 'app_extractor.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
@@ -28,13 +26,11 @@ class GoRouterRefreshStream extends ChangeNotifier {
   }
 }
 
-// Buat key untuk root navigator
-final GlobalKey<NavigatorState> rootNavigatorKey =
-    GlobalKey<NavigatorState>(debugLabel: 'root');
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: AppRoutes.login, // Atau halaman splash screen jika ada
-  navigatorKey: rootNavigatorKey,
+  initialLocation: '/login', // Atau halaman splash screen jika ada
+  navigatorKey: _rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
     // Periksa status login dari Firebase Auth
     final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
@@ -43,22 +39,21 @@ final GoRouter appRouter = GoRouter(
     final String location = state.uri.toString();
 
     // Daftar halaman publik yang bisa diakses tanpa login
-    final bool isPublicPage = location == AppRoutes.login ||
-        location == AppRoutes.register ||
-        location ==
-            AppRoutes.forgotPassword; // Sesuaikan dengan rute publik Anda
+    final bool isPublicPage = location == '/login' ||
+        location == '/register' ||
+        location == '/forgot-password'; // Sesuaikan dengan rute publik Anda
 
     // Skenario:
     // 1. Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
     //    maka alihkan (redirect) ke halaman login.
     if (!isLoggedIn && !isPublicPage) {
-      return AppRoutes.login;
+      return '/login';
     }
 
     // 2. Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
     //    maka alihkan ke halaman utama (home).
     if (isLoggedIn && isPublicPage) {
-      return AppRoutes.home;
+      return '/';
     }
 
     // 3. Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
@@ -84,137 +79,26 @@ final GoRouter appRouter = GoRouter(
 
     // Rute-rute di luar Shell (misalnya, halaman login, register, dll.)
     // Ini penting agar redirect berfungsi dengan benar.
-    GoRoute(
-      path: AppRoutes.login,
+    /*GoRoute(
+      path: '/login',
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
-      path: AppRoutes.register,
+      path: '/register',
       builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
-      path: AppRoutes.forgotPassword,
+      path: '/forgot-password',
       builder: (context, state) => const ForgotPasswordScreen(),
-    ),
+    ),*/
     GoRoute(
-      path: AppRoutes.home,
+      path: '/',
       builder: (context, state) =>
           const HomeScreen(), // Ganti dengan halaman utama Anda
     ),
-    GoRoute(
-      path: AppRoutes.shopRegistration,
+    /*GoRoute(
+      path: '/shop-registration',
       builder: (context, state) => const ShopRegistrationScreen(),
-    ),
-
-    GoRoute(
-      path: AppRoutes.productDetail,
-      parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) {
-        final String productId = state.pathParameters['id']!;
-        return ProductDetailScreen(productId: productId);
-      },
-    ),
-    GoRoute(
-      path: AppRoutes
-          .productDetailEdit, // Menggunakan '/products/:productId/edit'
-      parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) {
-        state.pathParameters['productId']!;
-        return const AddProductScreen();
-      },
-    ),
-    GoRoute(
-      path: AppRoutes.chat,
-      parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const ChatScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.attendance,
-      builder: (context, state) => const AttendanceScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.management,
-      builder: (context, state) => const ManagementScreen(),
-      routes: [
-        GoRoute(
-          path: AppRoutes.publicProduct,
-          parentNavigatorKey: rootNavigatorKey,
-          builder: (context, state) => const PublicProductScreen(),
-          routes: [
-            GoRoute(
-              path: AppRoutes.addProduct,
-              parentNavigatorKey: rootNavigatorKey,
-              builder: (context, state) => const AddProductScreen(),
-            ),
-            GoRoute(
-              path: AppRoutes.productDetail,
-              parentNavigatorKey: rootNavigatorKey,
-              builder: (context, state) => const ProductDetailScreen(
-                productId: '',
-              ),
-            ),
-          ],
-        ),
-        GoRoute(
-              path: AppRoutes.income,
-              parentNavigatorKey: rootNavigatorKey,
-              builder: (context, state) => const IncomeTransaction(),
-            ),
-      ],
-    ),
-    GoRoute(
-      path: AppRoutes.sellers,
-      builder: (context, state) => const SellerScreen(),
-      routes: [
-        GoRoute(
-          path: AppRoutes.status,
-          parentNavigatorKey: rootNavigatorKey,
-          builder: (context, state) => const PublicProductScreen(),
-          routes: [
-            GoRoute(
-              path: AppRoutes.addProduct,
-              parentNavigatorKey: rootNavigatorKey,
-              builder: (context, state) => const AddProductScreen(),
-            ),
-            GoRoute(
-              path: AppRoutes.productDetail,
-              parentNavigatorKey: rootNavigatorKey,
-              builder: (context, state) => const ProductDetailScreen(
-                productId: '',
-              ),
-            ),
-          ],
-        ),
-        GoRoute(
-          path: AppRoutes.profile,
-          parentNavigatorKey: rootNavigatorKey,
-          builder: (context, state) => const ProfileScreen(),
-          routes: [
-            GoRoute(
-              path: AppRoutes.editProfile,
-              parentNavigatorKey: rootNavigatorKey,
-              builder: (context, state) => const ProfileScreen(),
-            ),
-          ],
-        ),
-      ],
-    ),
-    GoRoute(
-      path: AppRoutes.stream,
-      builder: (context, state) => const StreamingScreen(
-        streamId: '',
-      ),
-    ),
-    GoRoute(
-      path: AppRoutes.settings,
-      builder: (context, state) => const SettingsScreen(),
-      parentNavigatorKey: rootNavigatorKey,
-    ),
+    ),*/
   ],
 );
-
-extension GoRouterExtension on GoRouter {
-  String get location {
-    return routerDelegate.currentConfiguration.uri.toString();
-  }
-}

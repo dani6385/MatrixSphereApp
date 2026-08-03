@@ -1,8 +1,8 @@
 
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class ChatProvider extends ChangeNotifier {
-  // Example state for chat
+  
   final List<String> _messages = [];
 
   List<String> get messages => _messages;
@@ -11,7 +11,13 @@ class ChatProvider extends ChangeNotifier {
     _messages.add(message);
     notifyListeners();
   }
-
-  // You can add more chat-related logic here,
-  // e.g., fetching messages, sending messages, managing chat rooms, etc.
+  // For example:
+  // List<Message> _messages = [];
+  //
+  // List<Message> get messages => _messages;
+  //
+  // void addMessage(Message message) {
+  //   _messages.add(message);
+  //   notifyListeners();
+  // }
 }

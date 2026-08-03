@@ -20,8 +20,12 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     // Data untuk ikon, dipetakan berdasarkan rute
     const Map<String, ({IconData icon, IconData activeIcon})> tabIcons = {
-      AppRoutes.home: (icon: Icons.home_outlined, activeIcon: Icons.home),
-      AppRoutes.stream: (icon: Icons.cast, activeIcon: Icons.cast_connected),
+      AppRoutes.home: (
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home),
+      AppRoutes.stream: (
+        icon: Icons.cast,
+        activeIcon: Icons.cast_connected),
       AppRoutes.management: (
         icon: Icons.point_of_sale,
         activeIcon: Icons.point_of_sale_outlined
@@ -37,7 +41,6 @@ class BottomNavBar extends StatelessWidget {
     };
 
     return SharedBottomNavBar(
-      selectedIndex: currentIndex,
       currentIndex: currentIndex,
       onTap: onTap,
       tabs: List.generate(appShellBranches.length, (index) {
@@ -49,6 +52,7 @@ class BottomNavBar extends StatelessWidget {
           icon: isSelected ? icons.activeIcon : icons.icon,
         );
       }),
+      selectedIndex: currentIndex, items: const [],
     );
   }
 }
