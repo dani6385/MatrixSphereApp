@@ -26,7 +26,7 @@ export 'package:seller_sphere/screens/management/components/Management_end_drawe
 export 'package:seller_sphere/screens/management/management_screen.dart';
 // sellers
 export 'package:seller_sphere/screens/sellers/components/Seller_drawer.dart';
-export 'package:seller_sphere/screens/sellers/components/seller_end_drawer.dart';
+export 'package:seller_sphere/screens/sellers/components/Seller_end_drawer.dart';
 export 'package:seller_sphere/screens/sellers/seller_screen.dart';
 // streams
 export 'package:seller_sphere/screens/streams/streaming_screen.dart';

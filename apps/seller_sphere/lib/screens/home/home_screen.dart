@@ -14,6 +14,8 @@ class HomeScreen extends StatelessWidget {
     super.key,
   });
 
+  get crossAxisAlignment => null;
+
   @override
   Widget build(BuildContext context) {
     return ListView(

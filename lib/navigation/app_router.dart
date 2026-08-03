@@ -1,75 +1,26 @@
+// lib/navigation/app_router.dart
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-//import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_ui/shared_ui.dart';
-//import 'package:shared_services/shared_services.dart';
-import 'app_extractor.dart';
 
-final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
+//import 'app_navigator.dart';
 
-final GoRouter appRouter = GoRouter(
-  navigatorKey: _rootNavigatorKey,
-  initialLocation: '/',
-  routes: <RouteBase>[
-    GoRoute(
-      path: '/',
-      builder: (BuildContext context, GoRouterState state) {
-        return const SplashScreen();
-      },
-      
-    ),
-    /*GoRoute(
-      path:'/onboarding',
-      builder: (BuildContext context, GoRouterState state) {
-        return const OnboardingScreen();
-      },
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (BuildContext context, GoRouterState state) {
-        return const LoginScreen();
-      },
-    ),*/
-    GoRoute(
-      path: '/home',
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomeScreen();
-      },
-    ),
-  ],
-  /*redirect: (BuildContext context, GoRouterState state) {
-    final authState = context.read<AuthBloc>().state;
-    final bool loggedIn = authState is AuthAuthenticated;
-    final bool loggingIn = state.matchedLocation == '/login';
-    final bool onOnboarding = state.matchedLocation == '/onboarding';
-    final bool onSplash = state.matchedLocation == '/';
+//import 'app_shell_branches.dart';
+import 'package:shared_ui/shared_ui.dart'; // Import SplashScreen
 
-    // If not logged in, and not on login or onboarding Screen, redirect to login
-    if (!loggedIn && !loggingIn && !onOnboarding && !onSplash) {
-      return '/login';
-    }
-    // If logged in, and trying to go to login or onboarding, redirect to home
-    if (loggedIn && (loggingIn || onOnboarding || onSplash)) {
-      return '/home';
-    }
-    // No redirect needed
-    return null;
-  },
-  refreshListenable: GoRouterRefreshStream(AuthBloc(authService: context.read()) as Stream<dynamic>),*/
-);
+import 'package:firebase_auth/firebase_auth.dart';
 
-/*mixin context {
-  static AuthService read() { throw UnimplementedError('This context mixin is a placeholder and should not be used.'); }
-}*/
+//import 'app_extractor.dart';
 
-// Helper class to convert a Stream into a Listenable for GoRouter's refreshListenable
+// Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
-    _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
+    _subscription = stream.asBroadcastStream().listen(
+          (dynamic _) => notifyListeners(),
+        );
   }
 
   late final StreamSubscription<dynamic> _subscription;
@@ -80,3 +31,82 @@ class GoRouterRefreshStream extends ChangeNotifier {
     super.dispose();
   }
 }
+
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
+final GoRouter appRouter = GoRouter(
+  initialLocation: '/', // Mengubah initialLocation ke root
+  navigatorKey: _rootNavigatorKey,
+  redirect: (BuildContext context, GoRouterState state) {
+    // Periksa status login dari Firebase Auth
+    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+
+    // Dapatkan lokasi yang sedang dituju
+    final String location = state.fullPath ?? state.uri.toString(); // Menggunakan fullPath untuk rute yang lebih akurat
+
+    // Daftar halaman publik yang bisa diakses tanpa login
+    final bool isPublicPage = location == '/' || // Menambahkan '/' sebagai halaman publik
+        location == '/login' ||
+        location == '/register' ||
+        location == '/forgot-password'; // Sesuaikan dengan rute publik Anda
+
+    // Skenario:
+    // 1. Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
+    //    maka alihkan (redirect) ke halaman login.
+    if (!isLoggedIn && !isPublicPage) {
+      return '/login';
+    }
+
+    // 2. Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
+    //    maka alihkan ke halaman utama (home).
+    if (isLoggedIn && isPublicPage) {
+      return '/';
+    }
+
+    // 3. Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
+    return null;
+  },
+  // Ini adalah bagian KRUSIAL untuk persistensi sesi dengan GoRouter
+  refreshListenable:
+      GoRouterRefreshStream(FirebaseAuth.instance.authStateChanges()),
+  errorBuilder: (context, state) => Scaffold(
+    body: Center(
+      child: Text('Halaman tidak ditemukan: ${state.error}'),
+    ),
+  ),
+  routes: <RouteBase>[
+    // Rute untuk Splash Screen (akan ditampilkan pertama kali)
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const SplashScreen(),
+    ),
+    /*/ StatefulShellRoute untuk halaman utama dengan Bottom Navigation Bar.
+    StatefulShellRoute.indexedStack(
+      // Rute-rute di dalam 'branches' akan ditampilkan di dalam AppNavigator
+      builder: (context, state, navigationShell) {
+        return AppNavigator(navigationShell: navigationShell);
+      },
+      branches: appShellBranches,
+    ),
+
+    // Rute-rute di luar Shell (misalnya, halaman login, register, dll.)
+    // Ini penting agar redirect berfungsi dengan benar.
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/forgot-password',
+      builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: '/shop-registration',
+      builder: (context, state) => const ShopRegistrationScreen(),
+    ),*/
+  ],
+);
