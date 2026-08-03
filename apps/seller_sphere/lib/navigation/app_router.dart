@@ -112,5 +112,46 @@ final GoRouter appRouter = GoRouter(
       path: '/addproducts',
       builder: (context, state) => const AddProductScreen(),
     ),
+    GoRoute(
+      path: '/product-detail/:id',
+      builder: (context, state) {
+        final String productId = state.pathParameters['id']!;
+        return ProductDetailScreen(productId: productId);
+      },
+    ),
+    GoRoute(
+      path: '/edit-product/:id',
+      builder: (context, state) {
+        state.pathParameters['id']!;
+        return const AddProductScreen();
+      },
+    ),
+    GoRoute(
+      path: '/chat',
+      builder: (context, state) => const ChatScreen(),
+    ),
+    GoRoute(
+      path: '/attendance',
+      builder: (context, state) => const AttendanceScreen(),
+    ),
+    GoRoute(
+      path: '/management',
+      builder: (context, state) => const ManagementScreen(),
+    ),
+    GoRoute(
+      path: '/sellers',
+      builder: (context, state) => const SellerScreen(),
+    ),
+    GoRoute(
+      path: '/streaming',
+      builder: (context, state) => const StreamingScreen(streamId: '',),
+    ),
+    
   ],
 );
+
+extension GoRouterExtension on GoRouter {
+  String get location {
+    return routerDelegate.currentConfiguration.uri.toString();
+  }
+}

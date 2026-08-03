@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigation/app_routes.dart';
+import 'package:seller_sphere/navigation/app_router.dart';
+//import 'package:seller_sphere/navigation/app_routes.dart';
 
 import 'package:shared_ui/shared_ui.dart';
 import 'package:logger/logger.dart';
@@ -13,80 +14,68 @@ class HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SideMenu(
-      header: header,
-      items: items(context), // Pass context to the items method
-      selectedRoute: selectedRoute,
-      footer: const Text('Pengaturan v1.0.0'),
+      header: header(context),
+      items: items(context),
+      selectedRoute: selectedRoute(context),
+      footer: const Text('Seller Sphere v1.0.0'),
     );
   }
 
-  Widget get header => const DrawerHeader(
-        decoration: BoxDecoration(color: kDarkAppBar),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.settings, color: kBrandPrimary, size: 48),
-            SizedBox(height: AppSpacing.sm),
-            Text(
-              'Pintasan',
-              style: TextStyle(
-                color: kDarkTextPrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
+  Widget header(BuildContext context) => Text(
+        'Seller Sphere',
+        style: AppStyles.primaryTitle(Theme.of(context).textTheme),
       );
 
+  String selectedRoute(BuildContext context) {
+    final GoRouter router = GoRouter.of(context);
+    return router.location;
+  }
+
   List<SideMenuItem> items(BuildContext context) => [
-        // Make items a method that accepts BuildContext
         SideMenuItem(
-          title: 'Profil',
-          icon: Icons.person_outline,
-          isSelected: false,
+          title: 'Dashboard',
+          icon: Icons.dashboard_rounded,
+          route: '/', // Assuming AppRoutes.home maps to '/'
           onTap: () {
-            _logger.i('Profil tapped');
-            Navigator.of(context).pop();
-            context.go(AppRoutes.profile);
+            _logger.d('Navigating to Dashboard');
+            GoRouter.of(context).go('/'); // Assuming AppRoutes.home maps to '/'
           },
-          route: '/profile',
         ),
         SideMenuItem(
-          title: 'Notifikasi',
-          icon: Icons.notifications_outlined,
-          isSelected: false,
+          title: 'Products',
+          icon: Icons.inventory_2_rounded,
+          route: '/products',
           onTap: () {
-            _logger.i('Notifikasi tapped');
-            Navigator.of(context).pop();
-            // Implement navigation to notifications page
+            _logger.d('Navigating to Products');
+            GoRouter.of(context).go('/products');
           },
-          route: '/notifications',
         ),
         SideMenuItem(
-          title: 'Bantuan & Dukungan',
-          icon: Icons.help_outline,
-          isSelected: false,
+          title: 'Orders',
+          icon: Icons.receipt_long_rounded,
+          route: '/orders',
           onTap: () {
-            _logger.i('Bantuan & Dukungan tapped');
-            Navigator.of(context).pop();
-            // Implement navigation to help and support page
+            _logger.d('Navigating to Orders');
+            GoRouter.of(context).go('/orders');
           },
-          route: '/help',
         ),
         SideMenuItem(
-          title: 'Keluar',
-          icon: Icons.logout,
-          isSelected: false,
+          title: 'Customers',
+          icon: Icons.people_alt_rounded,
+          route: '/customers',
           onTap: () {
-            _logger.i('Keluar tapped');
-            Navigator.of(context).pop();
-            // Implement logout logic
+            _logger.d('Navigating to Customers');
+            GoRouter.of(context).go('/customers');
           },
-          route: '/logout',
+        ),
+        SideMenuItem(
+          title: 'Settings',
+          icon: Icons.settings_rounded,
+          route: '/settings',
+          onTap: () {
+            _logger.d('Navigating to Settings');
+            GoRouter.of(context).go('/settings');
+          },
         ),
       ];
-
-  String get selectedRoute => '';
 }

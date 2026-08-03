@@ -9,7 +9,7 @@ export 'package:seller_sphere/features/profile/profile_screen.dart';
 
 export 'package:seller_sphere/menu/drawer/managements/products/public_product_screen.dart';
 export 'package:seller_sphere/menu/drawer/managements/products/add_product_screen.dart';
-//export 'package:seller_sphere/features/products/product_detail_screen.dart';
+export 'package:seller_sphere/menu/drawer/managements/products/product_detail_screen.dart';
 
 
 
