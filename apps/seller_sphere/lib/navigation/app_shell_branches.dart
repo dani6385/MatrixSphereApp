@@ -4,9 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
-//import 'package:seller_sphere/navigation/custom_transition_page.dart';
+import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'app_extractor.dart';
-//import 'app_common_routes.dart'; // Mengimpor rute umum
+import 'app_common_routes.dart'; // Mengimpor rute umum
 
 // Kunci navigator untuk setiap cabang/tab.
 // Ini penting agar navigasi ke halaman detail (seperti add/edit product)
@@ -26,7 +26,7 @@ final List<StatefulShellBranch> appShellBranches = [
         path: '/',
         name: AppRoutes.home,
         builder: (context, state) => const HomeScreen(),
-        /*routes: [
+        routes: [
           // Sub-rute dari Home
           GoRoute(
             path: 'products', // Path relatif: /products
@@ -46,13 +46,13 @@ final List<StatefulShellBranch> appShellBranches = [
               ),
             ],
           ),
-        ],*/
+        ],
       ),
     ],
   ),
 
   // Branch untuk Tab Stream
-  /*StatefulShellBranch(
+  StatefulShellBranch(
     routes: [
       GoRoute(
         path: AppRoutes.stream,
@@ -119,5 +119,5 @@ final List<StatefulShellBranch> appShellBranches = [
         routes: commonDetailRoutes,
       ),
     ],
-  ),*/
+  ),
 ];

@@ -1,23 +1,18 @@
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
-class ChatProvider extends ChangeNotifier {
-  
-  final List<String> _messages = [];
+class ChatProvider with ChangeNotifier {
+  final List<String> _unreadMessagesList = [];
 
-  List<String> get messages => _messages;
+  List<String> get unreadMessagesList => _unreadMessagesList;
 
-  void addMessage(String message) {
-    _messages.add(message);
+  void addUnreadMessage(String message) {
+    _unreadMessagesList.add(message);
     notifyListeners();
   }
-  // For example:
-  // List<Message> _messages = [];
-  //
-  // List<Message> get messages => _messages;
-  //
-  // void addMessage(Message message) {
-  //   _messages.add(message);
-  //   notifyListeners();
-  // }
+
+  void clearUnreadMessages() {
+    _unreadMessagesList.clear();
+    notifyListeners();
+  }
 }

@@ -1,11 +1,16 @@
 // lib/navigation/app_router.dart
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/features/auth/shop_registration_screen.dart';
 import 'app_navigator.dart';
+
 import 'app_shell_branches.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'app_extractor.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
@@ -79,7 +84,7 @@ final GoRouter appRouter = GoRouter(
 
     // Rute-rute di luar Shell (misalnya, halaman login, register, dll.)
     // Ini penting agar redirect berfungsi dengan benar.
-    /*GoRoute(
+    GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),
     ),
@@ -90,15 +95,15 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/forgot-password',
       builder: (context, state) => const ForgotPasswordScreen(),
-    ),*/
+    ),
     GoRoute(
       path: '/',
       builder: (context, state) =>
           const HomeScreen(), // Ganti dengan halaman utama Anda
     ),
-    /*GoRoute(
+    GoRoute(
       path: '/shop-registration',
       builder: (context, state) => const ShopRegistrationScreen(),
-    ),*/
+    ),
   ],
 );

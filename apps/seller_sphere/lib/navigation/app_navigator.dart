@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'app_extractor.dart';
-import 'app_view_model.dart';
-
+import '../providers/app_viewmodel.dart';
 import 'bottom_nav_bar.dart';
 import 'widgets/app_navigator_drawer.dart';
 
