@@ -6,7 +6,7 @@ class AppRoutes {
   static const String forgotPassword = '/forgot-password';
   static const String shopRegistration = '/shop-registration';
   //bottom nav bar
-  static const String home = '/';
+  static const String home = '/home';
   static const String stream = '/stream';
   static const String management = '/management';
   static const String sellers = '/sellers';
