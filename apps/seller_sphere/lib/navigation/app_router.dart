@@ -29,11 +29,12 @@ class GoRouterRefreshStream extends ChangeNotifier {
   }
 }
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
+// Buat key untuk root navigator
+final GlobalKey<NavigatorState> rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRoutes.login, // Atau halaman splash screen jika ada
-  navigatorKey: _rootNavigatorKey,
+  navigatorKey: rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
     // Periksa status login dari Firebase Auth
     final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
@@ -105,14 +106,17 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.profile,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const ProfileScreen(),
     ),
     GoRoute(
       path: AppRoutes.publicProduct,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const PublicProductScreen(),
     ),
     GoRoute(
       path: AppRoutes.productDetail,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) {
         final String productId = state.pathParameters['id']!;
         return ProductDetailScreen(productId: productId);
@@ -120,6 +124,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.productDetailEdit, // Menggunakan '/products/:productId/edit'
+      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) {
         state.pathParameters['productId']!;
         return const AddProductScreen();
@@ -127,6 +132,7 @@ final GoRouter appRouter = GoRouter(
     ),
     GoRoute(
       path: AppRoutes.chat,
+      parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) => const ChatScreen(),
     ),
     GoRoute(
@@ -150,33 +156,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.settings,
       builder: (context, state) => const SettingsScreen(),
-    ),
-
-    // Rute untuk sub-menu Attendance
-    GoRoute(
-      path: AppRoutes.attendanceOverview,
-      builder: (context, state) =>
-          const AttendanceScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.attendancePunch,
-      builder: (context, state) =>
-          const AttendanceScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.attendanceHistory,
-      builder: (context, state) =>
-          const AttendanceScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.attendanceReports,
-      builder: (context, state) =>
-          const AttendanceScreen(),
-    ),
-    GoRoute(
-      path: AppRoutes.attendanceSettings,
-      builder: (context, state) =>
-          const AttendanceScreen(),
     ),
   ],
 );

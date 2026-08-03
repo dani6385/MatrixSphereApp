@@ -43,7 +43,7 @@ class AttendanceEndDrawer extends StatelessWidget {
       );
 
   List<SideMenuItem> items(BuildContext context) => [
-        SideMenuItem(
+        /*SideMenuItem(
           title: 'Overview',
           icon: Icons.dashboard,
           route: AppRoutes.attendanceOverview,
@@ -78,14 +78,14 @@ class AttendanceEndDrawer extends StatelessWidget {
             Navigator.of(context).pop();
             context.push(AppRoutes.attendanceReports);
           },
-        ),
+        ),*/
         SideMenuItem(
           title: 'Settings',
           icon: Icons.settings,
-          route: AppRoutes.attendanceSettings,
+          route: AppRoutes.settings,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.attendanceSettings);
+            context.push(AppRoutes.settings);
           },
         ),
       ];

@@ -29,13 +29,6 @@ class AppRoutes {
   static const String productDetail = '/product-detail/:id';
   static const String productDetailEdit = '/products/:productId/edit';
 
-  // Sub-routes untuk Attendance
-  static const String attendanceOverview = '/attendance/overview';
-  static const String attendancePunch = '/attendance/punch';
-  static const String attendanceHistory = '/attendance/history';
-  static const String attendanceReports = '/attendance/reports';
-  static const String attendanceSettings = '/attendance/settings';
-
   // Sub-routes untuk Management
   static const String managementEdit = '/management/edit';
   static const String managementApproval = '/management/approval';
