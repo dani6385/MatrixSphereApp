@@ -18,19 +18,11 @@ class AppNavigation {
     context.go(AppRoutes.login);
   }
 
-  /// Navigates to the Profile screen.
+  /// Navigates to the Settings screen.
   /// This uses `push` to stack the screen on top of the current one.
-  /*static void pushToProfile(BuildContext context) {
-    context.push(AppRoutes.profile);
-  }*/
   static void pushTosetting(BuildContext context) {
     context.push(AppRoutes.settings);
   }
-
-  /// Navigates to the Edit Profile screen from the Profile screen.
-  /*static void pushToEditProfile(BuildContext context) {
-    context.push(AppRoutes.editprofile);
-  }*/
 
   /// A more robust way to navigate to a specific tab in the BottomNavBar.
   /// It finds the GoRouter and uses `go` on the correct path.
