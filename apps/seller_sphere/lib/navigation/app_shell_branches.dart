@@ -8,6 +8,7 @@ import 'package:seller_sphere/navigation/custom_transition_page.dart';
 import 'app_extractor.dart';
 import 'app_common_routes.dart'; // Mengimpor rute umum
 
+
 // Kunci navigator untuk setiap cabang/tab.
 // Ini penting agar navigasi ke halaman detail (seperti add/edit product)
 // tetap berada di dalam tab yang sama dan tidak menutupi bottom nav bar.
@@ -124,8 +125,23 @@ final List<StatefulShellBranch> appShellBranches = [
     routes: [
       GoRoute(
         path: AppRoutes.attendance,
-        pageBuilder: (context, state) =>
-            FadeTransitionPage(child: const AttendanceScreen()),
+        pageBuilder: (context, state) => FadeTransitionPage(
+            child: AttendanceScreen(
+          // Placeholder values for AttendanceScreen
+          isScanning: false, // Placeholder
+          hasCameraPermission: false, // Placeholder
+          cameraController: null, // Placeholder
+          laserAnimation: const AlwaysStoppedAnimation(0.0), // Placeholder
+          scanStatusMessage: '', // Placeholder
+          scanProgress: 0.0, // Placeholder
+          onCancelScan: () {}, // Placeholder
+          onRequestPermission: () {}, // Placeholder
+          isCheckingLocation: false, // Placeholder (was null, now bool)
+          onClockIn: () {},
+          onClockOut: () {},
+          attendanceHistory: const [],
+          onSync: () {},
+        )),
         routes: commonDetailRoutes,
       ),
     ],

@@ -68,6 +68,10 @@ class AppShell extends StatelessWidget {
     switch (navigationShell.currentIndex) {
       case 0: // Index 0 adalah tab 'Home'
         return const HomeDrawer();
+      case 2: // Index 0 adalah tab 'Home'
+        return const ManagementDrawer();
+      case 3: // Index 0 adalah tab 'Home'
+        return const SellerDrawer();
       case 4: // Index 4 adalah tab 'Attendance'
         return const AttendanceDrawer();
       default:
@@ -82,6 +86,12 @@ class AppShell extends StatelessWidget {
     switch (navigationShell.currentIndex) {
       case 0: // Index 0 adalah tab 'Home'
         return const HomeEndDrawer();
+      case 2: // Index 0 adalah tab 'Home'
+        return const ManagementEndDrawer();
+      case 3: // Index 0 adalah tab 'Home'
+        return const SellerEndDrawer();
+      case 4: // Index 0 adalah tab 'Home'
+        return const AttendanceEndDrawer();
       // Jika ada tab lain yang butuh endDrawer, tambahkan di sini.
       // case 1:
       //   return const StreamEndDrawer();
