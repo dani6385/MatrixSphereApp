@@ -1,15 +1,13 @@
-import 'package:flutter/foundation.dart'; // Tambahkan import ini untuk PlatformDispatcher
-import 'package:flutter/material.dart';
+import 'dart:ui';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:matrix_sphere/screens/chat/providers/chat_provider.dart';
-
-import 'package:shared_services/shared_services.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
+import 'package:matrix_sphere/navigation/app_router.dart';
+import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'routes/app_router.dart';
-// Pastikan firebase_options diimport jika Anda menggunakannya secara lokal:
-// import 'firebase_options.dart'; 
 
 void main() async {
   // 1. Pastikan binding diinisialisasi terlebih dahulu
@@ -30,7 +28,7 @@ void main() async {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
-    
+
     debugPrint("Firebase & Crashlytics berhasil dikonfigurasi.");
   } catch (e, stack) {
     // Jika Firebase gagal, aplikasi TIDAK AKAN layar hitam, melainkan tetap berjalan
@@ -43,25 +41,49 @@ void main() async {
   runApp(const MatrixSphere());
 }
 
-class MatrixSphere extends StatelessWidget {
+class MatrixSphere extends StatefulWidget {
   const MatrixSphere({super.key});
+
+  @override
+  State<MatrixSphere> createState() => _MatrixSphereState();
+}
+
+class _MatrixSphereState extends State<MatrixSphere> {
+  late final AuthBloc _authBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _authBloc = AuthBloc(authService: AuthService());
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => ChatProvider()),
+        BlocProvider.value(value: _authBloc),
+        //ChangeNotifierProvider(create: (context) => AppProvider()),
       ],
-      child: Consumer<ThemeProvider>(
-        builder: (context, themeProvider, child) {
-          // Ganti ke MaterialApp.router
+      // BlocListener tidak lagi diperlukan di sini karena GoRouter
+      // akan menangani redirect secara otomatis berdasarkan perubahan state.
+      child: Builder(
+        builder: (context) {
+          // Add return statement here
           return MaterialApp.router(
             title: 'Matrix Sphere',
+            debugShowCheckedModeBanner: false,
+            // --- KONFIGURASI TEMA ---
+            // Tema yang digunakan saat sistem dalam mode terang (light mode)
             theme: AppTheme.lightTheme,
+
+            // Tema yang digunakan saat sistem dalam mode gelap (dark mode)
             darkTheme: AppTheme.darkTheme,
-            themeMode: themeProvider.themeMode,
-            routerConfig: appRouter, // Gunakan konfigurasi router baru
+
+            // Ini adalah kuncinya: aplikasi akan mengikuti pengaturan sistem
+            themeMode: ThemeMode.system,
+
+            // Konfigurasi router dari GoRouter
+            routerConfig: appRouter,
           );
         },
       ),
