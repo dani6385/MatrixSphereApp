@@ -2,10 +2,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+//import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:shared_services/shared_services.dart';
+//import 'package:shared_services/shared_services.dart';
 import 'app_extractor.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -40,7 +40,7 @@ final GoRouter appRouter = GoRouter(
       },
     ),
   ],
-  redirect: (BuildContext context, GoRouterState state) {
+  /*redirect: (BuildContext context, GoRouterState state) {
     final authState = context.read<AuthBloc>().state;
     final bool loggedIn = authState is AuthAuthenticated;
     final bool loggingIn = state.matchedLocation == '/login';
@@ -58,12 +58,12 @@ final GoRouter appRouter = GoRouter(
     // No redirect needed
     return null;
   },
-  refreshListenable: GoRouterRefreshStream(AuthBloc(authService: context.read()) as Stream<dynamic>), // This line needs to be fixed. AuthBloc should be provided via BlocProvider.
+  refreshListenable: GoRouterRefreshStream(AuthBloc(authService: context.read()) as Stream<dynamic>),*/
 );
 
-mixin context {
+/*mixin context {
   static AuthService read() { throw UnimplementedError('This context mixin is a placeholder and should not be used.'); }
-}
+}*/
 
 // Helper class to convert a Stream into a Listenable for GoRouter's refreshListenable
 class GoRouterRefreshStream extends ChangeNotifier {
