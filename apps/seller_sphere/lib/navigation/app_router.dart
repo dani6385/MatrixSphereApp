@@ -8,6 +8,7 @@ import 'package:seller_sphere/features/auth/shop_registration_screen.dart';
 import 'app_navigator.dart';
 
 import 'app_shell_branches.dart';
+import 'package:shared_ui/shared_ui.dart'; // Import SplashScreen
 
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -31,20 +32,22 @@ class GoRouterRefreshStream extends ChangeNotifier {
   }
 }
 
+
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/login', // Atau halaman splash screen jika ada
+  initialLocation: '/', // Mengubah initialLocation ke root
   navigatorKey: _rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
     // Periksa status login dari Firebase Auth
     final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
     // Dapatkan lokasi yang sedang dituju
-    final String location = state.uri.toString();
+    final String location = state.fullPath ?? state.uri.toString(); // Menggunakan fullPath untuk rute yang lebih akurat
 
     // Daftar halaman publik yang bisa diakses tanpa login
-    final bool isPublicPage = location == '/login' ||
+    final bool isPublicPage = location == '/' || // Menambahkan '/' sebagai halaman publik
+        location == '/login' ||
         location == '/register' ||
         location == '/forgot-password'; // Sesuaikan dengan rute publik Anda
 
@@ -73,6 +76,11 @@ final GoRouter appRouter = GoRouter(
     ),
   ),
   routes: <RouteBase>[
+    // Rute untuk Splash Screen (akan ditampilkan pertama kali)
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const SplashScreen(),
+    ),
     // StatefulShellRoute untuk halaman utama dengan Bottom Navigation Bar.
     StatefulShellRoute.indexedStack(
       // Rute-rute di dalam 'branches' akan ditampilkan di dalam AppNavigator
@@ -95,11 +103,6 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/forgot-password',
       builder: (context, state) => const ForgotPasswordScreen(),
-    ),
-    GoRoute(
-      path: '/',
-      builder: (context, state) =>
-          const HomeScreen(), // Ganti dengan halaman utama Anda
     ),
     GoRoute(
       path: '/shop-registration',
