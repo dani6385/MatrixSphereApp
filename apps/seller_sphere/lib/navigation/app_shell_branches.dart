@@ -11,6 +11,9 @@ import 'app_common_routes.dart'; // Mengimpor rute umum
 // Kunci navigator untuk setiap cabang/tab.
 // Ini penting agar navigasi ke halaman detail (seperti add/edit product)
 // tetap berada di dalam tab yang sama dan tidak menutupi bottom nav bar.
+// Letakkan ini di bagian paling atas file (di luar kurung kurawal class/function)
+final GlobalKey<NavigatorState> rootNavigatorKey =
+    GlobalKey<NavigatorState>(debugLabel: 'root');
 final _shellNavigatorHomeKey =
     GlobalKey<NavigatorState>(debugLabel: 'ShellHome');
 
@@ -30,7 +33,7 @@ final List<StatefulShellBranch> appShellBranches = [
           // Sub-rute dari Home
           GoRoute(
             path: 'products', // Path relatif: /products
-            name: AppRoutes.publicProduct,
+            name: AppRoutes.product,
             builder: (context, state) => const PublicProductScreen(),
             routes: [
               // Rute ini sekarang akan menggunakan navigator dari branch Home
@@ -75,20 +78,27 @@ final List<StatefulShellBranch> appShellBranches = [
         routes: [
           // Sub-rute dari Home
           GoRoute(
-            path: 'products', // Path relatif: /products
-            name: AppRoutes.publicProduct,
+            path: 'products',
+            name: AppRoutes.product,
             builder: (context, state) => const PublicProductScreen(),
             routes: [
-              // Rute ini sekarang akan menggunakan navigator dari branch Home
+              // Sub-rute ini otomatis menjadi full screen dan menyembunyikan Bottom Navigation Bar
               GoRoute(
-                path: 'add', // Path relatif: /products/add
+                path: 'add',
                 name: AppRoutes.addProduct,
+                parentNavigatorKey: rootNavigatorKey, // <-- KUNCI UTAMA DI SINI
                 builder: (context, state) => const AddProductScreen(),
               ),
               GoRoute(
-                path: 'edit', // Path relatif: /products/edit
-                name: AppRoutes.editProduct,
-                builder: (context, state) => const AddProductScreen(),
+                path: 'detail/:productId/:shopId',
+                name: AppRoutes.productDetail,
+                parentNavigatorKey: rootNavigatorKey, // <-- KUNCI UTAMA DI SINI
+                builder: (context, state) {
+                  final productId = state.pathParameters['productId']!;
+                  final shopId = state.pathParameters['shopId']!;
+                  return ProductDetailScreen(
+                      productId: productId, shopId: shopId);
+                },
               ),
             ],
           ),
