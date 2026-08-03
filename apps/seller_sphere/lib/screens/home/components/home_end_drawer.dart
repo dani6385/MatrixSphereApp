@@ -56,7 +56,7 @@ class HomeEndDrawer extends StatelessWidget {
           onTap: () {
             _logger.i('Profil tapped');
             Navigator.of(context).pop();
-            context.push(AppRoutes.profile);
+            context.go(AppRoutes.profile);
           },
           route: AppRoutes.profile, // Perbaikan: Gunakan konstanta dari AppRoutes
         ),
@@ -67,7 +67,7 @@ class HomeEndDrawer extends StatelessWidget {
         //   onTap: () {
         //     _logger.i('Notifikasi tapped');
         //     Navigator.of(context).pop();
-        //     // context.push(AppRoutes.notifications); // Ganti jika sudah ada
+        //     // context.go(AppRoutes.notifications); // Ganti jika sudah ada
         //   },
         //   route: '/notifications', // Ganti dengan AppRoutes.notifications jika sudah dibuat
         // ),
@@ -78,7 +78,7 @@ class HomeEndDrawer extends StatelessWidget {
         //   onTap: () {
         //     _logger.i('Bantuan & Dukungan tapped');
         //     Navigator.of(context).pop();
-        //     // context.push(AppRoutes.help); // Ganti jika sudah ada
+        //     // context.go(AppRoutes.help); // Ganti jika sudah ada
         //   },
         //   route: '/help', // Ganti dengan AppRoutes.help jika sudah dibuat
         // ),

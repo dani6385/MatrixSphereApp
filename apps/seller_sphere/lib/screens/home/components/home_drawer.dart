@@ -38,7 +38,7 @@ class HomeDrawer extends StatelessWidget {
           route: AppRoutes.home,
           onTap: () {
             _logger.d('Navigating to Dashboard');
-            GoRouter.of(context).push(AppRoutes.home);
+            GoRouter.of(context).go(AppRoutes.home);
           },
         ),
         SideMenuItem(
@@ -47,7 +47,7 @@ class HomeDrawer extends StatelessWidget {
           route: AppRoutes.publicProduct,
           onTap: () {
             _logger.d('Navigating to Products');
-            GoRouter.of(context).push(AppRoutes.publicProduct);
+            GoRouter.of(context).go(AppRoutes.publicProduct);
           },
         ),
         // TODO: Aktifkan kembali setelah rute '/orders' dibuat di app_router.dart
@@ -57,7 +57,7 @@ class HomeDrawer extends StatelessWidget {
         //   route: '/orders', // Ganti dengan AppRoutes.orders jika sudah dibuat
         //   onTap: () {
         //     _logger.d('Navigating to Orders');
-        //     GoRouter.of(context).push('/orders');
+        //     GoRouter.of(context).go('/orders');
         //   },
         // ),
         // TODO: Aktifkan kembali setelah rute '/customers' dibuat di app_router.dart
@@ -67,7 +67,7 @@ class HomeDrawer extends StatelessWidget {
         //   route: '/customers', // Ganti dengan AppRoutes.customers jika sudah dibuat
         //   onTap: () {
         //     _logger.d('Navigating to Customers');
-        //     GoRouter.of(context).push('/customers');
+        //     GoRouter.of(context).go('/customers');
         //   },
         // ),
         SideMenuItem(
@@ -76,7 +76,7 @@ class HomeDrawer extends StatelessWidget {
           route: AppRoutes.settings,
           onTap: () {
             _logger.d('Navigating to Settings');
-            GoRouter.of(context).push(AppRoutes.settings);
+            GoRouter.of(context).go(AppRoutes.settings);
           },
         ),
       ];

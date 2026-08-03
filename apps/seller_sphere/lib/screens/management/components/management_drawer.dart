@@ -37,7 +37,7 @@ class ManagementDrawer extends StatelessWidget {
           isSelected: selectedRoute == AppRoutes.management,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.management);
+            context.go(AppRoutes.management);
           },
           route: '',
         ),

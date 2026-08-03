@@ -50,7 +50,7 @@ class ManagementEndDrawer extends StatelessWidget {
           route: AppRoutes.productDetailEdit,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.productDetailEdit);
+            context.go(AppRoutes.productDetailEdit);
           },
         ),
         SideMenuItem(
@@ -59,7 +59,7 @@ class ManagementEndDrawer extends StatelessWidget {
           route: AppRoutes.managementApproval,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.managementApproval);
+            context.go(AppRoutes.managementApproval);
           },
         ),
       ];

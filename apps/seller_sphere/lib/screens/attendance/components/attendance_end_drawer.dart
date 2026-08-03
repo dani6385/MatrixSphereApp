@@ -49,7 +49,7 @@ class AttendanceEndDrawer extends StatelessWidget {
           route: AppRoutes.attendanceOverview,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.attendanceOverview);
+            context.go(AppRoutes.attendanceOverview);
           },
         ),
         SideMenuItem(
@@ -58,7 +58,7 @@ class AttendanceEndDrawer extends StatelessWidget {
           route: AppRoutes.attendancePunch,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.attendancePunch);
+            context.go(AppRoutes.attendancePunch);
           },
         ),
         SideMenuItem(
@@ -67,7 +67,7 @@ class AttendanceEndDrawer extends StatelessWidget {
           route: AppRoutes.attendanceHistory,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.attendanceHistory);
+            context.go(AppRoutes.attendanceHistory);
           },
         ),
         SideMenuItem(
@@ -76,7 +76,7 @@ class AttendanceEndDrawer extends StatelessWidget {
           route: AppRoutes.attendanceReports,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.attendanceReports);
+            context.go(AppRoutes.attendanceReports);
           },
         ),*/
         SideMenuItem(
@@ -85,7 +85,7 @@ class AttendanceEndDrawer extends StatelessWidget {
           route: AppRoutes.settings,
           onTap: () {
             Navigator.of(context).pop();
-            context.push(AppRoutes.settings);
+            context.go(AppRoutes.settings);
           },
         ),
       ];
