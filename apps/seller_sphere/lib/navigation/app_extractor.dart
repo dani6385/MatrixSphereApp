@@ -10,7 +10,7 @@ export 'package:seller_sphere/features/profile/profile_screen.dart';
 export 'package:seller_sphere/menu/drawer/managements/products/public_product_screen.dart';
 export 'package:seller_sphere/menu/drawer/managements/products/add_product_screen.dart';
 export 'package:seller_sphere/menu/drawer/managements/products/product_detail_screen.dart';
-
+export 'package:seller_sphere/menu/drawer/managements/pendapatan/income_screen.dart';
 
 
 export 'package:seller_sphere/menu/drawer/home/settings/settings_screen.dart';

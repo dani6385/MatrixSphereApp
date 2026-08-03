@@ -38,7 +38,8 @@ class ManagementDrawer extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pop();
             context.push(AppRoutes.management);
-          }, route: '',
+          },
+          route: '',
         ),
         // PENAMBAHAN: Item menu untuk halaman produk
         SideMenuItem(
@@ -49,7 +50,9 @@ class ManagementDrawer extends StatelessWidget {
         ),
       ],
       selectedRoute: selectedRoute ?? '',
-      footer: const Text('Seller Sphere v1.0.0'),
+      footer: const Center(
+        child: Text('Seller Sphere v1.0.0'),
+      ),
       onItemSelected: (SideMenuItem item) {
         Navigator.of(context).pop(); // 1. Tutup drawer
         item.onTap.call(); // 2. Panggil onTap dari item

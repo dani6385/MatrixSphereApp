@@ -28,6 +28,7 @@ class AppRoutes {
   static const String addProduct = '/products/add'; // sub-route: /products/add
   static const String productDetail = '/product-detail/:id';
   static const String productDetailEdit = '/products/:productId/edit';
+  static const String income = '/income';
 
   // Sub-routes untuk Management
   static const String status = '/seller/status';

@@ -155,6 +155,11 @@ final GoRouter appRouter = GoRouter(
             ),
           ],
         ),
+        GoRoute(
+              path: AppRoutes.income,
+              parentNavigatorKey: rootNavigatorKey,
+              builder: (context, state) => const IncomeTransaction(),
+            ),
       ],
     ),
     GoRoute(
