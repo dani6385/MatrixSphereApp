@@ -1,9 +1,12 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'package:shared_services/shared_servic.dart';
+import 'package:shared_services/shared_services.dart';
+import 'app_extractor.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -18,22 +21,22 @@ final GoRouter appRouter = GoRouter(
       },
       
     ),
-    GoRoute(
+    /*GoRoute(
       path:'/onboarding',
       builder: (BuildContext context, GoRouterState state) {
-        return const OnboardingPage();
+        return const OnboardingScreen();
       },
     ),
     GoRoute(
       path: '/login',
       builder: (BuildContext context, GoRouterState state) {
-        return const LoginPage();
+        return const LoginScreen();
       },
-    ),
+    ),*/
     GoRoute(
       path: '/home',
       builder: (BuildContext context, GoRouterState state) {
-        return const HomePage();
+        return const HomeScreen();
       },
     ),
   ],
@@ -44,7 +47,7 @@ final GoRouter appRouter = GoRouter(
     final bool onOnboarding = state.matchedLocation == '/onboarding';
     final bool onSplash = state.matchedLocation == '/';
 
-    // If not logged in, and not on login or onboarding page, redirect to login
+    // If not logged in, and not on login or onboarding Screen, redirect to login
     if (!loggedIn && !loggingIn && !onOnboarding && !onSplash) {
       return '/login';
     }
@@ -55,8 +58,12 @@ final GoRouter appRouter = GoRouter(
     // No redirect needed
     return null;
   },
-  refreshListenable: GoRouterRefreshStream(AuthBloc(authService: context.read())), // This line needs to be fixed. AuthBloc should be provided via BlocProvider.
+  refreshListenable: GoRouterRefreshStream(AuthBloc(authService: context.read()) as Stream<dynamic>), // This line needs to be fixed. AuthBloc should be provided via BlocProvider.
 );
+
+mixin context {
+  static AuthService read() { throw UnimplementedError('This context mixin is a placeholder and should not be used.'); }
+}
 
 // Helper class to convert a Stream into a Listenable for GoRouter's refreshListenable
 class GoRouterRefreshStream extends ChangeNotifier {
