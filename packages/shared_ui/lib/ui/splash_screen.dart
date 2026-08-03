@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,8 +19,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _initializeAndNavigate() async {
+    // GoRouter's redirect logic will handle navigation automatically.
+    // This screen's only job is to initialize what's needed on first launch,
+    // like permissions.
     final prefs = await SharedPreferences.getInstance();
     final alreadyGranted = prefs.getBool(_permFlagKey) ?? false;
+
     if (!alreadyGranted) {
       // Meminta izin sesuai dengan konfigurasi di Info.plist
       await [
@@ -31,40 +34,40 @@ class _SplashScreenState extends State<SplashScreen> {
       ].request();
       await prefs.setBool(_permFlagKey, true);
     }
-    // Small delay for splash experience
-    await Future.delayed(const Duration(seconds: 2));
-    if (mounted) {
-      // Arahkan ke halaman login setelah splash screen
-      context.go('/login');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FlutterLogo(size: 100),
-            SizedBox(height: 20),
-            Text(
+            // Mengganti FlutterLogo dengan logo aplikasi Anda dari assets.
+            Image.asset(
+              'assets/images/logo.png',
+              width: 150, // Anda bisa menyesuaikan ukurannya di sini
+            ),
+            const SizedBox(height: 20),
+            const Text(
               'Selamat Datang!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Padding(
+            const SizedBox(height: 10),
+            const Padding(
               padding: EdgeInsets.all(16.0),
               child: Text(
                 'Mempersiapkan aplikasi...',
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 30),
-            CircularProgressIndicator(),
+            const SizedBox(height: 30),
+            const CircularProgressIndicator(),
           ],
         ),
       ),
     );
   }
 }
+        
+
