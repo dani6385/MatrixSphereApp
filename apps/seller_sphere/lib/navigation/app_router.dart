@@ -8,6 +8,7 @@ import 'app_shell_branches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:seller_sphere/navigation/app_routes.dart';
 
+
 import 'app_extractor.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
@@ -111,11 +112,7 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const PublicProductScreen(),
     ),
     GoRoute(
-      path: '/addproducts', // Catatan: Rute ini tidak ada di AppRoutes, mungkin rute lama?
-      builder: (context, state) => const AddProductScreen(),
-    ),
-    GoRoute(
-      path: '/product-detail/:id', // Catatan: Rute ini tidak ada di AppRoutes
+      path: AppRoutes.productDetail,
       builder: (context, state) {
         final String productId = state.pathParameters['id']!;
         return ProductDetailScreen(productId: productId);
@@ -145,14 +142,42 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const SellerScreen(),
     ),
     GoRoute(
-      path: '/streaming', // Catatan: '/streaming' berbeda dari AppRoutes.stream ('/stream')
-      builder: (context, state) => const StreamingScreen(streamId: '',),
+      path: AppRoutes.stream,
+      builder: (context, state) => const StreamingScreen(
+        streamId: '',
+      ),
     ),
     GoRoute(
       path: AppRoutes.settings,
       builder: (context, state) => const SettingsScreen(),
     ),
-    
+
+    // Rute untuk sub-menu Attendance
+    GoRoute(
+      path: AppRoutes.attendanceOverview,
+      builder: (context, state) =>
+          const AttendanceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.attendancePunch,
+      builder: (context, state) =>
+          const AttendanceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.attendanceHistory,
+      builder: (context, state) =>
+          const AttendanceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.attendanceReports,
+      builder: (context, state) =>
+          const AttendanceScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.attendanceSettings,
+      builder: (context, state) =>
+          const AttendanceScreen(),
+    ),
   ],
 );
 

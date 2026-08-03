@@ -41,7 +41,7 @@ final List<StatefulShellBranch> appShellBranches = [
               ),
               GoRoute(
                 path: 'edit', // Path relatif: /products/edit
-                name: AppRoutes.editProduct,
+                name: AppRoutes.productDetailEdit,
                 builder: (context, state) => const AddProductScreen(),
               ),
             ],
@@ -87,7 +87,7 @@ final List<StatefulShellBranch> appShellBranches = [
               ),
               GoRoute(
                 path: 'edit', // Path relatif: /products/edit
-                name: AppRoutes.editProduct,
+                name: AppRoutes.productDetailEdit,
                 builder: (context, state) => const AddProductScreen(),
               ),
             ],

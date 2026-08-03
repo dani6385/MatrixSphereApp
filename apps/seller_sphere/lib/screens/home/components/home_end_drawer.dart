@@ -89,9 +89,7 @@ class HomeEndDrawer extends StatelessWidget {
             _logger.i('Keluar tapped');
             Navigator.of(context).pop();
             // Implementasi logika logout
-            FirebaseAuth.instance.signOut().then((_) {
-              context.push(AppRoutes.login); // Arahkan ke halaman login setelah logout
-            });
+            FirebaseAuth.instance.signOut().then((_) {});
           },
           route: AppRoutes.login, // Rute ini akan menjadi aktif setelah logout
         ),

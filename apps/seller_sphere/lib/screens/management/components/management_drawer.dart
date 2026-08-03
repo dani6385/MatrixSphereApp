@@ -45,7 +45,7 @@ class ManagementDrawer extends StatelessWidget {
           title: 'Produk',
           icon: Icons.shopping_bag_outlined,
           // Ganti dengan rute produk Anda yang sebenarnya
-          route: '/products', onTap: () {},
+          route: AppRoutes.publicProduct, onTap: () {},
         ),
       ],
       selectedRoute: selectedRoute ?? '',

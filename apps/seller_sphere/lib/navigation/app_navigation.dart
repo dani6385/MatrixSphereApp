@@ -29,7 +29,7 @@ class AppNavigation {
 
   /// Navigates to the Edit Profile screen from the Profile screen.
   static void pushToEditProfile(BuildContext context) {
-    context.push(AppRoutes.editprofile);
+    context.push(AppRoutes.aditProfile);
   }
 
   /// A more robust way to navigate to a specific tab in the BottomNavBar.

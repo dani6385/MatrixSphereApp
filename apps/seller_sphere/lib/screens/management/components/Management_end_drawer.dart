@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class ManagementEndDrawer extends StatelessWidget {
@@ -11,7 +13,9 @@ class ManagementEndDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return SideMenu(
       header: const DrawerHeader(
-        decoration: BoxDecoration(color: kAccentBlue),
+        decoration: BoxDecoration(
+          color: kAccentBlue,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,27 +33,34 @@ class ManagementEndDrawer extends StatelessWidget {
           ],
         ),
       ),
-      items: [
+      items: items(context),
+      selectedRoute: selectedRoute(context),
+      footer: const Text('Kalkulasi v1.0.0'),
+    );
+  }
+
+  String selectedRoute(BuildContext context) {
+    return GoRouter.of(context).location;
+  }
+
+  List<SideMenuItem> items(BuildContext context) => [
         SideMenuItem(
           title: 'Edit',
           icon: Icons.store,
-          isSelected: true,
+          route: AppRoutes.managementEdit,
           onTap: () {
             Navigator.of(context).pop();
-            context.push('/product');
-          }, route: '',
+            context.push(AppRoutes.managementEdit);
+          },
         ),
         SideMenuItem(
           title: 'Approval',
           icon: Icons.playlist_add_check,
-          isSelected: false,
+          route: AppRoutes.managementApproval,
           onTap: () {
             Navigator.of(context).pop();
-            context.push('/approval');
-          }, route: '',
+            context.push(AppRoutes.managementApproval);
+          },
         ),
-      ],
-      selectedRoute: '', footer: const Text('Kalkulasi v1.0.0'),
-    );
-  }
+      ];
 }

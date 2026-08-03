@@ -1,16 +1,19 @@
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:seller_sphere/navigation/app_router.dart';
+import 'package:seller_sphere/navigation/app_routes.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-class AttendanceEndDrawer extends StatelessWidget {  const AttendanceEndDrawer({super.key});
+class AttendanceEndDrawer extends StatelessWidget {
+  const AttendanceEndDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SideMenu(      header: header,
-      items: items,
-      selectedRoute: selectedRoute,
+    return SideMenu(
+      header: header,
+      items: items(context),
+      selectedRoute: selectedRoute(context),
       footer: const Text('Attendance v1.0.0'),
-      onItemSelected: (SideMenuItem item) {},
     );
   }
 
@@ -39,39 +42,53 @@ class AttendanceEndDrawer extends StatelessWidget {  const AttendanceEndDrawer({
         ),
       );
 
-  List<SideMenuItem> get items => [
+  List<SideMenuItem> items(BuildContext context) => [
         SideMenuItem(
           title: 'Overview',
           icon: Icons.dashboard,
-          route: '/attendance_overview',
-          onTap: () {},
+          route: AppRoutes.attendanceOverview,
+          onTap: () {
+            Navigator.of(context).pop();
+            context.push(AppRoutes.attendanceOverview);
+          },
         ),
         SideMenuItem(
           title: 'Punch In/Out',
           icon: Icons.fingerprint,
-          route: '/attendance_punch',
-          onTap: () {},
+          route: AppRoutes.attendancePunch,
+          onTap: () {
+            Navigator.of(context).pop();
+            context.push(AppRoutes.attendancePunch);
+          },
         ),
         SideMenuItem(
           title: 'History',
           icon: Icons.history,
-          route: '/attendance_history',
-          onTap: () {},
+          route: AppRoutes.attendanceHistory,
+          onTap: () {
+            Navigator.of(context).pop();
+            context.push(AppRoutes.attendanceHistory);
+          },
         ),
         SideMenuItem(
           title: 'Reports',
           icon: Icons.bar_chart,
-          route: '/attendance_reports',
-          onTap: () {},
+          route: AppRoutes.attendanceReports,
+          onTap: () {
+            Navigator.of(context).pop();
+            context.push(AppRoutes.attendanceReports);
+          },
         ),
         SideMenuItem(
           title: 'Settings',
           icon: Icons.settings,
-          route: '/attendance_settings',
-          onTap: () {},
+          route: AppRoutes.attendanceSettings,
+          onTap: () {
+            Navigator.of(context).pop();
+            context.push(AppRoutes.attendanceSettings);
+          },
         ),
       ];
 
-  String get selectedRoute =>
-      '/attendance_overview'; // This should be dynamic based on current route
+  String selectedRoute(BuildContext context) => GoRouter.of(context).location;
 }
