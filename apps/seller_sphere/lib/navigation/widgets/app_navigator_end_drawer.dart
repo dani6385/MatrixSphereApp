@@ -1,11 +1,9 @@
-// lib/navigation/widgets/app_navigator_drawer.dart
-
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
 import '../app_navigation.dart';
 
-class AppNavigatorDrawer extends StatelessWidget {
-  const AppNavigatorDrawer({super.key});
+class AppNavigatorEndDrawer extends StatelessWidget {
+  const AppNavigatorEndDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +14,11 @@ class AppNavigatorDrawer extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.storefront, color: kBrandPrimary, size: 48),
+            Icon(Icons.person, color: kBrandPrimary, size: 48),
             SizedBox(height: AppSpacing.sm),
             Text(
-              'Menu Utama',
-              // Menggunakan gaya teks konsisten jika diinginkan
-              style: TextStyle(
-                color: kDarkTextPrimary,
+              'User Options',
+              style: TextStyle(                color: kDarkTextPrimary,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
@@ -32,56 +28,15 @@ class AppNavigatorDrawer extends StatelessWidget {
       ),
       items: [
         SideMenuItem(
-          title: 'Home',
-          icon: Icons.home,
+          title: 'Profile',
+          icon: Icons.person,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/home');
+            AppNavigation.goToTab(context, '/profile');
           },
-          route: '/home',
-        ),
-        SideMenuItem(
-          title: 'Stream',
-          icon: Icons.live_tv,
-          isSelected: false,
-          onTap: () {
-            Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/stream');
-          },
-          route: '/stream',
-        ),
-        SideMenuItem(
-          title: 'Management',
-          icon: Icons.dashboard,
-          isSelected: false,
-          onTap: () {
-            Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/management');
-          },
-          route: '/management',
-        ),
-        SideMenuItem(
-          title: 'Sellers',
-          icon: Icons.store,
-          isSelected: false,
-          onTap: () {
-            Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/sellers');
-          },
-          route: '/sellers',
-        ),
-        SideMenuItem(
-          title: 'Attendance',
-          icon: Icons.person_pin_rounded,
-          isSelected: false,
-          onTap: () {
-            Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/attendance');
-          },
-          route: '/attendance',
-        ),
-        SideMenuItem(
+          route: '/profile',
+        ),        SideMenuItem(
           title: 'Settings',
           icon: Icons.settings,
           isSelected: false,
@@ -92,135 +47,186 @@ class AppNavigatorDrawer extends StatelessWidget {
           route: '/settings',
         ),
         SideMenuItem(
-          title: 'Product',
-          icon: Icons.store,
+          title: 'Help',
+          icon: Icons.help_outline,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/product');
+            AppNavigation.goToTab(context, '/help');
           },
-          route: '/product',
+          route: '/help',
         ),
         SideMenuItem(
-          title: 'Approval',
-          icon: Icons.playlist_add_check,
+          title: 'About',
+          icon: Icons.info_outline,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/approval');
+            AppNavigation.goToTab(context, '/about');
           },
-          route: '/approval',
+          route: '/about',
         ),
         SideMenuItem(
-          title: 'Chat',
-          icon: Icons.chat_bubble_outline,
+          title: 'Privacy Policy',
+          icon: Icons.privacy_tip_outlined,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/chat');
+            AppNavigation.goToTab(context, '/privacy_policy');
           },
-          route: '/chat',
+          route: '/privacy_policy',
         ),
         SideMenuItem(
-          title: 'Order',
-          icon: Icons.shopping_cart,
+          title: 'Terms of Service',
+          icon: Icons.description_outlined,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/order');
+            AppNavigation.goToTab(context, '/terms_of_service');
           },
-          route: '/order',
+          route: '/terms_of_service',
         ),
         SideMenuItem(
-          title: 'Report',
-          icon: Icons.bar_chart,
+          title: 'Switch Account',
+          icon: Icons.switch_account,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/report');
+            AppNavigation.goToTab(context, '/switch_account');
           },
-          route: '/report',
+          route: '/switch_account',
         ),
         SideMenuItem(
-          title: 'Finance',
-          icon: Icons.account_balance_wallet,
+          title: 'Language',
+          icon: Icons.language,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/finance');
+            AppNavigation.goToTab(context, '/language');
           },
-          route: '/finance',
+          route: '/language',
         ),
         SideMenuItem(
-          title: 'Promo',
-          icon: Icons.discount,
+          title: 'Theme',
+          icon: Icons.color_lens,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/promo');
+            AppNavigation.goToTab(context, '/theme');
           },
-          route: '/promo',
+          route: '/theme',
         ),
         SideMenuItem(
-          title: 'Customer',
-          icon: Icons.people,
+          title: 'Notifications',
+          icon: Icons.notifications,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/customer');
+            AppNavigation.goToTab(context, '/notifications');
           },
-          route: '/customer',
+          route: '/notifications',
         ),
         SideMenuItem(
-          title: 'Employee',
-          icon: Icons.person,
+          title: 'Privacy',
+          icon: Icons.privacy_tip_outlined,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/employee');
+            AppNavigation.goToTab(context, '/privacy');
           },
-          route: '/employee',
+          route: '/privacy',
         ),
         SideMenuItem(
-          title: 'Warehouse',
-          icon: Icons.warehouse,
+          title: 'Security',
+          icon: Icons.security,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/warehouse');
+            AppNavigation.goToTab(context, '/security');
           },
-          route: '/warehouse',
+          route: '/security',
         ),
         SideMenuItem(
-          title: 'Shipping',
-          icon: Icons.local_shipping,
+          title: 'Delete Account',
+          icon: Icons.delete_forever,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/shipping');
+            AppNavigation.goToTab(context, '/delete_account');
           },
-          route: '/shipping',
+          route: '/delete_account',
         ),
         SideMenuItem(
-          title: 'Finance',
-          icon: Icons.account_balance_wallet,
+          title: 'Feedback',
+          icon: Icons.feedback,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/finance');
+            AppNavigation.goToTab(context, '/feedback');
           },
-          route: '/finance',
+          route: '/feedback',
         ),
         SideMenuItem(
-          title: 'Promo',
-          icon: Icons.discount,
+          title: 'App Version',
+          icon: Icons.info_outline,
           isSelected: false,
           onTap: () {
             Navigator.of(context).pop();
-            AppNavigation.goToTab(context, '/promo');
+            AppNavigation.goToTab(context, '/app_version');
           },
-          route: '/promo',
+          route: '/app_version',
         ),
+        SideMenuItem(
+          title: 'Contact Us',
+          icon: Icons.contact_support,
+          isSelected: false,
+          onTap: () {
+            Navigator.of(context).pop();
+            AppNavigation.goToTab(context, '/contact_us');
+          },
+          route: '/contact_us',
+        ),
+        SideMenuItem(
+          title: 'Dark Mode',
+          icon: Icons.dark_mode,
+          isSelected: false,
+          onTap: () {
+            Navigator.of(context).pop();
+            AppNavigation.goToTab(context, '/dark_mode');
+          },
+          route: '/dark_mode',
+        ),
+        SideMenuItem(
+          title: 'About Us',
+          icon: Icons.people_alt,
+          isSelected: false,
+          onTap: () {
+            Navigator.of(context).pop();
+            AppNavigation.goToTab(context, '/about_us');
+          },
+          route: '/about_us',
+        ),
+        SideMenuItem(
+          title: 'Help Center',
+          icon: Icons.help_center,
+          isSelected: false,
+          onTap: () {
+            Navigator.of(context).pop();
+            AppNavigation.goToTab(context, '/help_center');
+          },
+          route: '/help_center',
+        ),
+        SideMenuItem(
+          title: 'App Settings',
+          icon: Icons.settings_applications,
+          isSelected: false,
+          onTap: () {
+            Navigator.of(context).pop();
+            AppNavigation.goToTab(context, '/app_settings');
+          },
+          route: '/app_settings',
+        ),
+        
         SideMenuItem(
           title: 'Logout',
           icon: Icons.logout,

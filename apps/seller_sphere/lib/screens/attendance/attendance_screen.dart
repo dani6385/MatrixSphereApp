@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:seller_sphere/screens/attendance/components/attendance_drawer.dart';
+import 'package:seller_sphere/screens/attendance/components/attendance_end_drawer.dart';
 import 'package:seller_sphere/screens/attendance/providers/attendance_viewmodel.dart';
 import 'package:seller_sphere/screens/attendance/components/attendance_appbar.dart';
 import 'package:seller_sphere/screens/attendance/components/attendance_body.dart';
@@ -94,6 +96,8 @@ class _AttendanceViewState extends State<AttendanceView>
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
       appBar: const AttendanceAppBar(),
+      drawer: const AttendanceDrawer(),
+      endDrawer: const AttendanceEndDrawer(),
       body: Consumer<AttendanceViewModel>(
         builder: (context, viewModel, child) {
           return AttendanceBody(

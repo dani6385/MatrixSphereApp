@@ -1,85 +1,24 @@
+// lib/screens/Management_screen.dart
 
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'components/cashier_body.dart';
-import 'package:shared_services/shared_services.dart';
 
+import 'components/management_appbar.dart';
+import 'components/management_body.dart';
+import 'components/management_drawer.dart';
+import 'components/Management_end_drawer.dart';
 
-
-import 'widgets/order_list_view.dart';
-
-class ManagementScreen extends StatefulWidget {
+class ManagementScreen extends StatelessWidget {
   const ManagementScreen({super.key});
 
   @override
-  State<ManagementScreen> createState() => _ManagementScreenState();
-}
-
-class _ManagementScreenState extends State<ManagementScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.receipt_long_outlined), text: 'Orderan'),
-            Tab(icon: Icon(Icons.point_of_sale_outlined), text: 'Kasir'),
-          ],
-        ),
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: [
-              _buildOrderList(),
-              const CashierBody(),
-            ],
-          ),
-        ),
-      ],
+    return const Scaffold(
+      appBar: ManagementAppBar(),
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
+      drawer: ManagementDrawer(),
+      endDrawer: ManagementEndDrawer(),
+      body: ManagementBody(),
     );
   }
-}
-
-Widget _buildOrderList() {
-  // Asumsi FirebaseRtdbService memiliki getter 'ordersRef'
-  final DatabaseReference ordersRef = FirebaseRtdbService().ordersRef;
-
-  return StreamBuilder<DatabaseEvent>(
-    stream: ordersRef.onValue,
-    builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        return Center(child: Text('Terjadi kesalahan: ${snapshot.error}'));
-      }
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      final data = snapshot.data?.snapshot.value;
-      if (data == null || (data is Map && data.isEmpty)) {
-        return const Center(child: Text('Belum ada orderan masuk.'));
-      }
-
-      final ordersMap = Map<String, dynamic>.from(data as Map);
-      final List<Order> orders = ordersMap.entries.map((entry) {
-        return Order.fromMap(Map<String, dynamic>.from(entry.value), entry.key);
-      }).toList();
-
-      return OrderListView(orders: orders);
-    },
-  );
 }

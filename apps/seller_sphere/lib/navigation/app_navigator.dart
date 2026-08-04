@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:seller_sphere/navigation/widgets/app_navigator_end_drawer.dart';
 import 'app_extractor.dart';
 import '../providers/app_viewmodel.dart';
 import 'bottom_nav_bar.dart';
@@ -32,6 +33,7 @@ class _AppNavigatorState extends State<AppNavigator> {
         extendBody: true,
         body: widget.navigationShell,
         drawer: const AppNavigatorDrawer(),
+        endDrawer: const AppNavigatorEndDrawer(),
         bottomNavigationBar: BottomNavBar(
           currentIndex: widget.navigationShell.currentIndex,
           onTap: _onItemTapped,
