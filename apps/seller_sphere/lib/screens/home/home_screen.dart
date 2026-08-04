@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Home Screen'),
       ),
       body: const Center(
-        child: Text('Welcome to Seller Sphere!'),
+        child: Text('Welcome to the Home Screen!'),
       ),
     );
   }

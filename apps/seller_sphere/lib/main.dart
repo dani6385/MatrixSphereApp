@@ -52,10 +52,13 @@ class SellerSphere extends StatefulWidget {
 class _SellerSphereState extends State<SellerSphere> {
   late final AuthBloc _authBloc;
 
+  
+
   @override
   void initState() {
     super.initState();
     _authBloc = AuthBloc(authService: AuthService());
+    AppRouter.initialize(_authBloc);
   }
 
   @override
@@ -84,7 +87,7 @@ class _SellerSphereState extends State<SellerSphere> {
             themeMode: ThemeMode.system,
 
             // Konfigurasi router dari GoRouter
-            routerConfig: appRouter,
+            routerConfig: AppRouter.router,
           );
         },
       ),
