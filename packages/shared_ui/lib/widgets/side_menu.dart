@@ -33,7 +33,7 @@ class SideMenu extends StatelessWidget {
     required this.header,
     required this.items,
     this.footer,
-    this.onItemSelected, required String selectedRoute,
+    this.onItemSelected, required String selectedRoute, required children,
   });
 
   @override
