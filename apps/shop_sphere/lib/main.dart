@@ -52,7 +52,7 @@ void main() async {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter _router = GoRouter(
-  initialLocation: '/login', // Mulai dari halaman login
+  //initialLocation: '/login', // Mulai dari halaman login
   // 1. Redirect logic
   redirect: (BuildContext context, GoRouterState state) {
     // --- PERUBAHAN DIMULAI DI SINI ---

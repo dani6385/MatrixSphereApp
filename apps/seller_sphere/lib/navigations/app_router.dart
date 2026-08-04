@@ -29,11 +29,11 @@ class GoRouterRefreshStream extends ChangeNotifier {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/login', // Atau halaman splash screen jika ada
+  //initialLocation: '/login', // Atau halaman splash screen jika ada
   navigatorKey: _rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
     // Periksa status login dari Firebase Auth
-    final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
+    /*final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
     // Dapatkan lokasi yang sedang dituju
     final String location = state.uri.toString();
@@ -54,7 +54,7 @@ final GoRouter appRouter = GoRouter(
     //    maka alihkan ke halaman utama (home).
     if (isLoggedIn && isPublicPage) {
       return '/';
-    }
+    }*/
 
     // 3. Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
     return null;

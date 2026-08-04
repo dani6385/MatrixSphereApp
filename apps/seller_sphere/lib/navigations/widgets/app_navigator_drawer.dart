@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
-import '../app_navigation.dart';
+//import '../app_navigation.dart';
 
 class AppNavigatorDrawer extends StatelessWidget {
   const AppNavigatorDrawer({super.key});
@@ -30,13 +30,14 @@ class AppNavigatorDrawer extends StatelessWidget {
               //AppNavigation.pushToProfile(context);
             },
           ),
-          ListTile(
+          /*ListTile(
             leading: const Icon(Icons.login),
             title: const Text('Logout (ke Halaman Login)'),
             onTap: () => AppNavigation.goToLogin(context),
-          ),
+          ),*/
         ],
       ),
     );
   }
 }
+
