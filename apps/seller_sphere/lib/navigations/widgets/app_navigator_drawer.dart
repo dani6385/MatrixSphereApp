@@ -30,11 +30,6 @@ class AppNavigatorDrawer extends StatelessWidget {
               //AppNavigation.pushToProfile(context);
             },
           ),
-          /*ListTile(
-            leading: const Icon(Icons.login),
-            title: const Text('Logout (ke Halaman Login)'),
-            onTap: () => AppNavigation.goToLogin(context),
-          ),*/
         ],
       ),
     );

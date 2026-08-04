@@ -29,34 +29,10 @@ class GoRouterRefreshStream extends ChangeNotifier {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
-  //initialLocation: '/login', // Atau halaman splash screen jika ada
+  
   navigatorKey: _rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
-    // Periksa status login dari Firebase Auth
-    /*final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
-
-    // Dapatkan lokasi yang sedang dituju
-    final String location = state.uri.toString();
-
-    // Daftar halaman publik yang bisa diakses tanpa login
-    final bool isPublicPage = location == '/login' ||
-        location == '/register' ||
-        location == '/forgot-password'; // Sesuaikan dengan rute publik Anda
-
-    // Skenario:
-    // 1. Jika pengguna BELUM login dan TIDAK sedang menuju halaman publik,
-    //    maka alihkan (redirect) ke halaman login.
-    if (!isLoggedIn && !isPublicPage) {
-      return '/login';
-    }
-
-    // 2. Jika pengguna SUDAH login dan sedang mencoba mengakses halaman publik,
-    //    maka alihkan ke halaman utama (home).
-    if (isLoggedIn && isPublicPage) {
-      return '/';
-    }*/
-
-    // 3. Jika tidak ada kondisi di atas yang terpenuhi, jangan lakukan redirect.
+    
     return null;
   },
   // Ini adalah bagian KRUSIAL untuk persistensi sesi dengan GoRouter
@@ -76,21 +52,6 @@ final GoRouter appRouter = GoRouter(
       },
       branches: appShellBranches,
     ),
-
-    // Rute-rute di luar Shell (misalnya, halaman login, register, dll.)
-    // Ini penting agar redirect berfungsi dengan benar.
-    /*GoRoute(
-      path: '/login',
-      builder: (context, state) => const LoginScreen(),
-    ),
-    GoRoute(
-      path: '/register',
-      builder: (context, state) => const RegisterScreen(),
-    ),
-    GoRoute(
-      path: '/forgot-password',
-      builder: (context, state) => const ForgotPasswordScreen(),
-    ),*/
     GoRoute(
       path: '/',
       builder: (context, state) =>
