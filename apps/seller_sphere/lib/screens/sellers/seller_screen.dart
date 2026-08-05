@@ -1,17 +1,17 @@
 
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class SellerScreen extends StatelessWidget {
+  const SellerScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Seller Sphere'),
+        title: const Text('Seller Dashboard'),
       ),
       body: const Center(
-        child: Text('Home Screen Content'),
+        child: Text('Welcome to Seller Sphere'),
       ),
     );
   }

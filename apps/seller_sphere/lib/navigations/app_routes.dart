@@ -1,6 +1,6 @@
 class AppRoutes {
   //auth
-  
+  static const String login = '/login';
   static const String productDetailEdit = '/products/:productId/edit';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
