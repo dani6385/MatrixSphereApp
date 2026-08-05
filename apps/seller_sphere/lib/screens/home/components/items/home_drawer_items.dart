@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:seller_sphere/navigations/app_routes.dart';
+import 'package:seller_sphere/navigations/app_extractor.dart';
 
 final Logger logger = Logger();
 
@@ -40,7 +41,8 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
     DrawerItemData(
       title: 'Dashboard',
       icon: Icons.dashboard,
-      label: 'Menampilkan ringkasan statistik penjualan, grafik, dan performa toko.',
+      label:
+          'Menampilkan ringkasan statistik penjualan, grafik, dan performa toko.',
       route: '',
       onTap: () {
         logger.i('Menu Dashboard diklik!');
@@ -49,7 +51,8 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
     DrawerItemData(
       title: 'Products / Produk',
       icon: Icons.shopping_bag,
-      label: 'Mengelola daftar produk, menambah barang baru, atau mengatur harga.',
+      label:
+          'Mengelola daftar produk, menambah barang baru, atau mengatur harga.',
       route: '',
       onTap: () {
         logger.i('Menu Products diklik!');
@@ -62,7 +65,11 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       route: '',
       onTap: () {
         logger.i('Menu Orders diklik!');
-        Navigator.of(context, rootNavigator: true).push(AppRoutes.order as Route<Object?>);
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const OrderScreen(),
+          ),
+        );
       },
     ),
     DrawerItemData(
