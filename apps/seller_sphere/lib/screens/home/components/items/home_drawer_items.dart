@@ -32,7 +32,10 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       icon: Icons.home,
       label: 'Mengarahkan pengguna kembali ke halaman utama dashboard.',
       route: AppRoutes.home,
-      onTap: () => context.go(AppRoutes.home),
+      onTap: () {
+        logger.i('Menu Home / Beranda diklik!');
+        context.go(AppRoutes.home);
+      },
     ),
     DrawerItemData(
       title: 'Dashboard',
