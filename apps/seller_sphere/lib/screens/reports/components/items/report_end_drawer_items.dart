@@ -1,4 +1,4 @@
-// lib/navigations/widgets/app_end_drawer_items.dart[cite: 9]
+// lib/navigations/widgets/app_end_drawer_items.dart
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -29,35 +29,35 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
     EndDrawerItemData(
       title: 'Profile / Profil',
       icon: Icons.person,
-      label: 'Melihat dan mengubah informasi profil akun staf atau karyawan.',
+      label: 'Melihat dan mengubah informasi profil akun pengelola toko.',
       route: AppRoutes.profile,
       onTap: () => context.go(AppRoutes.profile),
     ),
     EndDrawerItemData(
-      title: 'Report History / Riwayat Kehadiran',
-      icon: Icons.history,
-      label: 'Melihat catatan riwayat jam masuk dan jam keluar presensi.',
+      title: 'Date Range / Rentang Tanggal',
+      icon: Icons.date_range,
+      label: 'Memilih periode waktu tertentu untuk menyaring data laporan.',
       route: '',
       onTap: () {},
     ),
     EndDrawerItemData(
-      title: 'Work Calendar / Kalender Kerja',
-      icon: Icons.calendar_today,
-      label: 'Memeriksa jadwal shift kerja, hari libur, dan jadwal cuti.',
+      title: 'Filter Options / Opsi Filter',
+      icon: Icons.filter_list,
+      label: 'Menyaring laporan berdasarkan kategori produk, metode bayar, atau status.',
       route: '',
       onTap: () {},
     ),
     EndDrawerItemData(
-      title: 'Tasks / Tugas Harian',
-      icon: Icons.task,
-      label: 'Melihat daftar tugas atau target kerja harian yang harus diselesaikan.',
+      title: 'Currency Settings / Pengaturan Mata Uang',
+      icon: Icons.attach_money,
+      label: 'Mengatur format mata uang yang digunakan pada grafik dan laporan.',
       route: '',
       onTap: () {},
     ),
     EndDrawerItemData(
       title: 'Notifications Settings / Pengaturan Notifikasi',
       icon: Icons.notifications_active,
-      label: 'Mengatur pengingat waktu jam masuk dan jam pulang kerja.',
+      label: 'Mengatur pemberitahuan berkala untuk ringkasan laporan harian/mingguan.',
       route: '',
       onTap: () {},
     ),
@@ -71,7 +71,7 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
     EndDrawerItemData(
       title: 'Help / Bantuan',
       icon: Icons.help_outline,
-      label: 'Membaca panduan tata cara melakukan presensi atau menghubungi HR.',
+      label: 'Membaca panduan cara membaca metrik dan analitik laporan penjualan.',
       route: '',
       onTap: () {},
     ),

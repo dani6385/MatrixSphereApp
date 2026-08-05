@@ -14,10 +14,10 @@ class ReportAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0,
 
-      // Tombol di sebelah kiri untuk membuka Drawer utama (navigasi presensi)
+      // Tombol di sebelah kiri untuk membuka Drawer utama (navigasi laporan)
       leading: IconButton(
         icon: Icon(
-          Icons.fingerprint, // Ikon sidik jari khusus halaman Report
+          Icons.analytics, // Ikon analitik/grafik khusus halaman Report
           color: colorScheme.onSurface,
         ),
         tooltip: 'Buka Menu Navigasi',
@@ -27,9 +27,9 @@ class ReportAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
 
-      // Judul AppBar.
+      // Judul AppBar disesuaikan menjadi Laporan Penjualan.
       title: Text(
-        'Presensi Kehadiran',
+        'Laporan Penjualan',
         style: TextStyle(
           color: colorScheme.onSurface,
           fontWeight: FontWeight.bold,
@@ -37,14 +37,14 @@ class ReportAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
 
-      // Tombol di sebelah kanan (actions) untuk membuka EndDrawer (kalender/riwayat)
+      // Tombol di sebelah kanan (actions) untuk membuka EndDrawer (filter/tanggal laporan)
       actions: [
         IconButton(
           icon: Icon(
-            Icons.calendar_today, // Ikon kalender untuk riwayat/jadwal kerja
+            Icons.filter_list, // Ikon filter untuk menyaring data laporan
             color: colorScheme.onSurface,
           ),
-          tooltip: 'Buka Kalender & Riwayat',
+          tooltip: 'Buka Filter Laporan',
           onPressed: () {
             // Membuka EndDrawer dari sisi kanan
             Scaffold.of(context).openEndDrawer();

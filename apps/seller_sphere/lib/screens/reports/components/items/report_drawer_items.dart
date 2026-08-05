@@ -1,4 +1,4 @@
-// lib/navigation/widgets/app_drawer_items.dart[cite: 9]
+// lib/navigation/widgets/app_drawer_items.dart
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -35,45 +35,45 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       onTap: () => context.go(AppRoutes.home),
     ),
     DrawerItemData(
-      title: 'Report History / Riwayat Kehadiran',
-      icon: Icons.history,
-      label: 'Melihat catatan riwayat jam masuk dan jam keluar presensi.',
+      title: 'Sales Summary / Ringkasan Penjualan',
+      icon: Icons.bar_chart,
+      label: 'Melihat rekapitulasi pendapatan harian, mingguan, dan bulanan.',
       route: '',
       onTap: () {
-        logger.i('Menu Report History diklik!');
+        logger.i('Menu Sales Summary diklik!');
       },
     ),
     DrawerItemData(
-      title: 'Work Calendar / Kalender Kerja',
-      icon: Icons.calendar_today,
-      label: 'Memeriksa jadwal shift kerja, hari libur, dan jadwal cuti.',
+      title: 'Transaction History / Riwayat Transaksi',
+      icon: Icons.receipt_long,
+      label: 'Melihat catatan lengkap seluruh transaksi penjualan yang berhasil.',
       route: '',
       onTap: () {
-        logger.i('Menu Work Calendar diklik!');
+        logger.i('Menu Transaction History diklik!');
       },
     ),
     DrawerItemData(
-      title: 'Tasks / Tugas Harian',
-      icon: Icons.task,
-      label: 'Melihat daftar tugas atau target kerja harian yang harus diselesaikan.',
+      title: 'Top Products / Produk Terlaris',
+      icon: Icons.trending_up,
+      label: 'Memeriksa daftar produk yang paling banyak dibeli oleh pelanggan.',
       route: '',
       onTap: () {
-        logger.i('Menu Tasks diklik!');
+        logger.i('Menu Top Products diklik!');
       },
     ),
     DrawerItemData(
-      title: 'Calendar / Kalender',
-      icon: Icons.event,
-      label: 'Melihat agenda kegiatan atau acara operasional secara keseluruhan.',
+      title: 'Export Data / Unduh Laporan',
+      icon: Icons.download,
+      label: 'Mengunduh laporan keuangan dan penjualan dalam format Excel atau PDF.',
       route: '',
       onTap: () {
-        logger.i('Menu Calendar diklik!');
+        logger.i('Menu Export Data diklik!');
       },
     ),
     DrawerItemData(
       title: 'Profile / Profil',
       icon: Icons.person,
-      label: 'Melihat dan mengubah informasi profil akun staf atau karyawan.',
+      label: 'Melihat dan mengubah informasi profil akun pengelola toko.',
       route: AppRoutes.profile,
       onTap: () {
         logger.i('Menu Profile diklik!');
