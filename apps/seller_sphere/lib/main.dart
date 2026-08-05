@@ -50,6 +50,8 @@ class SellerSphere extends StatefulWidget {
 }
 
 class _SellerSphereState extends State<SellerSphere> {
+  ThemeMode? get currentThemeMode => null;
+
   @override
   Widget build(BuildContext context) {
     // MultiProvider dan BlocProvider dapat ditambahkan kembali di sini jika ada state lain yang perlu dikelola secara global.
@@ -74,7 +76,7 @@ class _SellerSphereState extends State<SellerSphere> {
       darkTheme: AppTheme.darkTheme,
 
       // Ini adalah kuncinya: aplikasi akan mengikuti pengaturan sistem
-      themeMode: ThemeMode.system,
+      themeMode: currentThemeMode,
 
       // Konfigurasi router dari GoRouter
       routerConfig: appRouter, // Menggunakan variabel appRouter langsung

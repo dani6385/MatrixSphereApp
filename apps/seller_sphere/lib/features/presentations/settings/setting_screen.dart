@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
+import 'package:seller_sphere/navigations/app_extractor.dart';
+
+final Logger logger = Logger();
 
 /// Halaman untuk menampilkan berbagai opsi pengaturan aplikasi.
 class SettingScreen extends StatefulWidget {
@@ -10,8 +15,9 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   // Variabel state untuk mengontrol switch
-  bool _isDarkMode = false;
   bool _areNotificationsEnabled = true;
+
+  ThemeMode? _currentThemeMode = ThemeMode.system; // Initialize with a default value
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,13 @@ class _SettingScreenState extends State<SettingScreen> {
             subtitle: const Text('Ubah informasi profil Anda'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // TODO: Navigasi ke halaman profil
+              logger.i('Menu profile diklik!');
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Navigasi ke halaman Profile.')),
+              );
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
             },
           ),
           ListTile(
@@ -39,23 +51,47 @@ class _SettingScreenState extends State<SettingScreen> {
             subtitle: const Text('Ubah kata sandi dan pengaturan keamanan'),
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
-              // TODO: Navigasi ke halaman keamanan
+              logger.i('Menu profile diklik!');
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Navigasi ke halaman Profile.')),
+              );
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const SecurityScreen()),
+              );
             },
           ),
           const Divider(),
 
           // --- Bagian Aplikasi ---
           _buildSectionHeader(context, 'Aplikasi'),
-          SwitchListTile(
-            secondary: const Icon(Icons.dark_mode_outlined),
-            title: const Text('Mode Gelap'),
-            value: _isDarkMode,
-            onChanged: (bool value) {
-              setState(() {
-                _isDarkMode = value;
-                // TODO: Implementasikan logika untuk mengubah tema aplikasi
-              });
-            },
+          ListTile(
+            leading: const Icon(
+                Icons.brightness_6_outlined), // Ikon untuk pengaturan tema
+            title: const Text('Tema Aplikasi'),
+            trailing: DropdownButton<ThemeMode>(
+              value: _currentThemeMode, // Nilai yang sedang aktif saat ini
+              onChanged: (ThemeMode? newMode) {
+                if (newMode != null) {
+                  setState(() {
+                    _currentThemeMode = newMode;
+                  });
+                }
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: ThemeMode.light,
+                  child: Text('Light'),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.dark,
+                  child: Text('Dark'),
+                ),
+                DropdownMenuItem(
+                  value: ThemeMode.system,
+                  child: Text('System'),
+                ),
+              ],
+            ),
           ),
           SwitchListTile(
             secondary: const Icon(Icons.notifications_outlined),

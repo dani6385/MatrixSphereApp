@@ -13,6 +13,7 @@ export 'package:seller_sphere/features/presentations/status/status_screen.dart';
 export 'package:seller_sphere/features/presentations/Transactions/transaction_history_screen.dart';
 export 'package:seller_sphere/features/presentations/sales/sales_screen.dart';
 export 'package:seller_sphere/features/presentations/settings/setting_screen.dart';
+export 'package:seller_sphere/features/presentations/security/Security.dart';
 
 export 'package:seller_sphere/screens/home/home_screen.dart';
 export 'package:seller_sphere/screens/reports/reports_screen.dart';
