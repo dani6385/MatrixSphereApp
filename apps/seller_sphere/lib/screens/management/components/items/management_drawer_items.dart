@@ -37,7 +37,8 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
     DrawerItemData(
       title: 'Users / Pengguna',
       icon: Icons.people_alt,
-      label: 'Mengelola daftar akun pengguna atau staf yang memiliki akses ke toko.',
+      label:
+          'Mengelola daftar akun pengguna atau staf yang memiliki akses ke toko.',
       route: '',
       onTap: () {
         logger.i('Menu Users diklik!');
@@ -59,6 +60,28 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       route: '',
       onTap: () {
         logger.i('Menu Inventory diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Rules / Aturan Hak Akses',
+      icon: Icons.admin_panel_settings,
+      label: 'Mengatur hak akses dan peran wewenang pengguna dalam sistem.',
+      route: '',// AppRoutes.managementRules, // Pastikan rute ini didaftarkan di app_routes.dart
+      onTap: () {
+        logger.i('Menu Rules / Aturan diklik!');
+        //context.go(AppRoutes.managementRules);
+      },
+    ),
+
+// 2. Menu Khusus untuk Daftar Karyawan / Staf (Members)
+    DrawerItemData(
+      title: 'Members / Daftar Karyawan',
+      icon: Icons.people_alt,
+      label: 'Melihat dan mengelola daftar staf atau karyawan yang terdaftar.',
+      route: '',// AppRoutes.managementMembers, // Pastikan rute ini didaftarkan di app_routes.dart
+      onTap: () {
+        logger.i('Menu Members / Karyawan diklik!');
+        //context.go(AppRoutes.managementMembers);
       },
     ),
     DrawerItemData(

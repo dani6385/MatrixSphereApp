@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'app_navigator.dart';
 import 'app_shell_branches.dart';
+import 'app_extractor.dart';
 
 // Kunci global untuk navigator utama (root)
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -36,5 +37,10 @@ final GoRouter appRouter = GoRouter(
     //   parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
     //   builder: (context, state) => const LoginScreen(),
     // ),
+    GoRoute(
+    path: '/profile',
+    parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
+    builder: (context, state) => const ProfileScreen(),
+    ),
   ],
 );

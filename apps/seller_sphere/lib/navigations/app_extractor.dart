@@ -18,3 +18,6 @@ export 'package:seller_sphere/screens/reports/reports_screen.dart';
 export 'package:seller_sphere/screens/management/management_screen.dart';
 export 'package:seller_sphere/screens/sellers/seller_screen.dart';
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
+
+
+export 'package:seller_sphere/features/presentations/profiles/profile_screen.dart';
