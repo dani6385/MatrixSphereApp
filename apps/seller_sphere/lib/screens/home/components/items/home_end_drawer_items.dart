@@ -1,6 +1,7 @@
 // lib/navigations/widgets/app_end_drawer_items.dart
 
 import 'package:flutter/material.dart';
+
 import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'package:seller_sphere/navigations/app_routes.dart';
 import 'package:logger/logger.dart';
@@ -60,8 +61,13 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       title: 'Settings',
       icon: Icons.settings,
       label: 'Mengatur preferensi dasar aplikasi secara keseluruhan.',
-      route: '',
-      onTap: () {},
+      route: AppRoutes.settings,
+      onTap: () {
+        logger.i('Menu Settings diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const SettingScreen()),
+        );
+      },
     ),
     EndDrawerItemData(
       title: 'Security',
