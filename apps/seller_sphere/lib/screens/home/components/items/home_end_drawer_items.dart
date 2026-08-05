@@ -1,11 +1,11 @@
 // lib/navigations/widgets/app_end_drawer_items.dart
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-// ignore: unused_import
-import 'package:shared_ui/shared_ui.dart';
+import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'package:seller_sphere/navigations/app_routes.dart';
+import 'package:logger/logger.dart';
 
+final Logger logger = Logger();
 // Definisi struktur data untuk item menu EndDrawer yang ditambah properti 'label'
 class EndDrawerItemData {
   final String title;
@@ -31,7 +31,12 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       icon: Icons.person,
       label: 'Melihat dan mengubah informasi profil akun toko.',
       route: AppRoutes.profile,
-      onTap: () => context.go(AppRoutes.profile),
+      onTap: () {
+        logger.i('Menu Status Toko diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        );
+      },
     ),
     EndDrawerItemData(
       title: 'Dark Mode',
