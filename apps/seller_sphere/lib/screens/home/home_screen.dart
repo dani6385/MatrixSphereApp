@@ -7,11 +7,9 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Seller Sphere'),
-      ),
+      appBar: AppBar(title: const Text('Home')),
       body: const Center(
-        child: Text('Home Screen Content'),
+        child: Text('Selamat datang di Halaman Utama!'),
       ),
     );
   }
