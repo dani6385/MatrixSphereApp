@@ -62,6 +62,7 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       route: '',
       onTap: () {
         logger.i('Menu Orders diklik!');
+        context.go(AppRoutes.order);
       },
     ),
     DrawerItemData(

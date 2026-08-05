@@ -21,6 +21,7 @@ class AppRoutes {
   // Rute baru untuk detail produk publik berdasarkan toko dan produk
 
   static const String profile = '/profile';
+  static const String order = '/order';
   //static const String editprofile = '/profile/edit';
   static const String publicProduct = '/products';
   static const String productDetail = '/products/:productId';

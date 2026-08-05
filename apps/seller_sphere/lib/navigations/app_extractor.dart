@@ -21,3 +21,4 @@ export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 
 
 export 'package:seller_sphere/features/presentations/profiles/profile_screen.dart';
+export 'package:seller_sphere/features/presentations/orders/order_screen.dart';
