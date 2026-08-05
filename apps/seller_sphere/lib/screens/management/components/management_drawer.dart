@@ -21,7 +21,32 @@ class ManagementDrawer extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.blue,
         ),
-        child: Text('Menu'),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment
+              .start, // Mengatur posisi teks & ikon ke sebelah kiri
+          mainAxisAlignment: MainAxisAlignment
+              .center, // Memposisikan konten agar berada di tengah secara vertikal
+          children: [
+            // 1. Menambahkan Icon di dalam DrawerHeader
+            Icon(
+              Icons
+                  .dashboard_customize, // Kamu bisa mengganti ikon ini sesuai kebutuhan (misal: Icons.account_circle)
+              size: 48, // Ukuran ikon
+              color: Colors
+                  .white, // Warna ikon agar kontras dengan latar belakang biru
+            ),
+            SizedBox(height: 12), // Jarak antara ikon dan teks
+            // 2. Menambahkan Text dengan TextStyle/AppStyle
+            Text(
+              'Menu',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
       // Melakukan mapping data ke SideMenuItem secara dinamis dan bersih
       items: menuList.map((item) {

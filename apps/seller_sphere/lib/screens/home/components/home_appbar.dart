@@ -17,7 +17,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       // Tombol ikon di sebelah kiri untuk membuka Drawer utama
       leading: IconButton(
         icon: Icon(
-          Icons.menu, // Ikon garis tiga standar untuk Drawer
+          Icons.person_outline, // Ikon garis tiga standar untuk Drawer
           color: colorScheme.onSurface,
         ),
         onPressed: () {
@@ -40,7 +40,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Icon(
-            Icons.person_outline, // Ikon profil atau akun untuk EndDrawer
+            Icons.settings, // Ikon profil atau akun untuk EndDrawer
             color: colorScheme.onSurface,
           ),
           onPressed: () {
