@@ -2,12 +2,12 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-//import 'package:seller_sphere/models/attendance_model.dart';
+import 'package:seller_sphere/models/attendance_model.dart';
 import 'package:seller_sphere/screens/attendance/widgets/attendance_header_card.dart';
 import 'package:seller_sphere/screens/attendance/widgets/attendance_scanner_widget.dart';
 import 'package:seller_sphere/screens/attendance/widgets/attendance_action_buttons.dart';
 import 'package:seller_sphere/screens/attendance/widgets/attendance_history_header.dart';
-//import 'package:seller_sphere/screens/attendance/widgets/attendance_history_section.dart';
+import 'package:seller_sphere/screens/attendance/widgets/attendance_history_section.dart';
 
 class AttendanceBody extends StatelessWidget {
   final bool isScanning;
@@ -21,7 +21,7 @@ class AttendanceBody extends StatelessWidget {
   final VoidCallback onRequestPermission;
   final VoidCallback onClockIn;
   final VoidCallback onClockOut;
-  //final List<AttendanceRecord> attendanceHistory;
+  final List<AttendanceRecord> attendanceHistory;
   final VoidCallback onSync;
 
   const AttendanceBody({
@@ -37,7 +37,7 @@ class AttendanceBody extends StatelessWidget {
     required this.onRequestPermission,
     required this.onClockIn,
     required this.onClockOut,
-    //required this.attendanceHistory,
+    required this.attendanceHistory,
     required this.onSync,
   });
 
@@ -81,7 +81,7 @@ class AttendanceBody extends StatelessWidget {
           const SizedBox(height: 24),
           AttendanceHistoryHeader(onSync: onSync),
           const SizedBox(height: 8),
-          //AttendanceHistorySection(attendanceHistory: attendanceHistory),
+          AttendanceHistorySection(attendanceHistory: attendanceHistory),
         ],
       ),
     );

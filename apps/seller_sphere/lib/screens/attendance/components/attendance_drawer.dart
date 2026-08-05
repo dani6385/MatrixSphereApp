@@ -1,30 +1,35 @@
-// lib/navigation/widgets/app_navigator_EndDrawer.dart
+// lib/navigation/widgets/app_Attendance_drawer.dart
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'items/attendance_end_drawer_items.dart'; // Impor data menu EndDrawer yang baru dibuat
+import 'items/attendance_drawer_items.dart'; // Impor data menu yang sudah dipecah
 
 class AttendanceDrawer extends StatelessWidget {
   const AttendanceDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Mengambil daftar item dari file data terpisah
-    final endDrawerList = getEndDrawerItems(context);
+    // Mendapatkan rute aktif saat ini
+    final String currentRoute = GoRouterState.of(context).uri.toString();
+    
+    // Mengambil daftar item menu dari fungsi terpisah
+    final menuList = getDrawerItems(context, currentRoute);
 
     return SideMenu(
       header: const DrawerHeader(
         decoration: BoxDecoration(
           color: Colors.blue,
         ),
-        child: Text('Pengaturan'),
+        child: Text('Menu'),
       ),
-      // Melakukan mapping data item menu secara dinamis
-      items: endDrawerList.map((item) {
+      // Melakukan mapping data ke SideMenuItem secara dinamis dan bersih
+      items: menuList.map((item) {
         return SideMenuItem(
           title: item.title,
           icon: item.icon,
           route: item.route,
+          isSelected: item.route.isNotEmpty && currentRoute == item.route,
           onTap: item.onTap ?? () {},
         );
       }).toList(),

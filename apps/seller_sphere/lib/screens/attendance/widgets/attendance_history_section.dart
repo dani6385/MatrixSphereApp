@@ -1,5 +1,5 @@
 // lib/screens/attendance/widgets/attendance_history_section.dart
-/*
+
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/models/attendance_model.dart';
 import 'package:seller_sphere/screens/attendance/widgets/attendance_history_item.dart';
@@ -49,4 +49,4 @@ class AttendanceHistorySection extends StatelessWidget {
       children: attendanceHistory.map((record) => AttendanceHistoryItem(record: record)).toList(),
     );
   }
-}*/
+}

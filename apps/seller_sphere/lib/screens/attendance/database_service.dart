@@ -1,5 +1,5 @@
-/*import 'package:firebase_database/firebase_database.dart';
-//import 'package:seller_sphere/models/attendance_model.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:seller_sphere/models/attendance_model.dart';
 import 'package:intl/intl.dart';
 
 /// A service class to handle all interactions with Firebase Realtime Database.
@@ -61,4 +61,4 @@ class DatabaseService {
       }
     }
   }
-}*/
+}

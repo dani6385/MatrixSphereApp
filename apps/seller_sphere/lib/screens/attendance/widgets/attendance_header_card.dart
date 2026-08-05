@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-//import 'package:provider/provider.dart';
-//import 'package:seller_sphere/providers/app_viewmodel.dart';
+import 'package:provider/provider.dart';
+import 'package:seller_sphere/providers/app_viewmodel.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 class AttendanceHeaderCard extends StatelessWidget {
@@ -8,7 +8,7 @@ class AttendanceHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final ownerName = context.watch<AppViewModel>().ownerName;
+    final ownerName = context.watch<AppViewModel>().ownerName;
     final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
@@ -31,8 +31,7 @@ class AttendanceHeaderCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              //$ownerName
-              'Halo, username! Silakan lakukan absensi kehadiran harian Anda.',
+              'Halo, $ownerName! Silakan lakukan absensi kehadiran harian Anda.',
               style: context.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
