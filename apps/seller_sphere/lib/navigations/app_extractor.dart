@@ -16,6 +16,7 @@ export 'package:seller_sphere/menu/settings/setting_screen.dart';
 export 'package:seller_sphere/screens/home/home_screen.dart';
 export 'package:seller_sphere/screens/reports/reports_screen.dart';
 export 'package:seller_sphere/screens/management/management_screen.dart';
+export 'package:seller_sphere/screens/management/widgets/order_list_view.dart';
 export 'package:seller_sphere/screens/sellers/seller_screen.dart';
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 
