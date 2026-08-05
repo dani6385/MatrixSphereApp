@@ -48,9 +48,9 @@ class HomeBody extends StatelessWidget {
                 ),*/
           SizedBox(height: 24),
           HomeSectionHeader(title: 'Riwayat Kehadiran'),
-          //HomeHistoryHeader(onSync: onSync),
+          // HomeHistoryHeader(onSync: onSync), // Anda bisa aktifkan ini jika sudah siap
           SizedBox(height: 8),
-          //HomeHistorySection(HomeHistory: HomeHistory),
+          // HomeHistorySection(HomeHistory: HomeHistory), // Aktifkan ini untuk menampilkan daftar riwayat
         ],
       );
   }
