@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart'; // Impor AppStyles
-//import '../widgets/seller_welcome_header.dart';
-//import '../widgets/seller_summary_section.dart';
-//import '../widgets/seller_quick_actions_grid.dart';
-//import '../widgets/seller_recent_activity_list.dart';
-//import '../widgets/seller_section_header.dart';
+import '../widgets/seller_welcome_header.dart';
+import '../widgets/seller_summary_section.dart';
+import '../widgets/seller_quick_actions_grid.dart';
+import '../widgets/seller_recent_activity_list.dart';
+import '../widgets/seller_section_header.dart';
 
 class SellerBody extends StatelessWidget {
   const SellerBody({super.key});
@@ -18,18 +18,19 @@ class SellerBody extends StatelessWidget {
       padding: AppStyles.defaultScreenPadding,
       physics: const AlwaysScrollableScrollPhysics(),
       children: const [
-        //SellerWelcomeHeader(sellerName: 'Andi'),
+        SellerWelcomeHeader(sellerName: 'Andi'),
         SizedBox(height: 24),
-        //SellerSummarySection(),
+        SellerSummarySection(),
         SizedBox(height: 24),
-        //SellerSectionHeader(title: 'Aksi Cepat'),
+        SellerSectionHeader(title: 'Aksi Cepat'),
         SizedBox(height: 16),
-        //SellerQuickActionsGrid(),
+        SellerQuickActionsGrid(),
         SizedBox(height: 24),
-        //SellerSectionHeader(title: 'Aktivitas Terbaru'),
+        SellerSectionHeader(title: 'Aktivitas Terbaru'),
         SizedBox(height: 16),
-        //SellerRecentActivityList(),
+        SellerRecentActivityList(),
       ],
     );
   }
 }
+

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'package:shared_services/shared_services.dart';
 
 /// Kartu untuk menampilkan satu item produk dalam daftar inventaris.
@@ -45,10 +46,12 @@ class InventoryItemCard extends StatelessWidget {
           ],
         ),
         onTap: () {
-          // TODO: Implementasi navigasi ke halaman detail produk
-          // atau munculkan dialog untuk edit stok.
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Buka detail untuk ${product.name}')),
+          // Navigasi ke halaman detail produk saat kartu diketuk.
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => ProductDetailScreen(
+                  productId: product.id),
+            ),
           );
         },
       ),

@@ -50,6 +50,18 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       },
     ),
     DrawerItemData(
+      title: 'Status Toko',
+      icon: Icons.info_outline,
+      label: 'Melihat status persetujuan toko, rating, dan informasi penting lainnya.',
+      route: AppRoutes.status, // Placeholder untuk rute yang akan datang
+      onTap: () {
+        logger.i('Menu Status Toko diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const StatusScreen()),
+        );
+      },
+    ),
+    DrawerItemData(
       title: 'Products / Produk',
       icon: Icons.shopping_bag,
       label:

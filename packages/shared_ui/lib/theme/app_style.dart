@@ -9,7 +9,20 @@ import 'package:shared_ui/theme/app_colors.dart';
 /// secara konsisten agar mudah dikelola dari satu tempat.
 class AppStyles {
   // --- Dekorasi Umum ---
-static const EdgeInsets defaultScreenPadding = EdgeInsets.all(16.0);
+  static const EdgeInsets defaultScreenPadding = EdgeInsets.all(16.0);
+
+  /// Gaya teks standar untuk body medium.
+  static const TextStyle headlineMedium =
+      TextStyle(fontSize: 28, color: kDarkTextPrimary);
+
+  /// Gaya teks standar untuk body medium.
+  static const TextStyle headlineSmall =
+      TextStyle(fontSize: 24, color: kDarkTextPrimary);
+
+  /// Gaya teks standar untuk body medium.
+  static const TextStyle bodyMedium =
+      TextStyle(fontSize: 14, color: kDarkTextPrimary);
+
   /// Dekorasi untuk kartu utama
   static BoxDecoration get cardDecoration => BoxDecoration(
         color: kDarkSecondary,
@@ -45,7 +58,10 @@ static const EdgeInsets defaultScreenPadding = EdgeInsets.all(16.0);
   /// Warna latar belakang default untuk Scaffold pada tema gelap.
   static List<Color> darkScaffoldBackgroundColor(BuildContext context) => [
         Theme.of(context).colorScheme.surface,
-        Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+        Theme.of(context)
+            .colorScheme
+            .surfaceContainerHighest
+            .withValues(alpha: 0.3),
       ];
 
   /// Gaya AppBar default untuk tema gelap.
@@ -101,8 +117,8 @@ static const EdgeInsets defaultScreenPadding = EdgeInsets.all(16.0);
       textTheme.bodySmall!.copyWith(color: kDarkTextSecondary);
 
   /// Untuk tampilan jam yang besar
-  static TextStyle timeDisplay(TextTheme textTheme) => textTheme.displaySmall!
-      .copyWith(color: kDarkTextPrimary, fontWeight: FontWeight.bold);
+  static TextStyle timeDisplay(TextTheme textTheme) =>
+  textTheme.displaySmall! .copyWith(color: kDarkTextPrimary, fontWeight: FontWeight.bold);
 
   /// Untuk tampilan tanggal di bawah jam
   static TextStyle dateDisplay(TextTheme textTheme) =>

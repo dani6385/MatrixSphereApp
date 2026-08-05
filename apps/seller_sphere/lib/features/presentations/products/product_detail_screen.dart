@@ -7,12 +7,10 @@ import 'widgets/product_detail_body.dart';
 /// A screen that displays detailed information about a single product.
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
-  final String shopId;
 
   const ProductDetailScreen({
     super.key,
     required this.productId,
-    required this.shopId,
   });
 
   @override
