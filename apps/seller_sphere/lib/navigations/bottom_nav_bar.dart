@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:logger/logger.dart';
 import 'app_routes.dart';
 import 'app_shell_branches.dart';
 import 'package:shared_ui/shared_ui.dart';
 
+final Logger logger = Logger();
 /// A wrapper widget that configures and displays the [SharedBottomNavBar]
 /// with tabs specific to the Seller Sphere application.
 class BottomNavBar extends StatelessWidget {
@@ -24,7 +26,7 @@ class BottomNavBar extends StatelessWidget {
         icon: Icons.home_outlined,
         activeIcon: Icons.home),
       AppRoutes.reports: (
-        icon: Icons.cast,
+        icon: Icons.analytics,
         activeIcon: Icons.analytics),
       AppRoutes.management: (
         icon: Icons.point_of_sale,
@@ -42,7 +44,25 @@ class BottomNavBar extends StatelessWidget {
 
     return SharedBottomNavBar(
       currentIndex: currentIndex,
-      onTap: onTap,
+      onTap: (index) {
+        // Ambil rute berdasarkan indeks cabang yang ditekan
+        final routePath = (appShellBranches[index].routes.first as dynamic).path;
+        if (routePath == AppRoutes.reports) {
+          logger.i('Mengakses Halaman Reports / Laporan untuk memantau grafik penjualan pendapatan toko secara real-time.'); // Log aktivitas
+        }
+        // Periksa apakah rute yang diklik adalah halaman Reports
+        if (routePath == AppRoutes.management) {
+          logger.i('Pusat kendali khusus bagi penjual untuk memantau performa penjualan produk.'); // Log aktivitas
+        }
+        if (routePath == AppRoutes.sellers) {
+          logger.i('Mengakses fitur pengelolaan operasional, staf, atau pengaturan toko secara mendetail.'); // Log aktivitas
+        }
+        if (routePath == AppRoutes.reports) {
+          logger.i('Mengakses fitur pencatatan presensi, jam kerja, atau shift karyawan.'); // Log aktivitas
+        }
+        // Jalankan fungsi onTap bawaan
+        onTap(index);
+      },
       tabs: List.generate(appShellBranches.length, (index) {
         final isSelected = index == currentIndex;
         final routePath =
