@@ -7,6 +7,7 @@ import 'package:seller_sphere/navigations/app_routes.dart';
 
 import 'package:seller_sphere/navigations/app_extractor.dart';
 
+
 final Logger logger = Logger();
 
 // Definisi struktur data untuk item menu yang kini ditambah properti 'label'
@@ -111,6 +112,11 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       route: '',
       onTap: () {
         logger.i('Menu Shopes diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const ShopesScreen(),
+          ),
+        );
       },
     ),
     DrawerItemData(
