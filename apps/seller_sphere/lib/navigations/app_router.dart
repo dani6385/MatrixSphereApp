@@ -1,17 +1,12 @@
 // lib/navigation/app_router.dart
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
 import 'app_navigator.dart';
-
 import 'app_shell_branches.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
-
-
+import 'app_keys.dart';
 import 'app_extractor.dart';
 
 // Ini adalah kelas helper untuk GoRouter agar bisa mendengarkan Stream
@@ -32,11 +27,11 @@ class GoRouterRefreshStream extends ChangeNotifier {
   }
 }
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/', // Atau halaman splash screen jika ada
-  navigatorKey: _rootNavigatorKey,
+  navigatorKey: rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
     // Periksa status login dari Firebase Auth
     final bool isLoggedIn = FirebaseAuth.instance.currentUser != null;
