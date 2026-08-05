@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+
+
 import 'package:seller_sphere/navigations/app_routes.dart';
 
 import 'package:seller_sphere/navigations/app_extractor.dart';
@@ -126,6 +128,11 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       route: '',
       onTap: () {
         logger.i('Menu Riwayat diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const TransactionHistoryScreen(),
+          ),
+        );
       },
     ),
     DrawerItemData(
@@ -135,6 +142,11 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       route: '',
       onTap: () {
         logger.i('Menu Reports diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const ReportScreen(),
+          ),
+        );
       },
     ),
     DrawerItemData(
@@ -144,6 +156,11 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       route: '',
       onTap: () {
         logger.i('Menu Promotions diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const SalestScreen(),
+          ),
+        );
       },
     ),
   ];
