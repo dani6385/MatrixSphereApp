@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:seller_sphere/navigations/app_routes.dart';
+
 import 'package:seller_sphere/navigations/app_extractor.dart';
 
 final Logger logger = Logger();
@@ -81,9 +82,14 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       title: 'Stok Barang / Inventaris',
       icon: Icons.inventory,
       label: 'Memantau ketersediaan stok barang secara mendetail.',
-      route: '',
+      route: AppRoutes.inventory, // Ganti dengan route yang sesuai
       onTap: () {
         logger.i('Menu Stok Barang diklik!');
+        // Pastikan Anda sudah mendaftarkan AppRoutes.inventory di GoRouter
+        // Contoh: context.go(AppRoutes.inventory);
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const InventoryScreen()),
+        );
       },
     ),
     DrawerItemData(
