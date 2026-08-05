@@ -35,7 +35,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/login', // Atau halaman splash screen jika ada
+  initialLocation: '/', // Atau halaman splash screen jika ada
   navigatorKey: _rootNavigatorKey,
   redirect: (BuildContext context, GoRouterState state) {
     // Periksa status login dari Firebase Auth
@@ -45,7 +45,7 @@ final GoRouter appRouter = GoRouter(
     final String location = state.uri.toString();
 
     // Daftar halaman publik yang bisa diakses tanpa login
-    final bool isPublicPage = location == '/login' ||
+    final bool isPublicPage = location == '/' || // '/login'
         location == '/register' ||
         location == '/forgot-password'; // Sesuaikan dengan rute publik Anda
 

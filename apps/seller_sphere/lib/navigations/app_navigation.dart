@@ -13,10 +13,10 @@ class AppNavigation {
     context.go(AppRoutes.stream);
   }
 
-  /// Navigates to the Login screen.
-  static void goToLogin(BuildContext context) {
-    context.go(AppRoutes.login);
-  }
+  
+  //static void goToLogin(BuildContext context) {
+    //context.go(AppRoutes.login);
+  //}
 
   /// Navigates to the Profile screen.
   /// This uses `push` to stack the screen on top of the current one.
