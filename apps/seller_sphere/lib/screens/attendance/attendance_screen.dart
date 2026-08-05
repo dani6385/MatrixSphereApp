@@ -1,60 +1,30 @@
+// lib/screens/Attendance_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'components/attendance_appbar.dart';
+//import 'components/attendance_body.dart';
+import 'components/attendance_drawer.dart';
+import 'components/attendance_end_drawer.dart';
 
-class AttendanceScreen extends StatefulWidget {
+class AttendanceScreen extends StatelessWidget {
   const AttendanceScreen({super.key});
 
   @override
-  State<AttendanceScreen> createState() => _AttendanceScreenState();
-}
-
-class _AttendanceScreenState extends State<AttendanceScreen> {
-  String _currentTime = '';
-  bool _isClockedIn = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _updateTime();
-  }
-
-  void _updateTime() {
-    setState(() {
-      _currentTime = DateFormat('HH:mm:ss').format(DateTime.now());
-    });
-    Future.delayed(const Duration(seconds: 1), _updateTime);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Attendance')),
+    return const Scaffold(
+      // Scaffold itself will have a transparent background by default
+      appBar: AttendanceAppBar(),
+      drawerEnableOpenDragGesture: false,
+      endDrawerEnableOpenDragGesture: false,
+      drawer: AttendanceDrawer(),
+      endDrawer: AttendanceEndDrawer(),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              DateFormat('EEEE, d MMMM yyyy').format(DateTime.now()),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _currentTime,
-              style: Theme.of(context).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () => setState(() => _isClockedIn = !_isClockedIn),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: _isClockedIn ? Colors.red : Colors.green,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-              ),
-              child: Text(_isClockedIn ? 'CLOCK OUT' : 'CLOCK IN'),
-            ),
-          ],
+        child: Text(
+          'Selamat Datang di Halaman Presensi',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
