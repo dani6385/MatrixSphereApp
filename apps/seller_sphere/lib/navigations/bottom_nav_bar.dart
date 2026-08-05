@@ -23,9 +23,9 @@ class BottomNavBar extends StatelessWidget {
       AppRoutes.home: (
         icon: Icons.home_outlined,
         activeIcon: Icons.home),
-      AppRoutes.stream: (
+      AppRoutes.reports: (
         icon: Icons.cast,
-        activeIcon: Icons.cast_connected),
+        activeIcon: Icons.analytics),
       AppRoutes.management: (
         icon: Icons.point_of_sale,
         activeIcon: Icons.point_of_sale_outlined

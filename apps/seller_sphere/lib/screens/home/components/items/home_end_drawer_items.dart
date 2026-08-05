@@ -1,4 +1,3 @@
-
 // lib/navigations/widgets/app_end_drawer_items.dart
 
 import 'package:flutter/material.dart';
@@ -7,61 +6,87 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/navigations/app_routes.dart';
 
-// Definisi struktur data untuk item menu EndDrawer
+// Definisi struktur data untuk item menu EndDrawer yang ditambah properti 'label'
 class EndDrawerItemData {
   final String title;
   final IconData icon;
+  final String label; // Properti untuk menyimpan keterangan fungsi
   final String route;
   final VoidCallback? onTap;
 
   EndDrawerItemData({
     required this.title,
     required this.icon,
+    required this.label,
     required this.route,
     this.onTap,
   });
 }
 
-// Daftar seluruh item menu pengaturan (EndDrawer) yang sudah dibersihkan dari duplikasi
+// Daftar rekomendasi item menu EndDrawer khusus saat di Halaman Home
 List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
   return [
     EndDrawerItemData(
       title: 'Profile',
       icon: Icons.person,
+      label: 'Melihat dan mengubah informasi profil akun toko.',
       route: AppRoutes.profile,
       onTap: () => context.go(AppRoutes.profile),
     ),
-    EndDrawerItemData(title: 'Settings', icon: Icons.settings, route: ''),
-    EndDrawerItemData(title: 'Security', icon: Icons.security, route: ''),
-    EndDrawerItemData(title: 'Preferences', icon: Icons.tune, route: ''),
-    EndDrawerItemData(title: 'Themes', icon: Icons.color_lens, route: ''),
-    EndDrawerItemData(title: 'Language', icon: Icons.language, route: ''),
-    EndDrawerItemData(title: 'Help', icon: Icons.help_outline, route: ''),
-    EndDrawerItemData(title: 'About', icon: Icons.info_outline, route: ''),
-    EndDrawerItemData(title: 'Logout', icon: Icons.logout, route: ''),
-    EndDrawerItemData(title: 'Privacy Policy', icon: Icons.privacy_tip, route: ''),
-    EndDrawerItemData(title: 'Terms of Service', icon: Icons.description, route: ''),
-    EndDrawerItemData(title: 'Licenses', icon: Icons.article, route: ''),
-    EndDrawerItemData(title: 'Version', icon: Icons.info, route: ''),
-    EndDrawerItemData(title: 'Check for Updates', icon: Icons.update, route: ''),
-    EndDrawerItemData(title: 'Debug Info', icon: Icons.bug_report, route: ''),
-    EndDrawerItemData(title: 'Send Feedback', icon: Icons.feedback, route: ''),
-    EndDrawerItemData(title: 'Rate App', icon: Icons.star, route: ''),
-    EndDrawerItemData(title: 'Share App', icon: Icons.share, route: ''),
-    EndDrawerItemData(title: 'Contact Us', icon: Icons.contact_mail, route: ''),
-    EndDrawerItemData(title: 'FAQ', icon: Icons.question_answer, route: ''),
-    EndDrawerItemData(title: 'Tutorial', icon: Icons.school, route: ''),
-    EndDrawerItemData(title: 'Backup & Restore', icon: Icons.backup, route: ''),
-    EndDrawerItemData(title: 'Data Management', icon: Icons.data_usage, route: ''),
-    EndDrawerItemData(title: 'Notifications Settings', icon: Icons.notifications_active, route: ''),
-    EndDrawerItemData(title: 'Account Management', icon: Icons.manage_accounts, route: ''),
-    EndDrawerItemData(title: 'Subscription Details', icon: Icons.subscriptions, route: ''),
-    EndDrawerItemData(title: 'Payment Methods', icon: Icons.payment, route: ''),
-    EndDrawerItemData(title: 'Order History', icon: Icons.history, route: ''),
-    EndDrawerItemData(title: 'Wishlist', icon: Icons.favorite, route: ''),
-    EndDrawerItemData(title: 'Addresses', icon: Icons.location_on, route: ''),
-    EndDrawerItemData(title: 'Coupons', icon: Icons.card_giftcard, route: ''),
-    EndDrawerItemData(title: 'Referral Program', icon: Icons.group_add, route: ''),
-    EndDrawerItemData(title: 'Dark Mode', icon: Icons.dark_mode, route: ''),
+    EndDrawerItemData(
+      title: 'Dark Mode',
+      icon: Icons.dark_mode,
+      label: 'Mengubah tema tampilan aplikasi menjadi mode gelap atau terang.',
+      route: '',
+      onTap: () {
+        // Aksi mengubah tema
+      },
+    ),
+    EndDrawerItemData(
+      title: 'Notifications',
+      icon: Icons.notifications_active,
+      label: 'Mengatur pemberitahuan pesanan masuk dan pesan pembeli.',
+      route: '',
+      onTap: () {
+        // Aksi pengaturan notifikasi
+      },
+    ),
+    EndDrawerItemData(
+      title: 'Settings',
+      icon: Icons.settings,
+      label: 'Mengatur preferensi dasar aplikasi secara keseluruhan.',
+      route: '',
+      onTap: () {},
+    ),
+    EndDrawerItemData(
+      title: 'Security',
+      icon: Icons.security,
+      label: 'Mengatur kata sandi dan keamanan akun seller.',
+      route: '',
+      onTap: () {},
+    ),
+    EndDrawerItemData(
+      title: 'Help',
+      icon: Icons.help_outline,
+      label: 'Membaca panduan penggunaan atau menghubungi pusat bantuan.',
+      route: '',
+      onTap: () {},
+    ),
+    EndDrawerItemData(
+      title: 'About',
+      icon: Icons.info_outline,
+      label: 'Melihat informasi versi dan pengembang aplikasi.',
+      route: '',
+      onTap: () {},
+    ),
+    EndDrawerItemData(
+      title: 'Logout',
+      icon: Icons.logout,
+      label: 'Keluar dari sesi akun aktif pada aplikasi.',
+      route: '',
+      onTap: () {
+        // Aksi keluar akun
+      },
+    ),
   ];
 }

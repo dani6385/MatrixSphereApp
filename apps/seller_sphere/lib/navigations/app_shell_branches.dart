@@ -55,7 +55,7 @@ final List<StatefulShellBranch> appShellBranches = [
   StatefulShellBranch(
     routes: [
       GoRoute(
-        path: AppRoutes.stream,
+        path: AppRoutes.reports,
         pageBuilder: (context, state) => FadeTransitionPage(
             child: const StreamingScreen(streamId: '',)),
         routes: const [],

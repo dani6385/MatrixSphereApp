@@ -7,79 +7,104 @@ import 'package:seller_sphere/navigations/app_routes.dart';
 
 final Logger logger = Logger();
 
-// Definisi struktur data untuk item menu
+// Definisi struktur data untuk item menu yang kini ditambah properti 'label'
 class DrawerItemData {
   final String title;
   final IconData icon;
+  final String label; // Properti baru untuk menyimpan keterangan fungsi
   final String route;
   final VoidCallback? onTap;
 
   DrawerItemData({
     required this.title,
     required this.icon,
+    required this.label,
     required this.route,
     this.onTap,
   });
 }
 
-// Daftar seluruh item menu yang sebelumnya menumpuk di satu file
+// Daftar seluruh item menu drawer dengan penambahan label fungsi
 List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
   return [
     DrawerItemData(
-      title: 'Home',
+      title: 'Home / Beranda',
       icon: Icons.home,
+      label: 'Mengarahkan pengguna kembali ke halaman utama dashboard.',
       route: AppRoutes.home,
       onTap: () => context.go(AppRoutes.home),
     ),
-    DrawerItemData(title: 'Dashboard', icon: Icons.dashboard, route: '',onTap: () {
-    // Tulis aksi atau kode yang ingin dijalankan di sini saat menu ditekan
-    logger.i('Menu Dashboard diklik!');
-    
-    // Contoh jika ingin berpindah halaman menggunakan GoRouter:
-    // context.go('/dashboard-route');
-  },),
-    DrawerItemData(title: 'Products', icon: Icons.shopping_bag, route: ''),
-    DrawerItemData(title: 'Orders', icon: Icons.receipt, route: ''),
-    DrawerItemData(title: 'Customers', icon: Icons.people, route: ''),
-    DrawerItemData(title: 'Settings', icon: Icons.settings, route: ''),
-    DrawerItemData(title: 'Logout', icon: Icons.logout, route: ''),
-    DrawerItemData(title: 'Reports', icon: Icons.bar_chart, route: ''),
-    DrawerItemData(title: 'Promotions', icon: Icons.discount, route: ''),
-    DrawerItemData(title: 'Analytics', icon: Icons.analytics, route: ''),
-    DrawerItemData(title: 'Integrations', icon: Icons.extension, route: ''),
-    DrawerItemData(title: 'Support', icon: Icons.support_agent, route: ''),
-    DrawerItemData(title: 'Feedback', icon: Icons.feedback, route: ''),
-    DrawerItemData(title: 'Help', icon: Icons.help_outline, route: ''),
-    DrawerItemData(title: 'About', icon: Icons.info_outline, route: ''),
-    DrawerItemData(title: 'Profile', icon: Icons.person, route: ''),
-    DrawerItemData(title: 'Messages', icon: Icons.message, route: ''),
     DrawerItemData(
-        title: 'Notifications', icon: Icons.notifications, route: ''),
-    DrawerItemData(title: 'Team', icon: Icons.group, route: ''),
-    DrawerItemData(title: 'Files', icon: Icons.folder, route: ''),
-    DrawerItemData(title: 'Tasks', icon: Icons.task, route: ''),
-    DrawerItemData(title: 'Calendar', icon: Icons.calendar_today, route: ''),
-    DrawerItemData(title: 'Contacts', icon: Icons.contacts, route: ''),
-    DrawerItemData(title: 'Inventory', icon: Icons.inventory, route: ''),
-    DrawerItemData(title: 'Shipping', icon: Icons.local_shipping, route: ''),
-    DrawerItemData(title: 'Payments', icon: Icons.payment, route: ''),
-    DrawerItemData(title: 'Returns', icon: Icons.assignment_return, route: ''),
-    DrawerItemData(title: 'Vendors', icon: Icons.store, route: ''),
-    DrawerItemData(title: 'Reviews', icon: Icons.reviews, route: ''),
-    DrawerItemData(title: 'Marketing', icon: Icons.campaign, route: ''),
-    DrawerItemData(title: 'Subscription', icon: Icons.subscriptions, route: ''),
-    DrawerItemData(title: 'Billing', icon: Icons.credit_card, route: ''),
-    DrawerItemData(title: 'API Keys', icon: Icons.vpn_key, route: ''),
-    DrawerItemData(title: 'Security', icon: Icons.security, route: ''),
-    DrawerItemData(title: 'Audit Log', icon: Icons.history, route: ''),
-    DrawerItemData(title: 'Webhooks', icon: Icons.webhook, route: ''),
-    DrawerItemData(title: 'Templates', icon: Icons.copy, route: ''),
-    DrawerItemData(title: 'Assets', icon: Icons.image, route: ''),
-    DrawerItemData(title: 'Users', icon: Icons.people_alt, route: ''),
-    DrawerItemData(title: 'Roles', icon: Icons.assignment_ind, route: ''),
-    DrawerItemData(title: 'Permissions', icon: Icons.lock_open, route: ''),
-    DrawerItemData(title: 'Preferences', icon: Icons.tune, route: ''),
-    DrawerItemData(title: 'Themes', icon: Icons.color_lens, route: ''),
-    DrawerItemData(title: 'Language', icon: Icons.language, route: ''),
+      title: 'Dashboard',
+      icon: Icons.dashboard,
+      label: 'Menampilkan ringkasan statistik penjualan, grafik, dan performa toko.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Dashboard diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Products / Produk',
+      icon: Icons.shopping_bag,
+      label: 'Mengelola daftar produk, menambah barang baru, atau mengatur harga.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Products diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Orders / Pesanan',
+      icon: Icons.receipt,
+      label: 'Melihat dan memproses pesanan masuk dari pembeli.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Orders diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Stok Barang / Inventaris',
+      icon: Icons.inventory,
+      label: 'Memantau ketersediaan stok barang secara mendetail.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Stok Barang diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Shopes / Pelanggan',
+      icon: Icons.people,
+      label: 'Melihat daftar data pembeli atau pelanggan setia toko.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Shopes diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Riwayat / Transaksi',
+      icon: Icons.payment,
+      label: 'Memeriksa riwayat pembayaran atau transaksi yang masuk.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Riwayat diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Reports / Laporan',
+      icon: Icons.bar_chart,
+      label: 'Mengakses laporan penjualan harian, bulanan, atau tahunan.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Reports diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Promotions / Promosi',
+      icon: Icons.discount,
+      label: 'Mengatur diskon, kupon, atau voucher toko.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Promotions diklik!');
+      },
+    ),
   ];
 }

@@ -1,4 +1,4 @@
-// lib/navigation/widgets/app_drawer_items.dart
+// lib/navigation/widgets/app_drawer_items.dart[cite: 9]
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,79 +7,78 @@ import 'package:seller_sphere/navigations/app_routes.dart';
 
 final Logger logger = Logger();
 
-// Definisi struktur data untuk item menu
+// Definisi struktur data untuk item menu dengan tambahan properti 'label'
 class DrawerItemData {
   final String title;
   final IconData icon;
+  final String label; // Keterangan fungsi menu
   final String route;
   final VoidCallback? onTap;
 
   DrawerItemData({
     required this.title,
     required this.icon,
+    required this.label,
     required this.route,
     this.onTap,
   });
 }
 
-// Daftar seluruh item menu yang sebelumnya menumpuk di satu file
+// Daftar rekomendasi item menu Drawer khusus saat berada di Halaman Attendance
 List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
   return [
     DrawerItemData(
-      title: 'Home',
+      title: 'Home / Beranda',
       icon: Icons.home,
+      label: 'Mengarahkan pengguna kembali ke halaman utama dashboard.',
       route: AppRoutes.home,
       onTap: () => context.go(AppRoutes.home),
     ),
-    DrawerItemData(title: 'Dashboard', icon: Icons.dashboard, route: '',onTap: () {
-    // Tulis aksi atau kode yang ingin dijalankan di sini saat menu ditekan
-    logger.i('Menu Dashboard diklik!');
-    
-    // Contoh jika ingin berpindah halaman menggunakan GoRouter:
-    // context.go('/dashboard-route');
-  },),
-    DrawerItemData(title: 'Products', icon: Icons.shopping_bag, route: ''),
-    DrawerItemData(title: 'Orders', icon: Icons.receipt, route: ''),
-    DrawerItemData(title: 'Customers', icon: Icons.people, route: ''),
-    DrawerItemData(title: 'Settings', icon: Icons.settings, route: ''),
-    DrawerItemData(title: 'Logout', icon: Icons.logout, route: ''),
-    DrawerItemData(title: 'Reports', icon: Icons.bar_chart, route: ''),
-    DrawerItemData(title: 'Promotions', icon: Icons.discount, route: ''),
-    DrawerItemData(title: 'Analytics', icon: Icons.analytics, route: ''),
-    DrawerItemData(title: 'Integrations', icon: Icons.extension, route: ''),
-    DrawerItemData(title: 'Support', icon: Icons.support_agent, route: ''),
-    DrawerItemData(title: 'Feedback', icon: Icons.feedback, route: ''),
-    DrawerItemData(title: 'Help', icon: Icons.help_outline, route: ''),
-    DrawerItemData(title: 'About', icon: Icons.info_outline, route: ''),
-    DrawerItemData(title: 'Profile', icon: Icons.person, route: ''),
-    DrawerItemData(title: 'Messages', icon: Icons.message, route: ''),
     DrawerItemData(
-        title: 'Notifications', icon: Icons.notifications, route: ''),
-    DrawerItemData(title: 'Team', icon: Icons.group, route: ''),
-    DrawerItemData(title: 'Files', icon: Icons.folder, route: ''),
-    DrawerItemData(title: 'Tasks', icon: Icons.task, route: ''),
-    DrawerItemData(title: 'Calendar', icon: Icons.calendar_today, route: ''),
-    DrawerItemData(title: 'Contacts', icon: Icons.contacts, route: ''),
-    DrawerItemData(title: 'Inventory', icon: Icons.inventory, route: ''),
-    DrawerItemData(title: 'Shipping', icon: Icons.local_shipping, route: ''),
-    DrawerItemData(title: 'Payments', icon: Icons.payment, route: ''),
-    DrawerItemData(title: 'Returns', icon: Icons.assignment_return, route: ''),
-    DrawerItemData(title: 'Vendors', icon: Icons.store, route: ''),
-    DrawerItemData(title: 'Reviews', icon: Icons.reviews, route: ''),
-    DrawerItemData(title: 'Marketing', icon: Icons.campaign, route: ''),
-    DrawerItemData(title: 'Subscription', icon: Icons.subscriptions, route: ''),
-    DrawerItemData(title: 'Billing', icon: Icons.credit_card, route: ''),
-    DrawerItemData(title: 'API Keys', icon: Icons.vpn_key, route: ''),
-    DrawerItemData(title: 'Security', icon: Icons.security, route: ''),
-    DrawerItemData(title: 'Audit Log', icon: Icons.history, route: ''),
-    DrawerItemData(title: 'Webhooks', icon: Icons.webhook, route: ''),
-    DrawerItemData(title: 'Templates', icon: Icons.copy, route: ''),
-    DrawerItemData(title: 'Assets', icon: Icons.image, route: ''),
-    DrawerItemData(title: 'Users', icon: Icons.people_alt, route: ''),
-    DrawerItemData(title: 'Roles', icon: Icons.assignment_ind, route: ''),
-    DrawerItemData(title: 'Permissions', icon: Icons.lock_open, route: ''),
-    DrawerItemData(title: 'Preferences', icon: Icons.tune, route: ''),
-    DrawerItemData(title: 'Themes', icon: Icons.color_lens, route: ''),
-    DrawerItemData(title: 'Language', icon: Icons.language, route: ''),
+      title: 'Attendance History / Riwayat Kehadiran',
+      icon: Icons.history,
+      label: 'Melihat catatan riwayat jam masuk dan jam keluar presensi.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Attendance History diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Work Calendar / Kalender Kerja',
+      icon: Icons.calendar_today,
+      label: 'Memeriksa jadwal shift kerja, hari libur, dan jadwal cuti.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Work Calendar diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Tasks / Tugas Harian',
+      icon: Icons.task,
+      label: 'Melihat daftar tugas atau target kerja harian yang harus diselesaikan.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Tasks diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Calendar / Kalender',
+      icon: Icons.event,
+      label: 'Melihat agenda kegiatan atau acara operasional secara keseluruhan.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Calendar diklik!');
+      },
+    ),
+    DrawerItemData(
+      title: 'Profile / Profil',
+      icon: Icons.person,
+      label: 'Melihat dan mengubah informasi profil akun staf atau karyawan.',
+      route: AppRoutes.profile,
+      onTap: () {
+        logger.i('Menu Profile diklik!');
+        context.go(AppRoutes.profile);
+      },
+    ),
   ];
 }
