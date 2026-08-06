@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 
+
 import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'package:seller_sphere/navigations/app_routes.dart';
 import 'package:logger/logger.dart';
 
 final Logger logger = Logger();
+
 // Definisi struktur data untuk item menu EndDrawer yang ditambah properti 'label'
 class EndDrawerItemData {
   final String title;
@@ -74,14 +76,30 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       icon: Icons.security,
       label: 'Mengatur kata sandi dan keamanan akun seller.',
       route: '',
-      onTap: () {},
+      onTap: () {
+        logger.i('Menu Keamanan diklik!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Navigasi ke halaman Keamanan.')),
+        );
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const SecurityScreen()),
+        );
+      },
     ),
     EndDrawerItemData(
       title: 'Help',
       icon: Icons.help_outline,
       label: 'Membaca panduan penggunaan atau menghubungi pusat bantuan.',
       route: '',
-      onTap: () {},
+      onTap: () {
+        logger.i('Menu Keamanan diklik!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Navigasi ke halaman Keamanan.')),
+        );
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const HelpScreen()),
+        );
+      },
     ),
     EndDrawerItemData(
       title: 'About',
