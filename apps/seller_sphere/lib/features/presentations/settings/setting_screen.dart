@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 
 
 
+
 import 'package:seller_sphere/navigations/app_extractor.dart';
 
 final Logger logger = Logger();
@@ -18,7 +19,6 @@ class SettingScreen extends StatefulWidget {
 
 class _SettingScreenState extends State<SettingScreen> {
   // Variabel state untuk mengontrol switch
-  bool _areNotificationsEnabled = true;
 
   ThemeMode? _currentThemeMode = ThemeMode.system; // Initialize with a default value
 
@@ -96,20 +96,19 @@ class _SettingScreenState extends State<SettingScreen> {
               ],
             ),
           ),
-          SwitchListTile(
-            secondary: const Icon(Icons.notifications_outlined),
+          ListTile(
+            leading: const Icon(Icons.notifications_outlined),
             title: const Text('Notifikasi'),
             subtitle: const Text('Aktifkan notifikasi aplikasi'),
-            value: _areNotificationsEnabled,
-            onChanged: (bool value) {
-              setState(() {
-                _areNotificationsEnabled = value;
-                // Menampilkan feedback ke pengguna
-                final message = value ? 'Notifikasi diaktifkan' : 'Notifikasi dinonaktifkan';
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(message)),
-                );
-              });
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () {
+              logger.i('Menu Bahasa diklik!');
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
+              );
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const NotificationSettingScreen()),
+              );
             },
           ),
           ListTile(

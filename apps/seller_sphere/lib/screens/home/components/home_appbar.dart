@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 final logger = Logger();
@@ -42,6 +43,21 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       // Tombol di sebelah kanan (actions) untuk membuka EndDrawer (profil/pengaturan).
       actions: [
+        IconButton(
+          icon: Icon(
+            Icons.notifications_outlined,
+            color: colorScheme.onSurface,
+          ),
+          onPressed: () {
+            logger.i('Ikon Pesan diklik!');
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
+              );
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const NotificationScreen()),
+              );
+          },
+        ),
         IconButton(
           icon: Icon(
             Icons.message_outlined,
