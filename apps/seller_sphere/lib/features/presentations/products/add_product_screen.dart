@@ -1,14 +1,14 @@
 // lib/features/products/presentation/add_product_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'controllers/add_product_logic.dart'; // Impor file logika yang baru dibuat
+import 'controllers/add_product_logic.dart';
 import 'widgets/product_form_fields.dart';
 import 'widgets/product_image_picker.dart';
 import 'widgets/product_form_actions.dart';
+import 'widgets/image_picker_bottom_sheet.dart'; // Impor helper bottom sheet baru
 
-/// A screen for adding a new product or editing an existing one.
+/// A screen for adding a new product or editing an existing one[cite: 8].
 class AddProductScreen extends StatefulWidget {
   final String? productId;
 
@@ -54,34 +54,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ProductImagePicker(
                     selectedImageFile: _logic.selectedImageFile,
                     existingImageUrl: _logic.existingImageUrl,
+                    // PERBAIKAN: Memanggil helper pemilih gambar yang sudah dipecah
                     onPickImage: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (BuildContext bc) {
-                          return SafeArea(
-                            child: Wrap(
-                              children: <Widget>[
-                                ListTile(
-                                  leading: const Icon(Icons.photo_library),
-                                  title: const Text('Galeri'),
-                                  onTap: () {
-                                    _logic.pickImage(ImageSource.gallery);
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                ListTile(
-                                  leading: const Icon(Icons.photo_camera),
-                                  title: const Text('Kamera'),
-                                  onTap: () {
-                                    _logic.pickImage(ImageSource.camera);
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      );
+                      ImagePickerBottomSheet.show(context, (source) {
+                        _logic.pickImage(source);
+                      });
                     },
                   ),
                   const SizedBox(height: 24),
