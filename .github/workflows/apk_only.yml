@@ -126,7 +126,8 @@ jobs:
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
             --app "${{ steps.vars.outputs.app_id }}" \
             --groups "sphere" \
-            --project "matrixsphere-c3de9"
+            --project "matrixsphere-c3de9" \
+            --release-notes "${{ env.MSG }}"
 
       # Unggah hasil kompilasi APK ke penyimpanan Artifact GitHub agar bisa diunduh langsung
       - name: Upload APK Artifact

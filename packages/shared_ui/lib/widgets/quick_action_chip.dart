@@ -6,7 +6,7 @@ class QuickActionChip extends StatelessWidget {
     super.key,
     required this.icon,
     required this.label,
-    this.onTap,
+    this.onTap, required Null Function() onPressed,
   });
 
   final IconData icon;
