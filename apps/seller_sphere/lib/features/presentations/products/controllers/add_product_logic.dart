@@ -43,7 +43,7 @@ class AddProductLogic {
     await mediaHandler.pickImage(source);
   }
 
-  Future<void> loadProductData(String productId, Function(VoidCallback) setState) async {
+  Future<void> loadProductData(String productId) async {
     formControllers.isLoading.value = true;
     final product = await _productService.getProductById(productId);
     if (product != null) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-
 import 'app_navigator.dart';
 // Import ProductDetailScreen
 import 'app_shell_branches.dart';
@@ -40,9 +39,9 @@ final GoRouter appRouter = GoRouter(
     //   builder: (context, state) => const LoginScreen(),
     // ),
     GoRoute(
-    path: '/profile',
-    parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
-    builder: (context, state) => const ProfileScreen(),
+      path: '/profile',
+      parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
+      builder: (context, state) => const ProfileScreen(),
     ),
     GoRoute(
       path: '/order',
@@ -50,17 +49,27 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const OrderScreen(),
     ),
     GoRoute(
-      path: '/add-product',
-      builder: (context, state) => const AddProductScreen(),
+      // Menggunakan path '/products/add' agar konsisten
+      path: '/products/add',
+      parentNavigatorKey: _rootNavigatorKey, // Tampilkan sebagai fullscreen
+      builder: (context, state) => const ProductFormScreen(),
     ),
-GoRoute(
+    GoRoute(
       path: '/scan-qr',
       builder: (context, state) => const ScannerScreen(),
     ),
     GoRoute(
       path: '/products/:productId', // Rute dengan parameter ID produk
-      parentNavigatorKey: _rootNavigatorKey, // Gunakan root key jika ini adalah layar fullscreen
-      builder: (context, state) => ProductDetailScreen(productId: state.pathParameters['productId']!),
+      parentNavigatorKey:
+          _rootNavigatorKey, // Gunakan root key jika ini adalah layar fullscreen
+      builder: (context, state) =>
+          ProductDetailScreen(productId: state.pathParameters['productId']!),
+    ),
+    GoRoute(
+      path: '/products/edit/:productId', // Rute dengan parameter ID produk
+      parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
+      builder: (context, state) =>
+          ProductFormScreen(productId: state.pathParameters['productId']!),
     ),
   ],
 );

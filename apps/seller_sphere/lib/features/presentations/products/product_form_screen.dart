@@ -1,24 +1,25 @@
-// lib/features/products/presentation/add_product_screen.dart
+// lib/features/products/presentation/add_edit_product_screen.dart
 
 import 'package:flutter/material.dart';
+//import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
-import 'controllers/add_product_logic.dart';
+import 'controllers/add_product_logic.dart'; // Menggunakan logika terpusat
 import 'widgets/product_form_fields.dart';
 import 'widgets/product_image_picker.dart';
 import 'widgets/product_form_actions.dart';
-import 'widgets/image_picker_bottom_sheet.dart'; // Impor helper bottom sheet baru
+import 'widgets/image_picker_bottom_sheet.dart';
 
-/// A screen for adding a new product or editing an existing one[cite: 8].
-class AddProductScreen extends StatefulWidget {
-  final String? productId;
+/// Halaman gabungan untuk menambah produk baru atau mengedit produk yang sudah ada.
+class ProductFormScreen extends StatefulWidget {
+  final String? productId; // Jika null = Tambah Baru, Jika ada isi = Edit Mode
 
-  const AddProductScreen({super.key, this.productId});
+  const ProductFormScreen({super.key, this.productId});
 
   @override
-  State<AddProductScreen> createState() => _AddProductScreenState();
+  State<ProductFormScreen> createState() => _ProductFormScreenState();
 }
 
-class _AddProductScreenState extends State<AddProductScreen> {
+class _ProductFormScreenState extends State<ProductFormScreen> {
   late final AddProductLogic _logic;
   bool get _isEditMode => widget.productId != null;
 
@@ -28,8 +29,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _logic = AddProductLogic();
     _logic.initControllers();
 
+    // Jika dalam mode edit, muat data produk berdasarkan ID
     if (_isEditMode) {
-      _logic.loadProductData(widget.productId!, (fn) => setState(fn));
+      _logic.loadProductData(widget.productId!).then((_) {
+        // Logika pengaman jika produk ternyata tidak ditemukan di database
+        if (_logic.skuController.text.isEmpty && mounted) {
+          // Opsional: Tangani jika data produk kosong
+        }
+      });
     }
   }
 
@@ -51,10 +58,10 @@ class _AddProductScreenState extends State<AddProductScreen> {
               padding: AppStyles.defaultScreenPadding,
               child: Column(
                 children: [
+                  // Komponen Pemilih Gambar (hanya tampil atau relevan diintegrasikan)
                   ProductImagePicker(
                     selectedImageFile: _logic.selectedImageFile,
                     existingImageUrl: _logic.existingImageUrl,
-                    // PERBAIKAN: Memanggil helper pemilih gambar yang sudah dipecah
                     onPickImage: () {
                       ImagePickerBottomSheet.show(context, (source) {
                         _logic.pickImage(source);
@@ -62,6 +69,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     },
                   ),
                   const SizedBox(height: 24),
+                  // Form Fields untuk mengisi Nama, Deskripsi, Harga, dan SKU
                   ProductFormFields(
                     formKey: _logic.formKey,
                     nameController: _logic.nameController,
@@ -73,6 +81,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 ],
               ),
             ),
+      // Tombol Aksi Simpan di bagian bawah layar
       floatingActionButton: ProductFormActions(
         isLoading: _logic.isLoading.value,
         isEditMode: _isEditMode,
