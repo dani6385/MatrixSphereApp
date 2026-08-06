@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 //import 'app_navigator.dart';
 
 //import 'app_shell_branches.dart';
+import 'package:seller_sphere/screens/management/widgets/scanner_screen.dart'; // Import ScannerScreen
 import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'package:shared_ui/shared_ui.dart'; // Import SplashScreen
 
@@ -114,6 +115,11 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/add-product',
       builder: (context, state) => const AddProductScreen(),
+    ),
+    // Rute untuk halaman pemindaian QR/Barcode
+    GoRoute(
+      path: '/scan-qr',
+      builder: (context, state) => const ScannerScreen(),
     ),
   ],
 );

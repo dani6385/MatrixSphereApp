@@ -1,9 +1,9 @@
 // lib/features/products/presentation/controllers/add_product_logic.dart
 
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:go_router/go_router.dart'; // Diperlukan untuk context.push
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:logger/logger.dart';
@@ -43,25 +43,19 @@ class AddProductLogic {
     skuController.dispose(); // Jangan lupa dispose controller baru
   }
 
-  /// Scans a barcode/QR code and updates the SKU controller.
-  Future<void> scanBarcode(Function(VoidCallback) setState) async {
+  /// Scans a barcode/QR code using the dedicated scanner screen and updates the SKU controller.
+  Future<void> scanBarcode(BuildContext context, Function(VoidCallback) setState) async {
     try {
-      final String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', // Warna garis pemindai
-        'Batal',   // Teks tombol batal
-        true,      // Tampilkan ikon flash
-        ScanMode.BARCODE,
-      );
+      // Navigasi ke ScannerScreen dan tunggu hasilnya
+      final String? barcodeScanRes = await context.push<String>('/scan-qr');
 
-      if (barcodeScanRes != '-1') {
-        // '-1' dikembalikan jika pengguna membatalkan pemindaian
+      if (barcodeScanRes != null && barcodeScanRes.isNotEmpty) {
         setState(() {
           skuController.text = barcodeScanRes;
         });
       }
     } catch (e) {
-      // Handle error, misalnya tampilkan snackbar
-      logger.i('Gagal memindai: $e');
+      logger.e('Gagal memindai: $e'); // Gunakan logger.e untuk error
     }
   }
 
@@ -79,21 +73,6 @@ class AddProductLogic {
     } catch (e) {
       logger.e('Gagal memilih gambar: $e');
     }
-  }
-
-  /// Helper function to compress an image file.
-  Future<XFile?> compressAndResizeImage(File file) async {
-    final targetPath = "${file.parent.path}/temp_${file.path.split('/').last}.jpg";
-    final result = await FlutterImageCompress.compressAndGetFile(
-      file.absolute.path,
-      targetPath,
-      quality: 80,
-      minWidth: 1024,
-      minHeight: 768,
-    );
-    if (result == null) return null;
-    // flutter_image_compress returns a File, so we convert it back to XFile
-    return XFile(result.path);
   }
 
   /// Loads existing product data when in edit mode.
@@ -152,7 +131,9 @@ class AddProductLogic {
           await _productService.addProduct(product);
         }
         if (context.mounted) {
-          Navigator.pop(context); // Kembali setelah berhasil menyimpan
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Gagal menyimpan produk: $e')),
+          );
         }
       } catch (e) {
         logger.e('Gagal menyimpan produk: $e');

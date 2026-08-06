@@ -62,7 +62,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     descriptionController: _logic.descriptionController,
                     priceController: _logic.priceController,
                     skuController: _logic.skuController,
-                    onScanPressed: () => _logic.scanBarcode((fn) => setState(fn)),
+                    onScanPressed: () => _logic.scanBarcode(context, (fn) => setState(fn)),
                   ),
                 ],
               ),
