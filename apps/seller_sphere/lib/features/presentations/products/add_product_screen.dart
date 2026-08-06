@@ -1,6 +1,7 @@
 // lib/features/products/presentation/add_product_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_ui/shared_ui.dart';
 import 'controllers/add_product_logic.dart'; // Impor file logika yang baru dibuat
 import 'widgets/product_form_fields.dart';
@@ -53,7 +54,35 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   ProductImagePicker(
                     selectedImageFile: _logic.selectedImageFile,
                     existingImageUrl: _logic.existingImageUrl,
-                    onPickImage: () => _logic.pickImage((fn) => setState(fn)),
+                    onPickImage: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (BuildContext bc) {
+                          return SafeArea(
+                            child: Wrap(
+                              children: <Widget>[
+                                ListTile(
+                                  leading: const Icon(Icons.photo_library),
+                                  title: const Text('Galeri'),
+                                  onTap: () {
+                                    _logic.pickImage(ImageSource.gallery, (fn) => setState(fn));
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                ListTile(
+                                  leading: const Icon(Icons.photo_camera),
+                                  title: const Text('Kamera'),
+                                  onTap: () {
+                                    _logic.pickImage(ImageSource.camera, (fn) => setState(fn));
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                   const SizedBox(height: 24),
                   ProductFormFields(
@@ -62,7 +91,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     descriptionController: _logic.descriptionController,
                     priceController: _logic.priceController,
                     skuController: _logic.skuController,
-                    onScanPressed: () => _logic.scanBarcode(context, (fn) => setState(fn)),
+                    onScanPressed: () =>
+                        _logic.scanBarcode(context, (fn) => setState(fn)),
                   ),
                 ],
               ),

@@ -60,9 +60,9 @@ class AddProductLogic {
   }
 
   /// Picks an image from the gallery, compresses it, and updates the state.
-  Future<void> pickImage(Function(VoidCallback) setState) async {
+  Future<void> pickImage(ImageSource source, Function(VoidCallback) setState) async {
     try {
-      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
         // Kompres gambar sebelum di-set ke state
         final compressedFile = await compressAndResizeImage(File(pickedFile.path));
