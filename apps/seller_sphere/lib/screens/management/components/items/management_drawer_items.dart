@@ -1,8 +1,9 @@
 // lib/navigation/widgets/app_drawer_items.dart[cite: 7]
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+//import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
+import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'package:seller_sphere/navigations/app_routes.dart';
 
 final Logger logger = Logger();
@@ -28,11 +29,19 @@ class DrawerItemData {
 List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
   return [
     DrawerItemData(
-      title: 'Home / Beranda',
+      title: 'Streams',
       icon: Icons.home,
       label: 'Mengarahkan pengguna kembali ke halaman utama dashboard.',
-      route: AppRoutes.home,
-      onTap: () => context.go(AppRoutes.home),
+      route: AppRoutes.stream,
+      onTap: () {
+        logger.i('Menu Keamanan diklik!');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Navigasi ke halaman Keamanan.')),
+        );
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const StreamingScreen(streamId: '',)),
+        );
+      },
     ),
     DrawerItemData(
       title: 'Users / Pengguna',

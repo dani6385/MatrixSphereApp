@@ -8,11 +8,12 @@ class AppRoutes {
   //bottom nav bar
   static const String home = '/';
   static const String reports = '/reports';
-  //static const String stream = '/stream';
+  
   static const String management = '/management';
   static const String sellers = '/sellers';
   static const String attendance = '/attendance';
   //feature
+  static const String stream = '/stream';
   static const String chat = '/chat';
   //static const String chatDetail = '/chat/:chatId';
   //static const String addChat = '/chat/add';
