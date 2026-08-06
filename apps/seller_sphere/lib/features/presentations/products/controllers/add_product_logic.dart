@@ -109,18 +109,19 @@ class AddProductLogic {
         }
       }
 
+      final priceValue = double.tryParse(priceController.text) ?? 0.0;
+
       final product = Product(
         id: isEditMode ? productId! : '', // ID akan dibuat oleh Firebase jika baru
         name: nameController.text,
         description: descriptionController.text,
-        price: double.tryParse(priceController.text) ?? 0.0,
+        price: priceValue, // Gunakan nilai harga yang sudah diparsing
         sku: skuController.text.isNotEmpty ? skuController.text : null, // Simpan SKU
-        // Inisialisasi field lain jika ada
         imageUrl: imageUrl, // Gunakan URL gambar yang sudah diunggah
         category: '', // Contoh inisialisasi
         soldCount: 0, // Contoh inisialisasi
-        sellingPrice: 0.0, // Mengubah null menjadi 0.0 karena tipe double tidak boleh null
-        purchasePrice: 0.0, // Mengubah null menjadi 0.0 karena tipe double tidak boleh null
+        sellingPrice: priceValue, // FIX: Gunakan nilai harga yang sama untuk harga jual
+        purchasePrice: 0.0, // Harga beli bisa tetap 0 atau ditambahkan field input baru
         stock: 0, // Dihapus dari form, di-set default 0 saat produk dibuat
         shopId: '', // Contoh inisialisasi
       );

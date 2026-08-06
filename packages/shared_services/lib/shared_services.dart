@@ -19,5 +19,7 @@ export 'src/location_service.dart';
 export 'src/models/produck/product_list_screen.dart';
 export 'src/models/product_model.dart';
 export 'src/navigation/go_router_refresh_stream.dart';
-export 'src/product_service.dart';
+export 'src/product/product_service.dart';
+export 'src/product/order_service.dart';
+export 'src/product/product_dialog_helper.dart';
 export 'utils/image_compressor.dart';
