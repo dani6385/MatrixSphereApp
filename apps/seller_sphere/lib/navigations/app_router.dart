@@ -47,6 +47,11 @@ final GoRouter appRouter = GoRouter(
       parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
       builder: (context, state) => const OrderScreen(),
     ),
+    GoRoute(
+      path: '/add-product',
+      builder: (context, state) => const AddProductScreen(),
+    ),
+
   ],
 );
 

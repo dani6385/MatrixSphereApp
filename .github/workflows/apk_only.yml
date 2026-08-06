@@ -110,7 +110,13 @@ jobs:
         run: |
           cd ${{ steps.vars.outputs.dir }}
           flutter build apk --release
-      
+      - name: Get Commit Message
+        id: get_commit
+        run: |
+          COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "COMMIT_MSG<<EOF" >> $GITHUB_ENV
+          echo "$COMMIT_MSG" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       # --- DEPLOYMENT & ARTIFACT ---
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
