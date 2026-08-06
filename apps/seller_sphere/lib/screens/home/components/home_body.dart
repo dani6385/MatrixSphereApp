@@ -17,7 +17,7 @@ class HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 40.0),
         physics: const AlwaysScrollableScrollPhysics(),
         children: const [
           //const HomeHeaderCard(),
