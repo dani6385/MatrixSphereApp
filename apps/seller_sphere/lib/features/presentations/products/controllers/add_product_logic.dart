@@ -1,7 +1,6 @@
 // lib/features/products/presentation/controllers/add_product_logic.dart
 
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart'; // Diperlukan untuk context.push
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +11,7 @@ final Logger logger = Logger();
 
 /// Handles the business logic for the AddProductScreen.
 class AddProductLogic {
-  final formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   late TextEditingController nameController;
   late TextEditingController descriptionController;
   late TextEditingController priceController;
@@ -22,7 +21,11 @@ class AddProductLogic {
   XFile? selectedImageFile;
   String? existingImageUrl;
 
-  bool isLoading = false;
+  // Gunakan ValueNotifier untuk state agar UI bisa bereaksi tanpa passing setState
+  final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
+  final ValueNotifier<String?> skuValue = ValueNotifier<String?>(null);
+  final ValueNotifier<XFile?> selectedImage = ValueNotifier<XFile?>(null);
+
   final ProductService _productService = ProductService();
   final ImageUploadService _imageUploadService = ImageUploadService();
   final ImagePicker _picker = ImagePicker();
@@ -41,18 +44,19 @@ class AddProductLogic {
     descriptionController.dispose();
     priceController.dispose();
     skuController.dispose(); // Jangan lupa dispose controller baru
+    isLoading.dispose();
+    skuValue.dispose();
   }
 
   /// Scans a barcode/QR code using the dedicated scanner screen and updates the SKU controller.
-  Future<void> scanBarcode(BuildContext context, Function(VoidCallback) setState) async {
+  Future<void> scanBarcode(BuildContext context) async {
     try {
       // Navigasi ke ScannerScreen dan tunggu hasilnya
       final String? barcodeScanRes = await context.push<String>('/scan-qr');
 
       if (barcodeScanRes != null && barcodeScanRes.isNotEmpty) {
-        setState(() {
-          skuController.text = barcodeScanRes;
-        });
+        skuController.text = barcodeScanRes;
+        skuValue.value = barcodeScanRes; // Update ValueNotifier
       }
     } catch (e) {
       logger.e('Gagal memindai: $e'); // Gunakan logger.e untuk error
@@ -60,15 +64,13 @@ class AddProductLogic {
   }
 
   /// Picks an image from the gallery, compresses it, and updates the state.
-  Future<void> pickImage(ImageSource source, Function(VoidCallback) setState) async {
+  Future<void> pickImage(ImageSource source) async {
     try {
       final XFile? pickedFile = await _picker.pickImage(source: source);
       if (pickedFile != null) {
         // Kompres gambar sebelum di-set ke state
         final compressedFile = await compressAndResizeImage(File(pickedFile.path));
-        setState(() {
-          selectedImageFile = compressedFile;
-        });
+        selectedImage.value = compressedFile; // Update ValueNotifier
       }
     } catch (e) {
       logger.e('Gagal memilih gambar: $e');
@@ -77,7 +79,7 @@ class AddProductLogic {
 
   /// Loads existing product data when in edit mode.
   Future<void> loadProductData(String productId, Function(VoidCallback) setState) async {
-    setState(() => isLoading = true);
+    isLoading.value = true;
     final product = await _productService.getProductById(productId);
     if (product != null) {
       nameController.text = product.name;
@@ -86,7 +88,7 @@ class AddProductLogic {
       skuController.text = product.sku ?? '';
       existingImageUrl = product.imageUrl;
     }
-    setState(() => isLoading = false);
+    isLoading.value = false;
   }
 
   /// Saves or updates the product.
@@ -94,15 +96,14 @@ class AddProductLogic {
     required BuildContext context,
     required bool isEditMode,
     String? productId,
-    required Function(VoidCallback) setStateParent,
-  }) async {
+  }) async { // Hapus parameter setStateParent
     if (formKey.currentState!.validate()) {
-      setStateParent(() => isLoading = true);
+      isLoading.value = true;
 
       String imageUrl = existingImageUrl ?? '';
       // Jika ada gambar baru yang dipilih, unggah dan perbarui URL-nya
-      if (selectedImageFile != null) {
-        final uploadedUrl = await _imageUploadService.uploadImageToImgBB(File(selectedImageFile!.path));
+      if (selectedImage.value != null) {
+        final uploadedUrl = await _imageUploadService.uploadImageToImgBB(File(selectedImage.value!.path));
         if (uploadedUrl != null) {
           imageUrl = uploadedUrl;
         }
@@ -131,15 +132,22 @@ class AddProductLogic {
           await _productService.addProduct(product);
         }
         if (context.mounted) {
+          final successMessage = isEditMode ? 'Produk berhasil diperbarui' : 'Produk berhasil ditambahkan';
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Gagal menyimpan produk: $e')),
+            SnackBar(content: Text(successMessage)),
           );
+          context.pop(true); // Kembali dan beri sinyal sukses
         }
       } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Gagal menyimpan produk: $e')),
+          );
+        }
         logger.e('Gagal menyimpan produk: $e');
         // Tampilkan pesan error ke pengguna jika perlu
       } finally {
-        setStateParent(() => isLoading = false);
+        isLoading.value = false;
       }
     }
   }

@@ -45,7 +45,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
       appBar: AppBar(
         title: Text(_isEditMode ? 'Edit Produk' : 'Tambah Produk Baru'),
       ),
-      body: _logic.isLoading && !_isEditMode
+      body: _logic.isLoading.value && !_isEditMode
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               padding: AppStyles.defaultScreenPadding,
@@ -65,8 +65,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   leading: const Icon(Icons.photo_library),
                                   title: const Text('Galeri'),
                                   onTap: () {
-                                    _logic.pickImage(ImageSource.gallery,
-                                        (fn) => setState(fn));
+                                    _logic.pickImage(ImageSource.gallery);
                                     Navigator.of(context).pop();
                                   },
                                 ),
@@ -74,8 +73,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   leading: const Icon(Icons.photo_camera),
                                   title: const Text('Kamera'),
                                   onTap: () {
-                                    _logic.pickImage(ImageSource.camera,
-                                        (fn) => setState(fn));
+                                    _logic.pickImage(ImageSource.camera);
                                     Navigator.of(context).pop();
                                   },
                                 ),
@@ -93,20 +91,18 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     descriptionController: _logic.descriptionController,
                     priceController: _logic.priceController,
                     skuController: _logic.skuController,
-                    onScanPressed: () =>
-                        _logic.scanBarcode(context, (fn) => setState(fn)),
+                    onScanPressed: () => _logic.scanBarcode(context),
                   ),
                 ],
               ),
             ),
       floatingActionButton: ProductFormActions(
-        isLoading: _logic.isLoading,
+        isLoading: _logic.isLoading.value,
         isEditMode: _isEditMode,
         onSavePressed: () => _logic.saveProduct(
           context: context,
           isEditMode: _isEditMode,
           productId: widget.productId,
-          setStateParent: (fn) => setState(fn),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
