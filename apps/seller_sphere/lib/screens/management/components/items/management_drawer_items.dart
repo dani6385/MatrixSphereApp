@@ -68,7 +68,10 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       label: 'Mengelola ketersediaan dan rincian stok barang di gudang.',
       route: '',
       onTap: () {
-        logger.i('Menu Inventory diklik!');
+        logger.i('Menuju ke halaman Inventory');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const InventoryScreen()),
+        );
       },
     ),
     DrawerItemData(

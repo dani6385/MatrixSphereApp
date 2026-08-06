@@ -56,7 +56,10 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       label: 'Mengatur pemberitahuan pesanan masuk dan pesan pembeli.',
       route: '',
       onTap: () {
-        // Aksi pengaturan notifikasi
+        logger.i('Menu Notifikasi diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const NotificationScreen()),
+        );
       },
     ),
     EndDrawerItemData(
@@ -106,7 +109,12 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       icon: Icons.info_outline,
       label: 'Melihat informasi versi dan pengembang aplikasi.',
       route: '',
-      onTap: () {},
+      onTap: () {
+        logger.i('Menu Status Toko diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const AboutScreen()),
+        );
+      },
     ),
     EndDrawerItemData(
       title: 'Logout',

@@ -1,10 +1,13 @@
 // lib/navigations/widgets/app_end_drawer_items.dart
 
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-// ignore: unused_import
-import 'package:shared_ui/shared_ui.dart';
+//import 'package:go_router/go_router.dart';
+//import 'package:shared_ui/shared_ui.dart';
 import 'package:seller_sphere/navigations/app_routes.dart';
+import 'package:logger/logger.dart';
+import 'package:seller_sphere/navigations/app_extractor.dart';
+
+final Logger logger = Logger();
 
 // Definisi struktur data untuk item menu EndDrawer dengan tambahan properti 'label'
 class EndDrawerItemData {
@@ -31,7 +34,12 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       icon: Icons.person,
       label: 'Melihat dan mengubah informasi profil akun administrator.',
       route: AppRoutes.profile,
-      onTap: () => context.go(AppRoutes.profile),
+      onTap: () {
+        logger.i('Menu Profile Toko diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        );
+      },
     ),
     EndDrawerItemData(
       title: 'Account Management / Kelola Akun',
@@ -43,7 +51,8 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
     EndDrawerItemData(
       title: 'Data Management / Manajemen Data',
       icon: Icons.data_usage,
-      label: 'Mengelola basis data, penyimpanan, dan pembersihan cache aplikasi.',
+      label:
+          'Mengelola basis data, penyimpanan, dan pembersihan cache aplikasi.',
       route: '',
       onTap: () {},
     ),
@@ -57,21 +66,34 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
     EndDrawerItemData(
       title: 'Notifications Settings / Pengaturan Notifikasi',
       icon: Icons.notifications_active,
-      label: 'Mengatur preferensi pemberitahuan sistem dan peringatan operasional.',
+      label:
+          'Mengatur preferensi pemberitahuan sistem dan peringatan operasional.',
       route: '',
-      onTap: () {},
+      onTap: () {
+        logger.i('Menu Notifications Settings diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+              builder: (context) => const NotificationSettingScreen()),
+        );
+      },
     ),
     EndDrawerItemData(
       title: 'Security / Keamanan',
       icon: Icons.security,
       label: 'Mengonfigurasi tingkat keamanan dan enkripsi data sistem.',
       route: '',
-      onTap: () {},
+      onTap: () {
+        logger.i('Menu Security / Keamanan diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const SecurityScreen()),
+        );
+      },
     ),
     EndDrawerItemData(
       title: 'Debug Info / Informasi Debug',
       icon: Icons.bug_report,
-      label: 'Melihat log kesalahan atau status diagnostik aplikasi untuk pengembang.',
+      label:
+          'Melihat log kesalahan atau status diagnostik aplikasi untuk pengembang.',
       route: '',
       onTap: () {},
     ),
@@ -80,7 +102,12 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       icon: Icons.settings,
       label: 'Mengubah konfigurasi lanjutan dan preferensi aplikasi.',
       route: '',
-      onTap: () {},
+      onTap: () {
+        logger.i('Menu Security / Keamanan diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const SettingScreen()),
+        );
+      },
     ),
   ];
 }
