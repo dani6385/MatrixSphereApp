@@ -30,9 +30,11 @@ class _PublicProductScreenState extends State<PublicProductScreen> {
       // Tombol untuk menambah produk baru
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigasi ke halaman tambah produk (menggunakan rute addProduct)
-          // Gunakan pushNamed agar lebih deklaratif dan aman
-          AddProductScreen;
+          // Navigasi ke halaman tambah produk.
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddProductScreen()),
+          );
         },
         child: const Icon(Icons.add),
       ),
