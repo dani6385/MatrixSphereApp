@@ -83,20 +83,6 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       },
     ),
     DrawerItemData(
-      title: 'Roles & Permissions / Hak Akses',
-      icon: Icons.assignment_ind,
-      label: 'Mengatur peran dan batasan hak akses untuk setiap pengguna.',
-      route: '',
-      onTap: () {
-        logger.i('Menu Orders diklik!');
-        Navigator.of(context, rootNavigator: true).push(
-          MaterialPageRoute(
-            builder: (context) => const OrderScreen(),
-          ),
-        );
-      },
-    ),
-    DrawerItemData(
       title: 'Inventory / Stok Barang',
       icon: Icons.inventory,
       label: 'Mengelola ketersediaan dan rincian stok barang di gudang.',

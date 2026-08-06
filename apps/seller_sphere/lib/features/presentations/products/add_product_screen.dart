@@ -65,7 +65,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   leading: const Icon(Icons.photo_library),
                                   title: const Text('Galeri'),
                                   onTap: () {
-                                    _logic.pickImage(ImageSource.gallery, (fn) => setState(fn));
+                                    _logic.pickImage(ImageSource.gallery,
+                                        (fn) => setState(fn));
                                     Navigator.of(context).pop();
                                   },
                                 ),
@@ -73,7 +74,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   leading: const Icon(Icons.photo_camera),
                                   title: const Text('Kamera'),
                                   onTap: () {
-                                    _logic.pickImage(ImageSource.camera, (fn) => setState(fn));
+                                    _logic.pickImage(ImageSource.camera,
+                                        (fn) => setState(fn));
                                     Navigator.of(context).pop();
                                   },
                                 ),
