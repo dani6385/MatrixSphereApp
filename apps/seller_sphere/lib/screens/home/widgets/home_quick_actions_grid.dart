@@ -1,14 +1,13 @@
 // lib/screens/home/widgets/home_quick_actions_grid.dart
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart'; // Import GoRouter
-// import 'package:seller_sphere/navigations/app_extractor.dart'; // Tidak lagi dibutuhkan di sini
-import 'package:shared_ui/shared_ui.dart';
-import 'package:logger/logger.dart';
 
-final Logger _logger = Logger();
+import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
+import 'home_quick_actions_logic.dart';
 
 class HomeQuickActionsGrid extends StatelessWidget {
-  const HomeQuickActionsGrid({super.key});
+  HomeQuickActionsGrid({super.key});
+
+  final HomeQuickActionsLogic _logic = HomeQuickActionsLogic();
 
   @override
   Widget build(BuildContext context) {
@@ -21,28 +20,30 @@ class HomeQuickActionsGrid extends StatelessWidget {
           icon: Icons.add_box_outlined,
           label: 'Produk',
           onPressed: () {
-            _logger.i('Menu Tambah Products diklik!');
-            context.push('/add-product'); // Gunakan GoRouter untuk navigasi
+            _logic.onProductPressed(context);
           },
         ),
         QuickActionChip(
           icon: Icons.qr_code_scanner,
           label: 'Scan',
           onPressed: () {
-            // Tulis logika ketika tombol Scan diklik di sini
-            _logger.i('Tombol Scan QR diklik!');
-            context.push('/scan-qr'); // Gunakan GoRouter untuk navigasi
+            _logic.onScanPressed(context);
           },
         ),
         QuickActionChip(
           icon: Icons.bar_chart_outlined,
           label: 'Laporan',
-          onPressed: () {},
+          // PERBAIKAN: Gunakan kurung kurawal atau panggil langsung tanpa panah yang mengembalikan nilai
+          onPressed: () {
+            _logic.onReportPressed();
+          },
         ),
         QuickActionChip(
           icon: Icons.chat_bubble_outline,
           label: 'Chat',
-          onPressed: () {},
+          onPressed: () {
+            _logic.onChatPressed();
+          },
         ),
       ],
     );
