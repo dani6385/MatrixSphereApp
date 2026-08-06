@@ -1,9 +1,9 @@
 name: Consolidated Monorepo Android Build (APK Only)
 
 on:
-  push:
-    branches:
-      - main
+  #push:
+    #branches:
+      #- main
   workflow_dispatch:
 
 permissions:
