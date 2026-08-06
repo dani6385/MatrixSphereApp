@@ -1,10 +1,11 @@
 /*
 
-export 'package:seller_sphere/features/chat/chat_screen.dart';
+
 export 'package:seller_sphere/features/chat/Providers/chat_provider.dart';
 export 'package:seller_sphere/features/products/public_product_screen.dart';
 export 'package:seller_sphere/features/products/add_product_screen.dart';
 */
+export 'package:seller_sphere/features/presentations/chat/chat_screen.dart';
 export 'package:seller_sphere/core/services/notifications/notification_screen.dart';
 // feature
 export 'package:seller_sphere/features/presentations/products/public_product_screen.dart';
@@ -20,6 +21,8 @@ export 'package:seller_sphere/features/presentations/notifications/notification_
 export 'package:seller_sphere/features/presentations/language/language_screen.dart';
 export 'package:seller_sphere/features/presentations/about/about_screen.dart';
 export 'package:seller_sphere/features/presentations/info/info_screen.dart';
+export 'package:seller_sphere/features/presentations/members/member_screen.dart';
+export 'package:seller_sphere/features/presentations/Permissions/permissions_screens.dart';
 
 export 'package:seller_sphere/features/presentations/help/help_screen.dart';
 export 'package:seller_sphere/features/presentations/streams/streaming_screen.dart';

@@ -54,12 +54,46 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       },
     ),
     DrawerItemData(
+      title: 'Products / Produk',
+      icon: Icons.shopping_bag,
+      label:
+          'Mengelola daftar produk, menambah barang baru, atau mengatur harga.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Products diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const PublicProductScreen(),
+          ),
+        );
+      },
+    ),
+    DrawerItemData(
+      title: 'Orders / Pesanan',
+      icon: Icons.receipt,
+      label: 'Melihat dan memproses pesanan masuk dari pembeli.',
+      route: '',
+      onTap: () {
+        logger.i('Menu Orders diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const OrderScreen(),
+          ),
+        );
+      },
+    ),
+    DrawerItemData(
       title: 'Roles & Permissions / Hak Akses',
       icon: Icons.assignment_ind,
       label: 'Mengatur peran dan batasan hak akses untuk setiap pengguna.',
       route: '',
       onTap: () {
-        logger.i('Menu Roles diklik!');
+        logger.i('Menu Orders diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const OrderScreen(),
+          ),
+        );
       },
     ),
     DrawerItemData(
@@ -80,8 +114,10 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       label: 'Mengatur hak akses dan peran wewenang pengguna dalam sistem.',
       route: '',// AppRoutes.managementRules, // Pastikan rute ini didaftarkan di app_routes.dart
       onTap: () {
-        logger.i('Menu Rules / Aturan diklik!');
-        //context.go(AppRoutes.managementRules);
+        logger.i('Menuju ke halaman Rules / Aturan Hak Akses');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const PermissionsScreen()),
+        );
       },
     ),
 
@@ -93,7 +129,11 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       route: '',// AppRoutes.managementMembers, // Pastikan rute ini didaftarkan di app_routes.dart
       onTap: () {
         logger.i('Menu Members / Karyawan diklik!');
-        //context.go(AppRoutes.managementMembers);
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (context) => const MemberScreen(),
+          ),
+        );
       },
     ),
     DrawerItemData(

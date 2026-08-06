@@ -18,7 +18,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       // Latar belakang transparan agar gradient dari body terlihat.[cite: 10]
       backgroundColor: kTransparent,
       elevation: 0,
-      
+
       // Tombol ikon di sebelah kiri untuk membuka Drawer utama
       leading: IconButton(
         icon: Icon(
@@ -51,11 +51,12 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             logger.i('Ikon Pesan diklik!');
             ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
-              );
-              Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(builder: (context) => const NotificationScreen()),
-              );
+              const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
+            );
+            Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(
+                  builder: (context) => const NotificationScreen()),
+            );
           },
         ),
         IconButton(
@@ -64,8 +65,14 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: colorScheme.onSurface,
           ),
           onPressed: () {
-            // TODO: Tambahkan aksi ketika ikon pesan diklik
             logger.i('Ikon Pesan diklik!');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
+            );
+            Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(
+                  builder: (context) => const ChatScreen()),
+            );
           },
         ),
         IconButton(
@@ -77,7 +84,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             // TODO: Tambahkan aksi ketika ikon chart diklik
             logger.i('Ikon Chart diklik!');
           },
-        ),        
+        ),
         IconButton(
           icon: Icon(
             Icons.settings, // Ikon profil atau akun untuk EndDrawer
