@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'app_navigator.dart';
-// Import ProductDetailScreen
-import 'app_shell_branches.dart';
-import 'app_extractor.dart';
+
+import 'shell_route_config.dart';
+
+
+import 'fullscreen_routes.dart';
 
 // Kunci global untuk navigator utama (root)
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -19,57 +20,7 @@ final GoRouter appRouter = GoRouter(
     ),
   ),
   routes: <RouteBase>[
-    // Ini adalah Shell Route utama yang berisi BottomNavBar
-    StatefulShellRoute.indexedStack(
-      builder: (context, state, navigationShell) {
-        // Shell ini akan selalu menggunakan AppNavigator sebagai UI-nya
-        return AppNavigator(navigationShell: navigationShell);
-      },
-      // Branches berisi daftar navigasi yang akan memiliki BottomNavBar
-      branches: appShellBranches,
-    ),
-
-    // --- TEMPAT UNTUK RUTE FULLSCREEN ---
-    // Nanti, jika Anda butuh halaman login atau halaman detail fullscreen,
-    // definisikan di sini, di luar StatefulShellRoute.
-    // Contoh:
-    // GoRoute(
-    //   path: '/login',
-    //   parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
-    //   builder: (context, state) => const LoginScreen(),
-    // ),
-    GoRoute(
-      path: '/profile',
-      parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
-      builder: (context, state) => const ProfileScreen(),
-    ),
-    GoRoute(
-      path: '/order',
-      parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
-      builder: (context, state) => const OrderScreen(),
-    ),
-    GoRoute(
-      // Menggunakan path '/products/add' agar konsisten
-      path: '/products/add',
-      parentNavigatorKey: _rootNavigatorKey, // Tampilkan sebagai fullscreen
-      builder: (context, state) => const ProductFormScreen(),
-    ),
-    GoRoute(
-      path: '/scan-qr',
-      builder: (context, state) => const ScannerScreen(),
-    ),
-    GoRoute(
-      path: '/products/:productId', // Rute dengan parameter ID produk
-      parentNavigatorKey:
-          _rootNavigatorKey, // Gunakan root key jika ini adalah layar fullscreen
-      builder: (context, state) =>
-          ProductDetailScreen(productId: state.pathParameters['productId']!),
-    ),
-    GoRoute(
-      path: '/products/edit/:productId', // Rute dengan parameter ID produk
-      parentNavigatorKey: _rootNavigatorKey, // Gunakan root key
-      builder: (context, state) =>
-          ProductFormScreen(productId: state.pathParameters['productId']!),
-    ),
+    buildAppShellRoute(),
+    ...buildFullscreenRoutes(_rootNavigatorKey),
   ],
 );

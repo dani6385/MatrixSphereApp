@@ -21,12 +21,13 @@ export 'package:seller_sphere/features/presentations/help/help_screen.dart';
 export 'package:seller_sphere/features/presentations/streams/streaming_screen.dart';
 
 export 'package:seller_sphere/screens/home/home_screen.dart';
-export 'package:seller_sphere/screens/reports/reports_screen.dart';
+//export 'package:seller_sphere/screens/reports/reports_screen.dart';
 // management
 export 'package:seller_sphere/screens/management/management_screen.dart';
 export 'package:seller_sphere/screens/management/widgets/scanner_screen.dart';
 export 'package:seller_sphere/screens/management/widgets/order_list_view.dart';
 export 'package:seller_sphere/screens/sellers/seller_screen.dart';
+export 'package:seller_sphere/screens/financials/financial_screen.dart';
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 
 export 'package:seller_sphere/features/presentations/inventories/inventory_screen.dart';

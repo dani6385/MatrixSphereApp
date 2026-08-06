@@ -7,7 +7,7 @@ class AppRoutes {
   static const String shopRegistration = '/shop-registration';
   //bottom nav bar
   static const String home = '/';
-  static const String reports = '/reports';
+  static const String financial = '/Financial';
   
   static const String management = '/management';
   static const String sellers = '/sellers';

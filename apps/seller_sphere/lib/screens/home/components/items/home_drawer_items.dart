@@ -144,7 +144,7 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
         logger.i('Menu Reports diklik!');
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
-            builder: (context) => const ReportScreen(),
+            builder: (context) => const FinancialScreen(),
           ),
         );
       },

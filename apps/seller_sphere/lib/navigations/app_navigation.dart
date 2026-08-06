@@ -10,7 +10,7 @@ class AppNavigation {
   /// Navigates to the Streaming screen.
   /// This uses `go` which is suitable for top-level navigation.
   static void goToStream(BuildContext context) {
-    context.go(AppRoutes.reports);
+    context.go(AppRoutes.financial);
   }
 
   
@@ -38,9 +38,9 @@ class AppNavigation {
     // Ensure the route is a valid main tab route
     final validTabs = [
       AppRoutes.home,
-      AppRoutes.reports,
       AppRoutes.management,
       AppRoutes.sellers,
+      AppRoutes.financial,
       AppRoutes.attendance
     ];
     if (validTabs.contains(route)) {
