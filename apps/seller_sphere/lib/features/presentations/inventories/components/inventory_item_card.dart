@@ -9,7 +9,7 @@ import 'package:shared_services/shared_services.dart';
 class InventoryItemCard extends StatelessWidget {
   final Product product;
 
-  const InventoryItemCard({super.key, required this.product});
+  const InventoryItemCard({super.key, required this.product, required Future<Object?> Function() onEdit, required Null Function() onStockManage});
 
   @override
   Widget build(BuildContext context) {

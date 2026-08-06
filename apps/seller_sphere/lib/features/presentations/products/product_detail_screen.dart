@@ -1,6 +1,7 @@
 // d:\MatrixSphereApp\apps\seller_sphere\lib\features\presentations\products\product_detail_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_services/shared_services.dart'; // Import Product dan ProductService
 
 /// Layar untuk menampilkan detail lengkap dari sebuah produk.
@@ -71,6 +72,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_product!.name),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          // Navigasi ke halaman edit dan tunggu hasilnya.
+          final result = await context.push('/products/edit/${_product!.id}');
+
+          // Jika halaman edit mengembalikan 'true' (artinya ada perubahan),
+          // muat ulang detail produk.
+          if (result == true) {
+            _loadProductDetails();
+          }
+        },
+        child: const Icon(Icons.edit),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

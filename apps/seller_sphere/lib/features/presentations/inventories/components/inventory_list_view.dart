@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:go_router/go_router.dart';
 import 'inventory_item_card.dart';
 
 /// Widget untuk menampilkan daftar produk inventaris dalam bentuk ListView.
@@ -43,7 +44,20 @@ class InventoryListView extends StatelessWidget {
       itemCount: sortedProducts.length,
       itemBuilder: (context, index) {
         final product = sortedProducts[index];
-        return InventoryItemCard(product: product);
+        return InventoryItemCard(
+          product: product,
+          // Menambahkan aksi edit, navigasi ke halaman detail produk
+          onEdit: () => context.push('/products/${product.id}'),
+          // Menambahkan aksi untuk mengelola stok
+          onStockManage: () {
+            // Di sini kita akan memanggil dialog untuk update stok.
+            // Logika ini akan kita tambahkan di ProductService.
+            ProductService().showStockUpdateDialog(context, product).then((updated) {
+              // Jika stok berhasil diupdate, kita bisa refresh state di sini jika diperlukan.
+              // Untuk saat ini, perubahan akan terlihat saat halaman dimuat ulang.
+            });
+          },
+        );
       },
     );
   }
