@@ -31,9 +31,7 @@ class HomeQuickActionsGrid extends StatelessWidget {
           onPressed: () {
             // Tulis logika ketika tombol Scan diklik di sini
             _logger.i('Tombol Scan QR diklik!');
-
-            // Contoh: Membuka halaman scanner atau memunculkan dialog
-            // Navigator.push(context, MaterialPageRoute(builder: (context) => const QrScannerScreen()));
+            context.push('/scan-qr'); // Gunakan GoRouter untuk navigasi
           },
         ),
         QuickActionChip(

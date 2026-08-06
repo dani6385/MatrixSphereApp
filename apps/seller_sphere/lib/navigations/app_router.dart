@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+
 import 'app_navigator.dart';
 import 'app_shell_branches.dart';
 import 'app_extractor.dart';
@@ -51,7 +52,10 @@ final GoRouter appRouter = GoRouter(
       path: '/add-product',
       builder: (context, state) => const AddProductScreen(),
     ),
-
+GoRoute(
+      path: '/scan-qr',
+      builder: (context, state) => const ScannerScreen(),
+    ),
   ],
 );
 

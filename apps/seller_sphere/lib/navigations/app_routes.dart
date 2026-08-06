@@ -32,7 +32,7 @@ class AppRoutes {
   static const String editProduct = '/products/edit';
 
   static const String settings = '/settings';
-
+static const String scanQr = '/scan-qr';
   
 //static const String profile = '/profile';
 }
