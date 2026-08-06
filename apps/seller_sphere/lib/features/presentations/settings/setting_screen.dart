@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 
 
 
+
 import 'package:seller_sphere/navigations/app_extractor.dart';
 
 final Logger logger = Logger();
@@ -134,9 +135,9 @@ class _SettingScreenState extends State<SettingScreen> {
             leading: const Icon(Icons.help_outline),
             title: const Text('Pusat Bantuan'),
             onTap: () {
-              logger.i('Menu Bahasa diklik!');
+              logger.i('Menu Pusat Bantuan diklik!');
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
+                const SnackBar(content: Text('Navigasi ke halaman Pusat Bantuan.')),
               );
               Navigator.of(context, rootNavigator: true).push(
                 MaterialPageRoute(builder: (context) => const AboutScreen()),
@@ -147,7 +148,13 @@ class _SettingScreenState extends State<SettingScreen> {
             leading: const Icon(Icons.info_outline),
             title: const Text('Tentang Aplikasi'),
             onTap: () {
-              // TODO: Tampilkan dialog tentang aplikasi
+              logger.i('Menu Tentang Aplikasi diklik!');
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Navigasi ke halaman Tentang Aplikasi.')),
+              );
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const InfoScreen()),
+              );
             },
           ),
         ],

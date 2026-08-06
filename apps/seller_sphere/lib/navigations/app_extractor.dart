@@ -17,6 +17,7 @@ export 'package:seller_sphere/features/presentations/settings/setting_screen.dar
 export 'package:seller_sphere/features/presentations/security/Security.dart';
 export 'package:seller_sphere/features/presentations/language/language_screen.dart';
 export 'package:seller_sphere/features/presentations/about/about_screen.dart';
+export 'package:seller_sphere/features/presentations/info/info_screen.dart';
 
 export 'package:seller_sphere/features/presentations/help/help_screen.dart';
 export 'package:seller_sphere/features/presentations/streams/streaming_screen.dart';
