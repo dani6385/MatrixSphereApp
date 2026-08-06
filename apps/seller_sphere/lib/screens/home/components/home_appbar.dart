@@ -1,6 +1,9 @@
 // lib/features/home/presentation/widgets/home_app_bar.dart
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+
+final logger = Logger();
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -38,6 +41,26 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
       // Tombol di sebelah kanan (actions) untuk membuka EndDrawer (profil/pengaturan).
       actions: [
+        IconButton(
+          icon: Icon(
+            Icons.message_outlined,
+            color: colorScheme.onSurface,
+          ),
+          onPressed: () {
+            // TODO: Tambahkan aksi ketika ikon pesan diklik
+            logger.i('Ikon Pesan diklik!');
+          },
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.bar_chart_outlined,
+            color: colorScheme.onSurface,
+          ),
+          onPressed: () {
+            // TODO: Tambahkan aksi ketika ikon chart diklik
+            logger.i('Ikon Chart diklik!');
+          },
+        ),        
         IconButton(
           icon: Icon(
             Icons.settings, // Ikon profil atau akun untuk EndDrawer
