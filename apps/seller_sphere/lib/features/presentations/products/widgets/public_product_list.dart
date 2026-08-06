@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-// <-- IMPORT RUTE
+import 'package:go_router/go_router.dart'; // Import GoRouter
+// import 'package:seller_sphere/features/presentations/products/product_detail_screen.dart'; // Tidak perlu diimpor langsung di sini, rutenya yang digunakan
 import 'package:shared_services/shared_services.dart';
 import 'public_product_card.dart';
 
@@ -36,9 +37,8 @@ class PublicProductList extends StatelessWidget {
             final product = products[index];
             return PublicProductCard(
               product: product,
-              onTap: () {
-                // Navigasi ke ProductDetailScreen menggunakan GoRouter
-                // Sesuaikan string rute dengan konfigurasi app_routes.dart milikmu
+              onTap: () { // Implementasi navigasi ke ProductDetailScreen
+                context.push('/products/${product.id}'); // Navigasi ke rute detail produk dengan ID
               },
             );
           },

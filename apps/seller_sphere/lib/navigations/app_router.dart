@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 
 import 'app_navigator.dart';
+import 'package:seller_sphere/features/presentations/products/product_detail_screen.dart'; // Import ProductDetailScreen
 import 'app_shell_branches.dart';
 import 'app_extractor.dart';
 
@@ -56,6 +57,10 @@ GoRoute(
       path: '/scan-qr',
       builder: (context, state) => const ScannerScreen(),
     ),
+    GoRoute(
+      path: '/products/:productId', // Rute dengan parameter ID produk
+      parentNavigatorKey: _rootNavigatorKey, // Gunakan root key jika ini adalah layar fullscreen
+      builder: (context, state) => ProductDetailScreen(productId: state.pathParameters['productId']!),
+    ),
   ],
 );
-
