@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 
+
 import 'package:seller_sphere/navigations/app_extractor.dart';
 
 final Logger logger = Logger();
@@ -133,7 +134,13 @@ class _SettingScreenState extends State<SettingScreen> {
             leading: const Icon(Icons.help_outline),
             title: const Text('Pusat Bantuan'),
             onTap: () {
-              // TODO: Navigasi ke halaman bantuan
+              logger.i('Menu Bahasa diklik!');
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
+              );
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const AboutScreen()),
+              );
             },
           ),
           ListTile(
