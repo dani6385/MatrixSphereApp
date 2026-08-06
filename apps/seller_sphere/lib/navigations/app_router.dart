@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 
 
 import 'app_navigator.dart';
-import 'package:seller_sphere/features/presentations/products/product_detail_screen.dart'; // Import ProductDetailScreen
+// Import ProductDetailScreen
 import 'app_shell_branches.dart';
 import 'app_extractor.dart';
 
