@@ -69,20 +69,6 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       },
     ),
     DrawerItemData(
-      title: 'Orders / Pesanan',
-      icon: Icons.receipt,
-      label: 'Melihat dan memproses pesanan masuk dari pembeli.',
-      route: '',
-      onTap: () {
-        logger.i('Menu Orders diklik!');
-        Navigator.of(context, rootNavigator: true).push(
-          MaterialPageRoute(
-            builder: (context) => const OrderScreen(),
-          ),
-        );
-      },
-    ),
-    DrawerItemData(
       title: 'Inventory / Stok Barang',
       icon: Icons.inventory,
       label: 'Mengelola ketersediaan dan rincian stok barang di gudang.',
