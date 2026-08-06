@@ -27,6 +27,26 @@ class ProductService {
     });
   }
   
+  /// Fetches a single product from the database by its ID.
+  ///
+  /// Returns a [Product] object if found, otherwise returns null.
+  Future<Product?> getProductById(String productId) async {
+    try {
+      // Mengambil data dari node produk dengan ID yang spesifik
+      final snapshot = await _productsRef.child(productId).get();
+
+      if (snapshot.exists && snapshot.value != null) {
+        // Jika data ditemukan, konversi menjadi objek Product
+        final data = Map<String, dynamic>.from(snapshot.value as Map);
+        return Product.fromMap(data, snapshot.key!);
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching product by ID: $e');
+      return null;
+    }
+  }
+
   /// Menambahkan produk baru ke database.
   /// Firebase akan secara otomatis membuat ID unik.
   Future<void> addProduct(Product product) {

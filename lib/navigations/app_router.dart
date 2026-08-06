@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 //import 'app_navigator.dart';
 
 //import 'app_shell_branches.dart';
+import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'package:shared_ui/shared_ui.dart'; // Import SplashScreen
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -107,6 +108,12 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/shop-registration',
       builder: (context, state) => const ShopRegistrationScreen(),
-    ),*/
+    ),
+    */
+    // Rute untuk halaman tambah produk
+    GoRoute(
+      path: '/add-product',
+      builder: (context, state) => const AddProductScreen(),
+    ),
   ],
 );

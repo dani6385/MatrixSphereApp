@@ -1,12 +1,14 @@
+// lib/features/products/presentation/add_product_screen.dart
+
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
+import 'controllers/add_product_logic.dart'; // Impor file logika yang baru dibuat
 import 'widgets/product_form_fields.dart';
+import 'widgets/product_image_picker.dart';
+import 'widgets/product_form_actions.dart';
 
 /// A screen for adding a new product or editing an existing one.
 class AddProductScreen extends StatefulWidget {
-  /// The ID of the product to edit. If null, the screen is in "add" mode.
   final String? productId;
 
   const AddProductScreen({super.key, this.productId});
@@ -16,106 +18,24 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _productService = ProductService();
-
-  late final TextEditingController _nameController;
-  late final TextEditingController _descriptionController;
-  late final TextEditingController _priceController;
-  late final TextEditingController _stockController;
-
-  bool _isLoading = false;
+  late final AddProductLogic _logic;
   bool get _isEditMode => widget.productId != null;
 
   @override
   void initState() {
     super.initState();
-    _nameController = TextEditingController();
-    _descriptionController = TextEditingController();
-    _priceController = TextEditingController();
-    _stockController = TextEditingController();
+    _logic = AddProductLogic();
+    _logic.initControllers();
 
     if (_isEditMode) {
-      _loadProductData();
+      _logic.loadProductData(widget.productId!, (fn) => setState(fn));
     }
   }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _descriptionController.dispose();
-    _priceController.dispose();
-    _stockController.dispose();
+    _logic.disposeControllers();
     super.dispose();
-  }
-
-  Future<void> _loadProductData() async {
-    setState(() => _isLoading = true);
-    try {
-      final product = await _productService
-          .getProductsStream()
-          .expand((products) => products)
-          .firstWhere((product) => product.id == widget.productId);
-
-      _nameController.text = product.name;
-      _descriptionController.text = product.description;
-      _priceController.text = product.price.toStringAsFixed(0);
-      _stockController.text = product.stock.toString();
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal memuat data produk: $e')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
-  }
-
-  Future<void> _saveProduct() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    setState(() => _isLoading = true);
-
-    try {
-      final product = Product(
-        shopId: '',
-        id: _isEditMode ? widget.productId! : '',
-        name: _nameController.text,
-        description: _descriptionController.text,
-        price: double.tryParse(_priceController.text) ?? 0.0,
-        stock: int.tryParse(_stockController.text) ?? 0,
-        sellingPrice: 0.0,
-        purchasePrice: 0.0,
-      );
-
-      if (_isEditMode) {
-        await _productService.updateProduct(product);
-      } else {
-        await _productService.addProduct(product);
-      }
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Produk berhasil disimpan!')),
-        );
-        context.pop();
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal menyimpan produk: $e')),
-        );
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
-    }
   }
 
   @override
@@ -124,24 +44,38 @@ class _AddProductScreenState extends State<AddProductScreen> {
       appBar: AppBar(
         title: Text(_isEditMode ? 'Edit Produk' : 'Tambah Produk Baru'),
       ),
-      body: _isLoading && !_isEditMode
+      body: _logic.isLoading && !_isEditMode
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               padding: AppStyles.defaultScreenPadding,
-              child: ProductFormFields(
-                formKey: _formKey,
-                nameController: _nameController,
-                descriptionController: _descriptionController,
-                priceController: _priceController,
-                stockController: _stockController,
+              child: Column(
+                children: [
+                  ProductImagePicker(
+                    selectedImageFile: _logic.selectedImageFile,
+                    existingImageUrl: _logic.existingImageUrl,
+                    onPickImage: () => _logic.pickImage((fn) => setState(fn)),
+                  ),
+                  const SizedBox(height: 24),
+                  ProductFormFields(
+                    formKey: _logic.formKey,
+                    nameController: _logic.nameController,
+                    descriptionController: _logic.descriptionController,
+                    priceController: _logic.priceController,
+                    skuController: _logic.skuController,
+                    onScanPressed: () => _logic.scanBarcode((fn) => setState(fn)),
+                  ),
+                ],
               ),
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _isLoading ? null : _saveProduct,
-        label: _isLoading
-            ? const CircularProgressIndicator(color: Colors.white)
-            : Text(_isEditMode ? 'Simpan Perubahan' : 'Tambah Produk'),
-        icon: _isLoading ? null : const Icon(Icons.save),
+      floatingActionButton: ProductFormActions(
+        isLoading: _logic.isLoading,
+        isEditMode: _isEditMode,
+        onSavePressed: () => _logic.saveProduct(
+          context: context,
+          isEditMode: _isEditMode,
+          productId: widget.productId,
+          setStateParent: (fn) => setState(fn),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

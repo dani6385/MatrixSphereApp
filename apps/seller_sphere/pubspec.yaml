@@ -51,6 +51,8 @@ dependencies:
   apivideo_live_stream: ^1.2.0
   collection: ^1.19.1
   url_launcher: ^6.3.2
+  flutter_barcode_scanner: ^2.0.0
+  flutter_image_compress: ^2.5.1
   
 
 

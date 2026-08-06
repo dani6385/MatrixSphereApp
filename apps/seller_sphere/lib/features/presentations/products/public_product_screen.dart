@@ -1,7 +1,7 @@
 // lib/screens/products/public_product_screen.dart
 
 import 'package:flutter/material.dart';
-import 'add_product_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_services/shared_services.dart';
 import 'widgets/public_product_list.dart';
 
@@ -22,20 +22,14 @@ class _PublicProductScreenState extends State<PublicProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Stok Produk'),
+        title: const Text('Daftar Produk'),
       ),
       body: PublicProductList(
         productsStream: _productService.getProductsStream(),
       ),
       // Tombol untuk menambah produk baru
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navigasi ke halaman tambah produk.
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddProductScreen()),
-          );
-        },
+        onPressed: () => context.push('/add-product'),
         child: const Icon(Icons.add),
       ),
     );

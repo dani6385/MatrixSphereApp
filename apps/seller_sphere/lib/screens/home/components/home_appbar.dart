@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 final logger = Logger();
 
@@ -14,7 +15,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return AppBar(
       // Latar belakang transparan agar gradient dari body terlihat.[cite: 10]
-      backgroundColor: Colors.transparent,
+      backgroundColor: kTransparent,
       elevation: 0,
       
       // Tombol ikon di sebelah kiri untuk membuka Drawer utama
