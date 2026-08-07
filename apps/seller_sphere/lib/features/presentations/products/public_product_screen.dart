@@ -26,6 +26,7 @@ class _PublicProductScreenState extends State<PublicProductScreen> {
       ),
       body: PublicProductList(
         productsStream: _productService.getProductsStream(),
+        productService: _productService,
       ),
       // Tombol untuk menambah produk baru
       floatingActionButton: FloatingActionButton(
