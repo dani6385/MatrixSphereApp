@@ -32,7 +32,7 @@ List<RouteBase> buildFullscreenRoutes(GlobalKey<NavigatorState> rootNavigatorKey
       parentNavigatorKey: rootNavigatorKey,
       builder: (context, state) {
         final id = state.pathParameters['productId']!;
-        return ProductDetailScreen(productId: id);
+        return ProductDetailScreen(productId: id, shopId: '',);
       },
     ),
     GoRoute(

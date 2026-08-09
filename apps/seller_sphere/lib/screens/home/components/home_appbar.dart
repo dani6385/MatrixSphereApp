@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:seller_sphere/navigations/app_extractor.dart';
+
 import 'package:shared_ui/shared_ui.dart';
 
 final logger = Logger();
@@ -70,8 +71,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
             );
             Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                  builder: (context) => const ChatScreen()),
+              MaterialPageRoute(builder: (context) => const ChatScreen()),
             );
           },
         ),
@@ -81,8 +81,14 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: colorScheme.onSurface,
           ),
           onPressed: () {
-            // TODO: Tambahkan aksi ketika ikon chart diklik
-            logger.i('Ikon Chart diklik!');
+            logger
+                .i('Ikon Chart diklik! Navigasi ke Halaman Manajemen (Kasir).');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Membuka halaman kasir...')),
+            );
+            Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(builder: (context) => const ManagementScreen()),
+            );
           },
         ),
         IconButton(

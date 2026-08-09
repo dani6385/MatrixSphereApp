@@ -51,12 +51,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
     });
 
     // Dapatkan key terakhir dari produk yang sudah dimuat
-    final String? lastKey = _products.isEmpty ? null : _products.last.name;
+    final String? lastKey = _products.isEmpty ? null : _products.last.id;
 
     final newProducts = await _rtdbService.fetchProductsPage(
-      shopUid: widget.shopUid,
+      // PERBAIKAN: Gunakan shopUid dari widget, bukan string kosong.
+      shopId: widget.shopUid,
       pageSize: _pageSize,
-      startAfterKey: lastKey,
+      startAfterKey: lastKey, shopUid: '',
     );
 
     setState(() {
@@ -94,7 +95,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           final product = _products[index];
           return ListTile(
             title: Text(product.name),
-            trailing: Text('Rp ${product.price}'),
+            trailing: Text('Rp ${product.sellingPrice}'),
           );
         },
       ),

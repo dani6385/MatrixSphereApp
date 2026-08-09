@@ -225,7 +225,7 @@ class FirebaseRtdbService {
   Future<List<Product>> fetchProductsPage({
     required String shopUid,
     required int pageSize,
-    String? startAfterKey,
+    String? startAfterKey, required String shopId,
   }) async {
     final List<Product> products = [];
     final path = 'seller_sphere/$shopUid/produk';

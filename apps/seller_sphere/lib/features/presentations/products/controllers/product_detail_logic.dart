@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:seller_sphere/navigations/app_routes.dart';
 import 'package:shared_services/shared_services.dart';
 
 class ProductDetailLogic {
@@ -31,14 +30,17 @@ class ProductDetailLogic {
   }
 
   /// Menangani aksi ketika tombol edit ditekan
-  void onEditPressed(BuildContext context, String productId, VoidCallback onProductUpdated) {
-    context.push(
-      '${AppRoutes.productDetail}/edit', // Asumsi path edit adalah /products/{id}/edit
-      extra: productId, // Kirim productId sebagai 'extra'
-    ).then((_) {
-      // Panggil callback untuk memuat ulang detail produk setelah halaman edit ditutup
-      onProductUpdated();
-    });
+  Future<void> onEditPressed(BuildContext context, String productId, Function() reloadCallback) async {
+    // Pastikan produk tidak null sebelum menavigasi
+    if (product == null) return;
+
+    // Navigasi ke halaman edit dengan membawa objek produk yang sudah ada
+    // Ini memungkinkan halaman form untuk langsung diisi tanpa perlu fetch ulang.
+    final result = await context.push('/products/edit/$productId', extra: product);
+
+    if (result == true) {
+      reloadCallback();
+    }
   }
   /// Menghapus produk dari database setelah konfirmasi
   Future<void> deleteProduct(BuildContext context, String productId) async {

@@ -8,11 +8,11 @@ class EditProductLogic {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final ProductService productService = ProductService();
 
-  late final TextEditingController nameController;
-  late final TextEditingController descriptionController;
-  late final TextEditingController priceController;
-  late final TextEditingController stockController;
-  late final TextEditingController skuController;
+  late TextEditingController nameController;
+  late TextEditingController descriptionController;
+  late TextEditingController sellingPriceController; // Renamed for clarity
+  late TextEditingController stockController;
+  late TextEditingController skuController;
 
   bool isLoading = true;
   bool isSaving = false;
@@ -21,7 +21,7 @@ class EditProductLogic {
   void initControllers() {
     nameController = TextEditingController();
     descriptionController = TextEditingController();
-    priceController = TextEditingController();
+    sellingPriceController = TextEditingController(); // Initialized
     stockController = TextEditingController();
     skuController = TextEditingController();
   }
@@ -29,7 +29,7 @@ class EditProductLogic {
   void disposeControllers() {
     nameController.dispose();
     descriptionController.dispose();
-    priceController.dispose();
+    sellingPriceController.dispose(); // Disposed
     stockController.dispose();
     skuController.dispose();
   }
@@ -42,7 +42,7 @@ class EditProductLogic {
         product = fetchedProduct;
         nameController.text = fetchedProduct.name;
         descriptionController.text = fetchedProduct.description;
-        priceController.text = fetchedProduct.price.toString();
+        sellingPriceController.text = fetchedProduct.sellingPrice.toString(); // Load sellingPrice
         stockController.text = fetchedProduct.stock.toString();
         skuController.text = fetchedProduct.sku ?? '';
         isLoading = false;
@@ -60,7 +60,7 @@ class EditProductLogic {
       final updatedProduct = product!.copyWith(
         name: nameController.text,
         description: descriptionController.text,
-        price: double.tryParse(priceController.text) ?? product!.price,
+        sellingPrice: double.tryParse(sellingPriceController.text) ?? product!.sellingPrice, // Save to sellingPrice
         stock: int.tryParse(stockController.text) ?? product!.stock,
         sku: skuController.text,
       );

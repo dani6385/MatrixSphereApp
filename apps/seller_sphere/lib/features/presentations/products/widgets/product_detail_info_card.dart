@@ -31,7 +31,7 @@ class ProductDetailInfoCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Rp ${product.price.toStringAsFixed(0)}',
+              'Rp ${product.unitPrice.toStringAsFixed(0)}',
               style: textTheme.titleLarge?.copyWith(
                 color: kSuccess,
                 fontWeight: FontWeight.bold,

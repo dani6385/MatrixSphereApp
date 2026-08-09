@@ -3,12 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-
-
 import 'package:seller_sphere/navigations/app_routes.dart';
-
 import 'package:seller_sphere/navigations/app_extractor.dart';
-
 
 final Logger logger = Logger();
 
@@ -74,7 +70,7 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
         logger.i('Menu Products diklik!');
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
-            builder: (context) => const PublicProductScreen(),
+            builder: (context) => const ProductScreen(),
           ),
         );
       },
@@ -130,7 +126,7 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
         logger.i('Menu Riwayat diklik!');
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
-            builder: (context) => const TransactionHistoryScreen(),
+            builder: (context) => const HistoryScreen(),// transactionscreen
           ),
         );
       },

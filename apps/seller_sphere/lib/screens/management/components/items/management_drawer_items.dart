@@ -63,7 +63,7 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
         logger.i('Menu Products diklik!');
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
-            builder: (context) => const PublicProductScreen(),
+            builder: (context) => const ProductScreen(),
           ),
         );
       },
