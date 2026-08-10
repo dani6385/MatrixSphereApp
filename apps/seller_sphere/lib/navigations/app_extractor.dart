@@ -26,7 +26,7 @@ export 'package:seller_sphere/screens/home/home_screen.dart';
 // management
 export 'package:seller_sphere/screens/management/management_screen.dart';
 export 'package:seller_sphere/screens/management/widgets/scanner_screen.dart';
-export 'package:seller_sphere/screens/management/widgets/order_list_view.dart';
+export 'package:seller_sphere/screens/management/components/order_list_view.dart';
 export 'package:seller_sphere/screens/management/components/cashier_body.dart';
 export 'package:seller_sphere/screens/sellers/seller_screen.dart';
 export 'package:seller_sphere/screens/financials/financial_screen.dart';

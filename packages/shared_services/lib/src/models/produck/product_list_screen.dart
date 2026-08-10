@@ -57,7 +57,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
       // PERBAIKAN: Gunakan shopUid dari widget, bukan string kosong.
       shopId: widget.shopUid,
       pageSize: _pageSize,
-      startAfterKey: lastKey, shopUid: '',
+      startAfterKey: lastKey,
     );
 
     setState(() {

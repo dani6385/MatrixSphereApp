@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_ui/theme/app_colors.dart';
+import 'package:shared_ui/theme/app_theme.dart';
 
 /// Kumpulan gaya visual dan tema terpusat untuk aplikasi.
 ///
@@ -57,9 +58,8 @@ class AppStyles {
 
   /// Warna latar belakang default untuk Scaffold pada tema gelap.
   static List<Color> darkScaffoldBackgroundColor(BuildContext context) => [
-        Theme.of(context).colorScheme.surface,
-        Theme.of(context)
-            .colorScheme
+        context.cardColor,
+        context
             .surfaceContainerHighest
             .withValues(alpha: 0.3),
       ];

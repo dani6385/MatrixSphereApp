@@ -29,7 +29,7 @@ class ShopeItemCard extends StatelessWidget {
                   user.displayName?.substring(0, 1).toUpperCase() ?? 'U',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    color: context.onPrimaryContainer,
                   ),
                 )
               : null,

@@ -5,7 +5,7 @@ import 'package:shared_services/shared_services.dart';
 
 
 import 'cashier_body.dart';
-import '../widgets/order_list_view.dart';
+import 'order_list_view.dart';
 
 class ManagementBody extends StatefulWidget {
   const ManagementBody({super.key});

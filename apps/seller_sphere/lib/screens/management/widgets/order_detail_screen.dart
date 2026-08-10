@@ -121,8 +121,7 @@ class OrderDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Text(
         title,
-        style: Theme.of(context)
-            .textTheme
+        style: AppStyles
             .titleLarge
             ?.copyWith(fontWeight: FontWeight.bold),
       ),
@@ -138,15 +137,14 @@ class OrderDetailScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: AppStyles.bodyMedium,
           ),
           Text(
             value,
             style: valueStyle ??
-                Theme.of(context)
-                    .textTheme
+                AppStyles
                     .bodyMedium
-                    ?.copyWith(color: valueColor),
+                    .copyWith(color: valueColor),
           ),
         ],
       ),

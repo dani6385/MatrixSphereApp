@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
 import 'package:shared_ui/shared_ui.dart';
 
-import 'order_detail_screen.dart';
-import 'order_card.dart';
+import '../widgets/order_detail_screen.dart';
+import '../widgets/order_card.dart';
 
 /// Widget untuk menampilkan daftar pesanan dalam bentuk ListView.
 class OrderListView extends StatelessWidget {
