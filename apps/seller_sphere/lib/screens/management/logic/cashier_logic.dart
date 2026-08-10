@@ -52,7 +52,7 @@ class CashierLogic {
     if (index != -1 && cartItems[index].quantity < product.stock) {
       cartItems[index].quantity++;
     } else if (index == -1) {
-      cartItems.add(CartItem(product: product, quantity: 1));
+      cartItems.add(CartItem(product: product, quantity: 1, productId: '', productName: '', sellingPrice: 0.0));
     }
     return null;
   }
@@ -92,7 +92,6 @@ class CashierLogic {
   // ==========================================
   Order _buildOrderPayload(String paymentMethod, double total) {
     return Order(
-      id: '',
       orderDate: DateTime.now(),
       totalAmount: total,
       paymentMethod: paymentMethod,

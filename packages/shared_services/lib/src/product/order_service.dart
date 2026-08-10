@@ -18,7 +18,6 @@ class OrderService {
       final String newOrderId = newOrderRef.key ?? '';
 
       final orderWithId = Order(
-        id: newOrderId,
         orderId: newOrderId,
         orderDate: order.orderDate,
         totalAmount: order.totalAmount,
