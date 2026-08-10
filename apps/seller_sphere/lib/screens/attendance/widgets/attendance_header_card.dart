@@ -9,11 +9,11 @@ class AttendanceHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ownerName = context.watch<AppViewModel>().ownerName;
-    final colorScheme = Theme.of(context).colorScheme;
+    
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+      color: context.surfaceContainerHighest.withValues(alpha: 0.4),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -21,7 +21,7 @@ class AttendanceHeaderCard extends StatelessWidget {
             Icon(
               Icons.fingerprint_rounded,
               size: 48,
-              color: colorScheme.primary,
+              color: context.primary,
             ),
             const SizedBox(height: 12),
             Text(
@@ -32,7 +32,7 @@ class AttendanceHeaderCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               'Halo, $ownerName! Silakan lakukan absensi kehadiran harian Anda.',
-              style: context.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
+              style: context.textTheme.bodyMedium?.copyWith(color: context.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
           ],

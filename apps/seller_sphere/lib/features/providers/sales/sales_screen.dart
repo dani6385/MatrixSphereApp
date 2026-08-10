@@ -2,8 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'models/top_product_model.dart';
-import 'components/summary_card.dart';
+//import 'components/summary_card.dart' hide SummaryCard;
 
 /// Halaman untuk menampilkan laporan penjualan yang lebih detail.
 class SalestScreen extends StatefulWidget {
@@ -60,7 +61,7 @@ class _SalestScreenState extends State<SalestScreen> {
       children: [
         Text(
           'Ringkasan Penjualan',
-          style: Theme.of(context).textTheme.titleLarge,
+          style: AppStyles.titleLarge,
         ),
         const SizedBox(height: 16),
         Row(
@@ -71,7 +72,7 @@ class _SalestScreenState extends State<SalestScreen> {
                 value: NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ')
                     .format(_totalRevenue),
                 icon: Icons.attach_money,
-                color: Colors.green,
+                color: Colors.green, label: '', iconColor: Colors.white,
               ),
             ),
             const SizedBox(width: 16),
@@ -80,7 +81,7 @@ class _SalestScreenState extends State<SalestScreen> {
                 title: 'Total Pesanan',
                 value: _totalOrders.toString(),
                 icon: Icons.shopping_cart,
-                color: Colors.blue,
+                color: Colors.blue, label: '', iconColor: Colors.white,
               ),
             ),
           ],
@@ -95,7 +96,7 @@ class _SalestScreenState extends State<SalestScreen> {
       children: [
         Text(
           'Grafik Penjualan (7 Hari Terakhir)',
-          style: Theme.of(context).textTheme.titleLarge,
+          style: AppStyles.titleLarge,
         ),
         const SizedBox(height: 16),
         Card(
@@ -122,7 +123,7 @@ class _SalestScreenState extends State<SalestScreen> {
       children: [
         Text(
           'Produk Terlaris',
-          style: Theme.of(context).textTheme.titleLarge,
+          style: AppStyles.titleLarge,
         ),
         const SizedBox(height: 16),
         Card(

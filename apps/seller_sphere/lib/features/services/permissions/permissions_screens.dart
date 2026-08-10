@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 // Model sederhana untuk merepresentasikan sebuah peran (Role)
 class Role {
@@ -78,7 +79,7 @@ class _PermissionsScreenState extends State<PermissionsScreen> {
           return Card(
             margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
             child: ExpansionTile(
-              title: Text(role.name, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18)),
+              title: Text(role.name, style: AppStyles.titleLarge?.copyWith(fontSize: 18)),
               subtitle: Text(role.description),
               children: role.permissions.map((permission) {
                 return CheckboxListTile(

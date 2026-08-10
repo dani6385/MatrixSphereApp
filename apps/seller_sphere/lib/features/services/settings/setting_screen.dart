@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 
 
 import 'package:seller_sphere/navigations/app_extractor.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 final Logger logger = Logger();
 
@@ -167,8 +168,8 @@ class _SettingScreenState extends State<SettingScreen> {
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
+        style: AppStyles.bodyMedium.copyWith(
+              color: context.primary,
               fontWeight: FontWeight.bold,
             ),
       ),

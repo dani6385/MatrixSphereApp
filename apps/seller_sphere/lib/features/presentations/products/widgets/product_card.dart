@@ -23,7 +23,7 @@ class ProductCard extends StatelessWidget {
     final indicatorColor = _getStockIndicatorColor(product.stock);
 
     return Card(
-      color: Theme.of(context).cardColor,
+      color: context.cardColor,
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       child: ListTile(
         onTap: onTap, // <-- PASANG AKSI KLIK DI SINI

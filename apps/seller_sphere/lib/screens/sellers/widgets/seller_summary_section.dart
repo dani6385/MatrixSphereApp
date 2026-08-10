@@ -7,7 +7,6 @@ class SellerSummarySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
 
     // Contoh data statis
     const double totalSales = 12500000.0;
@@ -28,7 +27,7 @@ class SellerSummarySection extends StatelessWidget {
         Text(
           'Ringkasan Penjualan',
           style: AppStyles.headlineSmall.copyWith(
-            color: colorScheme.onSurface,
+            color: context.onSurface,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -87,7 +86,7 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    
 
     return Card(
       elevation: 2,
@@ -104,7 +103,7 @@ class _StatCard extends StatelessWidget {
                 Text(
                   title,
                   style: AppStyles.bodyMedium.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+                    color: context.onSurfaceVariant,
                   ),
                 ),
                 Icon(
@@ -117,7 +116,7 @@ class _StatCard extends StatelessWidget {
             Text(
               value,
               style: AppStyles.headlineMedium.copyWith(
-                color: colorScheme.onSurface,
+                color: context.onSurface,
                 fontWeight: FontWeight.bold,
               ),
             ),

@@ -22,7 +22,7 @@ class AttendanceHistoryHeader extends StatelessWidget {
         ),
         IconButton(
           onPressed: onSync,
-          icon: Icon(Icons.cloud_sync_outlined, color: Theme.of(context).colorScheme.primary),
+          icon: Icon(Icons.cloud_sync_outlined, color: context.primary),
           tooltip: 'Sinkronisasi Data',
         ),
       ],

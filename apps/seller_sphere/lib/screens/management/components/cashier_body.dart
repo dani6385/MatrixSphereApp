@@ -1,12 +1,10 @@
-// lib/screens/management/cashier_body.dart
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../widgets/cashier_bottom_panel.dart';
 import '../widgets/cashier_sort_dropdown.dart';
 import '../widgets/cashier_cart_list.dart';
-import '../mixins/cashier_actions_mixin.dart'; // Memisahkan aksi ke mixin
+import '../mixins/cashier_actions_mixin.dart';
 
 class CashierBody extends StatefulWidget {
   const CashierBody({super.key});
@@ -41,7 +39,8 @@ class _CashierBodyState extends State<CashierBody> with CashierActionsMixin {
       children: [
         CashierSortDropdown(
           currentSortOption: logic.currentSortOption,
-          onChanged: (val) => logic.changeSortOption(val, () => setState(() {})),
+          onChanged: (val) =>
+              logic.changeSortOption(val, () => setState(() {})),
         ),
         Expanded(
           child: CashierCartList(
@@ -59,10 +58,12 @@ class _CashierBodyState extends State<CashierBody> with CashierActionsMixin {
         ),
         CashierBottomPanel(
           searchController: logic.searchController,
-          onSearchTap: () => showProductSelection(context, () => setState(() {})),
+          onSearchTap: () =>
+              showProductSelection(context, () => setState(() {})),
           onScanBarcode: () => scanBarcode(context, () => setState(() {})),
           formattedTotal: formattedTotal,
-          onProcessPayment: (method) => processPayment(context, method, () => setState(() {})),
+          onProcessPayment: (method) =>
+              processPayment(context, method, () => setState(() {})),
         ),
       ],
     );

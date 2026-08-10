@@ -29,22 +29,22 @@ class HistoryCard extends StatelessWidget {
           children: [
             Text(
               'ID Transaksi: ${history.id}',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: AppStyles.primaryTitle(context.textTheme),
             ),
             const SizedBox(height: 8.0),
             Text(
               'Tanggal: ${formatter.format(history.date)}',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppStyles.secondarySubtitle(context.textTheme),
             ),
             const SizedBox(height: 8.0),
             Text(
               'Jumlah: ${currencyFormatter.format(history.amount)}',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppStyles.bodyMedium,
             ),
             const SizedBox(height: 8.0),
             Text(
               'Status: ${history.status}',
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              style: AppStyles.bodyMedium.copyWith(
                     color: history.status == 'Berhasil'
                         ? kSoftTeal
                         : history.status == 'Dibatalkan'

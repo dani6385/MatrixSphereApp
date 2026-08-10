@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Halaman untuk menampilkan pusat bantuan dan FAQ.
@@ -60,8 +61,8 @@ class HelpScreen extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
+        style: AppStyles.headlineSmall.copyWith(
+              color: context.primary,
               fontWeight: FontWeight.bold,
             ),
       ),
@@ -121,7 +122,10 @@ class _FaqTile extends StatelessWidget {
       child: ExpansionTile(
         title: Text(
           question,
-          style: Theme.of(context).textTheme.titleMedium,
+          style: AppStyles.bodyMedium.copyWith(
+            fontWeight: FontWeight.bold,
+            color: context.background,
+        ),
         ),
         children: [
           Padding(

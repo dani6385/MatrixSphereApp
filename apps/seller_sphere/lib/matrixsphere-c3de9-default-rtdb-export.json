@@ -1,0 +1,95 @@
+{
+  "approval": {
+    "toko_andika": {
+      "nama": "andika",
+      "status": "waiting"
+    }
+  },
+  "orders": {
+    "akuna_001": {
+      "buyerId": "ikmal",
+      "items": {
+        "baju": 25000,
+        "sepatu": 25000
+      },
+      "shopId": "toko_agan",
+      "status": "processing",
+      "totalAmount": 50000
+    }
+  },
+  "products": {
+    "-OzM1QK8_fhZ5jeGAjPi": {
+      "ageRating": 0,
+      "category": "",
+      "description": "three on one",
+      "imageUrl": "https://i.ibb.co/93Sjw12t/compressed-1786019138518.jpg",
+      "minStockThreshold": 0,
+      "name": "Indocafe",
+      "price": 3000,
+      "purchasePrice": 0,
+      "sellingPrice": 3000,
+      "shopId": "toko_agan",
+      "sku": "(90)MD040282004100033",
+      "soldCount": 0,
+      "stock": 20
+    },
+    "lampu": {
+      "ageRating": 0,
+      "category": "penerangan",
+      "description": "menerangi hidup dengan cahaya di malam hari",
+      "imageUrl": "https://i.ibb.co/z90RRYt/f349d6ed-d0b5-48d5-9a65-0d380030b0a28304905117000663864.jpg",
+      "minStockThreshold": 0,
+      "name": "lampu",
+      "price": 12000,
+      "purchasePrice": 0,
+      "sellingPrice": 12000,
+      "shopId": "toko_agan",
+      "stock": 50
+    }
+  },
+  "shop_sphere": {
+    "akuna_001": {
+      "buyerId": "ikmal"
+    },
+    "akun_002": {
+      "buyerId": "insom"
+    }
+  },
+  "attendance": {
+    "clockInTime": "16:24:34",
+    "clockOutTime": "16:24:54",
+    "dateString": "2026-07-21",
+    "name": "Dani",
+    "status": "Selesai"
+  },
+  "system": {
+    "pelanggaran": {
+      "toko_abang": {
+        "komplain": "status tinggal ambil setlah sampai masih dalam pengemasan"
+      },
+      "toko_agan": {
+        "komplain": "kualitas barang jelek"
+      }
+    },
+    "rekomendasi": {
+      "akuna": {
+        "bukti": "berupa gambar",
+        "seller": "toko_andika segera buka di seller sphere",
+        "tikor": "berupa titik koordinat"
+      },
+      "akunb": {
+        "bukti": "berupa gambar",
+        "seller": "toko_andika segera buka di seller sphere",
+        "tikor": "berupa titik koordinat"
+      }
+    }
+  },
+  "seeller_sphere": {
+    "toko_abang": {
+      "shopName": "Toko Aban Sejahtera"
+    },
+    "toko_agan": {
+      "shopName": "Toko Agan Sejahtera"
+    }
+  }
+}

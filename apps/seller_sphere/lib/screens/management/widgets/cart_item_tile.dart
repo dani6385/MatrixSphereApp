@@ -38,7 +38,7 @@ class CartItemTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Text(
               '${cartItem.quantity}',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: AppStyles.titleMedium,
             ),
           ),
           _buildQuantityButton(

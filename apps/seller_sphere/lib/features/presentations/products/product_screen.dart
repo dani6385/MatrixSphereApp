@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
+
 import 'widgets/product_list.dart';
 
 /// Layar untuk menampilkan ringkasan stok produk di gudang.
@@ -36,7 +38,8 @@ class _ProductScreenState extends State<ProductScreen> {
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
               child: Text('Hapus',
-                  style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                  style: AppStyles.bodyMedium
+                      .copyWith(color: context.colorScheme.error)),
             ),
           ],
         );

@@ -1,25 +1,24 @@
-
+// lib/screens/management/components/seller_quick_actions_grid.dart
 import 'package:flutter/material.dart';
-import 'package:shared_ui/shared_ui.dart';
+import '../models/quick_action_data.dart'; // Sesuaikan path import model
+import 'quick_action_card.dart'; // Sesuaikan path import kartu
 
 class SellerQuickActionsGrid extends StatelessWidget {
   const SellerQuickActionsGrid({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     // Data untuk aksi cepat
-    final List<_QuickActionCardData> quickActions = [
-      _QuickActionCardData(
+    final List<QuickActionCardData> quickActions = [
+      QuickActionCardData(
         title: 'Tambah Produk',
         icon: Icons.add_box,
         description: 'Tambahkan produk baru ke toko Anda.',
         onTap: () {
-          // Aksi ketika kartu diklik
           debugPrint('Tambah Produk clicked');
         },
       ),
-      _QuickActionCardData(
+      QuickActionCardData(
         title: 'Kelola Pesanan',
         icon: Icons.receipt_long,
         description: 'Lihat dan proses pesanan yang masuk.',
@@ -27,7 +26,7 @@ class SellerQuickActionsGrid extends StatelessWidget {
           debugPrint('Kelola Pesanan clicked');
         },
       ),
-      _QuickActionCardData(
+      QuickActionCardData(
         title: 'Lihat Laporan',
         icon: Icons.bar_chart,
         description: 'Akses laporan penjualan dan performa toko.',
@@ -35,7 +34,7 @@ class SellerQuickActionsGrid extends StatelessWidget {
           debugPrint('Lihat Laporan clicked');
         },
       ),
-      _QuickActionCardData(
+      QuickActionCardData(
         title: 'Pengaturan Toko',
         icon: Icons.settings,
         description: 'Sesuaikan pengaturan toko Anda.',
@@ -52,12 +51,12 @@ class SellerQuickActionsGrid extends StatelessWidget {
         crossAxisCount: 2,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: 0.9, // Sesuaikan rasio aspek agar konten pas
+        childAspectRatio: 0.9,
       ),
       itemCount: quickActions.length,
       itemBuilder: (context, index) {
         final action = quickActions[index];
-        return _QuickActionCard(
+        return QuickActionCard(
           title: action.title,
           icon: action.icon,
           description: action.description,
@@ -66,76 +65,4 @@ class SellerQuickActionsGrid extends StatelessWidget {
       },
     );
   }
-}
-
-class _QuickActionCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final String description;
-  final VoidCallback onTap;
-
-  const _QuickActionCard({
-    required this.title,
-    required this.icon,
-    required this.description,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(
-                icon,
-                color: colorScheme.primary,
-                size: 32,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: AppStyles.dateDisplay(Theme.of(context).textTheme).copyWith(
-                  color: colorScheme.onSurface,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                description,
-                style: AppStyles.secondarySubtitle(Theme.of(context).textTheme).copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _QuickActionCardData {
-  final String title;
-  final IconData icon;
-  final String description;
-  final VoidCallback onTap;
-
-  _QuickActionCardData({
-    required this.title,
-    required this.icon,
-    required this.description,
-    required this.onTap,
-  });
 }

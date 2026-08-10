@@ -13,11 +13,11 @@ class HomeWelcomeHeader extends StatelessWidget {
       children: [
         Text(
           'Selamat Datang Kembali,',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: kDarkTextSecondary),
+          style: AppStyles.titleMedium?.copyWith(color: kDarkTextSecondary),
         ),
         Text(
           sellerName,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: AppStyles.headlineMedium.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );

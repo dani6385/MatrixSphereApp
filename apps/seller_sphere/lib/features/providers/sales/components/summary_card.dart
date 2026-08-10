@@ -1,6 +1,7 @@
 // lib/features/presentations/reports/components/summary_card.dart
 
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// Kartu ringkasan kustom untuk menampilkan data statistik.
 class SummaryCard extends StatelessWidget {
@@ -33,8 +34,7 @@ class SummaryCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               value,
-              style: Theme.of(context)
-                  .textTheme
+              style: AppStyles
                   .titleLarge
                   ?.copyWith(fontWeight: FontWeight.bold),
               overflow: TextOverflow.ellipsis,

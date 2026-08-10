@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 import 'order_detail_screen.dart';
 import 'order_card.dart';
@@ -24,15 +25,14 @@ class OrderListView extends StatelessWidget {
               Icon(Icons.inbox_outlined, size: 64, color: Colors.grey.shade400),
               const SizedBox(height: 16),
               Text('Belum ada pesanan masuk',
-                  style: Theme.of(context).textTheme.titleLarge),
+                  style: AppStyles.titleLarge),
               const SizedBox(height: 8),
               Text(
                 'Semua pesanan baru dari pelanggan akan ditampilkan di sini.',
                 textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
+                style: AppStyles
                     .bodyMedium
-                    ?.copyWith(color: Colors.grey.shade600),
+                    .copyWith(color: Colors.grey.shade600),
               ),
             ],
           ),

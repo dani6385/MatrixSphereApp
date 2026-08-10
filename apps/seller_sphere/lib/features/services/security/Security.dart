@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// Halaman untuk menampilkan pengaturan keamanan akun.
 class SecurityScreen extends StatefulWidget {
@@ -70,8 +71,8 @@ class _SecurityScreenState extends State<SecurityScreen> {
       padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
+        style: AppStyles.bodyMedium.copyWith(
+              color: context.primary,
               fontWeight: FontWeight.bold,
             ),
       ),

@@ -49,7 +49,7 @@ class StreamingChatInput extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             CircleAvatar(
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: context.primaryColor,
               child: IconButton(
                 icon: const Icon(Icons.send, color: kLightBackground),
                 onPressed: onSendMessage,

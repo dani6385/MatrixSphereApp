@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// A chip-like button for quick actions on the home screen.
 class QuickActionChip extends StatelessWidget {
@@ -21,11 +22,15 @@ class QuickActionChip extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, size: 28, color: Theme.of(context).colorScheme.onSurface),
+          Icon(icon, size: 28, color: context.onSurface),
           const SizedBox(height: 8),
-          Text(label, style: Theme.of(context).textTheme.bodySmall),
+          Text(label, style: AppStyles.bodySmall),
         ],
       ),
     );
   }
+}
+
+extension on BuildContext {
+  
 }

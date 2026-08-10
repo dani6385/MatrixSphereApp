@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// Halaman untuk menampilkan informasi tentang aplikasi Seller Sphere.
 class InfoScreen extends StatelessWidget {
@@ -20,17 +21,17 @@ class InfoScreen extends StatelessWidget {
             Icon(
               Icons.storefront_outlined, // Ikon yang relevan dengan seller
               size: 80,
-              color: Theme.of(context).colorScheme.primary,
+              color: context.primary,
             ),
             const SizedBox(height: 20),
             Text(
               'Seller Sphere',
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: AppStyles.primaryTitle(context.textTheme),
             ),
             const SizedBox(height: 8),
             Text(
               'Versi 1.0.0', // Anda bisa menggantinya dengan versi dinamis
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppStyles.secondarySubtitle(context.textTheme),
             ),
             const Divider(height: 40),
             const Text(

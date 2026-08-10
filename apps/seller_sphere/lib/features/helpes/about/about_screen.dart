@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// Halaman untuk menampilkan informasi tentang aplikasi.
 class AboutScreen extends StatelessWidget {
@@ -18,12 +19,18 @@ class AboutScreen extends StatelessWidget {
           children: [
             Text(
               'Seller Sphere', // Placeholder for app name
-              style: Theme.of(context).textTheme.headlineSmall,
+              style: AppStyles.headlineMedium.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.cardColor,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               'Versi: 1.0.0 (Build 1)', // Placeholder for app version
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: AppStyles.bodyMedium.copyWith(
+                fontWeight: FontWeight.bold,
+                color: context.cardColor,
+              ),
             ),
             const SizedBox(height: 16),
             const Text(
@@ -55,7 +62,7 @@ class AboutScreen extends StatelessWidget {
               child: Icon(
                 Icons.store, // Placeholder for an app icon
                 size: 80,
-                color: Theme.of(context).colorScheme.primary,
+                color: context.primary,
               ),
             ),
             const SizedBox(height: 20),

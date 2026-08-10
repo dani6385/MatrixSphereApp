@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// Widget untuk menampilkan satu item produk dalam daftar inventaris.
 /// Memungkinkan pengguna untuk memperbarui stoknya langsung.
@@ -58,14 +59,14 @@ class _InventoryItemCardState extends State<InventoryItemCard> {
                 children: [
                   Text(
                     widget.product.name,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: AppStyles.primaryTitle(context.textTheme),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Harga: Rp ${widget.product.sellingPrice}',
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: AppStyles.dateDisplay(context.textTheme),
                   ),
                   const SizedBox(height: 8),
                   Form(

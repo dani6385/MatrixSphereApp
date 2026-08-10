@@ -18,7 +18,7 @@ class AttendanceHistorySection extends StatelessWidget {
     if (attendanceHistory.isEmpty) {
       return Card(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        color: Theme.of(context).colorScheme.surfaceContainer.withValues(alpha: 0.5),
+        color: context.surfaceContainer.withValues(alpha: 0.5),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
           child: Column(
@@ -26,7 +26,7 @@ class AttendanceHistorySection extends StatelessWidget {
               Icon(
                 Icons.event_note_outlined,
                 size: 40,
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: context.onSurfaceVariant,
               ),
               const SizedBox(height: 12),
               Text(

@@ -13,7 +13,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
 
     return AppBar(
       // Latar belakang transparan agar gradient dari body terlihat.[cite: 10]
@@ -24,7 +23,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: Icon(
           Icons.person_outline, // Ikon garis tiga standar untuk Drawer
-          color: colorScheme.onSurface,
+          color: context.onSurface,
         ),
         onPressed: () {
           // Perintah untuk membuka Drawer dari sisi kiri
@@ -36,7 +35,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         'Home',
         style: TextStyle(
-          color: colorScheme.onSurface,
+          color: context.onSurface,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -47,7 +46,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.notifications_outlined,
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           onPressed: () {
             logger.i('Ikon Pesan diklik!');
@@ -63,7 +62,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.message_outlined,
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           onPressed: () {
             logger.i('Ikon Pesan diklik!');
@@ -78,7 +77,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.bar_chart_outlined,
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           onPressed: () {
             logger
@@ -94,7 +93,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.settings, // Ikon profil atau akun untuk EndDrawer
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           onPressed: () {
             // Perintah untuk membuka EndDrawer dari sisi kanan

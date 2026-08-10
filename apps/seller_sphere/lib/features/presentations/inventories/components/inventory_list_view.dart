@@ -2,13 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
 //import 'package:seller_sphere/navigations/app_extractor.dart';
 import 'inventory_item_card.dart';
 
 /// Widget untuk menampilkan daftar produk inventaris dalam bentuk ListView.
 class InventoryListView extends StatelessWidget {
   final List<Product> products;
-  final Function(Product product, int newStock) onStockUpdateCallback; // Changed signature
+  final Function(Product product, int newStock)
+      onStockUpdateCallback; // Changed signature
 
   const InventoryListView({
     super.key,
@@ -26,14 +28,18 @@ class InventoryListView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey.shade400),
+              Icon(Icons.inventory_2_outlined,
+                  size: 64, color: Colors.grey.shade400),
               const SizedBox(height: 16),
-              Text('Belum Ada Produk', style: Theme.of(context).textTheme.titleLarge),
+              Text('Belum Ada Produk',
+                  style: AppStyles.headlineMedium
+                      .copyWith(color: Colors.grey.shade600)),
               const SizedBox(height: 8),
               Text(
                 'Produk yang Anda tambahkan akan muncul di sini untuk manajemen stok.',
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade600),
+                style:
+                    AppStyles.bodyMedium.copyWith(color: Colors.grey.shade600),
               ),
             ],
           ),

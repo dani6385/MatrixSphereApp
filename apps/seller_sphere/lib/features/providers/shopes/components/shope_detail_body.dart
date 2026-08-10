@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/features/domain/entities/user.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// Komponen body untuk menampilkan detail informasi pelanggan.
 class ShopeDetailBody extends StatelessWidget {
@@ -9,9 +10,6 @@ class ShopeDetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
-
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -22,7 +20,7 @@ class ShopeDetailBody extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 50,
-                  backgroundColor: colorScheme.primaryContainer,
+                  backgroundColor: context.primaryContainer,
                   backgroundImage:
                       (user.photoURL != null && user.photoURL!.isNotEmpty)
                           ? NetworkImage(user.photoURL!)
@@ -31,8 +29,8 @@ class ShopeDetailBody extends StatelessWidget {
                       ? Text(
                           user.displayName?.substring(0, 1).toUpperCase() ??
                               'U',
-                          style: textTheme.headlineLarge?.copyWith(
-                            color: colorScheme.onPrimaryContainer,
+                          style: AppStyles.headlineSmall.copyWith(
+                            color: context.onPrimaryContainer,
                           ),
                         )
                       : null,
@@ -40,14 +38,14 @@ class ShopeDetailBody extends StatelessWidget {
                 const SizedBox(height: 16),
                 Text(
                   user.displayName ?? 'Nama Tidak Tersedia',
-                  style: textTheme.headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: AppStyles.headlineSmall
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   user.email ?? 'Email tidak tersedia',
-                  style: textTheme.bodyLarge
-                      ?.copyWith(color: colorScheme.onSurfaceVariant),
+                  style: AppStyles.bodyLarge
+                      ?.copyWith(color: context.onSurfaceVariant),
                 ),
               ],
             ),
@@ -57,7 +55,7 @@ class ShopeDetailBody extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'Informasi Kontak',
-            style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: AppStyles.titleMedium.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           _buildInfoTile(
@@ -75,7 +73,7 @@ class ShopeDetailBody extends StatelessWidget {
           const SizedBox(height: 24),
           Text(
             'Riwayat Transaksi',
-            style: textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: AppStyles.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           const Center(
@@ -95,9 +93,11 @@ class ShopeDetailBody extends StatelessWidget {
       required String subtitle}) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+      leading: Icon(icon, color: context.primary),
       title: Text(title),
-      subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodyLarge),
+      subtitle: Text(subtitle,
+          style:
+              AppStyles.bodyMedium.copyWith(color: context.onSurfaceVariant)),
     );
   }
 }
