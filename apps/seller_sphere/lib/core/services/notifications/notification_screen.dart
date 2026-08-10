@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// A screen to display a list of notifications.
 class NotificationScreen extends StatelessWidget {
@@ -17,10 +18,15 @@ class NotificationScreen extends StatelessWidget {
             Icon(
               Icons.notifications_off_outlined,
               size: 80,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+              color: context.cardColor
+                  .withValues(alpha: 0.5),
             ),
             const SizedBox(height: 16),
-            Text('Tidak ada notifikasi baru', style: Theme.of(context).textTheme.titleMedium),
+            Text('Tidak ada notifikasi baru',
+                style: AppStyles.bodyMedium.copyWith(
+                  color:
+                      context.cardColor.withOpacity(0.7),
+                )),
           ],
         ),
       ),

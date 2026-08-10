@@ -31,7 +31,13 @@ class ProductDetailLogic {
 
   /// Menangani aksi ketika tombol edit ditekan
   Future<void> onEditPressed(BuildContext context, String productId, Function() reloadCallback) async {
-    final result = await context.push('/products/edit/$productId');
+    // Pastikan produk tidak null sebelum menavigasi
+    if (product == null) return;
+
+    // Navigasi ke halaman edit dengan membawa objek produk yang sudah ada
+    // Ini memungkinkan halaman form untuk langsung diisi tanpa perlu fetch ulang.
+    final result = await context.push('/products/edit/$productId', extra: product);
+
     if (result == true) {
       reloadCallback();
     }

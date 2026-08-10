@@ -14,7 +14,7 @@ class ProductDetailBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+
 
     return StreamBuilder<Product?>(
       stream: productStream,
@@ -24,10 +24,10 @@ class ProductDetailBody extends StatelessWidget {
         }
 
         if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-          return Center(
+          return const Center(
             child: Text(
               'Gagal memuat produk atau produk tidak ditemukan.',
-              style: textTheme.bodyLarge,
+              style: AppStyles.bodyMedium,
             ),
           );
         }
@@ -43,16 +43,19 @@ class ProductDetailBody extends StatelessWidget {
               const SizedBox(height: 24),
               Text(
                 product.name,
-                style: textTheme.displaySmall?.copyWith(fontWeight: FontWeight.bold),
+                style: AppStyles.headlineSmall
+                    .copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               ProductDetailInfoCard(product: product),
               const SizedBox(height: 24),
-              Text('Deskripsi', style: textTheme.titleMedium),
+              Text('Deskripsi',
+                  style: AppStyles.bodyMedium
+                      .copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               Text(
                 product.description,
-                style: textTheme.bodyLarge?.copyWith(color: kDarkTextSecondary),
+                style: AppStyles.bodyMedium.copyWith(color: kDarkTextSecondary),
               ),
             ],
           ),

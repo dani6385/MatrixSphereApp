@@ -1,11 +1,8 @@
-
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
 
-
 import 'cashier_body.dart';
-import '../widgets/order_list_view.dart';
+import 'order_list_view.dart';
 
 class ManagementBody extends StatefulWidget {
   const ManagementBody({super.key});
@@ -17,11 +14,25 @@ class ManagementBody extends StatefulWidget {
 class _ManagementBodyState extends State<ManagementBody>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  String? _shopId;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _fetchShopId();
+  }
+
+  Future<void> _fetchShopId() async {
+    final authService = AuthService();
+    final id = await authService.getCurrentShopId();
+    if (mounted) {
+      setState(() {
+        _shopId = id;
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -42,43 +53,20 @@ class _ManagementBodyState extends State<ManagementBody>
           ],
         ),
         Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: [
-              _buildOrderList(),
-              const CashierBody(),
-            ],
-          ),
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : _shopId == null
+                  ? const Center(child: Text('Toko tidak ditemukan.'))
+                  : TabBarView(
+                      controller: _tabController,
+                      children: [
+                        // Gunakan _shopId yang sudah didapat secara dinamis
+                        OrderListView(shopId: _shopId!),
+                        const CashierBody(),
+                      ],
+                    ),
         ),
       ],
     );
   }
-}
-
-Widget _buildOrderList() {
-  // Asumsi FirebaseRtdbService memiliki getter 'ordersRef'
-  final DatabaseReference ordersRef = FirebaseRtdbService().ordersRef;
-
-  return StreamBuilder<DatabaseEvent>(
-    stream: ordersRef.onValue,
-    builder: (context, snapshot) {
-      if (snapshot.hasError) {
-        return Center(child: Text('Terjadi kesalahan: ${snapshot.error}'));
-      }
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      }
-      final data = snapshot.data?.snapshot.value;
-      if (data == null || (data is Map && data.isEmpty)) {
-        return const Center(child: Text('Belum ada orderan masuk.'));
-      }
-
-      final ordersMap = Map<String, dynamic>.from(data as Map);
-      final List<Order> orders = ordersMap.entries.map((entry) {
-        return Order.fromMap(Map<String, dynamic>.from(entry.value), entry.key);
-      }).toList();
-
-      return OrderListView(orders: orders);
-    },
-  );
 }

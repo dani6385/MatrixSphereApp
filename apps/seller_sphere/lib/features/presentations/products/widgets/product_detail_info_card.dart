@@ -19,20 +19,19 @@ class ProductDetailInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final colorScheme = Theme.of(context).colorScheme;
+    
     final stockColor = _getStockIndicatorColor(product.stock);
 
     return Card(
-      color: colorScheme.surface,
+      color: context.surface,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Rp ${product.price.toStringAsFixed(0)}',
-              style: textTheme.titleLarge?.copyWith(
+              'Rp ${product.unitPrice.toStringAsFixed(0)}',
+              style: AppStyles.headlineMedium.copyWith(
                 color: kSuccess,
                 fontWeight: FontWeight.bold,
               ),
@@ -45,7 +44,7 @@ class ProductDetailInfoCard extends StatelessWidget {
               ),
               child: Text(
                 'Stok: ${product.stock}',
-                style: textTheme.bodyMedium?.copyWith(
+                style: AppStyles.bodyLarge.copyWith(
                   color: stockColor,
                   fontWeight: FontWeight.bold,
                 ),

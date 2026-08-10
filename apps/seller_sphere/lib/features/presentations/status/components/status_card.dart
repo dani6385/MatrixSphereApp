@@ -1,6 +1,7 @@
 // lib/features/presentations/status/widgets/status_card.dart
 
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 /// Widget kartu yang dapat digunakan kembali untuk menampilkan satu item status.
 class StatusCard extends StatelessWidget {
@@ -27,7 +28,7 @@ class StatusCard extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           children: [
-            Icon(icon, size: 36, color: Theme.of(context).colorScheme.primary),
+            Icon(icon, size: 36, color: context.colorScheme.primary),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -35,15 +36,16 @@ class StatusCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: context.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     value,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          color: valueColor ?? Theme.of(context).colorScheme.onSurface,
+                    style: AppStyles.headlineSmall.copyWith(
+                          color: valueColor ??
+                              context.colorScheme.onSurface,
                           fontWeight: FontWeight.bold,
                         ),
                   ),

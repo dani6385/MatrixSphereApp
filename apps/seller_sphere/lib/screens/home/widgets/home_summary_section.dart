@@ -18,14 +18,18 @@ class HomeSummarySection extends StatelessWidget {
         SummaryCard(
           icon: Icons.monetization_on_outlined,
           value: 'Rp 1.2Jt',
-          label: 'Pendapatan Hari Ini',
-          iconColor: AppColors.success,
+          title: 'Pendapatan Hari Ini', // Use title for the main text
+          color: Colors.green, // Provide a non-null color for the card background
+          label: '', // Keep label empty for consistency with sales_screen.dart
+          iconColor: Colors.white, // Use white icon for better contrast on colored card
         ),
         SummaryCard(
           icon: Icons.shopping_cart_outlined,
           value: '12',
-          label: 'Pesanan Baru',
-          iconColor: AppColors.info,
+          title: 'Pesanan Baru', // Use title for the main text
+          color: Colors.blue, // Provide a non-null color for the card background
+          label: '', // Keep label empty for consistency with sales_screen.dart
+          iconColor: Colors.white, // Use white icon for better contrast on colored card
         ),
       ],
     );

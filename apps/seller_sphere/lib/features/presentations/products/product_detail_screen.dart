@@ -8,7 +8,7 @@ import 'controllers/product_detail_logic.dart'; // Impor file logika baru
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
 
-  const ProductDetailScreen({super.key, required this.productId});
+  const ProductDetailScreen({super.key, required this.productId, required String shopId});
 
   @override
   State<ProductDetailScreen> createState() => _ProductDetailScreenState();
@@ -107,8 +107,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             const SizedBox(height: 16),
             Text(product.name, style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 8),
-            Text(
-              'Rp ${product.price.toStringAsFixed(2)}',
+            Text( // Display sellingPrice to the customer
+              'Rp ${product.sellingPrice.toStringAsFixed(2)}',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.bold,

@@ -37,7 +37,7 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       onTap: () {
         logger.i('Menu Status Toko diklik!');
         Navigator.of(context, rootNavigator: true).push(
-          MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          MaterialPageRoute(builder: (context) => const UserProfileScreen()),
         );
       },
     ),

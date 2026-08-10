@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:seller_sphere/navigations/app_extractor.dart';
+
 import 'package:shared_ui/shared_ui.dart';
 
 final logger = Logger();
@@ -12,7 +13,6 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
 
     return AppBar(
       // Latar belakang transparan agar gradient dari body terlihat.[cite: 10]
@@ -23,7 +23,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: Icon(
           Icons.person_outline, // Ikon garis tiga standar untuk Drawer
-          color: colorScheme.onSurface,
+          color: context.onSurface,
         ),
         onPressed: () {
           // Perintah untuk membuka Drawer dari sisi kiri
@@ -35,7 +35,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         'Home',
         style: TextStyle(
-          color: colorScheme.onSurface,
+          color: context.onSurface,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -46,7 +46,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.notifications_outlined,
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           onPressed: () {
             logger.i('Ikon Pesan diklik!');
@@ -62,7 +62,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.message_outlined,
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           onPressed: () {
             logger.i('Ikon Pesan diklik!');
@@ -70,25 +70,30 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
               const SnackBar(content: Text('Navigasi ke halaman Bahasa.')),
             );
             Navigator.of(context, rootNavigator: true).push(
-              MaterialPageRoute(
-                  builder: (context) => const ChatScreen()),
+              MaterialPageRoute(builder: (context) => const ChatScreen()),
             );
           },
         ),
         IconButton(
           icon: Icon(
             Icons.bar_chart_outlined,
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           onPressed: () {
-            // TODO: Tambahkan aksi ketika ikon chart diklik
-            logger.i('Ikon Chart diklik!');
+            logger
+                .i('Ikon Chart diklik! Navigasi ke Halaman Manajemen (Kasir).');
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Membuka halaman kasir...')),
+            );
+            Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(builder: (context) => const ManagementScreen()),
+            );
           },
         ),
         IconButton(
           icon: Icon(
             Icons.settings, // Ikon profil atau akun untuk EndDrawer
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           onPressed: () {
             // Perintah untuk membuka EndDrawer dari sisi kanan

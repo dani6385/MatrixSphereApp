@@ -8,6 +8,7 @@ import 'package:seller_sphere/screens/attendance/widgets/attendance_scanner_widg
 import 'package:seller_sphere/screens/attendance/widgets/attendance_action_buttons.dart';
 import 'package:seller_sphere/screens/attendance/widgets/attendance_history_header.dart';
 import 'package:seller_sphere/screens/attendance/widgets/attendance_history_section.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class AttendanceBody extends StatelessWidget {
   final bool isScanning;
@@ -49,8 +50,8 @@ class AttendanceBody extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+            context.surface,
+            context.surfaceContainerHighest.withValues(alpha: 0.3),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

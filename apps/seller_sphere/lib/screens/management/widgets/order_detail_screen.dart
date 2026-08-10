@@ -11,7 +11,7 @@ class OrderDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final textTheme = context.textTheme;
     final formattedDate =
         DateFormat('dd MMM yyyy, HH:mm', 'id_ID').format(order.orderDate);
     final formattedPrice =
@@ -58,10 +58,12 @@ class OrderDetailScreen extends StatelessWidget {
                     _buildDetailRow(context, 'Email', order.customerEmail),
                     _buildDetailRow(context, 'Telepon', order.customerPhone),
                   ],
-                ),              ),
+                ),
+              ),
             ),
             const SizedBox(height: AppSpacing.lg),
-            _buildSectionTitle(context, 'Detail Produk'),            Card(
+            _buildSectionTitle(context, 'Detail Produk'),
+            Card(
               margin: EdgeInsets.zero,
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.md),
@@ -96,9 +98,9 @@ class OrderDetailScreen extends StatelessWidget {
                         context,
                         'Subtotal',
                         NumberFormat.currency(
-                                locale:                                'id_ID',
+                                locale: 'id_ID',
                                 symbol: 'Rp ',
-                                decimalDigits:0)
+                                decimalDigits: 0)
                             .format(order.totalAmount)),
                     const Divider(height: AppSpacing.lg),
                     _buildDetailRow(context, 'Total', formattedPrice,

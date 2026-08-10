@@ -10,7 +10,7 @@ class HomeSectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       title,
-      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+      style: AppStyles.titleMedium?.copyWith(
             fontWeight: FontWeight.bold,
             color: kDarkTextSecondary,
           ),

@@ -1,13 +1,14 @@
 // lib/features/attendance/presentation/widgets/attendance_app_bar.dart
 
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
   const AttendanceAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    
 
     return AppBar(
       // Latar belakang transparan agar gradient dari body terlihat.
@@ -18,7 +19,7 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: IconButton(
         icon: Icon(
           Icons.fingerprint, // Ikon sidik jari khusus halaman attendance
-          color: colorScheme.onSurface,
+          color: context.onSurface,
         ),
         tooltip: 'Buka Menu Navigasi',
         onPressed: () {
@@ -31,7 +32,7 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         'Presensi Kehadiran',
         style: TextStyle(
-          color: colorScheme.onSurface,
+          color: context.onSurface,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -42,7 +43,7 @@ class AttendanceAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.calendar_today, // Ikon kalender untuk riwayat/jadwal kerja
-            color: colorScheme.onSurface,
+            color: context.onSurface,
           ),
           tooltip: 'Buka Kalender & Riwayat',
           onPressed: () {

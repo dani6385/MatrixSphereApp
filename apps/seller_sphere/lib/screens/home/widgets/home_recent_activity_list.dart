@@ -9,7 +9,7 @@ class HomeRecentActivityList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: Theme.of(context).colorScheme.surface,
+      color: context.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
         children: [
@@ -19,7 +19,7 @@ class HomeRecentActivityList extends StatelessWidget {
             subtitle: 'dari Budi',
             color: kAccent,
           ),
-          Divider(height: 1, color: Theme.of(context).dividerColor),
+          Divider(height: 1, color: context.dividerColor),
           const ActivityListTile(
             icon: Icons.warning_amber_rounded,
             title: 'Stok menipis',

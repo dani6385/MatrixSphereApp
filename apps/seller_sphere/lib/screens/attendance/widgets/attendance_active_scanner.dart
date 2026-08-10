@@ -2,6 +2,7 @@
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class AttendanceActiveScanner extends StatelessWidget {
   final CameraController? cameraController;
@@ -42,10 +43,10 @@ class AttendanceActiveScanner extends StatelessWidget {
               child: Container(
                 height: 2,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.primary,
                   boxShadow: [
                     BoxShadow(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: context.primary,
                       blurRadius: 5,
                       spreadRadius: 2,
                     ),

@@ -33,8 +33,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     if (_isEditMode) {
       _logic.loadProductData(widget.productId!).then((_) {
         // Logika pengaman jika produk ternyata tidak ditemukan di database
-        if (_logic.skuController.text.isEmpty && mounted) {
-          // Opsional: Tangani jika data produk kosong
+        if (mounted) {
+          setState(() {
+            // setState ini memberi tahu UI untuk menggambar ulang
+            // setelah controller terisi data dari database/logic
+          });
         }
       });
     }
@@ -82,14 +85,19 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               ),
             ),
       // Tombol Aksi Simpan di bagian bawah layar
-      floatingActionButton: ProductFormActions(
-        isLoading: _logic.isLoading.value,
-        isEditMode: _isEditMode,
-        onSavePressed: () => _logic.saveProduct(
-          context: context,
-          isEditMode: _isEditMode,
-          productId: widget.productId,
-        ),
+      floatingActionButton: ValueListenableBuilder<bool>(
+        valueListenable: _logic.isLoading,
+        builder: (context, isLoading, child) {
+          return ProductFormActions(
+            isLoading: isLoading,
+            isEditMode: _isEditMode,
+            onSavePressed: () => _logic.saveProduct(
+              context: context,
+              isEditMode: _isEditMode,
+              productId: widget.productId,
+            ),
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

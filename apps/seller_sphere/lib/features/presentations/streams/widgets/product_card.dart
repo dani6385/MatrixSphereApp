@@ -65,7 +65,7 @@ class ProductCard extends StatelessWidget {
                   ),
                   Text(
                     NumberFormat.currency(locale: 'id_ID', symbol: 'Rp ')
-                        .format(product.price),
+                        .format(product.unitPrice),
                     style: const TextStyle(
                       fontSize: 10,
                       color: kLightBackground,

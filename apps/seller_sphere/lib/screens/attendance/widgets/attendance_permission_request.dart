@@ -18,11 +18,13 @@ class AttendancePermissionRequest extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.videocam_off_outlined, size: 48, color: Theme.of(context).colorScheme.error),
+          Icon(Icons.videocam_off_outlined,
+              size: 48, color: context.colorScheme.error),
           const SizedBox(height: 16),
           Text(
             'Izin Kamera Dibutuhkan',
-            style: context.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            style: context.textTheme.titleMedium
+                ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),

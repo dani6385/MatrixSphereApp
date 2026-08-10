@@ -8,13 +8,13 @@ class ProductDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    
 
     return Container(
       height: 250,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: colorScheme.surface,
+        color: context.surface,
         borderRadius: BorderRadius.circular(12),
       ),
       child: const Center(

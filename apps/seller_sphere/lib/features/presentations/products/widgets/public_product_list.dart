@@ -10,6 +10,7 @@ class PublicProductList extends StatelessWidget {
   const PublicProductList({
     super.key,
     required this.productsStream,
+    
   });
 
   @override
@@ -37,8 +38,10 @@ class PublicProductList extends StatelessWidget {
             final product = products[index];
             return PublicProductCard(
               product: product,
-              onTap: () { // Implementasi navigasi ke ProductDetailScreen
-                context.push('/products/${product.id}'); // Navigasi ke rute detail produk dengan ID
+              onTap: () {
+                // Implementasi navigasi ke ProductDetailScreen
+                context.push(
+                    '/products/${product.id}'); // Navigasi ke rute detail produk dengan ID
               },
             );
           },

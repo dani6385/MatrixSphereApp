@@ -17,7 +17,7 @@ class SellerSectionHeader extends StatelessWidget {
       child: Text(
         title,
         style: AppStyles.headlineSmall.copyWith(
-          color: Theme.of(context).colorScheme.onSurface,
+          color: context.onSurface,
         ),
       ),
     );

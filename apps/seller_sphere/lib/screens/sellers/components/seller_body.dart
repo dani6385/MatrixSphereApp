@@ -18,7 +18,7 @@ class SellerBody extends StatelessWidget {
       padding: AppStyles.defaultScreenPadding,
       physics: const AlwaysScrollableScrollPhysics(),
       children: const [
-        SellerWelcomeHeader(sellerName: 'Andi'),
+        SellerWelcomeHeader(sellerName: 'Andi', saldo: 'Rp 500.000'),
         SizedBox(height: 24),
         SellerSummarySection(),
         SizedBox(height: 24),
@@ -33,4 +33,3 @@ class SellerBody extends StatelessWidget {
     );
   }
 }
-

@@ -18,7 +18,6 @@ class AttendanceHistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final IconData statusIcon;
     final Color statusColor;
 
@@ -34,7 +33,7 @@ class AttendanceHistoryItem extends StatelessWidget {
         break;
       default:
         statusIcon = Icons.event_available_outlined;
-        statusColor = colorScheme.primary;
+        statusColor = context.primary;
     }
 
     return Card(
@@ -51,13 +50,16 @@ class AttendanceHistoryItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    DateFormat('EEEE, d MMMM yyyy', 'id_ID').format(record.date),
-                    style: context.textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                    DateFormat('EEEE, d MMMM yyyy', 'id_ID')
+                        .format(record.date),
+                    style: context.textTheme.bodyLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     'Masuk: ${record.clockInTime ?? '--:--'} • Pulang: ${record.clockOutTime ?? '--:--'}',
-                    style: context.textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
+                    style: context.textTheme.bodySmall
+                        ?.copyWith(color: context.onSurfaceVariant),
                   ),
                 ],
               ),

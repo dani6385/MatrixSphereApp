@@ -16,7 +16,7 @@ class OrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    
     final formattedDate =
         DateFormat('dd MMM yyyy, HH:mm').format(order.orderDate);
     final formattedPrice =
@@ -40,7 +40,7 @@ class OrderCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       'Order #${order.orderId.substring(0, 8)}...',
-                      style: textTheme.titleMedium
+                      style: AppStyles.titleMedium
                           ?.copyWith(fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -49,7 +49,7 @@ class OrderCard extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: AppSpacing.sm),
-              Text('Pemesan: ${order.customerName}', style: textTheme.bodyMedium),
+              Text('Pemesan: ${order.customerName}', style: AppStyles.bodyMedium),
               const SizedBox(height: AppSpacing.xs),
               // PERBAIKAN: Tambahkan informasi jika tidak ada item dalam pesanan.
               if (order.items.isEmpty)
@@ -57,19 +57,19 @@ class OrderCard extends StatelessWidget {
                   padding: const EdgeInsets.only(top: AppSpacing.sm),
                   child: Text(
                     '(Tidak ada item produk)',
-                    style: textTheme.bodySmall
+                    style: AppStyles.bodySmall
                         ?.copyWith(fontStyle: FontStyle.italic, color: kError),
                   ),
                 ),
-              Text(formattedDate, style: textTheme.bodySmall),
+              Text(formattedDate, style: AppStyles.bodySmall),
               const Divider(height: AppSpacing.lg),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Total', style: textTheme.bodyMedium),
+                  const Text('Total', style: AppStyles.bodyMedium),
                   Text(
                     formattedPrice,
-                    style: textTheme.titleMedium?.copyWith(
+                    style: AppStyles.titleMedium?.copyWith(
                         color: kBrandPrimary, fontWeight: FontWeight.bold),
                   ),
                 ],

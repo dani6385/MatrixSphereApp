@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-
 import 'shell_route_config.dart';
-
-
 import 'fullscreen_routes.dart';
 
 // Kunci global untuk navigator utama (root)

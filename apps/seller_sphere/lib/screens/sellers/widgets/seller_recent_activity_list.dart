@@ -8,9 +8,6 @@ class SellerRecentActivityList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
     // Data dummy untuk aktivitas terbaru
     final List<_ActivityItemData> activities = [
       _ActivityItemData(
@@ -60,8 +57,8 @@ class SellerRecentActivityList extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 12.0),
           child: _ActivityListItem(
             activity: activity,
-            colorScheme: colorScheme,
-            textTheme: textTheme,
+            colorScheme: context.colorScheme,
+            textTheme: context.textTheme,
           ),
         );
       },
