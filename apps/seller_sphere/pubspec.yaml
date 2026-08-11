@@ -53,6 +53,11 @@ dependencies:
   url_launcher: ^6.3.2
   
   flutter_image_compress: ^2.5.1
+  uuid: ^4.6.0
+  csv: ^8.0.0
+  open_file_plus: ^3.4.1+1
+  pdf: ^3.13.0
+  flutter_riverpod: ^2.6.1
   
 
 

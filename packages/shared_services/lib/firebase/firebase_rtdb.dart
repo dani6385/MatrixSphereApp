@@ -218,21 +218,21 @@ class FirebaseRtdbService {
   /// Mengambil satu "halaman" data produk dari sebuah toko dengan paginasi.
   ///
   /// [shopUid]: UID dari toko yang produknya ingin diambil.
+  /// [shopId]: ID dari toko yang produknya ingin diambil.
   /// [pageSize]: Jumlah produk yang ingin diambil per halaman.
   /// [startAfterKey]: Key (nama produk) terakhir dari halaman sebelumnya untuk
   ///                  menentukan titik awal query berikutnya. Null untuk halaman pertama.
   /// Mengembalikan `List<Product>`.
   Future<List<Product>> fetchProductsPage({
-    required String shopUid,
+    required String shopId,
     required int pageSize,
     String? startAfterKey,
   }) async {
     final List<Product> products = [];
-    final path = 'seller_sphere/$shopUid/produk';
-
-    // Membuat query dasar: urutkan berdasarkan key (nama produk)
-    Query query = _database.ref(path).orderByKey();
-
+    // PERBAIKAN: Query ke node 'products' global dan filter berdasarkan 'shopId'
+    Query query =
+        _database.ref('products').orderByChild('shopId').equalTo(shopId);
+    
     // Jika ini bukan halaman pertama, mulai query SETELAH key terakhir
     if (startAfterKey != null) {
       query = query.startAfter(startAfterKey);
@@ -245,10 +245,10 @@ class FirebaseRtdbService {
       final snapshot = await query.get();
       if (snapshot.exists && snapshot.value is Map) {
         final data = Map<String, dynamic>.from(snapshot.value as Map);
-        data.forEach((productName, productData) {
+        data.forEach((productId, productData) {
           if (productData is Map) {
-            // Use Product.fromMap to correctly parse all fields, including the new soldCount
-            products.add(Product.fromMap(Map<String, dynamic>.from(productData), productName));
+            products.add(Product.fromMap(
+                Map<String, dynamic>.from(productData), productId));
           }
         });
       }
@@ -256,7 +256,6 @@ class FirebaseRtdbService {
       debugPrint('Error saat fetch product page: $e');
     }
 
-    // List produk akan diurutkan secara otomatis karena kita menggunakan orderByKey()
     return products;
   }
 
@@ -264,55 +263,62 @@ class FirebaseRtdbService {
   ///
   /// [shopUid]: UID dari toko tempat pesanan dibuat.
   /// [buyerUid]: UID dari pembeli.
-  /// [orderItems]: Map dari item yang dipesan dan jumlahnya. Contoh: {'baju': 1, 'sepatu': 2}
+  /// [orderItems]: Map dari ID produk dan jumlah yang dipesan. Contoh: {'prod_123': 1, 'prod_456': 2}
   ///
   /// Mengembalikan `true` jika transaksi berhasil, `false` jika gagal (misal, stok tidak cukup).
   Future<bool> createOrderWithStockUpdate({
     required String shopUid,
     required String buyerUid,
-    required Map<String, int> orderItems,
+    required Map<String, int> orderItems, // Key adalah productId, Value adalah quantity
   }) async {
-    final shopRef = _database.ref('seller_sphere/$shopUid');
+    // Menggunakan referensi root untuk transaksi multi-path
+    final rootRef = _database.ref();
 
     try {
-      final transactionResult =
-          await shopRef.runTransaction((Object? currentData) {
-        // Jika node toko tidak ada, batalkan transaksi.
-        if (currentData == null) {
+      final transactionResult = await rootRef.runTransaction((Object? currentData) {
+        final data = currentData as Map<String, dynamic>?;
+        if (data == null) {
           return Transaction.abort();
         }
 
-        final shopData = Map<String, dynamic>.from(currentData as Map);
-        final products = shopData['produk'] as Map<String, dynamic>? ?? {};
+        final allProducts = data['products'] as Map<String, dynamic>? ?? {};
         int totalOrderPrice = 0;
+        final Map<String, dynamic> productUpdates = {};
 
         // 1. Validasi stok untuk semua item dalam pesanan
         for (var item in orderItems.entries) {
-          final productName = item.key;
+          final productId = item.key;
           final quantity = item.value;
-          final productData = products[productName] as Map<String, dynamic>?;
+          final productData = allProducts[productId] as Map<String, dynamic>?;
 
-          if (productData == null || (productData['stock'] as int) < quantity) {
+          if (productData == null ||
+              (productData['stock'] as int? ?? 0) < quantity ||
+              productData['shopId'] != shopUid) { // Pastikan produk milik toko yang benar
             // Jika produk tidak ada atau stok tidak cukup, batalkan seluruh transaksi.
-            debugPrint('Transaksi dibatalkan: Stok $productName tidak cukup.');
+            debugPrint('Transaksi dibatalkan: Stok untuk produk $productId tidak cukup atau produk tidak valid.');
             return Transaction.abort();
           }
+
+          // 2. Jika semua stok valid, siapkan update dan hitung total harga
+          final newStock = (productData['stock'] as int) - quantity;
+          productUpdates['/products/$productId/stock'] = newStock;
+          totalOrderPrice += (productData['sellingPrice'] as num? ?? 0).toInt() * quantity;
         }
 
-        // 2. Jika semua stok valid, kurangi stok dan hitung total harga
-        orderItems.forEach((productName, quantity) {
-          final productData = products[productName] as Map<String, dynamic>;
-          productData['stock'] = (productData['stock'] as int) - quantity;
-          totalOrderPrice += (productData['price'] as num).toInt() * quantity;
-        });
+        // 3. Buat pesanan baru di node 'seller-orders'
+        final newOrderRef = _database.ref('seller-orders').push();
+        final orderData = {
+          'shopId': shopUid,
+          'buyerId': buyerUid,
+          'items': orderItems,
+          'totalAmount': totalOrderPrice,
+          'createdAt': ServerValue.timestamp,
+          'status': 'completed', // atau 'pending'
+        };
 
-        // 3. Tambahkan pesanan baru
-        final pesanan = shopData['pesanan'] as Map<String, dynamic>? ?? {};
-        pesanan[buyerUid] = {...orderItems, 'total': totalOrderPrice};
-        shopData['pesanan'] = pesanan;
-
-        // Kembalikan data yang sudah dimodifikasi untuk ditulis ke database.
-        return Transaction.success(shopData);
+        // Gabungkan semua update (stok dan pesanan baru)
+        final Map<String, dynamic> finalUpdates = {...productUpdates, '/seller-orders/${newOrderRef.key}': orderData};
+        return Transaction.success(finalUpdates);
       });
 
       return transactionResult.committed;

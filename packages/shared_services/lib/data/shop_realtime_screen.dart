@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
+import 'package:shared_ui/shared_ui.dart';
 
 class ShopRealtimeScreen extends StatefulWidget {
   // ID toko yang ingin ditampilkan. Bisa didapat dari halaman sebelumnya.
@@ -57,12 +58,12 @@ class _ShopRealtimeScreenState extends State<ShopRealtimeScreen> {
               children: [
                 Text(
                   'Nama Toko: ${shop.id}',
-                  style: Theme.of(context).textTheme.headlineSmall,
+                  style: AppStyles.headlineSmall,
                 ),
                 const SizedBox(height: 20),
                 Text(
                   'Daftar Produk:',
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: AppStyles.titleMedium,
                 ),
                 // Gunakan ListView.builder untuk daftar yang dinamis
                 Expanded(

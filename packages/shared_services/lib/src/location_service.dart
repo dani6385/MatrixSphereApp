@@ -26,8 +26,8 @@ class LocationCheckResult {
 class LocationService {
   // --- KONFIGURASI ---
   // Ganti dengan koordinat lokasi kantor Anda.
-  // Anda bisa mendapatkan koordinat dari Google Maps.
-  static const LatLng _officeLocation = LatLng(-6.2088, 106.8456); // Contoh: Monas, Jakarta
+  // Hapus hardcode ini. Lokasi kantor/toko harus didapatkan secara dinamis.
+  static const LatLng _officeLocation = LatLng(-6.2088, 106.8456); // Contoh: Monas, Jakarta (digunakan untuk isUserWithinOfficeRadius)
   static const double _officeRadiusMeters = 100.0; // Radius 100 meter
   // -------------------
 

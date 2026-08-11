@@ -80,7 +80,7 @@ class Order {
   });
 
   /// Factory constructor untuk membuat instance Order dari Map (data RTDB).
-  factory Order.fromMap(Map<String, dynamic> data, String orderId) {
+  factory Order.fromMap(Map<String, dynamic> data, String orderId, {required String }) {
     return Order(
       orderId: orderId,
       customerName: data['customerName'] as String,

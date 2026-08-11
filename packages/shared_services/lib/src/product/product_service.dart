@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:shared_services/shared_services.dart';
 
 /// Layanan untuk mengelola operasi CRUD produk ke Firebase Realtime Database.
@@ -84,8 +83,6 @@ class ProductService {
   Future<String> uploadImageToImgBB({required String imagePath}) async {
     throw UnimplementedError('uploadImageToImgBB not yet implemented');
   }
-
-  showStockUpdateDialog(BuildContext context, Product product) {}
 
   Future<String?> createOrder(Order newOrder) async {
     return null;

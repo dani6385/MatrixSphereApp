@@ -5,6 +5,7 @@
       "status": "waiting"
     }
   },
+<<<<<<< HEAD
   "attendance": {
     "clockInTime": "16:24:34",
     "clockOutTime": "16:24:54",
@@ -98,6 +99,18 @@
       "shopId": "toko_sebelah",
       "status": "completed",
       "totalAmount": 255000
+=======
+  "orders": {
+    "akuna_001": {
+      "buyerId": "ikmal",
+      "items": {
+        "baju": 25000,
+        "sepatu": 25000
+      },
+      "shopId": "toko_agan",
+      "status": "processing",
+      "totalAmount": 50000
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
     }
   },
   "products": {
@@ -109,13 +122,21 @@
       "minStockThreshold": 0,
       "name": "Indocafe",
       "price": 3000,
+<<<<<<< HEAD
       "purchasePrice": 3000,
+=======
+      "purchasePrice": 0,
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
       "sellingPrice": 3000,
       "shopId": "toko_agan",
       "sku": "(90)MD040282004100033",
       "soldCount": 0,
+<<<<<<< HEAD
       "stock": 20,
       "unitPrice": 0
+=======
+      "stock": 20
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
     },
     "lampu": {
       "ageRating": 0,
@@ -125,6 +146,7 @@
       "minStockThreshold": 0,
       "name": "lampu",
       "price": 12000,
+<<<<<<< HEAD
       "purchasePrice": 12000,
       "sellingPrice": 12000,
       "shopId": "toko_agan",
@@ -149,6 +171,29 @@
       "buyerId": "ikmal"
     }
   },
+=======
+      "purchasePrice": 0,
+      "sellingPrice": 12000,
+      "shopId": "toko_agan",
+      "stock": 50
+    }
+  },
+  "shop_sphere": {
+    "akuna_001": {
+      "buyerId": "ikmal"
+    },
+    "akun_002": {
+      "buyerId": "insom"
+    }
+  },
+  "attendance": {
+    "clockInTime": "16:24:34",
+    "clockOutTime": "16:24:54",
+    "dateString": "2026-07-21",
+    "name": "Dani",
+    "status": "Selesai"
+  },
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
   "system": {
     "pelanggaran": {
       "toko_abang": {
@@ -170,5 +215,16 @@
         "tikor": "berupa titik koordinat"
       }
     }
+<<<<<<< HEAD
+=======
+  },
+  "seeller_sphere": {
+    "toko_abang": {
+      "shopName": "Toko Aban Sejahtera"
+    },
+    "toko_agan": {
+      "shopName": "Toko Agan Sejahtera"
+    }
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
   }
 }

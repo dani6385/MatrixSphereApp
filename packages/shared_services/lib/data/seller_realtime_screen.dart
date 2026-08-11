@@ -100,7 +100,7 @@ class _SellerRealtimeScreenState extends State<SellerRealtimeScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text('Harga: Rp ${product.price.toString()}'),
+                                  Text('Harga: Rp ${product.unitPrice.toString()}'),
                                   Text('Stok: ${product.stock.toString()}'),
                                   Text('Deskripsi: ${product.description}'),
                                   // Tambahkan detail produk lainnya jika perlu

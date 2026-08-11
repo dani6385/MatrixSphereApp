@@ -17,8 +17,12 @@ export 'package:seller_sphere/features/providers/shopes/shopes_screen.dart';
 export 'package:seller_sphere/features/presentations/status/status_screen.dart';
 export 'package:seller_sphere/features/presentations/histories/history_screen.dart';
 //export 'package:seller_sphere/features/presentations/inventories/controllers/inventory_logic.dart';
+<<<<<<< HEAD
 export 'package:seller_sphere/features/helpes/simulations/simulation_screen.dart';
 export 'package:seller_sphere/features/services/profiles/shop/shop_profile_screen.dart';
+=======
+
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
 export 'package:seller_sphere/features/helpes/help/help_screen.dart';
 export 'package:seller_sphere/features/presentations/streams/streaming_screen.dart';
 
@@ -36,5 +40,9 @@ export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
 export 'package:seller_sphere/features/presentations/inventories/inventory_screen.dart';
 
 
+<<<<<<< HEAD
 export 'package:seller_sphere/features/services/profiles/user/user_profile_screen.dart';
+=======
+export 'package:seller_sphere/features/services/profiles/profile_screen.dart';
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
 export 'package:seller_sphere/features/notifs/orders/order_screen.dart';

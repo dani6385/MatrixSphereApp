@@ -1,8 +1,9 @@
 class Product {
   final String id;
+  final String shopId;
   final String name;
   final String description;
-  final double price; // This might be purchase price or base price
+  final double unitPrice; // This might be purchase price or base price
   final double sellingPrice; // Price at which it's sold
   final double purchasePrice; // Price at which it's bought
   final int stock;
@@ -16,9 +17,10 @@ class Product {
 
   Product({
     required this.id,
+    required this.shopId,
     required this.name,
     this.description = '',
-    required this.price,
+    required this.unitPrice,
     required this.sellingPrice,
     required this.purchasePrice,
     required this.stock,
@@ -29,19 +31,23 @@ class Product {
     this.minStockThreshold = 0,
     this.ageRating = 0,
     this.soldCount = 0,
-    required String shopId, // Initialize new field
   });
 
   factory Product.fromMap(Map<String, dynamic> map, String id) {
     return Product(
       id: id,
+      shopId: map['shopId'] ?? '',
       name: map['name'] ?? '',
       description: map['description'] ?? '',
-      price: (map['price'] as num?)?.toDouble() ?? 0.0,
-      sellingPrice: (map['sellingPrice'] as num?)?.toDouble() ??
-          (map['price'] as num?)?.toDouble() ??
-          0.0, // Fallback to price if sellingPrice not present
-      purchasePrice: (map['purchasePrice'] as num?)?.toDouble() ?? 0.0,
+      unitPrice: (map['unitPrice'] as num?)?.toDouble() ??
+          0.0, // Added null-check and default
+      sellingPrice: ((map['sellingPrice'] as num?)?.toDouble() ?? 0.0) > 0.0
+          ? (map['sellingPrice'] as num).toDouble()
+          : (map['price'] as num?)?.toDouble() ??
+              0.0, // Fallback to price if sellingPrice is not present or is 0
+      purchasePrice: ((map['purchasePrice'] as num?)?.toDouble() ?? 0.0) > 0.0
+          ? (map['purchasePrice'] as num).toDouble()
+          : (map['price'] as num?)?.toDouble() ?? 0.0,
       stock: map['stock'] as int? ?? 0,
       category: map['category'] ?? '',
       sku: map['sku'],
@@ -49,7 +55,7 @@ class Product {
       imageUrls: List<String>.from(map['imageUrls'] ?? []),
       minStockThreshold: map['minStockThreshold'] as int? ?? 0,
       ageRating: map['ageRating'] as int? ?? 0,
-      soldCount: map['soldCount'] as int? ?? 0, shopId: '', // Parse new field
+      soldCount: map['soldCount'] as int? ?? 0,
     );
   }
 
@@ -57,7 +63,7 @@ class Product {
     return {
       'name': name,
       'description': description,
-      'price': price,
+      'unitPrice': unitPrice,
       'sellingPrice': sellingPrice,
       'purchasePrice': purchasePrice,
       'stock': stock,
@@ -74,8 +80,8 @@ class Product {
   Product copyWith({
     String? id,
     String? name,
+    double? unitPrice,
     String? description,
-    double? price,
     double? sellingPrice,
     double? purchasePrice,
     int? stock,
@@ -89,9 +95,10 @@ class Product {
   }) {
     return Product(
       id: id ?? this.id,
+      shopId: shopId,
       name: name ?? this.name,
+      unitPrice: unitPrice ?? this.unitPrice,
       description: description ?? this.description,
-      price: price ?? this.price,
       sellingPrice: sellingPrice ?? this.sellingPrice,
       purchasePrice: purchasePrice ?? this.purchasePrice,
       stock: stock ?? this.stock,
@@ -101,8 +108,6 @@ class Product {
       imageUrls: imageUrls ?? this.imageUrls,
       minStockThreshold: minStockThreshold ?? this.minStockThreshold,
       ageRating: ageRating ?? this.ageRating,
-      soldCount: soldCount ?? this.soldCount,
-      shopId: '',
     );
   }
 }
