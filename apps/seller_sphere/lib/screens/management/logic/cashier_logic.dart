@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/screens/management/cashier_logic.dart
 
 import 'package:firebase_database/firebase_database.dart';
@@ -53,7 +56,11 @@ class CashierLogic {
     if (index != -1 && cartItems[index].quantity < product.stock) {
       cartItems[index].quantity++;
     } else if (index == -1) {
+<<<<<<< HEAD
       cartItems.add(CartItem(product: product, quantity: 1));
+=======
+      cartItems.add(CartItem(product: product, quantity: 1, productId: product.id, productName: product.name, sellingPrice: product.sellingPrice));
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
     }
     return null;
   }
@@ -222,6 +229,7 @@ class CashierLogic {
     }
   }
 }
+<<<<<<< HEAD
 =======
 // lib/screens/management/cashier_logic.dart
 
@@ -443,3 +451,5 @@ class CashierLogic {
   }
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

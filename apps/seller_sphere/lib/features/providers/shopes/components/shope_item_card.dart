@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 import 'package:flutter/material.dart';
 //import '../providers/shopes_viewmodel.dart';
 import 'package:seller_sphere/features/domain/entities/user.dart'; // Menggunakan model User dari domain entities
@@ -52,6 +56,7 @@ class ShopeItemCard extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD
 =======
 import 'package:flutter/material.dart';
 //import '../providers/shopes_viewmodel.dart';
@@ -107,4 +112,6 @@ class ShopeItemCard extends StatelessWidget {
     );
   }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 }

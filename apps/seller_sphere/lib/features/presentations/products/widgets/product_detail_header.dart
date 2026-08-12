@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/screens/products/widgets/product_detail_header.dart
 
 import 'package:flutter/material.dart';
@@ -23,6 +26,7 @@ class ProductDetailHeader extends StatelessWidget {
       ),
     );
   }
+<<<<<<< HEAD
 =======
 // lib/screens/products/widgets/product_detail_header.dart
 
@@ -49,4 +53,6 @@ class ProductDetailHeader extends StatelessWidget {
     );
   }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 }

@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // lib/features/management/screens/order_screen.dart (atau sesuaikan dengan direktori project-mu)
 
 import 'package:flutter/material.dart';
@@ -36,6 +37,8 @@ class OrderScreen extends StatelessWidget {
     return const OrderListView(shopId: 'toko_agan',);
   }
 =======
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/features/management/screens/order_screen.dart (atau sesuaikan dengan direktori project-mu)
 
 import 'package:flutter/material.dart';
@@ -70,7 +73,12 @@ class OrderScreen extends StatelessWidget {
     List<Order> sampleOrders = []; // Ganti dengan sumber data pesaneanan aslimu
 
     // Jika data kosong, OrderListView sudah memiliki widget tampilan kosong (empty state) yang informatif
+<<<<<<< HEAD
     return OrderListView(orders: sampleOrders);
   }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+    return OrderListView(orders: sampleOrders, shopId: '',);
+  }
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 }

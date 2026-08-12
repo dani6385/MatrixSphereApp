@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/features/domain/entities/user.dart'; // Menggunakan model User dari domain entities
@@ -32,6 +35,7 @@ class ShopesViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
+<<<<<<< HEAD
 =======
 //import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -67,4 +71,6 @@ class ShopesViewModel extends ChangeNotifier {
     notifyListeners();
   }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 }

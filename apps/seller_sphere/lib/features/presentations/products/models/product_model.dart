@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/models/product_model.dart
 
 class Product {
@@ -29,6 +32,7 @@ class Product {
     );
   }
 }
+<<<<<<< HEAD
 =======
 // lib/models/product_model.dart
 
@@ -61,3 +65,5 @@ class Product {
   }
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

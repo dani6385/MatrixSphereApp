@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/screens/management/mixins/cashier_actions_mixin.dart
 
 import 'package:firebase_database/firebase_database.dart';
@@ -143,6 +147,7 @@ mixin CashierActionsMixin<T extends StatefulWidget> on State<T> {
       ),
     );
   }
+<<<<<<< HEAD
 }
 =======
 // lib/screens/management/mixins/cashier_actions_mixin.dart
@@ -291,3 +296,6 @@ mixin CashierActionsMixin<T extends StatefulWidget> on State<T> {
   }
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+}
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

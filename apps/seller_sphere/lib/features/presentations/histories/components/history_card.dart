@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -60,6 +63,7 @@ class HistoryCard extends StatelessWidget {
     );
   }
 }
+<<<<<<< HEAD
 =======
 
 import 'package:flutter/material.dart';
@@ -123,3 +127,5 @@ class HistoryCard extends StatelessWidget {
   }
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/features/presentations/inventory/widgets/inventory_body.dart
 
 import 'package:flutter/material.dart';
@@ -42,6 +45,7 @@ class _InventoryBodyState extends State<InventoryBody> {
     );
   }
 }
+<<<<<<< HEAD
 =======
 // lib/features/presentations/inventory/widgets/inventory_body.dart
 
@@ -87,3 +91,5 @@ class _InventoryBodyState extends State<InventoryBody> {
   }
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

@@ -1,12 +1,16 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 <<<<<<<< HEAD:apps/seller_sphere/lib/features/presentations/products/product_form_screen.dart
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/features/products/presentation/add_edit_product_screen.dart
 
 import 'package:flutter/material.dart';
 //import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import '../controllers/add_product_logic.dart'; // Menggunakan logika terpusat
 import '../widgets/product_form_fields.dart';
@@ -122,6 +126,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
 import 'package:flutter/material.dart';
 //import 'package:go_router/go_router.dart';
 import 'package:shared_ui/shared_ui.dart';
+=======
+
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 import '../controllers/add_product_logic.dart'; // Menggunakan logika terpusat
 import '../widgets/product_form_fields.dart';
 import '../widgets/product_image_picker.dart';
@@ -221,6 +228,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
+<<<<<<< HEAD
 >>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25:apps/seller_sphere/lib/features/presentations/products/components/product_form_screen.dart
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 }

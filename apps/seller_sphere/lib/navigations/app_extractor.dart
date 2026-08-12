@@ -1,3 +1,10 @@
+export 'package:seller_sphere/features/auth/forgot_password_screen.dart';
+export 'package:seller_sphere/features/auth/logins/login_screen.dart';
+
+export 'package:seller_sphere/features/auth/regitrations/user_registration_screen.dart';
+export 'package:seller_sphere/features/auth/regitrations/shop_registration_screen.dart';
+export 'package:seller_sphere/views/windows_map_view.dart';
+
 export 'package:seller_sphere/features/notifs/chat/chat_screen.dart';
 export 'package:seller_sphere/core/services/notifications/notification_screen.dart';
 // feature
@@ -22,7 +29,15 @@ export 'package:seller_sphere/features/helpes/simulations/simulation_screen.dart
 export 'package:seller_sphere/features/services/profiles/shop/shop_profile_screen.dart';
 =======
 
+<<<<<<< HEAD
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+export 'package:seller_sphere/features/helpes/simulations/simulation_screen.dart';
+export 'package:seller_sphere/features/profiles/shop/shop_profile_screen.dart';
+
+
+
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 export 'package:seller_sphere/features/helpes/help/help_screen.dart';
 export 'package:seller_sphere/features/presentations/streams/streaming_screen.dart';
 
@@ -32,7 +47,7 @@ export 'package:seller_sphere/screens/home/home_screen.dart';
 export 'package:seller_sphere/screens/management/management_screen.dart';
 export 'package:seller_sphere/screens/management/widgets/scanner_screen.dart';
 export 'package:seller_sphere/screens/management/components/order_list_view.dart';
-export 'package:seller_sphere/screens/management/components/cashier_body.dart';
+//export 'package:seller_sphere/screens/management/components/cashier_body.dart';
 export 'package:seller_sphere/screens/sellers/seller_screen.dart';
 export 'package:seller_sphere/screens/financials/financial_screen.dart';
 export 'package:seller_sphere/screens/attendance/attendance_screen.dart';
@@ -41,8 +56,17 @@ export 'package:seller_sphere/features/presentations/inventories/inventory_scree
 
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export 'package:seller_sphere/features/services/profiles/user/user_profile_screen.dart';
 =======
 export 'package:seller_sphere/features/services/profiles/profile_screen.dart';
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
 export 'package:seller_sphere/features/notifs/orders/order_screen.dart';
+=======
+
+export 'package:seller_sphere/features/profiles/user/user_profile_screen.dart';
+
+export 'package:seller_sphere/features/profiles/profile_screen.dart';
+
+export 'package:seller_sphere/features/notifs/orders/order_screen.dart';
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

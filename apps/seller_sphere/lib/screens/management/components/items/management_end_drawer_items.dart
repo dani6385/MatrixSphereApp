@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/navigations/widgets/app_end_drawer_items.dart
 
 import 'package:flutter/material.dart';
@@ -34,7 +38,11 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       title: 'Profil Pengguna',
       icon: Icons.person,
       label: 'Melihat dan mengubah informasi profil akun administrator.',
+<<<<<<< HEAD
       route: AppRoutes.profile,
+=======
+      route: AppRoutes.userProfile,
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
       onTap: () {
         logger.i('Menu Profile Toko diklik!');
         Navigator.of(context, rootNavigator: true).push(
@@ -46,11 +54,19 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       title: 'Profil Toko',
       icon: Icons.person,
       label: 'Melihat dan mengubah informasi profil akun administrator.',
+<<<<<<< HEAD
       route: AppRoutes.profile,
       onTap: () {
         logger.i('Menu Profile Toko diklik!');
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(builder: (context) => const ShopProfileScreen(shopId: '',)),
+=======
+      route: AppRoutes.userProfile,
+      onTap: () {
+        logger.i('Menu Profile Toko diklik!');
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(builder: (context) => const ShopProfileScreen()),
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
         );
       },
     ),
@@ -123,6 +139,7 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       },
     ),
   ];
+<<<<<<< HEAD
 }
 =======
 // lib/navigations/widgets/app_end_drawer_items.dart
@@ -239,3 +256,6 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
   ];
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+}
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

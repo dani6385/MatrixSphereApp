@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,12 @@ final _logger = Logger();
 class OrderListView extends StatefulWidget {
   // Hapus parameter `orders` yang tidak digunakan.
   // Jadikan `shopId` sebagai parameter utama untuk widget ini.
+<<<<<<< HEAD
   const OrderListView({super.key, required this.shopId});
+=======
+  const OrderListView(
+      {super.key, required this.shopId, required List<Order> orders});
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 
   final String shopId;
 
@@ -45,7 +53,12 @@ class _OrderListViewState extends State<OrderListView> {
       //   title: const Text('Daftar Pesanan'),
       // ),
       body: FirebaseAnimatedList(
+<<<<<<< HEAD
         query: _ordersQuery, // HANYA gunakan query yang sudah difilter berdasarkan shopId
+=======
+        query:
+            _ordersQuery, // HANYA gunakan query yang sudah difilter berdasarkan shopId
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
         reverse: true, // Tampilkan pesanan terbaru di atas
         padding: const EdgeInsets.all(AppSpacing.md),
         itemBuilder: (context, snapshot, animation, index) {
@@ -56,7 +69,12 @@ class _OrderListViewState extends State<OrderListView> {
 
           // Konversi data snapshot ke Map dan buat objek Order
           final orderDataMap = Map<String, dynamic>.from(snapshot.value as Map);
+<<<<<<< HEAD
           final order = Order.fromMap(orderDataMap, snapshot.key!);
+=======
+          final order =
+              Order.fromMap(orderDataMap, snapshot.key!);
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 
           // Gunakan FadeTransition untuk animasi yang bagus saat item muncul
           return SizeTransition(
@@ -145,6 +163,7 @@ class _OrderListViewState extends State<OrderListView> {
     );
   }
 }
+<<<<<<< HEAD
 =======
 import 'package:flutter/material.dart';
 import 'package:shared_services/shared_services.dart';
@@ -211,3 +230,5 @@ class OrderListView extends StatelessWidget {
   }
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

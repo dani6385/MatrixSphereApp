@@ -1,9 +1,16 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 import 'dart:ui';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+=======
+import 'package:seller_sphere/core/api_constants.class.dart';
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 //import 'package:flutter_bloc/flutter_bloc.dart';
 //import 'package:provider/provider.dart';
 import 'package:seller_sphere/navigations/app_router.dart';
@@ -38,7 +45,12 @@ void main() async {
     debugPrint("Gagal menginisialisasi Firebase: $e");
     debugPrint(stack.toString());
   }
+<<<<<<< HEAD
 
+=======
+  String apiKey = ApiConstants.googleMapsApiKey;
+  debugPrint("API Key Linux dimuat: $apiKey");
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
   // 4. Selalu panggil runApp di luar blok inisialisasi agar layar hitam terhindari
   runApp(const SellerSphere());
 }
@@ -86,6 +98,7 @@ class _SellerSphereState extends State<SellerSphere> {
       ),*/
   }
 }
+<<<<<<< HEAD
 
 =======
 import 'dart:ui';
@@ -177,3 +190,5 @@ class _SellerSphereState extends State<SellerSphere> {
 }
 
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

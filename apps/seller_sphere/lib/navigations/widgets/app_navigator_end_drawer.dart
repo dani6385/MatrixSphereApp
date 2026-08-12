@@ -24,8 +24,9 @@ class AppNavigatorEndDrawer extends StatelessWidget {
         return SideMenuItem(
           title: item.title,
           icon: item.icon,
-          route: item.route,
-          onTap: item.onTap ?? () {},
+          label: item.label,
+          route: '',
+          onTap: item.onTap ?? () {}, 
         );
       }).toList(),
       selectedRoute: '',

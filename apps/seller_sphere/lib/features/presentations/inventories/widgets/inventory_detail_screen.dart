@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // d:\matrixsphere\apps\seller_sphere\lib\features\presentations\inventories\inventory_detail_screen.dart
 
 import 'package:flutter/material.dart';
@@ -162,6 +165,7 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
     );
   }
 }
+<<<<<<< HEAD
 =======
 // d:\matrixsphere\apps\seller_sphere\lib\features\presentations\inventories\inventory_detail_screen.dart
 
@@ -327,3 +331,5 @@ class _InventoryDetailScreenState extends State<InventoryDetailScreen> {
   }
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/features/products/presentation/widgets/product_image_picker.dart
 
 import 'dart:io';
@@ -78,6 +81,7 @@ class ProductImagePicker extends StatelessWidget {
       ],
     );
   }
+<<<<<<< HEAD
 =======
 // lib/features/products/presentation/widgets/product_image_picker.dart
 
@@ -159,4 +163,6 @@ class ProductImagePicker extends StatelessWidget {
     );
   }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 }

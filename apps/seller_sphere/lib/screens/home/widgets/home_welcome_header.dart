@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/screens/home/widgets/home_welcome_header.dart
 import 'package:flutter/material.dart';
 import 'package:shared_ui/shared_ui.dart';
@@ -23,6 +27,7 @@ class HomeWelcomeHeader extends StatelessWidget {
       ],
     );
   }
+<<<<<<< HEAD
 }
 =======
 // lib/screens/home/widgets/home_welcome_header.dart
@@ -51,3 +56,6 @@ class HomeWelcomeHeader extends StatelessWidget {
   }
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+}
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

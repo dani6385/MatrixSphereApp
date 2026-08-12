@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
@@ -46,6 +50,7 @@ class TransactionService {
 final cartProvider = StateNotifierProvider<CartNotifier, List<CartItem>>(
     (ref) => CartNotifier());
 final transactionServiceProvider = Provider((ref) => TransactionService());
+<<<<<<< HEAD
 =======
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
@@ -95,3 +100,5 @@ final cartProvider = StateNotifierProvider<CartNotifier, List<CartItem>>(
     (ref) => CartNotifier());
 final transactionServiceProvider = Provider((ref) => TransactionService());
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_services/models/order_model.dart';
-import 'package:shared_services/models/cart_item_model.dart';
 
 // Kelas ini bertanggung jawab untuk berinteraksi dengan Firebase Realtime Database
 // untuk semua yang berhubungan dengan pesanan (orders).
@@ -36,40 +35,29 @@ class OrderService {
 
           // SANGAT PENTING: Filter pesanan hanya untuk toko yang relevan.
           if (orderData['shopId'] == shopId) {
-            
-            // Konversi `Map` items dari Firebase menjadi `List<CartItem>`.
-            final itemsMap = Map<String, dynamic>.from(orderData['items'] ?? {});
-            final List<CartItem> items = [];
-            itemsMap.forEach((productName, price) {
-              items.add(CartItem(
-                productId: productName, // Asumsi ID produk = nama produk
-                productName: productName,
-                quantity: 1, // Asumsi kuantitas 1 karena tidak ada datanya
-                sellingPrice: (price as num).toDouble(), product: null,
-              ));
-            });
-            
-            // Membuat objek Order dari data.
-            orders.add(Order.fromMap(
-                'orderId': key,
-                'buyerId': orderData['buyerId'],
-                'shopId': orderData['shopId'],
-                'items': items, // Menggunakan list yang sudah dikonversi
-                'totalAmount': (orderData['totalAmount'] as num).toDouble(),
-                'status': orderData['status'] ?? 'processing',
-                // Anda harus menyimpan tanggal dalam format timestamp di Firebase,
-                // untuk saat ini kita gunakan waktu sekarang sebagai placeholder.
-                'orderDate': DateTime.now().toIso8601String(),
-                'customerName': orderData['buyerId'] ?? 'Unknown',
-            ),
-            );
+            // Konversi `List<Map>` items dari Firebase menjadi `List<OrderItem>`.
+            final List<OrderItem> items = [];
+            final firebaseItems = orderData['items'];
+
+            if (firebaseItems != null && firebaseItems is List) {
+              for (var itemData in firebaseItems) {
+                if (itemData is Map) {
+                  final itemMap = Map<String, dynamic>.from(itemData);
+                  items.add(OrderItem(
+                    productId: itemMap['productId']?.toString() ?? '',
+                    productName: itemMap['productName']?.toString() ?? '',
+                    quantity: (itemMap['quantity'] as num?)?.toInt() ?? 0,
+                    price: (itemMap['price'] as num?)?.toDouble() ?? 0.0,
+                  ));
+                }
+              }
+            }
           }
         });
       }
       // Kirim daftar pesanan yang sudah diproses ke stream.
       controller.add(orders);
     });
-
     return controller.stream;
   }
 }

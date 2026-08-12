@@ -1,4 +1,8 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 // lib/navigation/widgets/app_drawer_items.dart[cite: 7]
 
 import 'package:flutter/material.dart';
@@ -137,6 +141,7 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
       },
     ),
   ];
+<<<<<<< HEAD
 }
 =======
 // lib/navigation/widgets/app_drawer_items.dart[cite: 7]
@@ -279,3 +284,6 @@ List<DrawerItemData> getDrawerItems(BuildContext context, String currentRoute) {
   ];
 }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+}
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

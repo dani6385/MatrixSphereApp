@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/features/domain/entities/user.dart';
 import 'components/shope_detail_body.dart';
@@ -19,6 +22,7 @@ class ShopeDetailScreen extends StatelessWidget {
       body: ShopeDetailBody(user: user),
     );
   }
+<<<<<<< HEAD
 =======
 import 'package:flutter/material.dart';
 import 'package:seller_sphere/features/domain/entities/user.dart';
@@ -41,4 +45,6 @@ class ShopeDetailScreen extends StatelessWidget {
     );
   }
 >>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
+=======
+>>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 }
