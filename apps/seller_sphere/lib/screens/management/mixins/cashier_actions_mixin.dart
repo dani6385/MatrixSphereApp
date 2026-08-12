@@ -1,3 +1,4 @@
+
 // lib/screens/management/mixins/cashier_actions_mixin.dart
 
 import 'package:firebase_database/firebase_database.dart';

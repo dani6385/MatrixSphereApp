@@ -45,7 +45,7 @@ class SellerWelcomeHeader extends StatelessWidget {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  // TODO: Implementasi logika Transfer
+                  // Implementasi logika Transfer
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Fitur Transfer belum tersedia.')),
                   );

@@ -52,7 +52,7 @@ class CashierLogic {
     if (index != -1 && cartItems[index].quantity < product.stock) {
       cartItems[index].quantity++;
     } else if (index == -1) {
-      cartItems.add(CartItem(product: product, quantity: 1, productId: '', productName: '', sellingPrice: 0.0));
+      cartItems.add(CartItem(product: product, quantity: 1, productId: product.id, productName: product.name, sellingPrice: product.sellingPrice));
     }
     return null;
   }
@@ -92,6 +92,10 @@ class CashierLogic {
   // ==========================================
   Order _buildOrderPayload(String paymentMethod, double total) {
     return Order(
+      shopId:
+          '', // For cashier transactions, shopId might be determined elsewhere or not directly relevant.
+      buyerId:
+          '', // For cashier transactions, buyerId might not be available or relevant.
       orderDate: DateTime.now(),
       totalAmount: total,
       paymentMethod: paymentMethod,
@@ -107,15 +111,15 @@ class CashierLogic {
       orderId: '',
       customerName: '',
       customerEmail: '',
-      customerPhone: '',
+      customerPhone: '', id: '',
     );
   }
 
   // ==========================================
   // PECAHAN 2: Mencatat Riwayat ke Firebase
   // ==========================================
-  Future<void> _saveTransactionHistory(
-      String transactionId, double total, double feeDeduction, String paymentMethod) async {
+  Future<void> _saveTransactionHistory(String transactionId, double total,
+      double feeDeduction, String paymentMethod) async {
     final dbRef = FirebaseDatabase.instance.ref();
     await dbRef.child('transactions').child(transactionId).set({
       'id': transactionId,
@@ -180,7 +184,8 @@ class CashierLogic {
           final transactionId = 'TRX-${DateTime.now().millisecondsSinceEpoch}';
 
           // 4. Jalankan fungsi terpecah: Simpan riwayat & potong saldo
-          await _saveTransactionHistory(transactionId, total, feeDeduction, paymentMethod);
+          await _saveTransactionHistory(
+              transactionId, total, feeDeduction, paymentMethod);
           await _deductSellerBalance(feeDeduction);
         } catch (e) {
           debugPrint("Gagal memproses riwayat atau saldo penjual: $e");

@@ -10,6 +10,8 @@ class CartItem {
   CartItem({
     required this.product,
     required this.quantity,
-    required String productId, required String productName, required double sellingPrice,
+    required String productId,
+    required String productName,
+    required double sellingPrice,
   });
 }

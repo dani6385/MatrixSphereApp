@@ -53,7 +53,8 @@ class AttendanceDrawer extends StatelessWidget {
         return SideMenuItem(
           title: item.title,
           icon: item.icon,
-          route: item.route,
+          label: item.label,
+          route: '',
           isSelected: item.route.isNotEmpty && currentRoute == item.route,
           onTap: item.onTap ?? () {},
         );

@@ -49,6 +49,7 @@ class HomeEndDrawer extends StatelessWidget {
         return SideMenuItem(
           title: item.title,
           icon: item.icon,
+          label: item.label,
           route: item.route,
           onTap: item.onTap ?? () {},
         );

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // ignore: unused_import
 import 'package:shared_ui/shared_ui.dart';
-import 'package:seller_sphere/navigations/app_routes.dart';
 
 // Definisi struktur data untuk item menu EndDrawer dengan tambahan properti 'label'
 class EndDrawerItemData {
@@ -30,8 +29,8 @@ List<EndDrawerItemData> getEndDrawerItems(BuildContext context) {
       title: 'Profile / Profil',
       icon: Icons.person,
       label: 'Melihat dan mengubah informasi profil akun penjual.',
-      route: AppRoutes.profile,
-      onTap: () => context.go(AppRoutes.profile),
+      route: '/user-profile',
+      onTap: () => context.go('/user-profile'),
     ),
     EndDrawerItemData(
       title: 'Payment Methods / Metode Pembayaran',

@@ -1,3 +1,4 @@
+
 // lib/screens/management/widgets/cashier_bottom_panel.dart
 
 import 'package:flutter/material.dart';

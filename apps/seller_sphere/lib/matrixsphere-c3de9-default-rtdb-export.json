@@ -5,6 +5,101 @@
       "status": "waiting"
     }
   },
+<<<<<<< HEAD
+  "attendance": {
+    "clockInTime": "16:24:34",
+    "clockOutTime": "16:24:54",
+    "dateString": "2026-07-21",
+    "name": "Dani",
+    "status": "Selesai"
+  },
+  "orders": {
+    "-Nq_Order_001": {
+      "buyerId": "user_abc_123",
+      "createdAt": 1715842800000,
+      "customerEmail": "budi.s@example.com",
+      "customerName": "Budi Santoso",
+      "customerPhone": "081234567890",
+      "items": [
+        {
+          "price": 150000,
+          "productId": "prod_sepatu_lari_01",
+          "productName": "Sepatu Lari Kencang",
+          "quantity": 1
+        },
+        {
+          "price": 75000,
+          "productId": "prod_kaos_kaki_sport_01",
+          "productName": "Kaos Kaki Olahraga",
+          "quantity": 2
+        }
+      ],
+      "orderId": "ORD-20240516-001",
+      "paymentMethod": "Transfer Bank",
+      "shopId": "toko_agan",
+      "status": "completed",
+      "totalAmount": 300000
+    },
+    "-Nq_Order_002": {
+      "buyerId": "user_def_456",
+      "createdAt": 1715925600000,
+      "customerEmail": "citra.l@example.com",
+      "customerName": "Citra Lestari",
+      "customerPhone": "082345678901",
+      "items": [
+        {
+          "price": 450000,
+          "productId": "prod_tas_gunung_60l",
+          "productName": "Tas Gunung Pro 60L",
+          "quantity": 1
+        }
+      ],
+      "orderId": "ORD-20240517-001",
+      "paymentMethod": "COD",
+      "shopId": "toko_agan",
+      "status": "processing",
+      "totalAmount": 450000
+    },
+    "-Nq_Order_003": {
+      "buyerId": "user_ghi_789",
+      "createdAt": 1715936400000,
+      "customerEmail": "eko.w@example.com",
+      "customerName": "Eko Wibowo",
+      "customerPhone": "083456789012",
+      "items": [
+        {
+          "price": 25000,
+          "productId": "prod_botol_minum_1l",
+          "productName": "Botol Minum 1L",
+          "quantity": 1
+        }
+      ],
+      "orderId": "ORD-20240517-002",
+      "paymentMethod": "E-Wallet",
+      "shopId": "toko_agan",
+      "status": "pending",
+      "totalAmount": 25000
+    },
+    "-Nq_Order_004": {
+      "buyerId": "user_jkl_012",
+      "createdAt": 1715756400000,
+      "customerEmail": "diana.p@example.com",
+      "customerName": "Diana Putri",
+      "customerPhone": "084567890123",
+      "items": [
+        {
+          "price": 85000,
+          "productId": "prod_baju_katun_01",
+          "productName": "Baju Katun Premium",
+          "quantity": 3
+        }
+      ],
+      "orderId": "ORD-20240515-001",
+      "paymentMethod": "Transfer Bank",
+      "shopId": "toko_sebelah",
+      "status": "completed",
+      "totalAmount": 255000
+=======
   "orders": {
     "akuna_001": {
       "buyerId": "ikmal",
@@ -15,6 +110,7 @@
       "shopId": "toko_agan",
       "status": "processing",
       "totalAmount": 50000
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
     }
   },
   "products": {
@@ -26,12 +122,21 @@
       "minStockThreshold": 0,
       "name": "Indocafe",
       "price": 3000,
+<<<<<<< HEAD
+      "purchasePrice": 3000,
+=======
       "purchasePrice": 0,
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
       "sellingPrice": 3000,
       "shopId": "toko_agan",
       "sku": "(90)MD040282004100033",
       "soldCount": 0,
+<<<<<<< HEAD
+      "stock": 20,
+      "unitPrice": 0
+=======
       "stock": 20
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
     },
     "lampu": {
       "ageRating": 0,
@@ -41,6 +146,32 @@
       "minStockThreshold": 0,
       "name": "lampu",
       "price": 12000,
+<<<<<<< HEAD
+      "purchasePrice": 12000,
+      "sellingPrice": 12000,
+      "shopId": "toko_agan",
+      "soldCount": 0,
+      "stock": 50,
+      "unitPrice": 0
+    }
+  },
+  "seeller_sphere": {
+    "toko_abang": {
+      "shopName": "Toko Aban Sejahtera"
+    },
+    "toko_agan": {
+      "shopName": "Toko Agan Sejahtera"
+    }
+  },
+  "shop_sphere": {
+    "akun_002": {
+      "buyerId": "insom"
+    },
+    "akuna_001": {
+      "buyerId": "ikmal"
+    }
+  },
+=======
       "purchasePrice": 0,
       "sellingPrice": 12000,
       "shopId": "toko_agan",
@@ -62,6 +193,7 @@
     "name": "Dani",
     "status": "Selesai"
   },
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
   "system": {
     "pelanggaran": {
       "toko_abang": {
@@ -83,6 +215,8 @@
         "tikor": "berupa titik koordinat"
       }
     }
+<<<<<<< HEAD
+=======
   },
   "seeller_sphere": {
     "toko_abang": {
@@ -91,5 +225,6 @@
     "toko_agan": {
       "shopName": "Toko Agan Sejahtera"
     }
+>>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
   }
 }

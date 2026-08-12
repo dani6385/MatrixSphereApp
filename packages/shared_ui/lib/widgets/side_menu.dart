@@ -14,7 +14,7 @@ class SideMenuItem {
     required this.icon,
     required this.onTap,
     this.isSelected = false,
-    required String route,
+    required String route, required String label,
   });
 }
 

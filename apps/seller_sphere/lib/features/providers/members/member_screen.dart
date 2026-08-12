@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 /// Model sederhana untuk data karyawan/member

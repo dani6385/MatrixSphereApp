@@ -1,4 +1,5 @@
 
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_services/shared_services.dart';
@@ -54,9 +55,9 @@ class OrderDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDetailRow(context, 'Nama', order.customerName ?? '-'),
-                    _buildDetailRow(context, 'Email', order.customerEmail ?? '-'),
-                    _buildDetailRow(context, 'Telepon', order.customerPhone ?? '-'),
+                    _buildDetailRow(context, 'Nama', order.customerName),
+                    _buildDetailRow(context, 'Email', order.customerEmail),
+                    _buildDetailRow(context, 'Telepon', order.customerPhone),
                   ],
                 ),
               ),
@@ -121,7 +122,8 @@ class OrderDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Text(
         title,
-        style: AppStyles
+        style: Theme.of(context)
+            .textTheme
             .titleLarge
             ?.copyWith(fontWeight: FontWeight.bold),
       ),
@@ -137,14 +139,15 @@ class OrderDetailScreen extends StatelessWidget {
         children: [
           Text(
             label,
-            style: AppStyles.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           Text(
             value,
             style: valueStyle ??
-                AppStyles
+                Theme.of(context)
+                    .textTheme
                     .bodyMedium
-                    .copyWith(color: valueColor),
+                    ?.copyWith(color: valueColor),
           ),
         ],
       ),

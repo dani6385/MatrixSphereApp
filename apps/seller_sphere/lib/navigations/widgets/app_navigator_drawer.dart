@@ -28,9 +28,9 @@ class AppNavigatorDrawer extends StatelessWidget {
         return SideMenuItem(
           title: item.title,
           icon: item.icon,
-          route: item.route,
-          isSelected: item.route.isNotEmpty && currentRoute == item.route,
-          onTap: item.onTap ?? () {},
+          route: '',// The route is handled by the onTap callback
+          label: item.label,
+          onTap: item.ontap ?? () {},
         );
       }).toList(),
       selectedRoute: '',

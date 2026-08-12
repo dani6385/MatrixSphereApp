@@ -47,8 +47,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         throw Exception("Gagal membuat akun, data pengguna tidak ditemukan.");
       }
 
-      // Langkah 2: Daftarkan detail toko di Realtime Database
-      await _authService.registerShop(user: user, shopName: event.name);
+      // Langkah 2: Buat entri toko awal di Realtime Database.
+      // Ini akan menempatkan toko dalam status awal sebelum melengkapi detail.
+      await _authService.createInitialShopEntry(
+          user: user, shopName: event.name);
       emit(const AuthSuccess('Registrasi berhasil! Silakan login.'));
     } catch (e) {
       emit(AuthFailure(e.toString()));

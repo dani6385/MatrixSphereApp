@@ -49,7 +49,8 @@ class AttendanceEndDrawer extends StatelessWidget {
         return SideMenuItem(
           title: item.title,
           icon: item.icon,
-          route: item.route,
+          label: item.label,
+          route: '',
           onTap: item.onTap ?? () {},
         );
       }).toList(),

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 //import 'app_routes.dart';
 //import 'package:shared_services/shared_services.dart';
-import 'app_extractor.dart';
+//import 'app_extractor.dart';
 
 /// Kunci navigator global yang diimpor dari file router utama.
 late final GlobalKey<NavigatorState> commonRootNavigatorKey;
@@ -18,11 +18,11 @@ final List<RouteBase> commonDetailRoutes = [
   GoRoute(
     path: AppRoutes.chat.substring(1),
     builder: (context, state) => const ChatScreen(),
-  ),*/
+  ),
   GoRoute(
     path: 'products/:productId',
     builder: (context, state) => ProductDetailScreen(
       productId: state.pathParameters['productId']!, shopId: '',
     ),
-  ),
+  ),*/
 ];

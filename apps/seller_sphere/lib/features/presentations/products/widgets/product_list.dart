@@ -1,7 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart'; // Import GoRouter
 // import 'package:seller_sphere/features/presentations/products/product_detail_screen.dart'; // Tidak perlu diimpor langsung di sini, rutenya yang digunakan
 import 'package:shared_services/shared_services.dart';
+
 import 'product_card.dart';
 
 class ProductList extends StatelessWidget {
@@ -15,7 +17,6 @@ class ProductList extends StatelessWidget {
     required Null Function(Product) onDeleteTap,
     required Null Function(Product) onManageStockTap,
   });
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<Product>>(
@@ -39,7 +40,10 @@ class ProductList extends StatelessWidget {
           itemCount: products.length,
           itemBuilder: (context, index) {
             final product = products[index];
+
             return ProductCard(
+            
+
               product: product,
               onTap: () {
                 // Implementasi navigasi ke ProductDetailScreen

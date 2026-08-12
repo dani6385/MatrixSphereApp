@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 //import '../providers/shopes_viewmodel.dart';
 import 'package:seller_sphere/features/domain/entities/user.dart'; // Menggunakan model User dari domain entities
@@ -29,7 +30,7 @@ class ShopeItemCard extends StatelessWidget {
                   user.displayName?.substring(0, 1).toUpperCase() ?? 'U',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: context.onPrimaryContainer,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 )
               : null,

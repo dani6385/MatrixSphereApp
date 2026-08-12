@@ -53,6 +53,7 @@ class SellerDrawer extends StatelessWidget {
         return SideMenuItem(
           title: item.title,
           icon: item.icon,
+          label:'',
           route: item.route,
           isSelected: item.route.isNotEmpty && currentRoute == item.route,
           onTap: item.onTap ?? () {},

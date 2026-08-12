@@ -1,3 +1,4 @@
+
 import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_services/models/order_model.dart';
@@ -15,9 +16,12 @@ class OrderService {
   ///
   /// [shopId] adalah ID dari toko yang sedang login (contoh: "toko_agan").
   Stream<List<Order>> getOrdersStream(String shopId) {
+    // Referensi ke 'orders' di database.
     final orderRef = _dbRef.child('orders');
     final controller = StreamController<List<Order>>();
 
+    // .onValue adalah listener yang akan terus-menerus mendengarkan perubahan
+    // pada path 'orders'.
     orderRef.onValue.listen((event) {
       final data = event.snapshot.value;
       final List<Order> orders = [];
@@ -25,20 +29,35 @@ class OrderService {
       if (data != null && data is Map) {
         final ordersMap = Map<String, dynamic>.from(data);
 
+        // Iterasi melalui setiap data pesanan yang ada di Firebase.
         ordersMap.forEach((key, value) {
-          final orderData = Map<String, dynamic>.from(value as Map);
+          final orderData = Map<String, dynamic>.from(value);
 
+          // SANGAT PENTING: Filter pesanan hanya untuk toko yang relevan.
           if (orderData['shopId'] == shopId) {
-            orders.add(Order.fromMap(orderData, key));
+            // Konversi `List<Map>` items dari Firebase menjadi `List<OrderItem>`.
+            final List<OrderItem> items = [];
+            final firebaseItems = orderData['items'];
+
+            if (firebaseItems != null && firebaseItems is List) {
+              for (var itemData in firebaseItems) {
+                if (itemData is Map) {
+                  final itemMap = Map<String, dynamic>.from(itemData);
+                  items.add(OrderItem(
+                    productId: itemMap['productId']?.toString() ?? '',
+                    productName: itemMap['productName']?.toString() ?? '',
+                    quantity: (itemMap['quantity'] as num?)?.toInt() ?? 0,
+                    price: (itemMap['price'] as num?)?.toDouble() ?? 0.0,
+                  ));
+                }
+              }
+            }
           }
         });
       }
+      // Kirim daftar pesanan yang sudah diproses ke stream.
       controller.add(orders);
-    }, onError: (error) {
-      // Handle error, maybe log it or add an error state to the stream
-      controller.addError(error);
     });
-
     return controller.stream;
   }
 }

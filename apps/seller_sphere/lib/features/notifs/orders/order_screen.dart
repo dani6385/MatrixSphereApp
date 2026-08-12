@@ -32,6 +32,6 @@ class OrderScreen extends StatelessWidget {
     List<Order> sampleOrders = []; // Ganti dengan sumber data pesaneanan aslimu
 
     // Jika data kosong, OrderListView sudah memiliki widget tampilan kosong (empty state) yang informatif
-    return OrderListView(orders: sampleOrders);
+    return OrderListView(orders: sampleOrders, shopId: '',);
   }
 }

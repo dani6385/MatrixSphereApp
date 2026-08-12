@@ -58,4 +58,12 @@ class AppNavigation {
       context.pop();
     }
   }
+
+  static void goToShopRegister(BuildContext context) {
+    context.go(AppRoutes.shopRegister);
+  }
+
+  static void goToLogin(BuildContext context) {
+    context.go(AppRoutes.login);
+  }
 }

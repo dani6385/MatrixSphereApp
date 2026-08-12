@@ -1,3 +1,4 @@
+
 // lib/screens/attendance/widgets/attendance_active_scanner.dart
 
 import 'package:camera/camera.dart';

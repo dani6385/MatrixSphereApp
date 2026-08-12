@@ -1,3 +1,4 @@
+
 // lib/screens/attendance/widgets/attendance_body.dart
 
 import 'package:camera/camera.dart';
@@ -87,4 +88,5 @@ class AttendanceBody extends StatelessWidget {
       ),
     );
   }
+
 }

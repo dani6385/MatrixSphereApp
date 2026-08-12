@@ -16,7 +16,7 @@ class FirebaseRtdbService {
 
   /// Mendapatkan referensi ke node 'seller-orders'.
   /// Path ini bisa disesuaikan jika struktur database Anda berbeda.
-  DatabaseReference get ordersRef => _database.ref('seller-orders');
+  DatabaseReference get ordersRef => _database.ref('orders'); // Diubah dari 'seller-orders'
 
   /// Mendapatkan referensi ke node 'products'.
   /// Path ini bisa disesuaikan jika struktur database Anda berbeda.
@@ -35,6 +35,7 @@ class FirebaseRtdbService {
       return false;
     }
   }
+
   /// Membaca data dari path tertentu di Realtime Database.
   ///
   /// [path]: Path ke data yang ingin dibaca (contoh: 'seller_sphere/toko_agan').
@@ -167,8 +168,8 @@ class FirebaseRtdbService {
         final snapshot = event.snapshot;
         if (snapshot.exists && snapshot.value != null) {
           // Pastikan konversi ke Map<String, dynamic> untuk kompatibilitas JSON
-          final shopData = Map<String, dynamic>.from(
-              (snapshot.value as Map).map((key, value) => MapEntry(key.toString(), value)));
+          final shopData = Map<String, dynamic>.from((snapshot.value as Map)
+              .map((key, value) => MapEntry(key.toString(), value)));
           // snapshot.key akan berisi ID toko, misal 'toko_agan'
           return Shop.fromJson(snapshot.key!, shopData);
         } else {
@@ -232,7 +233,7 @@ class FirebaseRtdbService {
     // PERBAIKAN: Query ke node 'products' global dan filter berdasarkan 'shopId'
     Query query =
         _database.ref('products').orderByChild('shopId').equalTo(shopId);
-    
+
     // Jika ini bukan halaman pertama, mulai query SETELAH key terakhir
     if (startAfterKey != null) {
       query = query.startAfter(startAfterKey);
@@ -269,13 +270,15 @@ class FirebaseRtdbService {
   Future<bool> createOrderWithStockUpdate({
     required String shopUid,
     required String buyerUid,
-    required Map<String, int> orderItems, // Key adalah productId, Value adalah quantity
+    required Map<String, int>
+        orderItems, // Key adalah productId, Value adalah quantity
   }) async {
     // Menggunakan referensi root untuk transaksi multi-path
     final rootRef = _database.ref();
 
     try {
-      final transactionResult = await rootRef.runTransaction((Object? currentData) {
+      final transactionResult =
+          await rootRef.runTransaction((Object? currentData) {
         final data = currentData as Map<String, dynamic>?;
         if (data == null) {
           return Transaction.abort();
@@ -293,20 +296,23 @@ class FirebaseRtdbService {
 
           if (productData == null ||
               (productData['stock'] as int? ?? 0) < quantity ||
-              productData['shopId'] != shopUid) { // Pastikan produk milik toko yang benar
+              productData['shopId'] != shopUid) {
+            // Pastikan produk milik toko yang benar
             // Jika produk tidak ada atau stok tidak cukup, batalkan seluruh transaksi.
-            debugPrint('Transaksi dibatalkan: Stok untuk produk $productId tidak cukup atau produk tidak valid.');
+            debugPrint(
+                'Transaksi dibatalkan: Stok untuk produk $productId tidak cukup atau produk tidak valid.');
             return Transaction.abort();
           }
 
           // 2. Jika semua stok valid, siapkan update dan hitung total harga
           final newStock = (productData['stock'] as int) - quantity;
           productUpdates['/products/$productId/stock'] = newStock;
-          totalOrderPrice += (productData['sellingPrice'] as num? ?? 0).toInt() * quantity;
+          totalOrderPrice +=
+              (productData['sellingPrice'] as num? ?? 0).toInt() * quantity;
         }
 
         // 3. Buat pesanan baru di node 'seller-orders'
-        final newOrderRef = _database.ref('seller-orders').push();
+        final newOrderRef = _database.ref('orders').push(); // Diubah dari 'seller-orders'
         final orderData = {
           'shopId': shopUid,
           'buyerId': buyerUid,
@@ -317,7 +323,10 @@ class FirebaseRtdbService {
         };
 
         // Gabungkan semua update (stok dan pesanan baru)
-        final Map<String, dynamic> finalUpdates = {...productUpdates, '/seller-orders/${newOrderRef.key}': orderData};
+        final Map<String, dynamic> finalUpdates = {
+          ...productUpdates,
+          '/orders/${newOrderRef.key}': orderData // Diubah dari 'seller-orders'
+        };
         return Transaction.success(finalUpdates);
       });
 
@@ -355,14 +364,15 @@ class FirebaseRtdbService {
       }
 
       // Siapkan data untuk order baru
-      final Map<String, dynamic> orderUpdate = {
-        '/seller-orders/$orderId': order.toMap(),
+      final Map<String, dynamic> orderUpdate = { // Path ini juga perlu disesuaikan
+        '/orders/$orderId': order.toMap(),
       };
 
       // Gabungkan semua update menjadi satu operasi atomik
-      final Map<String, dynamic> updates = {} // Renamed from stockUpdates to productUpdates
-        ..addAll(productUpdates)
-        ..addAll(orderUpdate);
+      final Map<String, dynamic> updates =
+          {} // Renamed from stockUpdates to productUpdates
+            ..addAll(productUpdates)
+            ..addAll(orderUpdate);
 
       // Jalankan multi-path update
       await _database.ref().update(updates);
@@ -377,8 +387,39 @@ class FirebaseRtdbService {
       return false;
     }
   }
-}
 
+  /// Mendengarkan perubahan data pesanan untuk toko tertentu secara real-time.
+  ///
+  /// Method ini mengembalikan sebuah Stream yang akan memancarkan `List<Order>`
+  /// setiap kali ada data pesanan baru atau perubahan pada pesanan yang ada
+  /// untuk `shopId` yang diberikan.
+  ///
+  /// [shopId]: ID dari toko yang pesanannya ingin didengarkan.
+  /// Mengembalikan `Stream<List<Order>>`.
+  Stream<List<Order>> getOrdersStreamForShop(String shopId) {
+    try {
+      // Query ke node 'seller-orders' dan filter berdasarkan 'shopId'
+      final query = ordersRef.orderByChild('shopId').equalTo(shopId);
+
+      // Dengarkan perubahan pada hasil query
+      return query.onValue.map((event) {
+        final List<Order> orders = [];
+        final snapshot = event.snapshot;
+
+        if (snapshot.exists && snapshot.value != null) {
+          final data = Map<String, dynamic>.from(snapshot.value as Map);
+          data.forEach((orderId, orderData) {
+            orders.add(Order.fromMap(orderData as Map<String, dynamic>, orderId));
+          });
+        }
+        return orders;
+      });
+    } catch (e) {
+      debugPrint('Error saat membuat stream pesanan untuk toko $shopId: $e');
+      return Stream.value([]); // Kembalikan stream kosong jika ada error
+    }
+  }
+}
 
 //--- CONTOH PENGGUNAAN ---
 //Untuk menggunakan service ini, Anda perlu membuat instance-nya terlebih dahulu.
@@ -389,7 +430,7 @@ void contohBacaData() async {
   final snapshot = await rtdbService.readData('seller_sphere/toko_agan/produk');
   if (snapshot != null && snapshot.value != null) {
     // snapshot.value akan berupa Map<Object?, Object?>
-    final data = snapshot.value as Map; 
+    final data = snapshot.value as Map;
     print('Produk Toko Agan: $data'); // Output: {baju: 25000, sepatu: 25000}
     print('Harga baju: ${data['baju']}'); // Output: Harga baju: 25000
   }
