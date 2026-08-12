@@ -19,10 +19,15 @@ class UserRegistrationLogic {
 
       try {
         // Panggil AuthService untuk membuat akun
-        await _authService.createUserAccount(
+        final userCredential = await _authService.createUserAccount(
           state.emailController.text.trim(),
           state.passwordController.text,
         );
+
+        // Simpan ID pengguna setelah registrasi berhasil
+        if (userCredential.user != null) {
+          await LocalAuthStorage.saveUserId(userCredential.user!.uid);
+        }
 
         if (!context.mounted) return;
 

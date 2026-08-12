@@ -40,7 +40,7 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Daftarkan Toko Anda'),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),

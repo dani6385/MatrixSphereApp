@@ -45,8 +45,9 @@ class ShopRegistrationLogic {
     if (state.formKey.currentState!.validate()) {
       setLoading(true);
       try {
-        final user = _authService.currentUser;
-        if (user == null) {
+        // Ambil ID pengguna dari local storage
+        final userId = await LocalAuthStorage.getUserId();
+        if (userId == null) {
           throw Exception("Sesi pengguna tidak valid. Silakan login kembali.");
         }
 
@@ -55,7 +56,7 @@ class ShopRegistrationLogic {
         }
 
         // Ambil shopId yang sudah dibuat di langkah sebelumnya
-        final sellerData = await _authService.getSellerData(user.uid);
+        final sellerData = await _authService.getSellerData(userId);
         if (sellerData == null) {
           throw Exception("Data penjual tidak ditemukan. Silakan mulai registrasi dari awal.");
         }
@@ -68,7 +69,7 @@ class ShopRegistrationLogic {
         }
 
         await _authService.updateShopDetails(
-          uid: user.uid,
+          uid: userId,
           shopId: shopId,
           fullAddress: state.fullAddressController.text.trim(),
           coordinates: {
