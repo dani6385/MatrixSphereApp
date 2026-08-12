@@ -3,7 +3,7 @@ class AppRoutes {
   static const String login = '/login';
   static const String register = '/register';
   static const String forgotPassword = '/forgot-password';
-  static const String shopRegistration = '/shop-registration';
+  //static const String shopRegistration = '/shop-registration';
   static const String map = '/map';
   static const String productDetailEdit = '/products/:productId/edit';
   //bottom nav bar
@@ -35,10 +35,6 @@ class AppRoutes {
 
   static const String settings = '/settings';
   static const String scanQr = '/scan-qr';
-<<<<<<< HEAD
-  static const String simulation = '/scan-qr';
-//static const String profile = '/profile';
-=======
   static const String simulation = '/simulasi';
   static const String shopes = '/shopes';
   static const String shopRegister = '/register/shop';
@@ -47,5 +43,4 @@ class AppRoutes {
   static const String reports = '/reports';
   static const String promotions = '/promotions';
   
->>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 }

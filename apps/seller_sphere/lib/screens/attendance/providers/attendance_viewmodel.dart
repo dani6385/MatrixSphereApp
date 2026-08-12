@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:geodesy/geodesy.dart';
 import 'package:seller_sphere/screens/attendance/database_service.dart';
 import 'package:seller_sphere/models/attendance_model.dart';
-import 'package:shared_services/shared_services.dart';
+import 'package:shared_services/shared_services.dart' hide DatabaseService;
 
 
 

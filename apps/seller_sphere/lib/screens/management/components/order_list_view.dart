@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +12,8 @@ final _logger = Logger();
 class OrderListView extends StatefulWidget {
   // Hapus parameter `orders` yang tidak digunakan.
   // Jadikan `shopId` sebagai parameter utama untuk widget ini.
-<<<<<<< HEAD
-  const OrderListView({super.key, required this.shopId});
-=======
   const OrderListView(
       {super.key, required this.shopId, required List<Order> orders});
->>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 
   final String shopId;
 
@@ -53,12 +45,8 @@ class _OrderListViewState extends State<OrderListView> {
       //   title: const Text('Daftar Pesanan'),
       // ),
       body: FirebaseAnimatedList(
-<<<<<<< HEAD
-        query: _ordersQuery, // HANYA gunakan query yang sudah difilter berdasarkan shopId
-=======
         query:
             _ordersQuery, // HANYA gunakan query yang sudah difilter berdasarkan shopId
->>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
         reverse: true, // Tampilkan pesanan terbaru di atas
         padding: const EdgeInsets.all(AppSpacing.md),
         itemBuilder: (context, snapshot, animation, index) {
@@ -69,12 +57,8 @@ class _OrderListViewState extends State<OrderListView> {
 
           // Konversi data snapshot ke Map dan buat objek Order
           final orderDataMap = Map<String, dynamic>.from(snapshot.value as Map);
-<<<<<<< HEAD
-          final order = Order.fromMap(orderDataMap, snapshot.key!);
-=======
           final order =
               Order.fromMap(orderDataMap, snapshot.key!);
->>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055
 
           // Gunakan FadeTransition untuk animasi yang bagus saat item muncul
           return SizeTransition(
@@ -163,72 +147,3 @@ class _OrderListViewState extends State<OrderListView> {
     );
   }
 }
-<<<<<<< HEAD
-=======
-import 'package:flutter/material.dart';
-import 'package:shared_services/shared_services.dart';
-import 'package:shared_ui/shared_ui.dart';
-
-import '../widgets/order_detail_screen.dart';
-import '../widgets/order_card.dart';
-
-/// Widget untuk menampilkan daftar pesanan dalam bentuk ListView.
-class OrderListView extends StatelessWidget {
-  final List<Order> orders;
-  const OrderListView({super.key, required this.orders});
-
-  @override
-  Widget build(BuildContext context) {
-    // Jika tidak ada pesanan, tampilkan pesan di tengah.
-    if (orders.isEmpty) {
-      // PERBAIKAN: Berikan pesan yang lebih informatif dan menarik
-      // saat belum ada pesanan yang masuk.
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.inbox_outlined, size: 64, color: Colors.grey.shade400),
-              const SizedBox(height: 16),
-              Text('Belum ada pesanan masuk',
-                  style: AppStyles.titleLarge),
-              const SizedBox(height: 8),
-              Text(
-                'Semua pesanan baru dari pelanggan akan ditampilkan di sini.',
-                textAlign: TextAlign.center,
-                style: AppStyles
-                    .bodyMedium
-                    .copyWith(color: Colors.grey.shade600),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    // Mengurutkan pesanan dari yang terbaru secara aman dengan membuat salinan list
-    final sortedOrders = List<Order>.from(orders)
-      ..sort((a, b) => b.orderDate.compareTo(a.orderDate));
-
-    return ListView.builder(
-      itemCount: sortedOrders.length,
-      itemBuilder: (context, index) {
-        final order = sortedOrders[index];
-        return OrderCard(
-          order: order,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => OrderDetailScreen(order: order),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-}
->>>>>>> 2481f3e3b66f2ed5a49d12240c79aeb34d18ce25
-=======
->>>>>>> fdcc94e8472ffa7558367a3b266ed48cb788d055

@@ -7,6 +7,7 @@ import '../states/shop_registration_state.dart';
 
 class ShopRegistrationLogic {
   final AuthService _authService = AuthService();
+  final ShopService shopService = ShopService();
 
   /// Mendapatkan lokasi GPS pengguna saat ini
   Future<void> getCurrentLocation({
@@ -19,7 +20,7 @@ class ShopRegistrationLogic {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) return;
       }
-      
+
       if (permission == LocationPermission.deniedForever) return;
 
       final position = await Geolocator.getCurrentPosition();
@@ -55,21 +56,16 @@ class ShopRegistrationLogic {
           throw Exception("Silakan pilih lokasi penjemputan di peta.");
         }
 
-        // Ambil shopId yang sudah dibuat di langkah sebelumnya
-        final sellerData = await _authService.getSellerData(userId);
-        if (sellerData == null) {
-          throw Exception("Data penjual tidak ditemukan. Silakan mulai registrasi dari awal.");
-        }
-
-        final shopId = sellerData['shopId'] as String?;
-
+        // Ambil shopId yang sudah dibuat saat registrasi pengguna
+        final shopId = await shopService.getCurrentShopId(_authService.currentUser);
         if (shopId == null) {
-          // Pesan error ini lebih spesifik, mengindikasikan masalah pada alur registrasi.
-          throw Exception("ID Toko belum terdaftar. Pastikan Anda telah menyelesaikan tahap registrasi awal sebelum memilih lokasi.");
+          throw Exception(
+              "ID Toko tidak ditemukan. Pastikan Anda telah menyelesaikan tahap registrasi awal.");
         }
 
-        await _authService.updateShopDetails(
-          uid: userId,
+        // Panggil ShopService untuk memperbarui detail toko, bukan AuthService
+        await shopService.updateShopDetails(
+          userId: userId,
           shopId: shopId,
           fullAddress: state.fullAddressController.text.trim(),
           coordinates: {
@@ -80,7 +76,7 @@ class ShopRegistrationLogic {
       } catch (e) {
         if (context.mounted) {
           showErrorDialog(
-            context: context, 
+            context: context,
             message: e.toString().replaceAll("Exception: ", ""),
           );
         }

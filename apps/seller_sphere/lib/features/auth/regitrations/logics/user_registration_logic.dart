@@ -1,7 +1,6 @@
 
 // lib/features/auth/user_registration/user_registration_logic.dart
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:shared_services/shared_services.dart';
 import '../states/user_registration_state.dart';
 
@@ -34,7 +33,11 @@ class UserRegistrationLogic {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registrasi berhasil! Silakan login.')),
         );
-        context.pop(); // Kembali ke halaman login setelah registrasi berhasil
+        // Jangan panggil context.pop().
+        // AuthService akan memberi notifikasi ke GoRouter,
+        // dan GoRouter akan secara otomatis mengarahkan pengguna
+        // ke halaman yang benar (pendaftaran toko atau home)
+        // berdasarkan logika di app_router.dart.
       } on Exception catch (e) {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(

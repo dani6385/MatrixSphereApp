@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shared_services/auth/auth_service.dart';
-import 'package:shared_services/database/database_service.dart';
+import 'package:shared_services/shared_services.dart';
+//import 'package:shared_services/database/database_service.dart';
 import 'package:shared_ui/shared_ui.dart';
 
 /// Layar untuk menampilkan dan mengelola profil toko.
@@ -16,13 +16,14 @@ class ShopProfileScreen extends StatefulWidget {
 
 class _ShopProfileScreenState extends State<ShopProfileScreen> {
   final AuthService _authService = AuthService();
+  final ShopService shopService = ShopService();
   late final Future<String?> _shopIdFuture;
 
   @override
   void initState() {
     super.initState();
     // Ambil shopId saat widget pertama kali dibuat
-    _shopIdFuture = _authService.getCurrentShopId();
+    _shopIdFuture = shopService.getCurrentShopId(_authService.currentUser);
   }
 
   @override
