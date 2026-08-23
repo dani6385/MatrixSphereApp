@@ -174,12 +174,29 @@ jobs:
         shell: bash
         env:
           CL: "/D_SILENCE_EXPERIMENTAL_COROUTINE_DEPRECAT_WARNINGS"
+          # Tentukan API key berdasarkan platform yang sedang di-build
+          API_KEY: ${{ (matrix.platform == 'web' && secrets.GOOGLE_MAPS_API_KEY_WEB) || \
+                       (matrix.platform == 'android' && secrets.GOOGLE_MAPS_API_KEY_ANDROID) || \
+                       (matrix.platform == 'linux' && secrets.GOOGLE_MAPS_API_KEY_LINUX) || \
+                       (matrix.platform == 'windows' && secrets.GOOGLE_MAPS_API_KEY_WINDOWS) || \
+                       (matrix.platform == 'macos' && secrets.GOOGLE_MAPS_API_KEY_MACOS) || \
+                       '' }}
         run: |
           cd ${{ steps.vars.outputs.dir }}
+
+          # Siapkan semua flag --dart-define
+          DART_DEFINES="--dart-define=GOOGLE_MAPS_API_KEY=${API_KEY}"
+          DART_DEFINES="$DART_DEFINES --dart-define=IMGBB_API_KEY=${{ secrets.IMGBB_API_KEY }}"
+          DART_DEFINES="$DART_DEFINES --dart-define=DEFAULT_STREAM_KEY=${{ secrets.DEFAULT_STREAM_KEY }}"
+
+          echo "Building with defines: $DART_DEFINES"
+
           if [ "${{ matrix.platform }}" = "android" ]; then
-            flutter build apk --release
+            # Untuk Android, teruskan key ke Gradle menggunakan properti -P
+            # dan juga ke Dart menggunakan --dart-define
+            flutter build apk --release $DART_DEFINES -Ptarget="lib/main.dart" -Pgoogle-maps-api-key="${API_KEY}"
           else
-            flutter build ${{ matrix.platform }} --release
+            flutter build ${{ matrix.platform }} --release $DART_DEFINES
           fi
       
 # --- DEPLOYMENT ---

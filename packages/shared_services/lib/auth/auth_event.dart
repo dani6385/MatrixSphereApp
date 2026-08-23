@@ -30,12 +30,12 @@ class AuthPasswordResetRequested extends AuthEvent {
   List<Object> get props => [email];
 }
 
+// PERBAIKAN: Menghapus parameter posisi yang tidak perlu dan salah.
 class AuthLoginRequested extends AuthEvent {
   final String email;
   final String password;
 
-  const AuthLoginRequested(String text, String,
-      {required this.email, required this.password});
+  const AuthLoginRequested({required this.email, required this.password});
 
   @override
   List<Object> get props => [email, password];

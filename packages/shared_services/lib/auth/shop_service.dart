@@ -20,7 +20,7 @@ class ShopService extends ChangeNotifier {
         'email': user.email,
         'createdAt': ServerValue.timestamp,
       };
-  
+
       // Menggunakan multi-path update untuk memastikan operasi atomik
       await _dbRef.update({
         'shops/$shopId': initialShopData,
@@ -39,23 +39,26 @@ class ShopService extends ChangeNotifier {
   }
 
   /// Memperbarui detail toko dengan alamat dan koordinat.
-  Future<void> updateShopDetails(
-      {required String userId,
-      required String shopId,
-      required String fullAddress,
-      required Map<String, double> coordinates}) async {
+  Future<void> updateShopDetails({
+    required String token,
+    required String userId,
+    required String shopId,
+    required String fullAddress,
+    required Map<String, dynamic> coordinates,
+  }) async {
     try {
       final Map<String, dynamic> detailsData = {
         'pickupAddress': fullAddress, // Path: /pickupAddress
         'pickupCoordinates': coordinates, // Path: /pickupCoordinates
       };
-  
+
       // Menggunakan multi-path update untuk konsistensi
       await _dbRef.update({
         'shops/$shopId/pickupAddress': detailsData['pickupAddress'],
         'shops/$shopId/pickupCoordinates': detailsData['pickupCoordinates'],
         'seller_sphere/$userId/pickupAddress': detailsData['pickupAddress'],
-        'seller_sphere/$userId/pickupCoordinates': detailsData['pickupCoordinates'],
+        'seller_sphere/$userId/pickupCoordinates':
+            detailsData['pickupCoordinates'],
       });
       notifyListeners();
     } catch (e) {
@@ -97,7 +100,7 @@ class ShopService extends ChangeNotifier {
   /// Memeriksa status toko pengguna.[cite: 4]
   Future<ShopStatus> getUserShopStatus(User? currentUser) async {
     if (currentUser == null) return ShopStatus.none;
-    
+
     final uid = currentUser.uid;
     try {
       final sellerSnapshot = await _dbRef.child('seller_sphere/$uid').get();

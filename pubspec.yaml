@@ -25,22 +25,49 @@ dependencies:
   shared_ui:
     path: packages/shared_ui
   cupertino_icons: ^1.0.6
+  
+  csv: ^8.0.0
+  flutter_dotenv: ^5.1.0
+  pdf: ^3.13.0
+  fluttertoast: ^10.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   melos: ^8.2.2
+  flutter_launcher_icons: "^0.14.1"
 
 flutter:
   uses-material-design: true
   # Deklarasikan path aset secara eksplisit.
   # Ini akan membuat aset tersedia untuk semua aplikasi di dalam workspace.
-  assets:
-    - apps/seller_sphere/assets/images/
+  #assets:
+    #- apps/seller_sphere/assets/images/
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/app_icon.jpg" # Sesuaikan dengan lokasi file gambar Anda
+  min_sdk_android: 21
+
+dependency_overrides:
+  cli_util: ^0.5.0
 
 workspace:
+  - apps/admin_mikrotik
+  - apps/client_connectivity
   - apps/seller_sphere
   - apps/shop_sphere
+  - packages/shared_components
+  #- packages/shared_core
+  #- packages/shared_contents
+  - packages/shared_logics
+  - packages/shared_models
+  - packages/shared_navigations
+  - packages/shared_providers
+  - packages/shared_screens
   - packages/shared_services
   - packages/shared_ui
-  - apps/seller_sphere/third_party/media_info
+  - packages/shared_utils
+  #- apps/seller_sphere/third_party/media_info
+

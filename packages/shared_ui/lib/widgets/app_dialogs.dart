@@ -47,7 +47,8 @@ void showInfoDialog({
   required BuildContext context,
   required String title,
   required String message,
-  String buttonText = 'Mengerti', required Null Function() onPressed,
+  String buttonText = 'Mengerti',
+  VoidCallback? onPressed,
 }) {
   showDialog(
     context: context,
@@ -58,9 +59,7 @@ void showInfoDialog({
         actions: <Widget>[
           TextButton(
             child: Text(buttonText),
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-            },
+            onPressed: onPressed ?? () => Navigator.of(dialogContext).pop(),
           ),
         ],
       );

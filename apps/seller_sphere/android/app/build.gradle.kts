@@ -3,15 +3,12 @@
 plugins {
     id("com.android.application")
     id("dev.flutter.flutter-gradle-plugin")
-    id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-    // Catatan: "kotlin-android" sengaja dihapus di sini untuk migrasi Built-in Kotlin
+    id("com.google.gms.google-services")
 }
 
 android {
-    // PENTING: Ganti "com.seller.sphere" dengan ID Paket asli Anda
-    // (Bisa dilihat di dalam file google-services.json pada bagian "package_name")
-    namespace = "com.seller.sphere" 
+    namespace = "com.seller.sphere"
     compileSdk = flutter.compileSdkVersion
 
     compileOptions {
@@ -20,7 +17,6 @@ android {
     }
 
     defaultConfig {
-        // PENTING: Samakan juga ID aplikasi di bawah ini dengan nama paket asli Anda
         applicationId = "com.seller.sphere"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
@@ -39,4 +35,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-auth") // Ditambahkan untuk memastikan
 }

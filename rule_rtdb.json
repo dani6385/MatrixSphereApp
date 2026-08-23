@@ -2,29 +2,225 @@
   "rules": {
     ".read": false,
     ".write": false,
-
     "seller_sphere": {
       "$uid": {
-        ".read": "auth != null",
-        ".write": "auth != null && auth.uid === $uid"
+        // Hanya pemilik (userId = auth.uid) yang dapat membaca dan menulis data profil mereka sendiri.
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid",
+        // Validasi bahwa shopId adalah string dan tidak kosong saat dibuat/diperbarui.
+        "shopId": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        // Izinkan bidang lain untuk ditulis/diperbarui selama pengguna adalah pemiliknya.
+        "$other": {
+          ".validate": "true"
+        }
       }
     },
-
     "shop_sphere": {
       "$uid": {
         ".read": "auth != null && auth.uid === $uid",
         ".write": "auth != null && auth.uid === $uid"
       }
     },
-
+    "matrix_members": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth.token.isAdmin === true"
+      }
+    },
     "approval": {
       ".read": "auth.token.isAdmin === true",
       ".write": "auth.token.isAdmin === true"
     },
-
     "system": {
       ".read": "auth.token.isAdmin === true",
       ".write": "auth.token.isAdmin === true"
+    },
+    // Aturan untuk node 'shops'
+    // Node ini menyimpan detail lengkap setiap toko.
+    "shops": {
+      "$shopId": {
+        // Hanya pemilik toko (ownerUid di node ini harus sama dengan auth.uid) yang dapat membaca dan menulis detail toko.
+        ".read": "auth != null && data.child('ownerUid').val() == auth.uid",
+        ".write": "auth != null && data.child('ownerUid').val() == auth.uid",
+        // Validasi bidang-bidang penting saat membuat atau memperbarui toko.
+        "ownerUid": {
+          ".validate": "newData.isString() && newData.val() == auth.uid"
+        },
+        "shopName": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "pickupAddress": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "pickupCoordinates": {
+          ".validate": "newData.hasChildren(['latitude', 'longitude'])",
+          "latitude": {
+            ".validate": "newData.isNumber()"
+          },
+          "longitude": {
+            ".validate": "newData.isNumber()"
+          }
+        },
+        "$other": {
+          ".validate": "true"
+        } // Izinkan bidang lain.
+      }
+    },
+    // Aturan untuk node 'shops_pending_approval'
+    // Node ini menyimpan toko yang baru didaftarkan dan menunggu persetujuan.
+    "shops_pending_approval": {
+      "$uid": {
+        // Hanya pengguna yang mendaftar (auth.uid) yang dapat menulis entri toko mereka yang tertunda.
+        ".write": "auth != null && auth.uid == $uid",
+        // Akses baca untuk node ini biasanya hanya untuk admin, jadi secara default ditolak.
+        // Anda bisa menambahkan aturan untuk admin jika diperlukan, misal:
+        // ".read": "auth != null && root.child('admins').hasChild(auth.uid)",
+        ".read": false,
+        // Validasi bidang-bidang untuk toko yang tertunda.
+        "ownerUid": {
+          ".validate": "newData.isString() && newData.val() == auth.uid"
+        },
+        "shopName": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "pickupAddress": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "pickupCoordinates": {
+          ".validate": "newData.hasChildren(['latitude', 'longitude'])",
+          "latitude": {
+            ".validate": "newData.isNumber()"
+          },
+          "longitude": {
+            ".validate": "newData.isNumber()"
+          }
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "status": {
+          ".validate": "newData.isString() && newData.val() == 'pending'"
+        },
+        "$other": {
+          ".validate": "true"
+        }
+      }
+    },
+    // Aturan untuk node 'products'
+    "products": {
+      "$productId": {
+        // Akses baca: Semua pengguna yang terautentikasi dapat membaca produk.
+        // Jika Anda ingin produk benar-benar publik (tanpa login), ubah ke "true".
+        ".read": "auth != null",
+        // Akses tulis: Hanya pemilik toko yang terkait dengan produk ini yang dapat menulis/memperbarui.
+        ".write": "auth != null && (
+        // Jika membuat produk baru, pastikan shopId di newData dimiliki oleh auth.uid
+          (!data.exists() && root.child('shops').child(newData.child('shopId').val()).child('ownerUid').val() == auth.uid) ||
+          // Jika memperbarui produk yang sudah ada, pastikan shopId yang ada dimiliki oleh auth.uid
+          (data.exists() && root.child('shops').child(data.child('shopId').val()).child('ownerUid').val() == auth.uid)
+        )",
+        // Validasi bidang-bidang produk.
+        "shopId": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "description": {
+          ".validate": "newData.isString()"
+        },
+        "price": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "stock": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "sellingPrice": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "soldCount": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "$other": {
+          ".validate": "true"
+        }
+      }
+    },
+    // Aturan untuk node 'orders'
+    "orders": {
+      "$orderId": {
+        // Akses baca:
+        // 1. Pembeli (buyerId) dapat membaca pesanan mereka sendiri.
+        // 2. Pemilik toko (ownerUid dari shopId) dapat membaca pesanan untuk toko mereka.
+        ".read": "auth != null && (data.child('buyerId').val() == auth.uid || root.child('shops').child(data.child('shopId').val()).child('ownerUid').val() == auth.uid)",
+        // Akses tulis:
+        // Hanya pemilik toko yang terkait dengan pesanan ini yang dapat menulis/memperbarui.
+        // Pembeli biasanya tidak menulis langsung ke node pesanan setelah dibuat.
+        ".write": "auth != null && root.child('shops').child(newData.child('shopId').val()).child('ownerUid').val() == auth.uid",
+        // Validasi bidang-bidang pesanan.
+        "shopId": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "buyerId": {
+          ".validate": "newData.isString() && newData.val().length > 0"
+        },
+        "items": {
+          ".validate": "newData.hasChildren()"
+        }, // Perlu validasi lebih lanjut untuk item jika diperlukan.
+        "totalAmount": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() == 'pending' || newData.val() == 'completed' || newData.val() == 'cancelled')"
+        },
+        "$other": {
+          ".validate": "true"
+        }
+      }
+    },
+    // Aturan untuk node 'stock_logs'
+    "stock_logs": {
+      "$productId": {
+        "$logId": {
+          // Akses baca dan tulis: Hanya pemilik toko yang terkait dengan produk ini yang dapat membaca dan menulis log stok.
+          // Ini memerlukan pencarian shopId dari node 'products' dan kemudian ownerUid dari node 'shops'.
+          ".read": "auth != null && root.child('shops').child(root.child('products').child($productId).child('shopId').val()).child('ownerUid').val() == auth.uid",
+          ".write": "auth != null && root.child('shops').child(root.child('products').child($productId).child('shopId').val()).child('ownerUid').val() == auth.uid",
+          // Validasi bidang-bidang log stok.
+          "previousStock": {
+            ".validate": "newData.isNumber()"
+          },
+          "newStock": {
+            ".validate": "newData.isNumber()"
+          },
+          "change": {
+            ".validate": "newData.isNumber()"
+          },
+          "reason": {
+            ".validate": "newData.isString()"
+          },
+          "timestamp": {
+            ".validate": "newData.isNumber()"
+          },
+          "$other": {
+            ".validate": "true"
+          }
+        }
+      }
     }
   }
 }

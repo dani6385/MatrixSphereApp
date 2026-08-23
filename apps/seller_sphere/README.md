@@ -2,27 +2,16 @@
 
 A new Flutter project.
 
-# Panduan Pemeliharaan Proyek (Maintenance Guide)
+## Getting Started
 
-Dokumen ini dirancang untuk membantumu atau pengembang lain dalam memahami, memelihara, dan mengembangkan aplikasi Flutter ini di masa depan.
+This project is a starting point for a Flutter application.
 
----
+A few resources to get you started if this is your first Flutter project:
 
-## 1. Arsitektur & Struktur Proyek
-Aplikasi ini menggunakan pendekatan modular dan terstruktur berdasarkan fitur. Berikut adalah rangkuman direktori utamanya di dalam folder `lib/`:
-- `core/`: Berisi utilitas global, konfigurasi tema (`app_theme.dart`), dan helper bersama.
-- `models/`: Berisi cetak biru data atau model objek (contoh: `attendance_model.dart`).
-- `screens/`: Berisi halaman aplikasi yang dipecah lagi menjadi:
-- `components/` atau `widgets/`: Komponen UI modular yang lebih kecil (contoh: widget tombol aksi, pemindai, dll).
-- `providers/` atau *ViewModel*: Mengatur logika bisnis dan state menggunakan `ChangeNotifier`.
+- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
+- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
 
----
-
-## 2. Cara Menjalankan & Membangun Aplikasi (Build & Run)
-Pastikan kamu telah menginstal Flutter SDK yang sesuai.
-
-* **Menjalankan Mode Debug**:
-  ```bash
-  flutter run
-
-  
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.

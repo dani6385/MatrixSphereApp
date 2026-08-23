@@ -27,6 +27,12 @@ jobs:
           filters: |
             seller_sphere:
               - 'apps/seller_sphere/**'
+            shop_sphere:
+              - 'apps/shop_sphere/**'
+            admin_mikrotik:
+              - 'apps/admin_mikrotik/**'
+            client_connectivity:
+              - 'apps/client_connectivity/**'
             matrix_sphere:
               - 'lib/**'
 
@@ -35,13 +41,19 @@ jobs:
         run: |
           MATRIX="[]"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            MATRIX='["seller_sphere", "matrix_sphere"]'
+            MATRIX='["seller_sphere", "shop_sphere", "admin_mikrotik", "client_connectivity", "matrix_sphere"]'
           else
             SELLER="${{ steps.filter.outputs.seller_sphere }}"
+            SHOP="${{ steps.filter.outputs.shop_sphere }}"
+            ADMIN="${{ steps.filter.outputs.admin_mikrotik }}"
+            CLIENT="${{ steps.filter.outputs.client_connectivity }}"
             MATRIX_SPHERE="${{ steps.filter.outputs.matrix_sphere }}"
 
             LIST=()
             [ "$SELLER" = "true" ] && LIST+=('"seller_sphere"')
+            [ "$SHOP" = "true" ] && LIST+=('"shop_sphere"')
+            [ "$ADMIN" = "true" ] && LIST+=('"admin_mikrotik"')
+            [ "$CLIENT" = "true" ] && LIST+=('"client_connectivity"')
             [ "$MATRIX_SPHERE" = "true" ] && LIST+=('"matrix_sphere"')
 
             if [ ${#LIST[@]} -gt 0 ]; then
@@ -77,6 +89,18 @@ jobs:
             DIR="apps/seller_sphere"
             echo "dir=$DIR" >> $GITHUB_OUTPUT
             echo "app_id=${{ secrets.FIREBASE_APP_ID_SELLER }}" >> $GITHUB_OUTPUT
+          elif [ "$PROJECT" = "shop_sphere" ]; then
+            DIR="apps/shop_sphere"
+            echo "dir=apps/shop_sphere" >> $GITHUB_OUTPUT
+            echo "app_id=${{ secrets.FIREBASE_APP_ID_SHOP }}" >> $GITHUB_OUTPUT
+          elif [ "$PROJECT" = "admin_mikrotik" ]; then
+            DIR="apps/admin_mikrotik"
+            echo "dir=apps/admin_mikrotik" >> $GITHUB_OUTPUT
+            echo "app_id=${{ secrets.FIREBASE_APP_ID_ADMIN }}" >> $GITHUB_OUTPUT
+          elif [ "$PROJECT" = "client_connectivity" ]; then
+            DIR="apps/client_connectivity"
+            echo "dir=apps/client_connectivity" >> $GITHUB_OUTPUT
+            echo "app_id=${{ secrets.FIREBASE_APP_ID_CLIENT }}" >> $GITHUB_OUTPUT
           elif [ "$PROJECT" = "matrix_sphere" ]; then
             DIR="."
             echo "dir=$DIR" >> $GITHUB_OUTPUT
@@ -102,9 +126,8 @@ jobs:
         shell: bash
         run: |
           cd ${{ steps.vars.outputs.dir }}
-          flutter clean
           flutter pub get
-
+# ditambahkannya --split-per-abi
       - name: Build APK Release
         shell: bash
         run: |
@@ -127,8 +150,17 @@ jobs:
 
       - name: Deploy to App Distribution (Android)
         shell: bash
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
         run: |
           APK_PATH=$(find ${{ steps.vars.outputs.dir }} -name "app-release.apk" | head -n 1)
+
+          if [ -z "$APK_PATH" ]; then
+            echo "Error: File APK tidak ditemukan!"
+            exit 1
+          fi
+          echo "File APK ditemukan di: $APK_PATH"
+
           npx firebase-tools appdistribution:distribute "$APK_PATH" \
             --app "${{ steps.vars.outputs.app_id }}" \
             --groups "sphere" \

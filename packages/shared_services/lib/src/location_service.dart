@@ -25,12 +25,6 @@ class LocationCheckResult {
 /// predefined office radius.
 class LocationService {
   // --- KONFIGURASI ---
-  // Ganti dengan koordinat lokasi kantor Anda.
-  // Hapus hardcode ini. Lokasi kantor/toko harus didapatkan secara dinamis.
-  static const LatLng _officeLocation = LatLng(-6.2088, 106.8456); // Contoh: Monas, Jakarta (digunakan untuk isUserWithinOfficeRadius)
-  static const double _officeRadiusMeters = 100.0; // Radius 100 meter
-  // -------------------
-
   final Geodesy _geodesy;
 
   // Sediakan Geodesy melalui constructor untuk kemudahan testing.
@@ -87,15 +81,19 @@ class LocationService {
     await Geolocator.openAppSettings();
   }
 
-  /// Memeriksa apakah pengguna secara fisik berada dalam radius toko yang ditentukan.
+  /// Memeriksa apakah pengguna secara fisik berada dalam radius lokasi yang ditentukan.
   ///
-  /// Method ini menangani pengecekan izin, permintaan lokasi, dan
-  /// menghitung jarak ke lokasi toko yang diberikan.
+  /// Metode ini adalah versi generik yang menangani:
+  /// 1. Pengecekan layanan lokasi (GPS).
+  /// 2. Pengecekan dan permintaan izin lokasi.
+  /// 3. Pengambilan lokasi pengguna saat ini.
+  /// 4. Perhitungan jarak ke lokasi target.
+  /// 5. Pengembalian hasil dalam bentuk [LocationCheckResult].
   ///
-  /// [shopLocation]: Koordinat LatLng dari toko.
+  /// [targetLocation]: Koordinat LatLng dari lokasi target (bisa kantor, toko, dll).
   /// [radiusMeters]: Radius yang diizinkan dalam meter (default 100m).
-  Future<LocationCheckResult> isUserWithinShopRadius({
-    required LatLng shopLocation,
+  Future<LocationCheckResult> isUserWithinRadius({
+    required LatLng targetLocation,
     double radiusMeters = 100.0,
   }) async {
     // 1. Periksa apakah layanan lokasi di perangkat aktif.
@@ -103,7 +101,7 @@ class LocationService {
     if (!serviceEnabled) {
       return LocationCheckResult(
         errorTitle: 'GPS Tidak Aktif',
-        errorMessage: 'Harap aktifkan layanan lokasi (GPS) di perangkat Anda untuk melanjutkan.',
+        errorMessage: 'Harap aktifkan layanan lokasi (GPS) di perangkat Anda untuk melanjutkan absensi.',
         needsSettings: true,
       );
     }
@@ -131,96 +129,28 @@ class LocationService {
     // 3. Dapatkan lokasi pengguna saat ini.
     try {
       final userPosition = await getCurrentLocation(); // Menggunakan metode yang sudah ada
-      final userLocation = LatLng(userPosition.latitude, userPosition.longitude);
+      final userLocation =
+          LatLng(userPosition.latitude, userPosition.longitude);
 
-      // 4. Hitung jarak dari pengguna ke toko.
-      final distance = _geodesy.distanceBetweenTwoGeoPoints(userLocation, shopLocation);
+      // 4. Hitung jarak dari pengguna ke lokasi target.
+      final distance =
+          _geodesy.distanceBetweenTwoGeoPoints(userLocation, targetLocation);
 
       // 5. Bandingkan jarak dengan radius yang diizinkan.
       if (distance <= radiusMeters) {
         return LocationCheckResult(isWithinRadius: true);
       } else {
         return LocationCheckResult(
-          errorTitle: 'Di Luar Jangkauan Toko',
-          errorMessage: 'Anda terdeteksi berada di luar radius toko. Jarak Anda sekitar ${distance.round()} meter dari lokasi toko.',
+          errorTitle: 'Di Luar Jangkauan',
+          errorMessage:
+              'Anda terdeteksi berada di luar radius yang diizinkan. Jarak Anda sekitar ${distance.round()} meter dari lokasi target.',
         );
       }
     } catch (e) {
       // Tangkap error dari getCurrentLocation() atau lainnya
-      return LocationCheckResult(errorTitle: 'Gagal Mendapatkan Lokasi', errorMessage: e.toString().replaceAll("Exception: ", ""));
-    }
-  }
-
-  /// Checks if the user is physically within the office radius.
-  ///
-  /// This method handles permission checks, requests location, and
-  /// calculates the distance to the office.
-  Future<LocationCheckResult> isUserWithinOfficeRadius() async {
-    // 1. Periksa apakah layanan lokasi di perangkat aktif.
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
       return LocationCheckResult(
-        errorTitle: 'GPS Tidak Aktif',
-        errorMessage: 'Harap aktifkan layanan lokasi (GPS) di perangkat Anda untuk melanjutkan absensi.',
-        needsSettings: true, // Tampilkan tombol untuk membuka pengaturan
-      );
-    }
-
-    // 2. Periksa dan minta izin lokasi kepada pengguna.
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return LocationCheckResult(
-          errorTitle: 'Izin Lokasi Ditolak',
-          errorMessage: 'Aplikasi memerlukan izin akses lokasi untuk memverifikasi kehadiran. Silakan berikan izin.',
-        );
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Pengguna menolak izin secara permanen.
-      return LocationCheckResult(
-        errorTitle: 'Izin Lokasi Ditolak Permanen',
-        errorMessage: 'Anda telah menolak izin lokasi secara permanen. Harap aktifkan secara manual di pengaturan aplikasi.',
-        needsSettings: true, // Tampilkan tombol untuk membuka pengaturan
-      );
-    }
-
-    // 3. Jika izin diberikan, dapatkan lokasi pengguna saat ini.
-    try {
-      Position userPosition = await Geolocator.getCurrentPosition(
-        // Perbaikan: Menggunakan LocationSettings yang lebih modern
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.high,
-          timeLimit: Duration(seconds: 10),
-        ),
-      );
-
-      final userLocation = LatLng(userPosition.latitude, userPosition.longitude);
-
-      // 4. Hitung jarak dari pengguna ke kantor.
-      final distance = _geodesy.distanceBetweenTwoGeoPoints(userLocation, _officeLocation);
-
-      // 5. Bandingkan jarak dengan radius yang diizinkan.
-      if (distance <= _officeRadiusMeters) {
-        return LocationCheckResult(isWithinRadius: true);
-      } else {
-        return LocationCheckResult(
-          errorTitle: 'Di Luar Jangkauan',
-          errorMessage: 'Anda terdeteksi berada di luar radius kantor yang diizinkan. Jarak Anda sekitar ${distance.round()} meter dari lokasi.',
-        );
-      }
-    } on TimeoutException {
-      return LocationCheckResult(
-        errorTitle: 'Gagal Mendapatkan Lokasi',
-        errorMessage: 'Tidak dapat mengambil lokasi Anda saat ini. Pastikan sinyal GPS Anda kuat dan coba lagi.',
-      );
-    } catch (e) {
-      return LocationCheckResult(
-        errorTitle: 'Terjadi Kesalahan',
-        errorMessage: 'Terjadi kesalahan tak terduga saat memeriksa lokasi: $e',
-      );
+          errorTitle: 'Gagal Mendapatkan Lokasi',
+          errorMessage: e.toString().replaceAll("Exception: ", ""));
     }
   }
 }

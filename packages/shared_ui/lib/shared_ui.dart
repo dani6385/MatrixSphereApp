@@ -14,6 +14,12 @@ export 'ui/widgets/loading_dialog.dart';
 export 'widgets/activity_list_tile.dart';
 export 'widgets/app_dialogs.dart';
 export 'widgets/quick_action_chip.dart';
-export 'widgets/shared_bottom_nav_bar.dart';
+
 export 'widgets/side_menu.dart';
 export 'widgets/summary_card.dart';
+export 'widgets/app_card.dart';
+export 'src/base_app.dart';
+export 'config/app_type.dart';
+export 'config/page_type.dart';
+export 'widgets/bottom/bottom.dart';
+export 'widgets/bottom/action_bottom.dart';

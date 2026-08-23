@@ -2,7 +2,6 @@ import 'dart:core';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
 import 'package:shared_services/shared_services.dart';
 
 part 'auth_event.dart';
@@ -10,7 +9,8 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthService _authService;
-final ShopService shopService = ShopService();
+  final ShopService shopService = ShopService();
+
   AuthBloc({required AuthService authService})
       : _authService = authService,
         super(AuthInitial()) {
@@ -25,7 +25,16 @@ final ShopService shopService = ShopService();
   ) async {
     emit(AuthLoading());
     try {
-      await _authService.login(event.email, event.password);
+      final userCredential = await _authService.login(event.email, event.password);
+      
+      // Log analytics event for successful login
+      analyticsService.logLogin('email_password');
+
+      // Set user property to identify them in analytics
+      if (userCredential.user != null) {
+        analyticsService.setUserProperty(name: 'user_id', value: userCredential.user!.uid);
+      }
+
       emit(const AuthSuccess('Login berhasil!'));
     } catch (e) {
       emit(AuthFailure(e.toString()));
@@ -38,7 +47,6 @@ final ShopService shopService = ShopService();
   ) async {
     emit(AuthLoading());
     try {
-      // Langkah 1: Buat akun pengguna di Firebase Auth
       final userCredential =
           await _authService.createUserAccount(event.email, event.password);
       final user = userCredential.user;
@@ -47,10 +55,15 @@ final ShopService shopService = ShopService();
         throw Exception("Gagal membuat akun, data pengguna tidak ditemukan.");
       }
 
-      // Langkah 2: Buat entri toko awal di Realtime Database.
-      // Ini akan menempatkan toko dalam status awal sebelum melengkapi detail.
+      // Log analytics event for successful sign-up
+      analyticsService.logSignUp('email_password');
+
+      // Set user property upon registration
+      analyticsService.setUserProperty(name: 'user_id', value: user.uid);
+
       await shopService.createInitialShopEntry(
           user: user, shopName: event.name);
+          
       emit(const AuthSuccess('Registrasi berhasil! Silakan login.'));
     } catch (e) {
       emit(AuthFailure(e.toString()));
@@ -63,8 +76,12 @@ final ShopService shopService = ShopService();
   ) async {
     emit(AuthLoading());
     try {
+      // Clear user-specific properties on logout
+      analyticsService.setUserProperty(name: 'user_id', value: null);
+      analyticsService.setUserProperty(name: 'has_shop', value: null); // Jika Anda melacak ini
+
       await _authService.logout();
-      emit(AuthInitial()); // Kembali ke state awal setelah logout
+      emit(AuthInitial());
     } catch (e) {
       emit(AuthFailure(e.toString()));
     }

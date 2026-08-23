@@ -3,9 +3,11 @@ import 'package:go_router/go_router.dart';
 //import 'package:provider/provider.dart';
 //import 'app_extractor.dart';
 //import '../providers/app_viewmodel.dart';
+//import 'package:shared_components/shared_components.dart';
+import 'package:shared_navigations/shared_navigations.dart';
 import 'bottom_nav_bar.dart';
-import 'widgets/app_navigator_drawer.dart';
-import 'widgets/app_navigator_end_drawer.dart';
+import 'widgets/app_drawer_items.dart';
+import 'widgets/app_end_drawer_items.dart';
 
 class AppNavigator extends StatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -32,11 +34,21 @@ class _AppNavigatorState extends State<AppNavigator> {
       child: */Scaffold(
         extendBody: true,
         body: widget.navigationShell,
-        drawer: const AppNavigatorDrawer(),
-        endDrawer: const AppNavigatorEndDrawer(),
+        drawer: SharedProjectDrawer(
+        menuBuilder: (context, currentRoute) {
+          // Panggil fungsi atau list item SideMenuItem yang ada di home_drawer_items.dart
+          return getDrawerSideMenuItems(context, currentRoute);
+        },
+      ),
+      endDrawer: SharedProjectDrawer(
+        menuBuilder: (context, currentRoute) {
+          // Panggil fungsi atau list item SideMenuItem yang ada di home_drawer_items.dart
+          return getEndDrawerSideMenuItems(context, currentRoute);
+        },
+      ),
         bottomNavigationBar: BottomNavBar(
           currentIndex: widget.navigationShell.currentIndex,
-          onTap: _onItemTapped,
+          onTap: _onItemTapped, navigationShell: widget.navigationShell,
         ),
       //),
     );

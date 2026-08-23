@@ -6,7 +6,10 @@
     <application
         android:label="SS Seller Sphere"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
+        <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyCG_oXq8jpOoJeZ9uJ1gfeQ4kDVlTRHK4Q"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
